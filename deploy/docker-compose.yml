@@ -15,7 +15,6 @@ services:
     ports:
       - ${NUXT_ENV_PORT}
     networks:
-      - horext-api-network
       - letsencrypt
 networks:
   letsencrypt:
