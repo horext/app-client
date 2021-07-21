@@ -22,6 +22,11 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/axios-accesor',
+    '~/plugins/api',
+    '~/plugins/snackbar.ts',
+    { src: '~/plugins/vuex-persist.js', ssr: false },
+    { src: '~/plugins/html2canvas.client.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,11 +45,21 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/universal-storage'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  // Axios module configuration (https://go.nuxtjs.dev/config-axios)
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api': {
+      target: process.env.NUXT_ENV_API_URL,
+      pathRewrite: { '^/api/': '/' }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -71,7 +86,6 @@ export default {
       }
     }
   },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

@@ -1,0 +1,68 @@
+<template>
+  <v-footer
+    id="home-footer"
+    min-height="48"
+  >
+    <v-container>
+      <v-row>
+        <v-col
+          cols="12"
+          md="6"
+        >
+          <div class="d-flex flex-wrap justify-md-start justify-center justify-md-none">
+            <template v-for="(s, i) in social">
+              <a
+                :key="s.name"
+                class="pa-1 pa-md-0"
+                :href="s.link"
+                v-text="s.name"
+              />
+
+              <v-responsive
+                v-if="i < social.length - 1"
+                :key="`divider-${s}`"
+                class="mx-4 shrink hidden-sm-and-down"
+                max-height="16"
+              >
+                <v-divider vertical />
+              </v-responsive>
+            </template>
+          </div>
+        </v-col>
+
+        <v-col
+          class="text-center text-md-right"
+          cols="12"
+          md="6"
+        >
+          Copyright &copy; 2020 Octatec
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-footer>
+</template>
+
+<script lang="ts">
+import { Vue } from 'nuxt-property-decorator'
+
+export default Vue.extend({
+  name: 'HomeFooter',
+  data: () => ({
+    social: [
+      {
+        name: 'Facebook',
+        link: 'https://www.facebook.com/OctatecOficial'
+      },
+      {
+        name: 'Linkedin',
+        link: 'https://www.linkedin.com/in/franz-antony-bendezu-isidro/'
+      }
+    ]
+  })
+})
+</script>
+
+<style lang="sass">
+  #home-footer a
+    text-decoration: none
+</style>

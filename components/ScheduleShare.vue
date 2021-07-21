@@ -1,0 +1,118 @@
+<template>
+  <v-card>
+    <v-card-title>
+      <span class="title font-weight-bold">Compartir</span>
+      <v-spacer />
+      <v-btn
+        class="mx-0"
+        icon
+        @click="close"
+      >
+        <v-icon>mdi-close-circle-outline</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-list>
+      <v-list-item :href="'https://www.facebook.com/sharer/sharer.php?u='+link" target="_blank">
+        <v-list-item-action>
+          <v-icon color="indigo">
+            mdi-facebook
+          </v-icon>
+        </v-list-item-action>
+        <v-card-title>Facebook</v-card-title>
+      </v-list-item>
+      <v-list-item
+        :href="'http://twitter.com/share?text=Mira mi horario &url='+link+'&hashtags=octatec,horext'"
+        target="_blank"
+      >
+        <v-list-item-action>
+          <v-icon color="cyan">
+            mdi-twitter
+          </v-icon>
+        </v-list-item-action>
+        <v-card-title>Twitter</v-card-title>
+      </v-list-item>
+      <v-list-item
+        :href="'https://api.whatsapp.com/send?text=Mira mi horario '+link"
+        target="_blank"
+        data-action="share/whatsapp/share"
+      >
+        <v-list-item-action>
+          <v-icon color="success">
+            mdi-whatsapp
+          </v-icon>
+        </v-list-item-action>
+        <v-card-title>Whatsapp</v-card-title>
+      </v-list-item>
+      <v-list-item
+        :href="`https://t.me/share/url?url=${link}&text=`"
+        target="_blank"
+        data-action="share/telegram/share"
+      >
+        <v-list-item-action>
+          <v-icon color="#54a9eb">
+            mdi-telegram
+          </v-icon>
+        </v-list-item-action>
+        <v-card-title>Telegram</v-card-title>
+      </v-list-item>
+    </v-list>
+    <v-text-field
+      id="link"
+      ref="link"
+      :label="copied ? 'Enlace copiado' : 'Click to copiar el link'"
+      class="pa-4"
+      readonly
+      :value="link"
+      @click="copy"
+    />
+  </v-card>
+</template>
+<script lang="js">
+
+export default {
+  name: 'ScheduleShare',
+  props: {
+    schedule: { type: Object },
+    path: { type: String, default: '/schedule' },
+    dialog: { type: Boolean },
+    postId: { type: Number, default: 1 }
+  },
+  data: () => ({
+    copied: false,
+    dialogSync: true
+  }),
+  computed: {
+    link () {
+      return location.origin + this.path + '?q=' + this.query
+    },
+    query () {
+      return btoa(this.schedule.scheduleId)
+    }
+  },
+  watch: {
+    dialog (newValue) {
+      this.dialogSync = newValue
+    },
+    dialogSync (newValue) {
+      this.$emit('update:dialog', newValue)
+    }
+  },
+  methods: {
+    close () {
+      this.dialogSync = false
+    },
+    copy () {
+      const copyText = document.querySelector('#link')
+      if (copyText) {
+        copyText.select()
+        navigator.clipboard.writeText(this.link).then(() => {
+          /* clipboard successfully set */
+          this.copied = true
+        }, function () {
+          /* clipboard write failed */
+        })
+      }
+    }
+  }
+}
+</script>
