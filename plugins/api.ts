@@ -32,7 +32,7 @@ const api: Plugin = ({ $axios }, inject) => {
   })
 
   // Set baseURL to something different
-  api.setBaseURL(<string>process.env.API_URL_BROWSER)
+  api.setBaseURL('/api')
 
   // Inject to context as $api
   inject('api', api)
