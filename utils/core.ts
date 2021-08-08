@@ -8,6 +8,7 @@ const convertToDate = (day: string | number, startTime: string) => {
   return obtenerDiaSemana(day).concat(startTime)
 }
 export { convertToDate }
+
 export function generate
 (cursos: Array<any>, eventos: Array<any>,
   crucesCursos: number = 0,
@@ -89,7 +90,10 @@ export function generate
 
         if (!(hayCruces) && ((numCrucesSeccion + numCruces) <= crucesCursos)) {
           // se guarda las sections sin cruce
-          sections.push({ ...cursos[i].sections[j], numCruces: numCrucesSeccion })
+          sections.push({
+            ...cursos[i].sections[j],
+            numCruces: numCrucesSeccion
+          })
         }
       }
       if (sections.length > 0) {
@@ -123,7 +127,7 @@ export function generate
   generar(cursos, i, eventos, numCursos, numCruces)
   return {
     schedules: classSessions,
-    ocurrences: Array.from(ocurrences).map((o:any) => {
+    ocurrences: Array.from(ocurrences).map((o: any) => {
       const object: any = JSON.parse(o)
       return ({
         type: object.type,
@@ -131,6 +135,57 @@ export function generate
         elementB: object.elements[1]
       })
     })
+  }
+}
+
+export function getSchedules (
+  subjects: Array<any>,
+  events: Array<any>,
+  options = {
+    credits: 100,
+    crossSubjects: 0,
+    crossEvent: false,
+    crossesPractices: false
+  }
+): { schedules: Array<any>; occurrences: Array<any> } {
+  const quantitySubjects = subjects.length
+  const maxQuantity = subjects.length
+  console.log(subjects)
+  console.log(quantitySubjects, maxQuantity)
+  const counter = Array(maxQuantity).fill(quantitySubjects === 1 ? subjects[0] : 0)
+  if (quantitySubjects === 1) {
+    console.log([counter])
+  }
+  const combos = []
+  const increment = (i: number) => {
+    if (i >= 0 && counter[i] === subjects[counter[i]].schedules.length - 1) {
+      counter[i] = 0
+      increment(i - 1)
+    } else {
+      counter[i]++
+    }
+  }
+  console.log([counter])
+  const combinations = subjects.reduce((previousValue, currentValue) => {
+    return previousValue * currentValue.schedules.length
+  }, 1)
+  for (let i = combinations; i--;) {
+    const combo = []
+    console.log(counter)
+    for (let j = 0; j < subjects.length; j++) {
+      console.log(j, subjects[j].schedules.length)
+      const course = subjects[j].course.id
+      const section = subjects[j].schedules[counter[j]].section.id
+      combo.push(course + section)
+    }
+    combos.push(combo)
+    increment(counter.length - 1)
+  }
+
+  console.log(combos.map(c => c.join(',')))
+  return {
+    schedules: [],
+    occurrences: []
   }
 }
 
@@ -151,14 +206,43 @@ function agregarAMisEventos (curso: Course, seccion: Section, color: string): Ar
   }
   return events
 }
+
 const weekDays = [
-  { index: 0, value: 'Domingo', startDate: '2020-11-15' },
-  { index: 1, value: 'Lunes', startDate: '2020-11-09' },
-  { index: 2, value: 'Martes', startDate: '2020-11-10' },
-  { index: 3, value: 'Miercoles', startDate: '2020-11-11' },
-  { index: 4, value: 'Jueves', startDate: '2020-11-12' },
-  { index: 5, value: 'Viernes', startDate: '2020-11-13' },
-  { index: 6, value: 'Sábado', startDate: '2020-11-14' }
+  {
+    index: 0,
+    value: 'Domingo',
+    startDate: '2020-11-15'
+  },
+  {
+    index: 1,
+    value: 'Lunes',
+    startDate: '2020-11-09'
+  },
+  {
+    index: 2,
+    value: 'Martes',
+    startDate: '2020-11-10'
+  },
+  {
+    index: 3,
+    value: 'Miercoles',
+    startDate: '2020-11-11'
+  },
+  {
+    index: 4,
+    value: 'Jueves',
+    startDate: '2020-11-12'
+  },
+  {
+    index: 5,
+    value: 'Viernes',
+    startDate: '2020-11-13'
+  },
+  {
+    index: 6,
+    value: 'Sábado',
+    startDate: '2020-11-14'
+  }
 ]
 export { weekDays }
 
