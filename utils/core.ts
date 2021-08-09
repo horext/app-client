@@ -1,9 +1,25 @@
-import options from '@nuxtjs/vuetify/dist/options'
 import { Course, Event, Section } from '~/types'
 
 const notIntersects =
   (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
     (eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start)
+
+const isIntersects =
+  (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
+    !((eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start))
+
+const quantityIntersections = (event: Event, events: Array<Event>, maxIntersections: number = -1) => {
+  let intersections = 0
+  for (let i = 0; i < events.length; i++) {
+    if (isIntersects(event, events[i])) {
+      intersections++
+    }
+    if (!!maxIntersections && intersections <= maxIntersections) {
+      break
+    }
+  }
+  return intersections
+}
 const convertToDate = (day: string | number, startTime: string) => {
   return obtenerDiaSemana(day).concat(startTime)
 }
@@ -140,53 +156,112 @@ export function generate
 
 export function getSchedules (
   subjects: Array<any>,
-  events: Array<any>,
+  myEvents: Array<any>,
   options = {
     credits: 100,
-    crossSubjects: 0,
+    crossingSubjects: 0,
     crossEvent: false,
-    crossesPractices: false
+    crossPractices: false
   }
-): { schedules: Array<any>; occurrences: Array<any> } {
+): { occurrences: any[]; schedules: any[]; combinations: any[] } {
   const quantitySubjects = subjects.length
   const maxQuantity = subjects.length
-  console.log(subjects)
-  console.log(quantitySubjects, maxQuantity)
-  const counter = Array(maxQuantity).fill(quantitySubjects === 1 ? subjects[0] : 0)
+  const totalCrossing = 0
+  const indexSchedules = Array(maxQuantity).fill(quantitySubjects === 1 ? subjects[0] : 0)
   if (quantitySubjects === 1) {
-    console.log([counter])
+    console.log([indexSchedules])
   }
-  const combos = []
+  const schedules: Array<any> = []
   const increment = (i: number) => {
-    if (i >= 0 && counter[i] === subjects[counter[i]].schedules.length - 1) {
-      counter[i] = 0
+    if (i >= 0 && (indexSchedules[i] === (subjects[i].schedules.length - 1))) {
+      indexSchedules[i] = 0
       increment(i - 1)
     } else {
-      counter[i]++
+      indexSchedules[i]++
     }
   }
-  console.log([counter])
   const combinations = subjects.reduce((previousValue, currentValue) => {
     return previousValue * currentValue.schedules.length
   }, 1)
+  const crossings = Array(combinations).fill(0)
   for (let i = combinations; i--;) {
-    const combo = []
-    console.log(counter)
-    for (let j = 0; j < subjects.length; j++) {
-      console.log(j, subjects[j].schedules.length)
-      const course = subjects[j].course.id
-      const section = subjects[j].schedules[counter[j]].section.id
-      combo.push(course + section)
+    const combination: Array<any> = []
+    for (let j = 0; j < indexSchedules.length; j++) {
+      const subject = subjects[j]
+      const schedule = subjects[j].schedules[indexSchedules[j]]
+      combination.push({
+        ...schedule,
+        subject
+      })
     }
-    combos.push(combo)
-    increment(counter.length - 1)
+    const currentSchedule = combination.map((c, index) => ({
+      ...c,
+      events: scheduleToEvent(c, colors[index])
+    }))
+    // calculating crossing
+    let crossingCombination = 0
+    for (let j = 0; j < combination.length; j++) {
+      const schedule = currentSchedule.splice(0, 1)
+      const events = schedule[0].events
+      for (const event of events) {
+        const otherEvents = currentSchedule.map((c: any) => c.events).flat()
+        otherEvents.push(...myEvents)
+        console.log(otherEvents)
+        let intersections = 0
+        for (let k = 0; k < otherEvents.length; k++) {
+          if (isIntersects(event, otherEvents[k])) {
+            if ((otherEvents[k].type?.includes('P', 0) && event.type?.includes('P', 0))) {
+              if (crossingCombination + intersections <= options.crossingSubjects) {
+                intersections++
+              } else {
+                break
+              }
+            } else {
+              intersections++
+            }
+          }
+        }
+
+        crossingCombination = crossingCombination + intersections
+      }
+    }
+    if ((totalCrossing + crossingCombination) <= options.crossingSubjects) {
+      crossings[i] = crossingCombination
+      schedules.push({
+        schedule: combination,
+        crossings: crossingCombination,
+        events: combination.map((c, index) => scheduleToEvent(c, colors[index])).flat().concat(myEvents)
+      })
+      increment(indexSchedules.length - 1)
+    }
   }
 
-  console.log(combos.map(c => c.join(',')))
   return {
     schedules: [],
+    combinations: schedules,
     occurrences: []
   }
+}
+
+function scheduleToEvent (schedule: any, color: string = 'primary'): Array<any> {
+  const events: Array<any> = []
+  const sessions = schedule?.sessions || []
+  for (let i = 0; i < sessions.length; i++) {
+    const course = schedule.subject.course
+    const section = schedule.section.id
+    const event = {
+      title: course.id + ' ' + section + ' ' + course.name,
+      start: convertToDate(sessions[i].day, sessions[i].startTime),
+      end: convertToDate(sessions[i].day, sessions[i].endTime),
+      type: sessions[i].type.code,
+      name: course.name,
+      color,
+      code: course.id + section,
+      category: 'COURSE'
+    }
+    events.push(event)
+  }
+  return events
 }
 
 function agregarAMisEventos (curso: Course, seccion: Section, color: string): Array<any> {
