@@ -35,6 +35,7 @@ export interface User {
 }
 
 export interface Course {
+  schedules: Array<any>;
   isFavorite: boolean
   codCurso: string;
   id: number

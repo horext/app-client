@@ -4,7 +4,7 @@
       id="calendar"
       v-model="focus"
       :start="start"
-      :events="schedule.eventos"
+      :events="schedule.events"
       first-interval="7"
       interval-count="16"
       :event-color="getEventColor"
@@ -15,14 +15,14 @@
       :weekdays="[1,2,3,4,5,6]"
       @click:event="showEvent"
     >
-      <template v-slot:day-label-header>
+      <template #day-label-header>
         <div />
       </template>
       <template
-        v-slot:event="{event, attrs,on}"
+        #event="{event, attrs,on}"
       >
         <v-hover>
-          <template v-slot:default="{ hover }">
+          <template #default="{ hover }">
             <schedule-event-info
               :key="event.id"
               v-bind="attrs"
@@ -79,11 +79,11 @@ export default class ScheduleViewer extends Vue {
     if (this.schedule.startDate && this.schedule.startDate !== 'Lunes') {
       return this.schedule.startDate
     }
-    if (this.schedule.eventos.length > 0) {
-      if (this.schedule.eventos[0].start.substr(0, 7) === '2020-03') {
+    if (this.schedule.events.length > 0) {
+      if (this.schedule.events[0].start.substr(0, 7) === '2020-03') {
         return '2020-03-16'
       }
-      if (this.schedule.eventos[0].start.substr(0, 7) === '2020-11') {
+      if (this.schedule.events[0].start.substr(0, 7) === '2020-11') {
         return '2020-11-09'
       }
     }

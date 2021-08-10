@@ -73,7 +73,7 @@ export default {
   name: 'ScheduleShare',
   props: {
     schedule: { type: Object },
-    path: { type: String, default: '/schedule' },
+    path: { type: String, default: '/subject' },
     dialog: { type: Boolean },
     postId: { type: Number, default: 1 }
   },
@@ -86,7 +86,7 @@ export default {
       return location.origin + this.path + '?q=' + this.query
     },
     query () {
-      return btoa(this.schedule.scheduleId)
+      return btoa(this.schedule.scheduleSubjectIds.join(','))
     }
   },
   watch: {

@@ -7,60 +7,74 @@
             v-model="editedItem"
             shaped
             filled
+            :search-input.sync="search"
             :items="availableCourses"
-            item-text="name"
             append-icon="mdi-magnify"
             label="Busca cursos para agregar"
             return-object
+            no-filter
+            :cache-items="false"
             hide-details
             @input="editItem"
-          />
+          >
+            <template #selection="{item}">
+              {{ item.course.id }} -  {{ item.course.name }}
+            </template>
+            <template #item="{item}">
+              {{ item.course.id }} -  {{ item.course.name }}
+            </template>
+          </v-autocomplete>
         </v-col>
         <v-col col="12">
           <v-toolbar-title>Mis cursos seleccionados</v-toolbar-title>
         </v-col>
       </v-row>
-      <course-schedules
-        v-if="dialog"
-        :course.sync="editedItem"
-        :open.sync="dialog"
-        :hourly-load="myHourlyLoad"
-        @update:course="save"
-      />
-    </v-card-text>
-    <v-data-table
-      :headers="headers"
-      :items="myCourses"
-      sort-by="calories"
-      class="elevation-1"
+      <v-dialog
+        v-model="dialog"
+        dense
+        max-width="800"
+      >
+        <SubjectScheduleList
+          :subject="editedItem"
+          :hourly-load="myHourlyLoad"
+          @save="save"
+        />
+      </v-dialog>
 
-    >
-      <template v-slot:item.sections="{ item }">
-        <v-chip
-          v-for="schedule in item.sections"
-          :key="schedule.id"
-          dark
-          :color="getColor(schedule.section.id)"
-        >
-          {{ schedule.section.id }}
-        </v-chip>
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <v-icon
-          class="mr-2"
-          color="primary"
-          @click="editItem(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          color="red"
-          @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
+      <v-data-table
+        :headers="headers"
+        :items="myCourses"
+        sort-by="calories"
+        class="elevation-1"
+
+      >
+        <template #[`item.sections`]="{ item }">
+          <v-chip
+            v-for="schedule in item.schedules"
+            :key="schedule.id"
+            dark
+            :color="getColor(schedule.section.id)"
+          >
+            {{ schedule.section.id }}
+          </v-chip>
+        </template>
+        <template  #[`item.actions`]="{ item }">
+          <v-icon
+            class="mr-2"
+            color="primary"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            color="red"
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-card-text>
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
@@ -84,47 +98,39 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 
 @Component({
-  layout: 'app'
+  layout: 'app',
+  components: {
+    SubjectScheduleList
+  }
 })
 export default class myCourses extends Vue {
-  @Watch('myHourlyLoad', { immediate: true })
-  async onChangeHourlyLoad (hourlyLoad: any) {
-    if (this.$storage.getUniversal('mySpeciality') && hourlyLoad) {
-      const response = await this.$api.get(
-        '/subjects', {
-          params: {
-            speciality: this.$storage.getUniversal('mySpeciality').id,
-            hourlyLoad: hourlyLoad.id
-          }
-        }
-      )
-      this.courses = response.data
-    }
-  }
-
   get availableCourses () {
-    return this.courses.filter((c1: any) =>
-      this.myCourses
-        .findIndex((c2: any) => c1.id === c2.id))
+    return this.courses?.filter((c1: any) =>
+      this.myCourses?.findIndex((c2: any) => c1.id === c2.id))
   }
 
   getColor (section: any) {
     const months = ['blue', 'purple', 'orange', 'indigo', 'teal']
-    return months[section.charCodeAt() % months.length]
+    return months[section.charCodeAt(0) % months.length]
   }
 
   courses: Array<any> = []
   dialog = false
+  loading = false
   dialogDelete = false
 
   defaultItem: any = null
-  editedItem: any = null
+  editedItem: any = {  }
   editedIndex: number = -1
 
   editItem (item: any) {
-    this.editedIndex = this.myCourses.findIndex((c: any) => c.id === item.id)
+    if (!item) {
+      return
+    }
+    this.editedIndex = this.myCourses.findIndex((c: any) => c.id === item?.id)
     this.editedItem = Object.assign({}, item)
     this.dialog = true
   }
@@ -156,13 +162,16 @@ export default class myCourses extends Vue {
     })
   }
 
-  save () {
-    if (this.editedIndex > -1 && this.editedItem.sections && this.editedItem.sections.length > 0) {
+  save (schedules: string | any[]) {
+    if (this.editedIndex > -1 && schedules && schedules.length > 0) {
       this.$store.commit('modules/MyData/updateMyCourseByIndex',
-        { course: this.editedItem, index: this.editedIndex })
+        {
+          course: { ...this.editedItem, schedules },
+          index: this.editedIndex
+        })
       this.close()
-    } else if (this.editedItem.sections && this.editedItem.sections.length > 0) {
-      this.saveMyCourse(this.editedItem)
+    } else if (schedules && schedules.length > 0) {
+      this.saveMyCourse({ ...this.editedItem, schedules })
       this.close()
     } else if (this.editedItem > -1) {
       this.deleteItem(this.editedItem)
@@ -181,16 +190,40 @@ export default class myCourses extends Vue {
 
   search: string = ''
 
+  @Watch('search', { immediate: true })
+  async onChangeSearch (search: string) {
+    try {
+      const response = await this.$api.course.findBySearch(
+        search || '',
+        this.$storage.getUniversal('mySpeciality')?.id,
+        this.$storage.getUniversal('myHourlyLoad')?.id
+      )
+      this.courses = response.data.content
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   headers = [
-    { text: 'Código', value: 'code' },
+    {
+      text: 'Código',
+      value: 'course.id'
+    },
     {
       text: 'Nombre de curso',
       align: 'start',
       sortable: false,
-      value: 'name'
+      value: 'course.name'
     },
-    { text: 'Secciones', value: 'sections' },
-    { text: 'Acciones', value: 'actions', sortable: false }
+    {
+      text: 'Secciones',
+      value: 'sections'
+    },
+    {
+      text: 'Acciones',
+      value: 'actions',
+      sortable: false
+    }
   ]
 
   get formTitle () {

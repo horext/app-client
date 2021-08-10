@@ -17,11 +17,11 @@
       </v-icon>
     </template>
     <v-window-item v-if="schedule">
-        <schedule-viewer :schedule="schedule" :week-days="weekDays" />
-        <v-divider />
-        <v-footer>
-          <v-pagination v-model="page" :length="schedules.length" />
-        </v-footer>
+      <schedule-viewer :schedule="schedule" :week-days="weekDays" />
+      <v-divider />
+      <v-footer>
+        <v-pagination v-model="page" :length="schedules.length" />
+      </v-footer>
     </v-window-item>
   </v-window>
 </template>

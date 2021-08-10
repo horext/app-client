@@ -93,7 +93,7 @@ export default class SelectFacultyForm extends Vue {
     const validate = this.form().validate()
     this.showErrorMessage = false
     try {
-      const hourlyLoad = await this.$api.$get('/hourlyLoads?speciality=' + this.faculty.id)
+      const hourlyLoad = await this.$apiv1.$get('/hourlyLoads?speciality=' + this.faculty.id)
       this.$store.commit('modules/UserModule/setMyHourlyLoad', hourlyLoad)
       if (validate) {
         this.setFaculty(this.faculty)

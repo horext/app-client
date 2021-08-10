@@ -40,16 +40,6 @@
             <v-icon>mdi-chevron-double-right</v-icon>
             Generar mis horarios
           </v-btn>
-
-          <v-btn
-            class="align-self-end"
-            outlined
-            dark
-            to="/beta/myCourses"
-          >
-            <v-icon>mdi-chevron-double-right</v-icon>
-            Generador Beta
-          </v-btn>
         </v-row>
       </v-container>
     </v-img>

@@ -50,7 +50,7 @@ export default class InitialSettings extends Vue {
   async initSpecialities (faculty:any) {
     if (faculty) {
       this.speciality = null
-      this.specialities = await this.$api.$get('/specialities', {
+      this.specialities = await this.$apiv1.$get('/specialities', {
         params: {
           faculty: faculty.id
         }
@@ -64,9 +64,9 @@ export default class InitialSettings extends Vue {
     if (speciality) {
       this.hourlyLoad = null
       try {
-        this.hourlyLoad = await this.$api.$get('/hourlyLoads', {
+        this.hourlyLoad = await this.$apiv1.$get('/hourlyLoads/latest', {
           params: {
-            speciality: this.faculty.id
+            faculty: this.faculty.id
           }
         })
       } catch (e) {
@@ -82,7 +82,7 @@ export default class InitialSettings extends Vue {
   hourlyLoad:any = null
 
   async init () {
-    this.faculties = await this.$api.$get('/faculties')
+    this.faculties = await this.$apiv1.$get('/faculties')
     this.faculty = this.$storage.getUniversal('myFaculty')
     this.hourlyLoad = this.$storage.getUniversal('myHourlyLoad')
     this.speciality = this.$storage.getUniversal('mySpeciality')
