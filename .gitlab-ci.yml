@@ -23,6 +23,10 @@ publish:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
+  only:
+    - main
+    - develop
+    - next
   tags:
     - docker
 
