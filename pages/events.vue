@@ -3,7 +3,7 @@
     :headers="headers"
     :items="myEvents"
   >
-    <template v-slot:top>
+    <template #top>
       <v-toolbar
         flat
       >
@@ -19,7 +19,7 @@
           max-width="500px"
           @click:outside="close"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn
               color="primary"
               dark
@@ -127,7 +127,7 @@ export default class myEvents extends Vue {
     title: null,
     day: null,
     color: 'primary',
-    typeSchedule: 'myEvent',
+    type: 'myEvent',
     startTime: null,
     endTime: null
   }
@@ -137,7 +137,7 @@ export default class myEvents extends Vue {
     title: null,
     day: null,
     color: 'primary',
-    typeSchedule: 'myEvent',
+    type: 'myEvent',
     startTime: null,
     endTime: null
   }
@@ -194,7 +194,7 @@ export default class myEvents extends Vue {
             name: this.editedItem.title,
             start: convertToDate(this.editedItem.day, this.editedItem.startTime),
             end: convertToDate(this.editedItem.day, this.editedItem.endTime),
-            typeSchedule: 'myEvent'
+            type: 'myEvent'
           },
           index: this.editedIndex
         })
@@ -208,7 +208,7 @@ export default class myEvents extends Vue {
           name: this.editedItem.title,
           start: convertToDate(this.editedItem.day, this.editedItem.startTime),
           end: convertToDate(this.editedItem.day, this.editedItem.endTime),
-          typeSchedule: 'myEvent'
+          type: 'myEvent'
         }
       )
     }

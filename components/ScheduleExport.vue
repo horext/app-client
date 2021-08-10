@@ -56,7 +56,7 @@
             Google Calendar
           </v-btn>
         </template>
-        <GoogleAuth :events="schedule.eventos" />
+        <GoogleAuth :events="schedule.events" />
       </v-dialog>
     </v-card-text>
   </v-card>

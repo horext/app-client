@@ -40,7 +40,7 @@
       </slot>
     </v-toolbar>
 
-    <div class="row col align-self-center align-items-center justify-center align-content-center">
+    <div class="row col align-self-center align-items-center justify-center align-content-center ma-1">
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length>0">
@@ -123,7 +123,7 @@ export default class SchedulesPresentation extends Vue {
   @Prop({ type: Array, default: [] })
   schedules!: [];
 
-  @Prop({ type: String, default: '/schedule' })
+  @Prop({ type: String, default: '/subject' })
   path!:string
 
   @Prop({ type: String, default: '' })
