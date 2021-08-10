@@ -23,7 +23,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios-accesor',
-    '~/plugins/api',
+    '~/plugins/api.v1.ts',
+    '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
     { src: '~/plugins/vuex-persist.js', ssr: false },
     { src: '~/plugins/html2canvas.client.js', mode: 'client' }
@@ -60,7 +61,9 @@ export default {
       pathRewrite: { '^/api/': '/' }
     }
   },
-
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL
+  },
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {

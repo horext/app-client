@@ -54,7 +54,7 @@ export default class EventsCreator extends Vue {
         title: '',
         day: null,
         color: 'primary',
-        typeSchedule: 'myEvent',
+        type: 'myEvent',
         startTime: '12:00',
         endTime: '14:00'
       })

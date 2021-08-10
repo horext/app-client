@@ -5,7 +5,7 @@
     empty-message="Usted no tiene horarios generados"
     :schedules="schedules"
     :dialog.sync="openMySchedules"
-    path="/beta/schedules"
+    path="/skd"
   >
     <template #top-items-right>
       <v-toolbar-title>
@@ -20,6 +20,18 @@
       <schedule-favorite-add :favorites-schedules.sync="myFavoriteSchedules" :schedule="item" />
     </template>
     <template #subtitle-items>
+      <v-text-field
+        v-model="crossingSubjects"
+        label="Cantidad de cruces"
+        hide-details
+        outlined
+        dense
+        max="5"
+        min="0"
+        class="shrink"
+        type="number"
+      />
+
       <v-btn
         color="success"
         dark
@@ -53,7 +65,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { generate } from '~/utils/core'
+import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 @Component({
   components: {
@@ -70,6 +82,7 @@ export default class Generator extends Vue {
   occurrences: Array<any> = []
   openMySchedules = false
 
+  crossingSubjects = 0;
   dialogShare = false;
   dialogExport = false;
 
@@ -98,9 +111,11 @@ export default class Generator extends Vue {
   }
 
   generateAllUserSchedules () {
-    const { schedules, ocurrences } = generate(this.myCourses, this.myEvents, 0, false)
-    this.schedules = schedules
-    this.occurrences = ocurrences
+    const { occurrences, combinations } = getSchedules(this.myCourses, this.myEvents, {
+      crossingSubjects: this.crossingSubjects
+    })
+    this.schedules = combinations
+    this.occurrences = occurrences
   }
 }
 </script>

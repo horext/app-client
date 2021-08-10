@@ -13,7 +13,7 @@
       <span class="font-weight-black">
         {{ event.code }}
         {{ event.section }}
-        ({{ event.typeSchedule }})
+        ({{ event.type }})
       </span>
       <br>
       {{ event.name }}
@@ -24,7 +24,7 @@
         v-if="hover"
         z-index="0"
         absolute
-        color="secondary"
+        :color="event.color"
       >
         <v-icon>mdi-information</v-icon>
       </v-overlay>
