@@ -1,9 +1,8 @@
 version: '3.8'
 
 services:
-  api-server:
+  ssr-client:
     image:  ${IMAGE_NAME}
-    container_name: ${CONTAINER_NAME}
     environment:
       HOST: ${NUXT_ENV_HOST}
       PORT: ${NUXT_ENV_PORT}
@@ -15,7 +14,6 @@ services:
     ports:
       - ${NUXT_ENV_PORT}
     networks:
-      - horext-api-network
       - letsencrypt
 networks:
   letsencrypt:
