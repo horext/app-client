@@ -9,10 +9,9 @@
     transition="slide-y-reverse-transition"
     direction="top"
   >
-    <template v-slot:default>
-      <slot />
+    <template v-slot:defa#defaultot />
     </template>
-    <template v-slot:activator>
+    <template #activator>
       <v-btn
         v-model="fab"
         color="blue darken-2"

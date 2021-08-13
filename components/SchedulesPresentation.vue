@@ -45,7 +45,7 @@
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length>0">
           <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 color="purple"
                 dark

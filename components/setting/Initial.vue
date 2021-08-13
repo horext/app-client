@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
 @Component
-export default class InitialSettings extends Vue {
+export default class SettingInitial extends Vue {
   faculties: Array<any> = []
   specialities: Array<any> = []
   errorMessage = ''

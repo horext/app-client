@@ -87,7 +87,7 @@
 <script lang="ts">
 import { Vue } from 'nuxt-property-decorator'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
-import InitialSettings from '~/components/InitialSettings.vue'
+import InitialSettings from '~/components/setting/Initial.vue'
 
 export default Vue.extend({
   components: {
@@ -128,7 +128,7 @@ export default Vue.extend({
       {
         title: 'Avanzado',
         icon: 'mdi-cog',
-        to: '/advance'
+        to: '/settings'
       }
     ],
     denseItems: [

@@ -1,7 +1,7 @@
 <template>
   <v-container >
     <v-card>
-      <initial-settings></initial-settings>
+      <SettingInitial/>
     </v-card>
   </v-container>
 </template>

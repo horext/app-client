@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isGoogleApiLoaded">
     <GoogleSignIn v-if="!signinStatus" @click="handleAuthClick()">
       Sincronizar con Google
     </GoogleSignIn>
@@ -101,7 +101,7 @@
               </v-progress-linear>
             </template>
           </v-btn>
-          <v-btn text color="success" @click="handleSignoutClick()">
+          <v-btn text color="success" @click="handleSignOutClick()">
             Cerrar Sesión
           </v-btn>
         </v-card-actions>
@@ -133,6 +133,7 @@ export default Vue.extend({
       'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
     dialogCalendarSync: false,
     signinStatus: false,
+    isGoogleApiLoaded: false,
     dialog: false,
     dayNames: [
       'Do',
@@ -171,15 +172,28 @@ export default Vue.extend({
     selectedError: false
   }
   ),
+  head () {
+    return {
+      script: [
+        {
+          src: 'https://apis.google.com/js/api.js',
+          crossorigin: true,
+          // Changed after script load
+          callback: () => {
+            this.isGoogleApiLoaded = true
+            this.handleClientLoad()
+          }
+        }
+
+      ]
+    }
+  },
   watch: {
-    signinStatus (value) {
+    signInStatus (value) {
       if (value) {
         this.getCalendarList()
       }
     }
-  },
-  created () {
-    this.handleClientLoad()
   },
   methods: {
     handleClientLoad () {
@@ -215,7 +229,7 @@ export default Vue.extend({
     /**
      *  Sign out the user upon button click.
      */
-    handleSignoutClick () {
+    handleSignOutClick () {
       window.gapi.auth2.getAuthInstance().signOut()
     },
     async onSubmit () {

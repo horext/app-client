@@ -71,12 +71,7 @@ import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
   components: {
     SchedulesPresentation
   },
-  layout: 'app',
-  head: {
-    script: [
-      { src: 'https://apis.google.com/js/api.js', crossorigin: true }
-    ]
-  }
+  layout: 'app'
 })
 export default class Generator extends Vue {
   occurrences: Array<any> = []
