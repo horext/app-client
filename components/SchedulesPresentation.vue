@@ -66,6 +66,7 @@
             <v-icon>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
+          <GoogleAuth v-if="currentSchedule" :events="currentSchedule.events" />
           <v-dialog
             v-model="dialogExport"
             max-width="600"

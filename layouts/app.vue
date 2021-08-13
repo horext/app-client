@@ -121,9 +121,14 @@ export default Vue.extend({
         to: '/courses'
       },
       {
-        title: 'Mis events',
+        title: 'Mis eventos',
         icon: 'mdi-calendar-plus',
         to: '/events'
+      },
+      {
+        title: 'Avanzado',
+        icon: 'mdi-cog',
+        to: '/advance'
       }
     ],
     denseItems: [
@@ -143,7 +148,7 @@ export default Vue.extend({
         to: '/courses'
       },
       {
-        title: 'Mis events',
+        title: 'Mis eventos',
         icon: 'mdi-calendar-plus',
         to: '/events'
       }

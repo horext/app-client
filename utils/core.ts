@@ -84,6 +84,7 @@ export function getSchedules (
         crossingCombination = crossingCombination + intersections
       }
     }
+    console.log(combination)
     if ((crossingCombination) <= options.crossingSubjects) {
       crossings[i] = crossingCombination
       schedules.push({
