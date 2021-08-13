@@ -44,17 +44,24 @@
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length>0">
-          <v-btn
-            color="purple"
-            dark
-            rounded
-            shaped
-            class="ma-1"
-            @click="dialogExport=!dialogExport"
-          >
-            <v-icon>mdi-export</v-icon>
-            Exportar
-          </v-btn>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="purple"
+                dark
+                rounded
+                shaped
+                class="ma-1"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>mdi-export</v-icon>
+                Exportar
+              </v-btn>
+            </template>
+            <ScheduleExport :dialog.sync="dialogExport" :schedule="currentSchedule" />
+          </v-menu>
+
           <v-btn
             color="indigo"
             dark
@@ -66,6 +73,7 @@
             <v-icon>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
+          <GoogleAuth v-if="currentSchedule" :events="currentSchedule.events" />
           <v-dialog
             v-model="dialogExport"
             max-width="600"

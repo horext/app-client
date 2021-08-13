@@ -1,7 +1,7 @@
 <template>
   <schedules-presentation
     color="blue"
-    title="Horarios Generados"
+    title="Generados"
     empty-message="Usted no tiene horarios generados"
     :schedules="schedules"
     :dialog.sync="openMySchedules"
@@ -9,7 +9,7 @@
   >
     <template #top-items-right>
       <v-toolbar-title>
-        Horarios generados
+        Generados
       </v-toolbar-title>
 
       <v-btn plain class="ml-2" outlined fab small>
