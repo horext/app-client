@@ -1,103 +1,113 @@
 <template>
-  <v-card>
-    <v-overlay v-model="loading" absolute>
-      <v-progress-circular indeterminate size="64" />
-    </v-overlay>
-    <v-dialog
-      v-model="dialog"
-      max-width="290"
+  <div>
+    <GoogleSignIn v-if="!signinStatus" @click="handleAuthClick()">
+      Sincronizar con Google
+    </GoogleSignIn>
+    <v-btn
+      v-else
+      rounded
+      class="ma-1"
+      shaped
+      @click="dialogCalendarSync=true"
     >
-      <CreateGoogleCalendar
-        :dialog.sync="dialog"
-        :item.sync="calendarItem"
-      />
-    </v-dialog>
-    <v-card-title>Google Calendar</v-card-title>
-    <v-card-text>
-      <v-btn v-if="!signinStatus" :key="'signinButton'" color="success" @click="handleAuthClick()">
-        Iniciar Sesión en Google
-      </v-btn>
-      <template v-else>
-        <v-autocomplete
-          v-model="selected"
-          label="Selecciona tu calendario"
-          :items="calendarList"
-          return-object
-          :search-input.sync="search"
-          item-text="summary"
+      Agregar a mi Calendario
+    </v-btn>
+    <v-dialog v-if="signinStatus" v-model="dialogCalendarSync">
+      <v-card>
+        <v-card-title>Google Calendar</v-card-title>
+        <v-dialog
+          v-model="dialog"
+          max-width="290"
         >
-          <template #prepend-item="">
-            <v-list-item selectable color="primary" @click="addCalendar()">
-              <v-list-item-content class=" text--primary">
-                <v-list-item-title class=" text primary--text">
-                  Crear mi calendario...
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+          <CreateGoogleCalendar
+            :dialog.sync="dialog"
+            :item.sync="calendarItem"
+          />
+        </v-dialog>
+        <v-card-text>
+          <template v-if="signinStatus">
+            <v-autocomplete
+              v-model="selected"
+              label="Selecciona tu calendario"
+              :items="calendarList"
+              return-object
+              :search-input.sync="search"
+              item-text="summary"
+            >
+              <template #prepend-item="">
+                <v-list-item selectable color="primary" @click="addCalendar()">
+                  <v-list-item-content class=" text--primary">
+                    <v-list-item-title class=" text primary--text">
+                      Crear mi calendario...
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
+            <v-text-field v-model="dateEnd" type="date" label="Fecha de Finalizacion" />
+            <v-form>
+              <span class="heading">
+                Notificaciones
+              </span>
+              <v-text-field
+                v-for="(notification,index) in notifications"
+                :id="'not-'+index"
+                :key="index"
+                v-model="notifications[index].minutes"
+                type="number"
+                :rules="[ (a)=>(a>0||'No permitido') ]"
+                outlined
+                dense
+                :value="notification.minutes"
+                prepend-icon="mdi-bell"
+                :items="Array.from({length: 60}, (x,i) => i)"
+                suffix="minutos"
+              >
+                <template #append-outer>
+                  <v-icon :key="index+'del'" color="error" @click="deleteNotification(notification)">
+                    mdi-delete
+                  </v-icon>
+                </template>
+              </v-text-field>
+              <v-text-field
+                key="selected"
+                v-model="defaultNotification.minutes"
+                :rules="[ (a)=>(a>0||'No permitido') ]"
+                :value="defaultNotification.minutes"
+                prepend-icon="mdi-bell"
+                type="number"
+                :items="Array.from({length: 60}, (x,i) => i)"
+                suffix="minutos"
+                outlined
+                dense
+              >
+                <template #append-outer>
+                  <v-icon color="success" @click="addNotification()">
+                    mdi-plus
+                  </v-icon>
+                </template>
+              </v-text-field>
+            </v-form>
           </template>
-        </v-autocomplete>
-        <v-text-field v-model="dateEnd" type="date" label="Fecha de Finalizacion" />
-        <v-form>
-          <span class="heading">
-            Notificaciones
-          </span>
-          <v-text-field
-            v-for="(notification,index) in notifications"
-            :id="'not-'+index"
-            :key="index"
-            v-model="notifications[index].minutes"
-            type="number"
-            :rules="[ (a)=>(a>0||'No permitido') ]"
-            outlined
-            dense
-            :value="notification.minutes"
-            prepend-icon="mdi-bell"
-            :items="Array.from({length: 60}, (x,i) => i)"
-            suffix="minutos"
-          >
-            <template v-slot:append-outer>
-              <v-icon :key="index+'del'" color="error" @click="deleteNotification(notification)">
-                mdi-delete
-              </v-icon>
+        </v-card-text>
+        <v-card-actions v-if="signinStatus">
+          <v-btn :loading="progress>0" text @click="exportEventToGCalendar">
+            Exportar
+            <template #loader>
+              <v-progress-linear color="secondary" striped :value="progress/events.length*100" :height="30">
+                <template #default="{ value }">
+                  <strong class="white--text">{{ Math.ceil(value) }}%</strong>
+                </template>
+              </v-progress-linear>
             </template>
-          </v-text-field>
-          <v-text-field
-            key="selected"
-            v-model="defaultNotification.minutes"
-            :rules="[ (a)=>(a>0||'No permitido') ]"
-            :value="defaultNotification.minutes"
-            prepend-icon="mdi-bell"
-            type="number"
-            :items="Array.from({length: 60}, (x,i) => i)"
-            suffix="minutos"
-            outlined
-            dense
-          >
-            <template v-slot:append-outer>
-              <v-icon color="success" @click="addNotification()">
-                mdi-plus
-              </v-icon>
-            </template>
-          </v-text-field>
-        </v-form>
-      </template>
-    </v-card-text>
-    <v-card-actions v-if="signinStatus">
-      <v-btn :loading="progress>0" text @click="exportEventToGCalendar">
-        Exportar
-        <template v-slot:loader>
-          <v-progress-linear color="secondary" striped :value="progress/events.length*100" :height="30">
-            <template v-slot="{ value }">
-              <strong class="white--text">{{ Math.ceil(value) }}%</strong>
-            </template>
-          </v-progress-linear>
-        </template>
-      </v-btn>
-      <v-btn text color="success" @click="handleSignoutClick()">
-        Cerrar Sesión
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+          </v-btn>
+          <v-btn text color="success" @click="handleSignoutClick()">
+            Cerrar Sesión
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -121,6 +131,7 @@ export default Vue.extend({
     calendarItem: { name: '' },
     monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
       'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    dialogCalendarSync: false,
     signinStatus: false,
     dialog: false,
     dayNames: [
