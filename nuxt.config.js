@@ -23,7 +23,6 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios-accesor',
-    '~/plugins/api.v1.ts',
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
     { src: '~/plugins/vuex-persist.js', ssr: false },
@@ -62,7 +61,13 @@ export default {
     }
   },
   publicRuntimeConfig: {
-    baseURL: process.env.BASE_URL
+    baseURL: process.env.BASE_URL,
+    googleApi: {
+      clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
+      apiKey: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
+      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(','),
+      scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
+    }
   },
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
