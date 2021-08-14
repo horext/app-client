@@ -130,6 +130,11 @@ export default class GoogleAuth extends Vue {
   })
     events!: Array<any>
 
+  API_KEY = API_KEY
+  CLIENT_ID = CLIENT_ID
+  DISCOVERY_DOCS = DISCOVERY_DOCS
+  SCOPES = SCOPES
+
   head () {
     return {
       script: [
