@@ -19,6 +19,7 @@ export function getSchedules (
     crossPractices: false
   }
 ): { occurrences: any[]; schedules: any[]; combinations: any[] } {
+  const occurrences = []
   const quantitySubjects = subjects.length
   const maxQuantity = subjects.length
   const indexSchedules = Array(maxQuantity).fill(quantitySubjects === 1 ? subjects[0] : 0)
@@ -61,12 +62,17 @@ export function getSchedules (
         const otherEvents = currentSchedule.map((c: any) => c.events).flat()
         otherEvents.push(...myEvents)
         let intersections = 0
-        for (let k = 0; k < otherEvents.length; k++) {
-          if (isIntersects(event, otherEvents[k])) {
-            if ((otherEvents[k].type?.includes('P', 0) && event.type?.includes('P', 0))) {
+        for (const item of otherEvents) {
+          if (isIntersects(event, item)) {
+            if ((item.type?.includes('P', 0) && event.type?.includes('P', 0))) {
               if (crossingCombination + intersections <= options.crossingSubjects) {
                 intersections++
               } else {
+                occurrences.push({
+                  type: 'Cruce de ' + event.title + ' - ' + item.title,
+                  elementA: event,
+                  elementB: item
+                })
                 break
               }
             } else {
@@ -78,7 +84,6 @@ export function getSchedules (
         crossingCombination = crossingCombination + intersections
       }
     }
-    console.log(combination)
     if ((crossingCombination) <= options.crossingSubjects) {
       crossings[i] = crossingCombination
       schedules.push({
@@ -95,7 +100,7 @@ export function getSchedules (
   return {
     schedules: [],
     combinations: schedules,
-    occurrences: []
+    occurrences
   }
 }
 

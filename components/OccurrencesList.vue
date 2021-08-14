@@ -8,12 +8,12 @@
   >
     <template #item.elementA.day="{item}">
       <div>
-        {{ weekDays[item.elementA.day].value }}
+        {{ item.elementA.start }} - {{ item.elementA.end }}
       </div>
     </template>
     <template #item.elementB.day="{item}">
       <div>
-        {{ weekDays[item.elementB.day].value }}
+        {{ item.elementB.start }} - {{ item.elementB.end }}
       </div>
     </template>
   </v-data-table>
