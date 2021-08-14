@@ -114,7 +114,6 @@
 
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
 import { colors } from '~/utils/core'
-import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from '~/utils/gCalendar'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 
@@ -129,11 +128,6 @@ export default class GoogleAuth extends Vue {
     type: Array
   })
     events!: Array<any>
-
-  API_KEY = API_KEY
-  CLIENT_ID = CLIENT_ID
-  DISCOVERY_DOCS = DISCOVERY_DOCS
-  SCOPES = SCOPES
 
   head () {
     return {
@@ -210,10 +204,10 @@ export default class GoogleAuth extends Vue {
     try {
       this.loading = true
       await window.gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
+        apiKey: this.$config.googleApi.apiKey,
+        clientId: this.$config.googleApi.clientId,
+        discoveryDocs: this.$config.googleApi.discoveryDocs,
+        scope: this.$config.googleApi.scopes
       })
       // Listen for sign-in state changes.
       window.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus)
