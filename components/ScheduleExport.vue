@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-card-text>
+  <v-list>
+    <v-list-item>
       <v-btn
         :loading="loadingPdf"
         color="success"
@@ -14,7 +14,8 @@
         Descargar (.pdf )
         <v-icon>mdi-file-pdf</v-icon>
       </v-btn>
-
+    </v-list-item>
+    <v-list-item>
       <v-btn
         :loading="loadingImage"
         color="success"
@@ -28,8 +29,8 @@
         Descargar (.png )
         <v-icon>mdi-file-image</v-icon>
       </v-btn>
-    </v-card-text>
-  </v-card>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script lang="ts">

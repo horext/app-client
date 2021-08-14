@@ -1,19 +1,13 @@
-import { Course, Event, Section } from '~/types'
-
-const notIntersects =
-  (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
-    (eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start)
+import { Event } from '~/types'
 
 const isIntersects =
   (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
     !((eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start))
 
-
 const convertToDate = (day: string | number, startTime: string) => {
   return obtenerDiaSemana(day).concat(startTime)
 }
 export { convertToDate }
-
 
 export function getSchedules (
   subjects: Array<any>,
@@ -121,24 +115,6 @@ function scheduleToEvent (schedule: any, color: string = 'primary'): Array<any> 
       code: course.id + section,
       category: 'COURSE'
     }
-    events.push(event)
-  }
-  return events
-}
-
-function agregarAMisEventos (curso: Course, seccion: Section, color: string): Array<any> {
-  const events: Array<any> = []
-  for (let i = 0; i < seccion.classSessions.length; i++) {
-    const event = seccion.classSessions[i]
-    event.code = curso.code + seccion.section.id
-    event.scheduleId = seccion.scheduleSubjectId || seccion.id
-    event.title = curso.code + ' ' + seccion.section.id + ' ' + curso.name + ''
-    event.start = obtenerDiaSemana(seccion.classSessions[i].day).concat(seccion.classSessions[i].startTime)
-    event.end = obtenerDiaSemana(seccion.classSessions[i].day).concat(seccion.classSessions[i].endTime)
-    event.name = curso.name
-    event.color = color
-    event.courseCode = curso.code
-    event.sectionCode = seccion.section.id
     events.push(event)
   }
   return events
