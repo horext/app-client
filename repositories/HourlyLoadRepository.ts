@@ -1,7 +1,11 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-const PATH_SUBJECTS = 'faculties'
+const PATH_SUBJECTS = 'hourlyLoads'
 export default ($axios: NuxtAxiosInstance) => ({
-  getAll () {
-    return $axios.get(PATH_SUBJECTS)
+  getLatestByFaculty (facultyId: any) {
+    return $axios.get(PATH_SUBJECTS + '/latest', {
+      params: {
+        faculty: facultyId
+      }
+    })
   }
 })

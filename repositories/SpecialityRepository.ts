@@ -1,7 +1,11 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-const PATH_SUBJECTS = 'faculties'
+const PATH_SUBJECTS = 'specialities'
 export default ($axios: NuxtAxiosInstance) => ({
-  getAll () {
-    return $axios.get(PATH_SUBJECTS)
+  getAllByFaculty (facultyId: any) {
+    return $axios.get(PATH_SUBJECTS, {
+      params: {
+        faculty: facultyId
+      }
+    })
   }
 })
