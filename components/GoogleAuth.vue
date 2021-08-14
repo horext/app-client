@@ -1,6 +1,6 @@
 <template>
   <div v-if="isGoogleApiLoaded">
-    <GoogleSignIn v-if="!signinStatus" @click="handleAuthClick()">
+    <GoogleSignIn v-if="!signInStatus" @click="handleAuthClick()">
       Sincronizar con Google
     </GoogleSignIn>
     <v-btn
@@ -12,7 +12,7 @@
     >
       Agregar a mi Calendario
     </v-btn>
-    <v-dialog v-if="signinStatus" v-model="dialogCalendarSync">
+    <v-dialog v-if="signInStatus" v-model="dialogCalendarSync">
       <v-card>
         <v-card-title>Google Calendar</v-card-title>
         <v-dialog
@@ -25,7 +25,7 @@
           />
         </v-dialog>
         <v-card-text>
-          <template v-if="signinStatus">
+          <template v-if="signInStatus">
             <v-autocomplete
               v-model="selected"
               label="Selecciona tu calendario"
@@ -90,7 +90,7 @@
             </v-form>
           </template>
         </v-card-text>
-        <v-card-actions v-if="signinStatus">
+        <v-card-actions v-if="signInStatus">
           <v-btn :loading="progress>0" text @click="exportEventToGCalendar">
             Exportar
             <template #loader>
@@ -158,7 +158,7 @@ export default class GoogleAuth extends Vue {
     'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
   dialogCalendarSync= false
-  signinStatus= false
+  signInStatus= false
   isGoogleApiLoaded= false
   dialog= false
   dayNames= [
@@ -218,17 +218,17 @@ export default class GoogleAuth extends Vue {
       // Listen for sign-in state changes.
       window.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus)
       // Handle the initial sign-in state.
-      this.signinStatus = window.gapi.auth2.getAuthInstance().isSignedIn.get()
+      this.signInStatus = window.gapi.auth2.getAuthInstance().isSignedIn.get()
       this.loading = false
     } catch (e) {
       this.loading = false
       console.log(JSON.stringify(e, null, 2))
     }
-    console.log(this.signinStatus)
+    console.log(this.signInStatus)
   }
 
   updateSigninStatus (isSignedIn: boolean) {
-    this.signinStatus = isSignedIn
+    this.signInStatus = isSignedIn
   }
 
   handleAuthClick () {
@@ -328,6 +328,7 @@ export default class GoogleAuth extends Vue {
 
   @Watch('signInStatus')
   onChangeSignInStatus (value: boolean) {
+    console.log(value)
     if (value) {
       this.getCalendarList()
     }
