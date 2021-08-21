@@ -22,6 +22,11 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/axios-accesor',
+    '~/plugins/api.ts',
+    '~/plugins/snackbar.ts',
+    { src: '~/plugins/vuex-persist.js', ssr: false },
+    { src: '~/plugins/html2canvas.client.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,12 +45,30 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/universal-storage'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
-
+  // Axios module configuration (https://go.nuxtjs.dev/config-axios)
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api': {
+      target: process.env.NUXT_ENV_API_URL,
+      pathRewrite: { '^/api/': '/' }
+    }
+  },
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL,
+    googleApi: {
+      clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
+      apiKey: process.env.NUXT_ENV_GOOGLE_API_KEY,
+      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(','),
+      scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
+    }
+  },
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
@@ -71,7 +94,6 @@ export default {
       }
     }
   },
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
