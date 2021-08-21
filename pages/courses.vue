@@ -33,11 +33,13 @@
         v-model="dialog"
         dense
         max-width="800"
+        @click:outside="close"
       >
         <SubjectScheduleList
           :subject="editedItem"
           :hourly-load="myHourlyLoad"
           @save="save"
+          @cancel="close"
         />
       </v-dialog>
 
@@ -46,7 +48,6 @@
         :items="myCourses"
         sort-by="calories"
         class="elevation-1"
-
       >
         <template #[`item.sections`]="{ item }">
           <v-chip
@@ -58,7 +59,7 @@
             {{ schedule.section.id }}
           </v-chip>
         </template>
-        <template  #[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-icon
             class="mr-2"
             color="primary"
@@ -79,15 +80,15 @@
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="headline">
-          Are you sure you want to delete this item?
+          ¿Estás segura de que quieres eliminar este curso?
         </v-card-title>
         <v-card-actions>
           <v-spacer />
           <v-btn color="blue darken-1" text @click="closeDelete">
-            Cancel
+            Cancelar
           </v-btn>
           <v-btn color="blue darken-1" text @click="deleteItemConfirm">
-            OK
+            Aceptar
           </v-btn>
           <v-spacer />
         </v-card-actions>
@@ -109,7 +110,7 @@ import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 export default class myCourses extends Vue {
   get availableCourses () {
     return this.courses?.filter((c1: any) =>
-      this.myCourses?.findIndex((c2: any) => c1.id === c2.id))
+      this.myCourses?.findIndex((c2: any) => c1.id === c2.id) === -1)
   }
 
   getColor (section: any) {
@@ -123,7 +124,7 @@ export default class myCourses extends Vue {
   dialogDelete = false
 
   defaultItem: any = null
-  editedItem: any = {  }
+  editedItem: any = { }
   editedIndex: number = -1
 
   editItem (item: any) {
