@@ -134,10 +134,11 @@ export default class Config extends VuexModule {
     return faculty
   }
 
-  @VuexAction({ commit: 'SET_SPECIALITY' })
-  public updateSpeciality (faculty: any) {
-    $storage.setUniversal('mySpeciality', faculty)
-    return faculty
+  @VuexAction
+  public async updateSpeciality (speciality: any) {
+    $storage.setUniversal('mySpeciality', speciality)
+    await this.context.commit('SET_SPECIALITY', speciality)
+    await this.context.dispatch('fetchHourlyLoad')
   }
 
   @VuexAction({ commit: 'SET_FIRST_ENTRY' })
