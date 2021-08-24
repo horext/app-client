@@ -11,24 +11,26 @@
       </v-toolbar-title>
     </template>
     <template #top-items-left="{item}">
-      <schedule-favorite-add v-if="item" :favorites-schedules.sync="schedules" :schedule="item" />
+      <schedule-favorite-add
+        v-if="item"
+        :favorites-schedules="schedules"
+        :schedule="item"
+        @update:favoritesSchedules="updateFavoritesSchedules"
+      />
     </template>
   </schedules-presentation>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-@Component({
-  layout: 'app'
-})
+import { Component, namespace, Vue } from 'nuxt-property-decorator'
+const userConfig = namespace('user/config')
+@Component()
 export default class Favorites extends Vue {
-  get schedules () {
-    return this.$store.state.modules.MyData.myFavoritesSchedules
-  }
+  @userConfig.State('favoritesSchedules')
+  schedules!: Array<any>
 
-  set schedules (schedules: Array<any>) {
-    this.$store.commit('modules/MyData/setMyFavoritesSchedules', schedules)
-  }
+  @userConfig.Action('updateFavoritesSchedules')
+  updateFavoritesSchedules!: Function
 }
 </script>
 

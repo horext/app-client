@@ -43,10 +43,9 @@
 
       <v-data-table
         :headers="headers"
-        :items="myCourses"
+        :items="mySubjects"
         sort-by="calories"
         class="elevation-1"
-
       >
         <template #[`item.sections`]="{ item }">
           <v-chip
@@ -58,7 +57,7 @@
             {{ schedule.section.id }}
           </v-chip>
         </template>
-        <template  #[`item.actions`]="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-icon
             class="mr-2"
             color="primary"
@@ -97,19 +96,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
-
+const userConfig = namespace('user/config')
 @Component({
-  layout: 'app',
   components: {
     SubjectScheduleList
   }
 })
-export default class myCourses extends Vue {
+export default class mySubjects extends Vue {
   get availableCourses () {
-    return this.courses?.filter((c1: any) =>
-      this.myCourses?.findIndex((c2: any) => c1.id === c2.id))
+    return this.subjects?.filter((c1: any) =>
+      this.mySubjects?.findIndex((c2: any) => c1.id === c2.id))
   }
 
   getColor (section: any) {
@@ -117,32 +115,44 @@ export default class myCourses extends Vue {
     return months[section.charCodeAt(0) % months.length]
   }
 
-  courses: Array<any> = []
+  @State(state => state.user.config.subjects)
+  mySubjects!: Array<any>
+
+  @userConfig.Action('deleteSubjectById')
+  deleteSubjectById!: Function
+
+  @userConfig.Action('updateSubject')
+  updateSubject!: Function
+
+  @userConfig.Action('saveNewSubject')
+  saveNewSubject!: Function
+
+  subjects: Array<any> = []
   dialog = false
   loading = false
   dialogDelete = false
 
   defaultItem: any = null
-  editedItem: any = {  }
+  editedItem: any = { }
   editedIndex: number = -1
 
   editItem (item: any) {
     if (!item) {
       return
     }
-    this.editedIndex = this.myCourses.findIndex((c: any) => c.id === item?.id)
+    this.editedIndex = this.mySubjects.findIndex((c: any) => c.id === item?.id)
     this.editedItem = Object.assign({}, item)
     this.dialog = true
   }
 
   deleteItem (item: any) {
-    this.editedIndex = this.myCourses.findIndex((c: any) => c.id === item.id)
+    this.editedIndex = this.mySubjects.findIndex((c: any) => c.id === item.id)
     this.editedItem = Object.assign({}, item)
     this.dialogDelete = true
   }
 
-  deleteItemConfirm () {
-    this.deleteMyCourseByIndex(this.editedIndex)
+  async deleteItemConfirm () {
+    await this.deleteSubjectById(this.editedItem.id)
     this.closeDelete()
   }
 
@@ -162,45 +172,35 @@ export default class myCourses extends Vue {
     })
   }
 
-  save (schedules: string | any[]) {
+  async save (schedules: string | any[]) {
     if (this.editedIndex > -1 && schedules && schedules.length > 0) {
-      this.$store.commit('modules/MyData/updateMyCourseByIndex',
-        {
-          course: { ...this.editedItem, schedules },
-          index: this.editedIndex
-        })
+      await this.updateSubject({ ...this.editedItem, schedules })
       this.close()
     } else if (schedules && schedules.length > 0) {
-      this.saveMyCourse({ ...this.editedItem, schedules })
+      await this.saveNewSubject({ ...this.editedItem, schedules })
       this.close()
     } else if (this.editedItem > -1) {
-      this.deleteItem(this.editedItem)
+      await this.deleteSubjectById(this.editedItem.id)
     } else {
       this.close()
     }
   }
 
-  saveMyCourse (course: any) {
-    this.$store.commit('modules/MyData/addMyCourse', course)
-  }
-
-  deleteMyCourseByIndex (index: number) {
-    this.$store.commit('modules/MyData/deleteMyCourseByIndex', index)
-  }
-
   search: string = ''
 
-  @Watch('search', { immediate: true })
+  @Watch('search')
   async onChangeSearch (search: string) {
-    try {
-      const response = await this.$api.course.findBySearch(
-        search || '',
-        this.$storage.getUniversal('mySpeciality')?.id,
-        this.$storage.getUniversal('myHourlyLoad')?.id
-      )
-      this.courses = response.data.content
-    } catch (e) {
-      console.error(e)
+    if (this.$store.getters['user/config/specialityId'] && this.$store.getters['user/config/hourlyLoadId']) {
+      try {
+        const response = await this.$api.course.findBySearch(
+          search || '',
+          this.$store.getters['user/config/specialityId'],
+          this.$store.getters['user/config/hourlyLoadId']
+        )
+        this.subjects = response.data.content
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 
@@ -231,19 +231,7 @@ export default class myCourses extends Vue {
   }
 
   get myHourlyLoad () {
-    return this.$store.state.storage.myHourlyLoad || null
-  }
-
-  set myHourlyLoad (hourlyLoad: any) {
-    this.$storage.setUniversal('myHourlyLoad', hourlyLoad)
-  }
-
-  get myCourses () {
-    return this.$store.state.modules.MyData.myCourses
-  }
-
-  set myCourses (courses: any) {
-    this.$store.commit('modules/MyData/setMyCourses', courses)
+    return this.$store.state.user.config.hourlyLoad
   }
 }
 </script>

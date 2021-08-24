@@ -22,11 +22,12 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/axios-accesor',
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
-    { src: '~/plugins/vuex-persist.js', ssr: false },
-    { src: '~/plugins/html2canvas.client.js', mode: 'client' }
+    { src: '~/plugins/html2canvas.client.js', mode: 'client' },
+    '~/plugins/axios-accesor',
+    '~/plugins/storage-accessor',
+    '~/plugins/api-accessor'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -73,6 +74,12 @@ export default {
   pwa: {
     manifest: {
       lang: 'en'
+    }
+  },
+
+  storage: {
+    initialState: {
+      myFirstEntry: true
     }
   },
 
