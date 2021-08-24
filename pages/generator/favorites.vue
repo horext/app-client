@@ -18,14 +18,22 @@
         @update:favoritesSchedules="updateFavoritesSchedules"
       />
     </template>
+    <template #emptyBody>
+      <FavoriteBanner/>
+    </template>
   </schedules-presentation>
 </template>
 
 <script lang="ts">
+import Lottie from 'lottie-web'
 import { Component, namespace, Vue } from 'nuxt-property-decorator'
+import FavoriteBanner from '~/components/FavoriteBanner.vue'
 const userConfig = namespace('user/config')
-@Component
+@Component({
+  components: { FavoriteBanner }
+})
 export default class Favorites extends Vue {
+
   @userConfig.State('favoritesSchedules')
   schedules!: Array<any>
 
@@ -34,6 +42,3 @@ export default class Favorites extends Vue {
 }
 </script>
 
-<style scoped>
-
-</style>
