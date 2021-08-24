@@ -71,12 +71,15 @@
         </v-dialog>
       </v-toolbar>
     </template>
+    <template #item.color="{item}">
+      <v-badge :color="item.color" />
+    </template>
     <template #item.schedule="{item}">
       <div>
         {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
       </div>
     </template>
-    <template v-slot:item.actions="{ item }">
+    <template #item.actions="{ item }">
       <v-icon
         class="mr-2"
         color="primary"
@@ -95,28 +98,41 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, namespace, State, Vue } from 'nuxt-property-decorator'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
 import { VForm } from '~/types'
-import { convertToDate, weekdays } from '~/utils/core'
+import { weekdays } from '~/utils/core'
+import Event from '~/model/Event'
+const userEvents = namespace('user/events')
 
 @Component({
-  components: { EventsCreator },
-  layout: 'app'
+  components: { EventsCreator }
 })
 export default class myEvents extends Vue {
+  @State(state => state.user.events.items)
+  myEvents!: Array<any>
+
+  @userEvents.Action('deleteItemById')
+  deleteEventById!: Function
+
+  @userEvents.Action('updateItem')
+  updateEvent!: Function
+
+  @userEvents.Action('saveNewItem')
+  saveNewEvent!: Function
+
   get weekdays () {
     return weekdays
   }
 
   dialog = false
   headers = [
-    { text: '#', value: 'id' },
+    { text: 'Color', value: 'color' },
     {
-      text: 'Nombre',
+      text: 'titulo',
       align: 'start',
       sortable: false,
-      value: 'name'
+      value: 'title'
     },
     { text: 'Horario', value: 'schedule' },
     { text: 'Acciones', value: 'actions', sortable: false }
@@ -158,8 +174,7 @@ export default class myEvents extends Vue {
   }
 
   deleteItemConfirm () {
-    this.$store.commit('modules/MyData/deleteMyEventByIndex',
-      this.editedIndex)
+    this.deleteEventById(this.editedItem.id)
     this.closeDelete()
   }
 
@@ -183,47 +198,28 @@ export default class myEvents extends Vue {
     if (!this.form().validated()) {
       return
     }
+    const event = new Event(
+      this.editedItem.day || 0,
+      this.editedItem.startTime,
+      this.editedItem.endTime,
+      this.editedItem.title,
+      this.editedItem.title,
+      this.editedItem.title,
+      this.editedItem.color,
+      'MY_EVENT',
+      ''
+    )
+    event.id = this.editedItem.id
     if (this.editedIndex > -1) {
-      this.$store.commit('modules/MyData/updateMyEventByIndex',
-        {
-          event: {
-            ...this.editedItem,
-            id: Date.now().toString(),
-            code: '',
-            sectionCode: '',
-            name: this.editedItem.title,
-            start: convertToDate(this.editedItem.day, this.editedItem.startTime),
-            end: convertToDate(this.editedItem.day, this.editedItem.endTime),
-            type: 'myEvent'
-          },
-          index: this.editedIndex
-        })
+      this.updateEvent(event)
     } else {
-      this.$store.commit('modules/MyData/addMyEvent',
-        {
-          ...this.editedItem,
-          id: Date.now().toString(),
-          code: '',
-          sectionCode: '',
-          name: this.editedItem.title,
-          start: convertToDate(this.editedItem.day, this.editedItem.startTime),
-          end: convertToDate(this.editedItem.day, this.editedItem.endTime),
-          type: 'myEvent'
-        }
-      )
+      this.saveNewEvent(event)
     }
     this.close()
   }
 
   form (): any {
-    return this.$refs.form as VForm
-  }
-
-  get myEvents () {
-    return this.$store.state.modules.MyData.myEvents
-  }
-
-  event:any = {
+    return this.$refs?.form as VForm
   }
 }
 </script>
