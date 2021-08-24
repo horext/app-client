@@ -10,7 +10,7 @@
 <script lang="ts">
 import { Component, State, Vue } from 'nuxt-property-decorator'
 
-@Component()
+@Component
 export default class AppHourlyLoadInfo extends Vue {
   @State(state => state.user.config.hourlyLoad)
   hourlyLoad!: any;

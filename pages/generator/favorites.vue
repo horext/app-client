@@ -24,7 +24,7 @@
 <script lang="ts">
 import { Component, namespace, Vue } from 'nuxt-property-decorator'
 const userConfig = namespace('user/config')
-@Component()
+@Component
 export default class Favorites extends Vue {
   @userConfig.State('favoritesSchedules')
   schedules!: Array<any>
