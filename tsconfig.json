@@ -27,6 +27,7 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
+      "@types/luxon",
       "@nuxtjs/universal-storage",
       "@nuxtjs/vuetify"
     ]

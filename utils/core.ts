@@ -1,13 +1,22 @@
-import { Event } from '~/types'
+import { DateTime } from 'luxon'
+import Event from '~/model/Event'
 
 const isIntersects =
   (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
     !((eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start))
 
-const convertToDate = (day: string | number, startTime: string) => {
-  return obtenerDiaSemana(day).concat(startTime)
+export const weekdayToDatetime = (weekday: number, time: string) => {
+  const date = DateTime.fromISO(time).set({ weekday })
+  return date.toFormat('yyyy-MM-dd HH:mm')
 }
-export { convertToDate }
+
+export const weekdayToDate = (weekday: number) => {
+  const date = DateTime.local().set({ weekday })
+  return date.toFormat('yyyy-MM-dd')
+}
+export const convertToDate = (day: string | number, startTime: string) => {
+  return weekdayToDatetime(<number>day, startTime)
+}
 
 export function getSchedules (
   subjects: Array<any>,
@@ -20,13 +29,10 @@ export function getSchedules (
   }
 ): { occurrences: any[]; schedules: any[]; combinations: any[] } {
   const occurrences = []
-  const quantitySubjects = subjects.length
   const maxQuantity = subjects.length
-  const indexSchedules = Array(maxQuantity).fill(quantitySubjects === 1 ? subjects[0] : 0)
-  if (quantitySubjects === 1) {
-    console.log([indexSchedules])
-  }
+  const indexSchedules = Array(maxQuantity).fill(0)
   const schedules: Array<any> = []
+
   const increment = (i: number) => {
     if (i >= 0 && (indexSchedules[i] === (subjects[i].schedules.length - 1))) {
       indexSchedules[i] = 0
@@ -35,6 +41,7 @@ export function getSchedules (
       indexSchedules[i]++
     }
   }
+
   const combinations = subjects.reduce((previousValue, currentValue) => {
     return previousValue * currentValue.schedules.length
   }, 1)
@@ -104,22 +111,23 @@ export function getSchedules (
   }
 }
 
-function scheduleToEvent (schedule: any, color: string = 'primary'): Array<any> {
-  const events: Array<any> = []
+function scheduleToEvent (schedule: any, color: string = 'primary'): Array<Event> {
+  const events: Array<Event> = []
   const sessions = schedule?.sessions || []
   for (let i = 0; i < sessions.length; i++) {
     const course = schedule.subject.course
     const section = schedule.section.id
-    const event = {
-      title: course.id + ' ' + section + ' ' + course.name,
-      start: convertToDate(sessions[i].day, sessions[i].startTime),
-      end: convertToDate(sessions[i].day, sessions[i].endTime),
-      type: sessions[i].type.code,
-      name: course.name,
+    const event = new Event(
+      sessions[i].day,
+      sessions[i].startTime,
+      sessions[i].endTime,
+      course.id + ' ' + section + ' ' + course.name,
+      course.name,
+      sessions[i].classroom.code,
       color,
-      code: course.id + section,
-      category: 'COURSE'
-    }
+      'COURSE',
+      sessions[i].type.code
+    )
     events.push(event)
   }
   return events
@@ -172,27 +180,6 @@ export const colors = ['indigo', 'deep-purple',
   'green lighten-3', 'orange lighten-3', 'blue lighten-3'
 ]
 
-const obtenerDiaSemana = (dia: string | number): string => {
-  switch (dia) {
-    case 1:
-      return '2020-11-09 '
-    case 2:
-      return '2020-11-10 '
-    case 3:
-      return '2020-11-11 '
-    case 4:
-      return '2020-11-12 '
-    case 5:
-      return '2020-11-13 '
-    case 6:
-      return '2020-11-14 '
-    case 0:
-      return '2020-11-15 '
-    default:
-      return ''
-  }
-}
-
 export const weekdays = [
   'Domingo',
   'Lunes',
@@ -202,5 +189,3 @@ export const weekdays = [
   'Viernes',
   'Sábado'
 ]
-
-export { obtenerDiaSemana }

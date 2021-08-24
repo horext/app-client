@@ -78,17 +78,15 @@ export default class SettingInitial extends Vue {
   async init () {
     const { data } = await this.$api.faculty.getAll()
     this.faculties = data
-    this.faculty = this.$storage.getUniversal('myFaculty')
-    this.hourlyLoad = this.$storage.getUniversal('myHourlyLoad')
-    this.speciality = this.$storage.getUniversal('mySpeciality')
+    this.faculty = this.$store.state.user.config.faculty
+    this.hourlyLoad = this.$store.state.user.config.hourlyLoad
+    this.speciality = this.$store.state.user.config.speciality
   }
 
   ending () {
-    this.$storage.syncUniversal('myFaculty', this.faculty)
-    this.$storage.syncUniversal('mySpeciality', this.speciality)
-    this.$storage.setUniversal('myHourlyLoad', this.hourlyLoad)
-    this.$storage.setUniversal('firstEntry', false)
-    this.$emit('update:dialog', false)
+    this.$store.dispatch('user/config/updateFaculty', this.faculty)
+    this.$store.dispatch('user/config/updateSpeciality', this.speciality)
+    this.$store.dispatch('user/config/updateFirstEntry', false)
   }
 }
 </script>

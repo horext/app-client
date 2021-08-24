@@ -12,7 +12,7 @@
       interval-width="40"
       :short-intervals="false"
       :interval-format="intervalFormat"
-      :weekdays="[1,2,3,4,5,6]"
+      :weekdays="[0,1,2,3,4,5,6]"
       @click:event="showEvent"
     >
       <template #day-label-header>
@@ -53,6 +53,7 @@
 import { Component, Prop, Vue } from 'nuxt-property-decorator'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import { weekdayToDate } from '~/utils/core'
 
 @Component({
   components: {
@@ -76,18 +77,7 @@ export default class ScheduleViewer extends Vue {
   }
 
   get start () {
-    if (this.schedule.startDate && this.schedule.startDate !== 'Lunes') {
-      return this.schedule.startDate
-    }
-    if (this.schedule.events.length > 0) {
-      if (this.schedule.events[0].start.substr(0, 7) === '2020-03') {
-        return '2020-03-16'
-      }
-      if (this.schedule.events[0].start.substr(0, 7) === '2020-11') {
-        return '2020-11-09'
-      }
-    }
-    return '2020-03-16'
+    return weekdayToDate(0)
   }
 
   selectedEvent= null
