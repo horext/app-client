@@ -25,10 +25,10 @@
       </v-list-item-icon>
       <v-list-item-content>
         <v-list-item-title>
-          {{ selectedEvent.name }} ({{selectedEvent.typeSchedule}})
+          {{ selectedEvent.title }}
         </v-list-item-title>
         <v-list-item-subtitle>
-          {{ selectedEvent.courseCode }}-{{ selectedEvent.sectionCode }}
+          {{ selectedEvent.description }}
         </v-list-item-subtitle>
       </v-list-item-content>
 
@@ -54,28 +54,6 @@
       </v-list-item-content>
     </v-list-item>
 
-    <template  v-if="selectedEvent.teacher">
-      <v-divider inset />
-      <v-list-item >
-        <v-list-item-icon>
-          <v-icon :color="selectedEvent.color+' lighten-2'">
-            mdi-account
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ selectedEvent.teacher.lastName + ', ' + selectedEvent.teacher.firstName }}
-          </v-list-item-title>
-          <v-list-item-subtitle>Docente</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-icon>
-          <v-btn @click="moreInfo" icon>
-            <v-icon>mdi-information</v-icon>
-          </v-btn>
-        </v-list-item-icon>
-      </v-list-item>
-
-    </template>
     <v-divider inset />
     <v-list-item>
       <v-list-item-icon>
@@ -84,7 +62,7 @@
         </v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title>{{ selectedEvent.aula }}</v-list-item-title>
+        <v-list-item-title>{{ selectedEvent.location }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
   </v-card>
@@ -104,7 +82,7 @@ export default class EventInfoCard extends Vue {
     return this.weekdays[this.selectedEvent.day]
   }
 
-  moreInfo(){
+  moreInfo () {
 
   }
 

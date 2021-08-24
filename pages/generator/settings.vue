@@ -9,6 +9,5 @@
 <script>
 export default {
   name: 'Advance',
-  layout: 'app'
 }
 </script>

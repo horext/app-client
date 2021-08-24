@@ -11,15 +11,8 @@
         aria-label="Menu Iziquierdo"
         @click.stop="drawer = !drawer"
       />
-      <v-list-item v-if="hourlyLoad">
-        <v-list-item-content>
-          <v-list-item-subtitle>
-            Ultima Actualización: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider />
       <v-spacer />
+      <ThemeDarkToggle />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -46,6 +39,7 @@
           :key="item.to"
           :to="item.to"
           link
+          exact
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -64,7 +58,7 @@
       color="primary"
       grow
     >
-      <v-btn v-for="item in denseItems" :key="item.to" tag="div" :to="item.to">
+      <v-btn v-for="item in denseItems" :key="item.to" exact tag="div" :to="item.to">
         <div>
           {{ item.title }}
         </div>
@@ -85,92 +79,89 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'nuxt-property-decorator'
+import { Component, State, Vue } from 'nuxt-property-decorator'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import InitialSettings from '~/components/setting/Initial.vue'
+import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
+import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
-export default Vue.extend({
+@Component({
   components: {
+    ThemeDarkToggle,
+    AppHourlyLoadInfo,
     TheSnackbar,
     InitialSettings
-  },
-  data: () => ({
-    firstEntry: false,
-    drawerLeft: true,
-    drawer: true,
-    dialog: true,
-    items: [
-      {
-        title: 'Inicio',
-        icon: 'mdi-calendar',
-        to: '/'
-      },
-      {
-        title: 'Generador de Horarios',
-        icon: 'mdi-calendar',
-        to: '/generator'
-      },
-      {
-        title: 'Horarios Favoritos',
-        icon: 'mdi-calendar-star',
-        to: '/favorites'
-      },
-      {
-        title: 'Mis cursos y secciones',
-        icon: 'mdi-book',
-        to: '/courses'
-      },
-      {
-        title: 'Mis eventos',
-        icon: 'mdi-calendar-plus',
-        to: '/events'
-      },
-      {
-        title: 'Avanzado',
-        icon: 'mdi-cog',
-        to: '/settings'
-      }
-    ],
-    denseItems: [
-      {
-        title: 'Generador',
-        icon: 'mdi-calendar',
-        to: '/generator'
-      },
-      {
-        title: 'Favoritos',
-        icon: 'mdi-calendar-star',
-        to: '/favorites'
-      },
-      {
-        title: 'Mis cursos',
-        icon: 'mdi-book',
-        to: '/courses'
-      },
-      {
-        title: 'Mis eventos',
-        icon: 'mdi-calendar-plus',
-        to: '/events'
-      }
-    ]
-  }),
-  computed: {
-    hourlyLoad () {
-      return this.$store.state.storage.myHourlyLoad || null
-    }
-  },
-  mounted () {
-    if (typeof (JSON.parse(localStorage.getItem('firstEntry') || 'null')) !== 'boolean') {
-      localStorage.setItem('mySpeciality', 'null')
-      localStorage.setItem('myFaculty', 'null')
-      this.$storage.setState('myHourlyLoad', 'null')
-      localStorage.setItem('firstEntry', 'true')
-    }
-    this.firstEntry = JSON.parse(localStorage.getItem('firstEntry') || 'null')
   }
-})
+}
+)
+export default class App extends Vue {
+  mounted () {
+    this.$vuetify.theme.dark = JSON.parse(localStorage.getItem('darkMode') || 'false')
+  }
+
+  drawer = true
+  dialog = true
+  items = [
+    {
+      title: 'Inicio',
+      icon: 'mdi-calendar',
+      to: '/'
+    },
+    {
+      title: 'Generador de Horarios',
+      icon: 'mdi-calendar',
+      to: '/generator'
+    },
+    {
+      title: 'Horarios Favoritos',
+      icon: 'mdi-calendar-star',
+      to: '/generator/favorites'
+    },
+    {
+      title: 'Mis cursos y secciones',
+      icon: 'mdi-book',
+      to: '/generator/subjects'
+    },
+    {
+      title: 'Mis eventos',
+      icon: 'mdi-calendar-plus',
+      to: '/generator/events'
+    },
+    {
+      title: 'Avanzado',
+      icon: 'mdi-cog',
+      to: '/generator/settings'
+    }
+  ]
+
+  denseItems = [
+    {
+      title: 'Generador',
+      icon: 'mdi-calendar',
+      to: '/generator'
+    },
+    {
+      title: 'Favoritos',
+      icon: 'mdi-calendar-star',
+      to: '/generator/favorites'
+    },
+    {
+      title: 'Mis cursos',
+      icon: 'mdi-book',
+      to: '/generator/subjects'
+    },
+    {
+      title: 'Mis eventos',
+      icon: 'mdi-calendar-plus',
+      to: '/generator/events'
+    }
+  ]
+
+  @State(state => state.user.config.hourlyLoad)
+  hourlyLoad!: any;
+
+  @State(state => state.user.config.firstEntry)
+  firstEntry!: any;
+}
+
 </script>
-
-<style scoped>
-
-</style>
