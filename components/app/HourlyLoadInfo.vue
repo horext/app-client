@@ -1,8 +1,8 @@
 <template>
-  <v-list-item>
+  <v-list-item v-if="updatedAt">
     <v-list-item-content>
       <v-list-item-subtitle>
-        Actualizado: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
+        Actualizado: {{ new Date(updatedAt).toLocaleString() }}
       </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
@@ -14,5 +14,9 @@ import { Component, State, Vue } from 'nuxt-property-decorator'
 export default class AppHourlyLoadInfo extends Vue {
   @State(state => state.user.config.hourlyLoad)
   hourlyLoad!: any;
+
+  get updatedAt () {
+    return this.hourlyLoad?.updatedAt
+  }
 }
 </script>
