@@ -9,7 +9,7 @@ import Lottie, { AnimationItem } from 'lottie-web'
 
 @Component
 export default class App extends Vue {
-  darkToggle: AnimationItem
+  darkToggle: AnimationItem|any = { }
 
   mounted () {
     this.darkToggle = Lottie.loadAnimation({
@@ -35,7 +35,7 @@ export default class App extends Vue {
   }
 
   @Watch('dark')
-  darkMode (newVal) {
+  darkMode (newVal: boolean) {
     if (!newVal) {
       this.darkToggle.setDirection(1)
       this.darkToggle.play()
