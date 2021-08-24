@@ -27,7 +27,7 @@
 <script lang="ts">
 import Lottie from 'lottie-web'
 import { Component, namespace, Vue } from 'nuxt-property-decorator'
-import FavoriteBanner from '~/pages/generator/FavoriteBanner.vue'
+import FavoriteBanner from '~/components/FavoriteBanner.vue'
 const userConfig = namespace('user/config')
 @Component({
   components: { FavoriteBanner }
