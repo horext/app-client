@@ -1,8 +1,11 @@
 <template>
-  <v-list-item v-if="updatedAt">
+  <v-list-item>
     <v-list-item-content>
-      <v-list-item-subtitle>
+      <v-list-item-subtitle v-if="hourlyLoad">
         Actualizado: {{ new Date(updatedAt).toLocaleString() }}
+      </v-list-item-subtitle>
+      <v-list-item-subtitle v-else>
+        Sin carga horaria.
       </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
