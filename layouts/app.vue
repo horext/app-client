@@ -11,9 +11,8 @@
         aria-label="Menu Iziquierdo"
         @click.stop="drawer = !drawer"
       />
-      <AppHourlyLoadInfo :hourly-load="hourlyLoad"/>
-      <v-divider />
       <v-spacer />
+      <ThemeDarkToggle />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -59,7 +58,7 @@
       color="primary"
       grow
     >
-      <v-btn exact v-for="item in denseItems" :key="item.to" tag="div" :to="item.to">
+      <v-btn v-for="item in denseItems" :key="item.to" exact tag="div" :to="item.to">
         <div>
           {{ item.title }}
         </div>
@@ -84,9 +83,11 @@ import { Component, State, Vue } from 'nuxt-property-decorator'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import InitialSettings from '~/components/setting/Initial.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
+import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
 @Component({
   components: {
+    ThemeDarkToggle,
     AppHourlyLoadInfo,
     TheSnackbar,
     InitialSettings
@@ -94,6 +95,10 @@ import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 }
 )
 export default class App extends Vue {
+  mounted () {
+    this.$vuetify.theme.dark = JSON.parse(localStorage.getItem('darkMode') || 'false')
+  }
+
   drawer = true
   dialog = true
   items = [
@@ -160,4 +165,3 @@ export default class App extends Vue {
 }
 
 </script>
-
