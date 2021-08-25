@@ -3,6 +3,9 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
+          <HourlyLoadInfo></HourlyLoadInfo>
+        </v-col>
+        <v-col cols="12">
           <v-autocomplete
             v-model="editedItem"
             shaped
@@ -100,9 +103,11 @@
 <script lang="ts">
 import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
+import HourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 const userConfig = namespace('user/config')
 @Component({
   components: {
+    HourlyLoadInfo,
     SubjectScheduleList
   }
 })
