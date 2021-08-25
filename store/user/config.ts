@@ -172,14 +172,14 @@ export default class Config extends VuexModule {
   }
 
   @VuexAction
-  public updateSchedules (mySchedules: any) {
-    this.context.commit('SET_SCHEDULES', mySchedules)
+  public updateSchedules (schedules: any) {
+    this.context.commit('SET_SCHEDULES', schedules)
     $storage.setLocalStorage('mySchedules', this.schedules)
   }
 
   @VuexAction
-  public updateFavoritesSchedules (mySchedules: any) {
-    this.context.commit('SET_FAVORITES_SCHEDULES', mySchedules)
+  public updateFavoritesSchedules (schedules: any) {
+    this.context.commit('SET_FAVORITES_SCHEDULES', schedules)
     $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
   }
 
@@ -217,6 +217,7 @@ export default class Config extends VuexModule {
   @VuexAction({ commit: 'SET_SCHEDULES' })
   public fetchSchedules () {
     const schedules = $storage.getLocalStorage('mySchedules') || []
+    console.log(schedules)
     return schedules.map((s: { events: any[] }) => ({
       ...s,
       events: s.events.map((e: any) => Object.assign(
