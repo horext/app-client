@@ -94,6 +94,7 @@ export function getSchedules (
     if ((crossingCombination) <= options.crossingSubjects) {
       crossings[i] = crossingCombination
       schedules.push({
+        id: combination.map(c => c.scheduleSubject.id).join(','),
         scheduleSubjectIds: combination.map(c => c.scheduleSubject.id),
         schedule: combination,
         crossings: crossingCombination,
