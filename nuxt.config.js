@@ -38,7 +38,8 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/google-analytics'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -62,6 +63,9 @@ export default {
     }
   },
   publicRuntimeConfig: {
+    googleAnalytics: {
+      id: process.env.NUXT_ENV_GOOGLE_ANALYTICS_ID
+    },
     baseURL: process.env.BASE_URL,
     googleApi: {
       clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
