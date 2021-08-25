@@ -88,19 +88,19 @@ export default class Generator extends Vue {
 
   crossingSubjects = 0;
 
-  @State(state => state.user.config.subjects)
+  @userConfig.State('subjects')
   mySubjects!: Array<any>;
 
   @userEvents.State('items')
   myEvents!: Array<any>;
 
-  @State(state => state.user.config.favoritesSchedules)
+  @userConfig.State('favoritesSchedules')
   myFavoritesSchedules!: Array<any>;
 
   @userConfig.Action('updateFavoritesSchedules')
   updateFavoritesSchedules!: Function
 
-  @State(state => state.user.config.schedules)
+  @userConfig.State('schedules')
   schedules!: Array<any>;
 
   @userConfig.Action('updateSchedules')
