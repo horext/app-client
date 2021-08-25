@@ -178,6 +178,19 @@ export default class Config extends VuexModule {
   }
 
   @VuexAction
+  public saveNewFavoriteSchedule (subject: any) {
+    this.context.commit('ADD_FAVORITE_SCHEDULE', subject)
+    $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
+  }
+
+  @VuexAction
+  public deleteFavoriteScheduleById (id: any) {
+    const index = this.subjects.findIndex(s => s.id === id)
+    this.context.commit('DELETE_FAVORITE_SCHEDULE_BY_INDEX', index)
+    $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
+  }
+
+  @VuexAction
   public updateFavoritesSchedules (schedules: any) {
     this.context.commit('SET_FAVORITES_SCHEDULES', schedules)
     $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)

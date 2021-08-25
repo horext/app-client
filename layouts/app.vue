@@ -67,9 +67,6 @@
       </v-btn>
     </v-bottom-navigation>
     <the-snackbar />
-    <v-dialog v-if="firstEntry" v-model="firstEntry" max-width="600" persistent>
-      <initial-settings :dialog.sync="firstEntry" />
-    </v-dialog>
     <v-main>
       <v-container>
         <nuxt />
@@ -156,12 +153,6 @@ export default class App extends Vue {
       to: '/generator/events'
     }
   ]
-
-  @State(state => state.user.config.hourlyLoad)
-  hourlyLoad!: any;
-
-  @State(state => state.user.config.firstEntry)
-  firstEntry!: any;
 }
 
 </script>
