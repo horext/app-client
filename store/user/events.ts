@@ -1,4 +1,5 @@
 import { Module, VuexAction, VuexModule, VuexMutation } from 'nuxt-property-decorator'
+import { v4 } from 'uuid'
 import { $storage } from '~/utils/api'
 import Event from '~/model/Event'
 
@@ -68,6 +69,6 @@ export default class Config extends VuexModule {
     const events = $storage.getLocalStorage('myEvents') || []
     return events.map((e: any) => Object.assign(
       new Event(0, '', '', '', '', '', '', '', ''),
-      e))
+      e, { id: e?.id || v4() }))
   }
 }

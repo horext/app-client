@@ -55,15 +55,15 @@
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline">
-              Are you sure you want to delete this item?
+              ¿Está seguro de eliminar este evento?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
               <v-btn color="blue darken-1" text @click="closeDelete">
-                Cancel
+                Cancelar
               </v-btn>
               <v-btn color="blue darken-1" text @click="deleteItemConfirm">
-                OK
+                Aceptar
               </v-btn>
               <v-spacer />
             </v-card-actions>
@@ -103,6 +103,7 @@ import EventsCreator from '~/components/EventsCreatorForm.vue'
 import { VForm } from '~/types'
 import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
+import { v4 } from 'uuid'
 const userEvents = namespace('user/events')
 
 @Component({
@@ -209,7 +210,7 @@ export default class myEvents extends Vue {
       'MY_EVENT',
       ''
     )
-    event.id = this.editedItem.id
+    event.id = this.editedItem.id||v4()
     if (this.editedIndex > -1) {
       this.updateEvent(event)
     } else {

@@ -16,6 +16,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/universal-storage": "^0.5.9",
     "@types/luxon": "^2.0.0",
+    "@types/uuid": "^8.3.1",
     "core-js": "^3.15.1",
     "html2canvas": "^1.1.4",
     "jspdf": "^2.3.1",
@@ -23,6 +24,7 @@
     "luxon": "^2.0.2",
     "nuxt": "^2.15.8",
     "nuxt-property-decorator": "^2.9.1",
+    "uuid": "^8.3.2",
     "vuetify": "^2.5.8"
   },
   "devDependencies": {
