@@ -15,6 +15,7 @@ export default class Config extends VuexModule {
   public schedules: Array<any>= []
   public favoritesSchedules: Array<any>= []
   public weekDays: Array<number> = [0, 1, 2, 3, 4, 5, 6]
+  public crossings:number = 0
   public firstEntry: boolean = true
 
   public get facultyId () {
@@ -32,6 +33,11 @@ export default class Config extends VuexModule {
   @VuexMutation
   public SET_FACULTY (faculty:any) {
     this.faculty = faculty
+  }
+
+  @VuexMutation
+  public SET_CROSSINGS (faculty:any) {
+    this.crossings = faculty
   }
 
   @VuexMutation
@@ -148,6 +154,12 @@ export default class Config extends VuexModule {
     return faculty
   }
 
+  @VuexAction({ commit: 'SET_CROSSINGS' })
+  public updateCrossings (crossings: any) {
+    $storage.setUniversal('myCrossings', crossings)
+    return crossings
+  }
+
   @VuexAction
   public saveNewSubject (subject: any) {
     this.context.commit('ADD_SUBJECT', subject)
@@ -221,6 +233,11 @@ export default class Config extends VuexModule {
   @VuexAction({ commit: 'SET_SUBJECTS' })
   public fetchSubjects () {
     return $storage.getLocalStorage('mySubjects') || []
+  }
+
+  @VuexAction({ commit: 'SET_CROSSINGS' })
+  public fetchCrossings () {
+    return $storage.getLocalStorage('myCrossings') || 0
   }
 
   @VuexAction({ commit: 'SET_EVENTS' })

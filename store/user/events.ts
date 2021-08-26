@@ -71,6 +71,6 @@ export default class Config extends VuexModule {
     const events = $storage.getLocalStorage('myEvents') || []
     return events.map((e: any) => Object.assign(
       new Event(0, '', '', '', '', '', '', '', ''),
-      e, { id: e?.id || v4() }))
+      e, { id: e?.id || v4(), type: 'MY_EVENT' }))
   }
 }

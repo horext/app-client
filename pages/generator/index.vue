@@ -25,7 +25,7 @@
     </template>
     <template #subtitle-items>
       <v-text-field
-        v-model="crossingSubjects"
+        v-model.number="crossingSubjects"
         label="Cantidad de cruces"
         hide-details
         outlined
@@ -86,10 +86,22 @@ export default class Generator extends Vue {
   occurrences: Array<any> = []
   openMySchedules = false;
 
-  crossingSubjects = 0;
+  get crossingSubjects () {
+    return this.crossings
+  }
+
+  set crossingSubjects (crossings) {
+    this.updateCrossings(crossings)
+  }
 
   @userConfig.State('subjects')
   mySubjects!: Array<any>;
+
+  @userConfig.State('crossings')
+  crossings!: number;
+
+  @userConfig.Action('updateCrossings')
+  updateCrossings!: Function;
 
   @userEvents.State('items')
   myEvents!: Array<any>;
