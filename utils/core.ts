@@ -24,7 +24,7 @@ export function getSchedules (
   options:any = {
     credits: 100,
     crossingSubjects: 0,
-    crossEvent: false,
+    crossEvent: true,
     crossPractices: false
   }
 ): { occurrences: any[]; schedules: any[]; combinations: any[] } {
@@ -62,6 +62,7 @@ export function getSchedules (
     }))
     // calculating crossing
     let crossingCombination = 0
+    let useCombination = true
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
       const events = schedule[0].events
@@ -76,16 +77,17 @@ export function getSchedules (
               elementA: event,
               elementB: item
             })
-            // if is cross practice to practice
-            if ((item.type?.includes('P', 0) && event.type?.includes('P', 0))) {
-              // if have available crossings
-              if (crossingCombination + intersections <= options.crossingSubjects) {
-                intersections++
-              } else {
-                break
-              }
-            } else {
+            // if have available crossings
+            if (crossingCombination + intersections <= options.crossingSubjects) {
               intersections++
+            } else {
+              break
+            }
+            // if is cross practice to practice
+            if ((item.type?.includes('P', 0) && event.type?.includes('P', 0)) && !options.crossPractices) {
+              useCombination = false
+            } else if ((item.type?.includes('MY_EVENT', 0) && event.type?.includes('MY_EVENT', 0)) && !options.crossEvent) {
+              useCombination = false
             }
           }
         }
@@ -93,7 +95,7 @@ export function getSchedules (
         crossingCombination = crossingCombination + intersections
       }
     }
-    if ((crossingCombination) <= options.crossingSubjects) {
+    if (((crossingCombination) <= options.crossingSubjects) && useCombination) {
       crossings[i] = crossingCombination
       schedules.push({
         id: combination.map(c => c.scheduleSubject.id).join(','),

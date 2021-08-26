@@ -208,7 +208,7 @@ export default class myEvents extends Vue {
       this.editedItem.title,
       this.editedItem.color,
       'MY_EVENT',
-      ''
+      'MY_EVENT'
     )
     event.id = this.editedItem.id || v4()
     if (this.editedIndex > -1) {
