@@ -13,7 +13,10 @@ import { Context } from '@nuxt/types'
 import InitialSettings from '~/components/setting/Initial.vue'
 @Component({
   components: { InitialSettings },
-  layout: 'app'
+  layout: 'app',
+  head: {
+    title: 'Generador de Horarios'
+  }
 })
 export default class Generator extends Vue {
   @State(state => state.user.config.firstEntry)
