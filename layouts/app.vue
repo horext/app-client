@@ -78,7 +78,6 @@
 <script lang="ts">
 import { Component, State, Vue } from 'nuxt-property-decorator'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
-import InitialSettings from '~/components/setting/Initial.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
@@ -86,8 +85,7 @@ import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
   components: {
     ThemeDarkToggle,
     AppHourlyLoadInfo,
-    TheSnackbar,
-    InitialSettings
+    TheSnackbar
   }
 }
 )
