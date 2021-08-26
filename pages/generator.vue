@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, State, Vue } from 'nuxt-property-decorator'
+import { Component, State, Vue, Watch } from 'nuxt-property-decorator'
 import { Context } from '@nuxt/types'
 import InitialSettings from '~/components/setting/Initial.vue'
 @Component({
@@ -18,6 +18,13 @@ import InitialSettings from '~/components/setting/Initial.vue'
 export default class Generator extends Vue {
   @State(state => state.user.config.firstEntry)
   firstEntry!: any;
+
+  @Watch('firstEntry')
+  onChangeFirstEntry (newValue:boolean, oldValue:boolean) {
+    if (oldValue && !newValue) {
+      this.$router.push('/generator/subjects')
+    }
+  }
 
   async asyncData ({ store }: Context) {
     await store.dispatch('user/config/fetchFirstEntry')

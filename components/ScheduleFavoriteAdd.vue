@@ -38,7 +38,7 @@ export default class ScheduleFavoriteAdd extends Vue {
         this.favoritesSchedulesSync = [...this.favoritesSchedulesSync, this.currentSchedule]
       }
       this.$snackbar({
-        content: this.isFavorite ? 'Agregado a favoritos' : 'Quitado de Favoritos',
+        content: !this.isFavorite ? 'Agregado a favoritos' : 'Quitado de Favoritos',
         timeout: 2000,
         color: 'yellow darken-3'
       })
