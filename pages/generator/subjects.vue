@@ -3,7 +3,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <HourlyLoadInfo></HourlyLoadInfo>
+          <HourlyLoadInfo />
         </v-col>
         <v-col cols="12">
           <v-autocomplete
@@ -52,6 +52,20 @@
         sort-by="calories"
         class="elevation-1"
       >
+        <template #no-data>
+          <v-row align="center" >
+            <v-col cols="12" md="6">
+              <div class="text-md-h2 text-h4 text-left">
+                Busca tus cursos en la parte superior y luego ve al <nuxt-link to="/generator" >generador</nuxt-link>
+              </div>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-responsive>
+                <div id="noData" />
+              </v-responsive>
+            </v-col>
+          </v-row>
+        </template>
         <template #[`item.sections`]="{ item }">
           <v-chip
             v-for="schedule in item.schedules"
@@ -102,6 +116,7 @@
 
 <script lang="ts">
 import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
+import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import HourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 const userConfig = namespace('user/config')
@@ -112,6 +127,16 @@ const userConfig = namespace('user/config')
   }
 })
 export default class mySubjects extends Vue {
+  mounted () {
+    Lottie.loadAnimation({
+      container: document.getElementById('noData') as Element,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: require('~/assets/lottie/15538-cat-woow.json')
+    })
+  }
+
   get availableCourses () {
     return this.subjects?.filter((c1: any) =>
       this.mySubjects?.findIndex((c2: any) => c1.id === c2.id))
