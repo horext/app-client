@@ -36,6 +36,7 @@ export default class Generator extends Vue {
   async mounted () {
     await this.$store.dispatch('user/config/fetchSubjects')
     await this.$store.dispatch('user/config/fetchSchedules')
+    await this.$store.dispatch('user/config/fetchCrossings')
     await this.$store.dispatch('user/config/fetchFavoritesSchedules')
     await this.$store.dispatch('user/events/fetchItems')
   }
