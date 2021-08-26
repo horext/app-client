@@ -16,7 +16,9 @@ export default class Config extends VuexModule {
 
   @VuexMutation
   public ADD_ITEM (item:any) {
-    this.items.push(Object.assign({}, item))
+    this.items.push(Object.assign(new Event(0,
+      '', '', '', '',
+      '', '', '', ''), item))
   }
 
   @VuexMutation

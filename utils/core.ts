@@ -71,15 +71,17 @@ export function getSchedules (
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
+            occurrences.push({
+              type: 'Cruce de ' + event.title + ' - ' + item.title,
+              elementA: event,
+              elementB: item
+            })
+            // if is cross practice to practice
             if ((item.type?.includes('P', 0) && event.type?.includes('P', 0))) {
+              // if have available crossings
               if (crossingCombination + intersections <= options.crossingSubjects) {
                 intersections++
               } else {
-                occurrences.push({
-                  type: 'Cruce de ' + event.title + ' - ' + item.title,
-                  elementA: event,
-                  elementB: item
-                })
                 break
               }
             } else {
