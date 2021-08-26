@@ -110,8 +110,8 @@ export default class SubjectScheduleList extends Vue {
   onChangeSessions () {
     if (this.subject.schedules) {
       this.selected = this.subject.schedules.filter(
-        (s1) => {
-          const schedule = this.schedules.find(s2 => s2.section.id === s1.section.id)
+        (s1: any) => {
+          const schedule = this.schedules.find((s2:any) => s2.section.id === s1.section.id)
           return schedule?.id === s1?.id
         }
       )

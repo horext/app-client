@@ -14,6 +14,7 @@ export default class Config extends VuexModule {
   public events: Array<any> = []
   public schedules: Array<any>= []
   public favoritesSchedules: Array<any>= []
+  public weekDays: Array<number> = [0, 1, 2, 3, 4, 5, 6]
   public firstEntry: boolean = true
 
   public get facultyId () {

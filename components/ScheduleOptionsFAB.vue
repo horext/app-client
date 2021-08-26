@@ -9,8 +9,6 @@
     transition="slide-y-reverse-transition"
     direction="top"
   >
-    <template v-slot:defa#defaultot />
-    </template>
     <template #activator>
       <v-btn
         v-model="fab"

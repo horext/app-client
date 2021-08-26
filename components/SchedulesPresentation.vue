@@ -111,7 +111,7 @@ import { Component, namespace, Prop, PropSync, Vue, Getter } from 'nuxt-property
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
-const userModule = namespace('modules/UserModule')
+const userModule = namespace('user/config')
 
 @Component(
   {
