@@ -210,12 +210,14 @@ export default class myEvents extends Vue {
       'MY_EVENT',
       ''
     )
-    event.id = this.editedItem.id||v4()
+    event.id = this.editedItem.id || v4()
     if (this.editedIndex > -1) {
       this.updateEvent(event)
     } else {
       this.saveNewEvent(event)
     }
+    console.log(event.end)
+    console.log(event.start)
     this.close()
   }
 
