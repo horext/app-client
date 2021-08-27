@@ -28,8 +28,16 @@
             </template>
           </v-autocomplete>
         </v-col>
-        <v-col col="12">
-          <v-toolbar-title>Mis cursos seleccionados</v-toolbar-title>
+      </v-row>
+      <v-row>
+        <v-col col="auto">
+          <v-toolbar-title>
+            Mis cursos seleccionados
+          </v-toolbar-title>
+        </v-col>
+        <v-spacer />
+        <v-col cols="auto">
+          <div>Créditos Necesarios : {{ totalCredits }}</div>
         </v-col>
       </v-row>
       <v-dialog
@@ -53,10 +61,12 @@
         class="elevation-1"
       >
         <template #no-data>
-          <v-row align="center" >
+          <v-row align="center">
             <v-col cols="12" md="6">
               <div class="text-md-h2 text-h4 text-left">
-                Busca tus cursos en la parte superior y luego ve al <nuxt-link to="/generator" >generador</nuxt-link>
+                Busca tus cursos en la parte superior y luego ve al <nuxt-link to="/generator">
+                  generador
+                </nuxt-link>
               </div>
             </v-col>
             <v-col cols="12" md="6">
@@ -149,6 +159,12 @@ export default class mySubjects extends Vue {
 
   @State(state => state.user.config.subjects)
   mySubjects!: Array<any>
+
+  get totalCredits () {
+    return this.subjects.reduce((previousValue, currentValue) => {
+      return currentValue.credits + previousValue
+    }, 0)
+  }
 
   @userConfig.Action('deleteSubjectById')
   deleteSubjectById!: Function
@@ -250,6 +266,10 @@ export default class mySubjects extends Vue {
     {
       text: 'Secciones',
       value: 'sections'
+    },
+    {
+      text: 'Creditos',
+      value: 'credits'
     },
     {
       text: 'Acciones',

@@ -43,7 +43,12 @@
             <v-icon>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
-          <GoogleAuth v-if="currentSchedule" :events="currentSchedule.events" />
+          <GoogleAuth
+            v-if="currentSchedule"
+            :events="currentSchedule.events"
+            :end-date="endDate"
+            :start-date="startDate"
+          />
           <v-dialog
             v-model="dialogExport"
             max-width="600"
@@ -95,6 +100,22 @@ const userModule = namespace('user/config')
   }
 )
 export default class SchedulesPresentation extends Vue {
+  get hourlyLoad () {
+    return this.$store.state.user.config.hourlyLoad
+  }
+
+  get academicPeriodOrganizationUnit () {
+    return this.hourlyLoad?.academicPeriodOrganizationUnit
+  }
+
+  get startDate () {
+    return this.academicPeriodOrganizationUnit.fromDate
+  }
+
+  get endDate () {
+    return this.academicPeriodOrganizationUnit.toDate
+  }
+
   mounted () {
     this.vCalendar = document.getElementById('calendar')
   }
