@@ -161,7 +161,7 @@ export default class mySubjects extends Vue {
   mySubjects!: Array<any>
 
   get totalCredits () {
-    return this.subjects.reduce((previousValue, currentValue) => {
+    return this.mySubjects.reduce((previousValue, currentValue) => {
       return currentValue.credits + previousValue
     }, 0)
   }
