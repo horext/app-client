@@ -315,7 +315,7 @@ export default class GoogleAuth extends Vue {
     for (let i = 0; i < this.events.length; i++) {
       const item: any = this.events[i]
       try {
-        await this.eventRequest(item, i)
+        await this.eventRequest(item)
         this.progress++
       } catch (e) {
         console.log(e)
