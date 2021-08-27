@@ -46,12 +46,16 @@ export default class CreateGoogleCalendar extends Vue {
    }
 
    @Watch('calendar')
-   onChangeValue (calendar) {
+   onChangeValue (calendar: any) {
      this.calendarCurrent = calendar
    }
 
+   get form (): any {
+     return this.$refs.form
+   }
+
    save () {
-     if (this.$refs.form.validate()) {
+     if (this.form.validate()) {
        this.$emit('update:calendar', this.calendarCurrent)
      }
    }
