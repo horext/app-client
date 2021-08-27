@@ -150,12 +150,12 @@ export default class GoogleAuth extends Vue {
     endDate!: string
 
   @Watch('startDate', { immediate: true })
-  onChangeStartDate (startDate) {
+  onChangeStartDate (startDate: string) {
     if (startDate) { this.dateStart = DateTime.fromISO(startDate).toFormat('yyyy-MM-dd') }
   }
 
   @Watch('endDate', { immediate: true })
-  onChangeEndDate (endDate) {
+  onChangeEndDate (endDate: string) {
     if (endDate) { this.dateEnd = DateTime.fromISO(endDate).toFormat('yyyy-MM-dd') }
   }
 
@@ -302,8 +302,12 @@ export default class GoogleAuth extends Vue {
     }
   }
 
+  get form (): any {
+    return this.$refs.form
+  }
+
   async exportEventToGCalendar () {
-    if (!this.$refs.form.validate()) {
+    if (!this.form.validate()) {
       return
     }
 
