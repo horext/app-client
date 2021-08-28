@@ -83,6 +83,13 @@ export default {
   storage: {
     initialState: {
       myFirstEntry: true
+    },
+    cookie: {
+      prefix: '',
+      options: {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7 * 4
+      }
     }
   },
 
