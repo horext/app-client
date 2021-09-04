@@ -4,7 +4,7 @@
     min-height="48"
   >
     <v-container>
-      <v-row>
+      <v-row dense>
         <v-col
           cols="12"
           md="6"
@@ -29,13 +29,29 @@
             </template>
           </div>
         </v-col>
-
         <v-col
           class="text-center text-md-right"
           cols="12"
           md="6"
         >
-          Copyright &copy; 2020 Octatec
+          <v-row justify-md="end"  justify="center" dense>
+            <v-col cols="auto">
+              <nuxt-link to="/terms">
+                Términos y Condiciones
+              </nuxt-link>
+            </v-col>
+            <v-col cols="auto">
+              <nuxt-link to="/privacy">
+                Politica de Privacidad
+              </nuxt-link>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col
+          class="text-center"
+          cols="12"
+        >
+          Copyright &copy; 2021 Octatec
         </v-col>
       </v-row>
     </v-container>
