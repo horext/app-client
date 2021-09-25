@@ -1,7 +1,3 @@
-image:  docker:latest
-services:
-  - docker:dind
-
 stages:
   - publish
   - deploy
@@ -18,6 +14,9 @@ before_script:
 
 
 publish:
+  image:  docker:latest
+  services:
+  - docker:dind
   stage: publish
   script:
     - docker pull $TAG_LATEST
@@ -32,6 +31,9 @@ publish:
     - docker
 
 deploy:
+  image:  docker:latest
+  services:
+  - docker:dind
   stage: deploy
   tags:
     - deployment
