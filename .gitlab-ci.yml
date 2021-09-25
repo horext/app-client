@@ -9,45 +9,33 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   DOCKER_DRIVER: overlay2
 
-build:
+publish:
+  image:  docker:latest
+  services:
+  - docker:dind
   before_script:
   - yarn install --cache-folder .yarn
-  image: node:latest
   cache:
     paths:
     - node_modules/
     - .yarn
   stage: publish
   script:
+     # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    # Make available in the current terminal
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install --prefer-offline  --non-interactive --production=false
     - yarn build
     - rm -rf node_modules && NODE_ENV=production yarn install --prefer-offline --pure-lockfile --non-interactive --production=true
-  only:
-    - main
-    - develop
-    - next
-
-
-
-
-publish:
-  image:  docker:latest
-  services:
-  - docker:dind
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-  stage: publish
-  script:
-    - docker pull $TAG_LATEST
-    - docker build --cache-from $TAG_LATEST -t $TAG_COMMIT -t $TAG_LATEST .
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
     - main
     - develop
     - next
-  tags:
-    - docker
+
 
 deploy:
   image:  docker:latest
