@@ -8,25 +8,36 @@ variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
 
-publish:
-  image:  docker:latest
-  services:
-    - docker:dind
+build:
+  image: node:latest
   before_script:
-    # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-    # Make available in the current terminal
-    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"  
     - yarn install --cache-folder .yarn
   cache:
     paths:
     - node_modules/
     - .yarn
-  stage: publish
+  stage: build
   script:
     - yarn install --prefer-offline  --non-interactive --production=false
     - yarn build
     - rm -rf node_modules && NODE_ENV=production yarn install --prefer-offline --pure-lockfile --non-interactive --production=true
+  artifacts:
+    paths:
+      - .
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+    - next
+
+publish:
+  image:  docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  stage: publish
+  script:
     - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
@@ -34,7 +45,6 @@ publish:
     - main
     - develop
     - next
-
 
 deploy:
   image:  docker:latest
