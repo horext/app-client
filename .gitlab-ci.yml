@@ -9,11 +9,9 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - yarn install --cache-folder .yarn
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
 build:
+  before_script:
+  - yarn install --cache-folder .yarn
   image: node:latest
   cache:
     paths:
@@ -29,10 +27,15 @@ build:
     - develop
     - next
 
+
+
+
 publish:
   image:  docker:latest
   services:
   - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   stage: publish
   script:
     - docker pull $TAG_LATEST
@@ -48,6 +51,8 @@ publish:
 
 deploy:
   image:  docker:latest
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   services:
   - docker:dind
   stage: deploy
