@@ -7,24 +7,23 @@ variables:
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  DOCKER_DRIVER: overlay2
 
 publish:
   image:  docker:latest
   services:
-  - docker:dind
+    - docker:dind
   before_script:
-  - yarn install --cache-folder .yarn
+    # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
+    # Make available in the current terminal
+    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"  
+    - yarn install --cache-folder .yarn
   cache:
     paths:
     - node_modules/
     - .yarn
   stage: publish
   script:
-     # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-    # Make available in the current terminal
-    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install --prefer-offline  --non-interactive --production=false
     - yarn build
     - rm -rf node_modules && NODE_ENV=production yarn install --prefer-offline --pure-lockfile --non-interactive --production=true
