@@ -10,8 +10,24 @@ variables:
   DOCKER_DRIVER: overlay2
 
 before_script:
+  - yarn install --cache-folder .yarn
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
+build:
+  image: node:latest
+  cache:
+    paths:
+    - node_modules/
+    - .yarn
+  stage: publish
+  script:
+    - yarn install --prefer-offline  --non-interactive --production=false
+    - yarn build
+    - rm -rf node_modules && NODE_ENV=production yarn install --prefer-offline --pure-lockfile --non-interactive --production=true
+  only:
+    - main
+    - develop
+    - next
 
 publish:
   image:  docker:latest
