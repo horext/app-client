@@ -21,7 +21,7 @@ publish:
   stage: publish
   script:
     - docker pull $TAG_LATEST
-    - docker build --cache-from $TAG_LATEST -t $TAG_COMMIT -t $TAG_LATEST
+    - docker build --cache-from $TAG_LATEST -t $TAG_COMMIT -t $TAG_LATEST .
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
