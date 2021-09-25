@@ -11,16 +11,17 @@ variables:
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DOCKER_DRIVER: overlay2
 
 before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 
 publish:
   stage: publish
   script:
-    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $TAG_LATEST
+    - docker build --cache-from $TAG_LATEST -t $TAG_COMMIT -t $TAG_LATEST
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
@@ -42,7 +43,6 @@ deploy:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - ssh  $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
     - ssh  $SERVER_USER@$SERVER_IP "docker pull $TAG_LATEST"
     - ssh  $SERVER_USER@$SERVER_IP "mkdir -p $CI_PROJECT_PATH/deploy"
     - scp  /builds/$CI_PROJECT_PATH/$DOCKER_COMPOSE_FILE_PATH $SERVER_USER@$SERVER_IP:$CI_PROJECT_PATH/$DOCKER_COMPOSE_FILE_PATH
