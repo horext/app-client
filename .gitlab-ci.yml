@@ -56,3 +56,7 @@ deploy:
     - next
   environment:
     name: $CI_COMMIT_REF_NAME
+
+include:
+  - project: 'dependabot-gitlab/dependabot-standalone'
+    file: '.gitlab-ci.yml'
