@@ -58,5 +58,4 @@ deploy:
     name: $CI_COMMIT_REF_NAME
 
 include:
-  - project: 'dependabot-gitlab/dependabot-standalone'
-    file: '.gitlab-ci.yml'
+  - local: '/.gitlab/dependabot.gitlab-ci.yml'
