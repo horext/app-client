@@ -1,7 +1,7 @@
 <template>
   <v-card tile flat>
     <v-card-text>
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
           <HourlyLoadInfo />
         </v-col>
@@ -20,16 +20,46 @@
             hide-details
             @input="editItem"
           >
-            <template #selection="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #selection="{ item, on , attrs}">
+              <v-list-item dense v-on="on" v-bind="attrs">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                    {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
-            <template #item="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #item="{ item, on , attrs}">
+              <v-list-item dense v-on="on" v-bind="attrs">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                    {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
           </v-autocomplete>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row no-gutters>
+        <v-spacer />
+        <v-col cols="auto">
+          <nuxt-link to="/generator">Generar mis horarios</nuxt-link>
+        </v-col>
+      </v-row>
+      <v-row dense>
         <v-col col="auto">
           <v-toolbar-title>
             Mis cursos seleccionados
@@ -45,6 +75,7 @@
         dense
         max-width="800"
         @click:outside="close"
+        @keydown.esc="close"
       >
         <SubjectScheduleList
           :subject="editedItem"
