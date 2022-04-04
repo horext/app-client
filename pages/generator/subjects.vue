@@ -53,7 +53,13 @@
           </v-autocomplete>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row no-gutters>
+        <v-spacer />
+        <v-col cols="auto">
+          <nuxt-link to="/generator">Generar mis horarios</nuxt-link>
+        </v-col>
+      </v-row>
+      <v-row dense>
         <v-col col="auto">
           <v-toolbar-title>
             Mis cursos seleccionados
