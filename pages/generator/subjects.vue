@@ -20,11 +20,35 @@
             hide-details
             @input="editItem"
           >
-            <template #selection="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #selection="{ item, on , attrs}">
+              <v-list-item dense v-on="on" v-bind="attrs">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                    {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
-            <template #item="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #item="{ item, on , attrs}">
+              <v-list-item dense v-on="on" v-bind="attrs">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                    {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
           </v-autocomplete>
         </v-col>
