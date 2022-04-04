@@ -45,6 +45,7 @@
         dense
         max-width="800"
         @click:outside="close"
+        @keydown.esc="close"
       >
         <SubjectScheduleList
           :subject="editedItem"
