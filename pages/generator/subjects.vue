@@ -1,7 +1,7 @@
 <template>
   <v-card tile flat>
     <v-card-text>
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
           <HourlyLoadInfo />
         </v-col>
