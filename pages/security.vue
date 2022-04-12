@@ -3,13 +3,14 @@
     <h1>Política de seguridad de Horext</h1>
     <div>Ultima revisión: 04 de marzo de 2022</div>
     <p>
-      Horext es una aplicación web que permite a los usuarios generar horarios de clases de forma
-      rápida y sencilla, nuestros usuarios confían en nosotros para mantener sus datos
-      seguros, privados y disponibles siempre que los necesiten. Nos tomamos esa
-      responsabilidad en serio. En Horext, mantenemos un sistema de seguridad
-      que: Previene todo acceso no autorizado; Admite el monitoreo continuo de
-      posibles vulnerabilidades; y Adopta mejoras continuas y proactivas para
-      estar al tanto de las últimas amenazas y herramientas de seguridad.
+      Horext es una aplicación web que permite a los usuarios generar horarios
+      de clases de forma rápida y sencilla, nuestros usuarios confían en
+      nosotros para mantener sus datos seguros, privados y disponibles siempre
+      que los necesiten. Nos tomamos esa responsabilidad en serio. En Horext,
+      mantenemos un sistema de seguridad que: Previene todo acceso no
+      autorizado; Admite el monitoreo continuo de posibles vulnerabilidades; y
+      Adopta mejoras continuas y proactivas para estar al tanto de las últimas
+      amenazas y herramientas de seguridad.
     </p>
     <h2>Acceso a la cuenta</h2>
     <p class="text">
@@ -35,10 +36,16 @@
       incluidos los requisitos de uso limitado.
     </p>
     <h2>
-      <nuxt-link to="/privacy">
-        Enlace a la Política de Privacidad
-      </nuxt-link>
+      Privacidad de datos
     </h2>
+    <p>
+      Nuestra prioridad es ser transparentes en la forma en
+      que recopilamos, usamos y manejamos su información cuando utiliza nuestro
+      sitio web y nuestro software. Consulte nuestra <nuxt-link to="/privacy">
+        política de privacidad
+      </nuxt-link>
+      completa para obtener más detalles.
+    </p>
   </v-container>
 </template>
 
