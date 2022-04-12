@@ -1,15 +1,15 @@
 <template>
-  <v-footer
-    id="home-footer"
-    min-height="48"
-  >
+  <v-footer id="home-footer" min-height="48">
     <v-container>
       <v-row dense>
-        <v-col
-          cols="12"
-          md="6"
-        >
-          <div class="d-flex flex-wrap justify-md-start justify-center justify-md-none">
+        <v-col cols="12" md="6">
+          <div
+            class="
+              d-flex
+              flex-wrap
+              justify-md-start justify-center justify-md-none
+            "
+          >
             <template v-for="(s, i) in social">
               <a
                 :key="s.name"
@@ -29,12 +29,13 @@
             </template>
           </div>
         </v-col>
-        <v-col
-          class="text-center text-md-right"
-          cols="12"
-          md="6"
-        >
-          <v-row justify-md="end"  justify="center" dense>
+        <v-col class="text-center text-md-right" cols="12" md="6">
+          <v-row justify-md="end" justify="center" dense>
+            <v-col cols="auto">
+              <nuxt-link to="/security">
+                Seguridad
+              </nuxt-link>
+            </v-col>
             <v-col cols="auto">
               <nuxt-link to="/terms">
                 Términos y Condiciones
@@ -47,10 +48,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col
-          class="text-center"
-          cols="12"
-        >
+        <v-col class="text-center" cols="12">
           Copyright &copy; 2021 Octatec
         </v-col>
       </v-row>
@@ -79,6 +77,6 @@ export default Vue.extend({
 </script>
 
 <style lang="sass">
-  #home-footer a
-    text-decoration: none
+#home-footer a
+  text-decoration: none
 </style>
