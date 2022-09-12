@@ -1,8 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>
-      Configuración
-    </v-card-title>
+    <v-card-title> Configuración </v-card-title>
     <v-card-text>
       <v-form>
         <v-autocomplete
@@ -27,7 +25,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn :disabled="!hourlyLoad" text @click="ending">
+      <v-btn :loading="loading" :disabled="!hourlyLoad" text @click="ending">
         Guardar
       </v-btn>
     </v-card-actions>
@@ -38,16 +36,17 @@
 import { Component, Vue, Watch } from 'nuxt-property-decorator'
 @Component
 export default class SettingInitial extends Vue {
-  faculties: Array<any> = []
-  specialities: Array<any> = []
-  errorMessage = ''
-  showErrorMessage = false
+  faculties: Array<any> = [];
+  specialities: Array<any> = [];
+  errorMessage = '';
+  showErrorMessage = false;
+  loading = false;
   async mounted () {
     await this.init()
   }
 
   @Watch('faculty')
-  async initSpecialities (faculty:any) {
+  async initSpecialities (faculty: any) {
     if (faculty) {
       this.speciality = null
       const { data } = await this.$api.speciality.getAllByFaculty(faculty.id)
@@ -56,12 +55,14 @@ export default class SettingInitial extends Vue {
   }
 
   @Watch('speciality')
-  async onChangeSpeciality (speciality:any) {
+  async onChangeSpeciality (speciality: any) {
     this.showErrorMessage = false
     if (speciality) {
       this.hourlyLoad = null
       try {
-        const { data } = await this.$api.hourlyLoad.getLatestByFaculty(this.faculty.id)
+        const { data } = await this.$api.hourlyLoad.getLatestByFaculty(
+          this.faculty.id
+        )
         this.hourlyLoad = data
       } catch (e) {
         const { data } = e.response
@@ -71,9 +72,9 @@ export default class SettingInitial extends Vue {
     }
   }
 
-  faculty:any = null
-  speciality:any = null
-  hourlyLoad:any = null
+  faculty: any = null;
+  speciality: any = null;
+  hourlyLoad: any = null;
 
   async init () {
     const { data } = await this.$api.faculty.getAll()
@@ -83,10 +84,12 @@ export default class SettingInitial extends Vue {
     this.speciality = this.$store.state.user.config.speciality
   }
 
-  ending () {
-    this.$store.dispatch('user/config/updateFaculty', this.faculty)
-    this.$store.dispatch('user/config/updateSpeciality', this.speciality)
-    this.$store.dispatch('user/config/updateFirstEntry', false)
+  async ending () {
+    this.loading = true
+    await this.$store.dispatch('user/config/updateFaculty', this.faculty)
+    await this.$store.dispatch('user/config/updateSpeciality', this.speciality)
+    await this.$store.dispatch('user/config/updateFirstEntry', false)
+    this.loading = false
   }
 }
 </script>
