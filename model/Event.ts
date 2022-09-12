@@ -14,7 +14,7 @@ export default class Event {
   category?: string
   type?: string
 
-  constructor (day: number, startTime: string, endTime: string, title: string, description: string, location: string, color: string, category: string, type: string) {
+  constructor (day: number, startTime: string, endTime: string, title: string, description: string, location: string = '', color: string, category: string, type: string) {
     this.day = day
     this.startTime = startTime
     this.endTime = endTime

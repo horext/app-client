@@ -1,22 +1,47 @@
 <template>
   <v-card>
-    <v-toolbar
-      flat
-      dark
-      :color="color"
-    >
+    <v-toolbar flat dark :color="color">
       <slot name="top-items-right" />
+      <v-spacer />
+      <v-radio-group v-model="mode" hide-details dense :column="false" hide-spin-buttons>
+        <template #label>
+          <div>Modo: </div>
+        </template>
+        <v-row no-gutters>
+          <v-col cols="12">
+            <v-radio value="calendar" color="primary darken-2">
+              <template #label>
+                <v-icon small left>
+                  mdi-calendar
+                </v-icon>Calendario
+              </template>
+            </v-radio>
+          </v-col>
+          <v-col cols="12">
+            <v-radio value="table" color="primary darken-2">
+              <template #label>
+                <v-icon  small left>
+                  mdi-table
+                </v-icon> Lista
+              </template>
+            </v-radio>
+          </v-col>
+        </v-row>
+      </v-radio-group>
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
 
-    <div class="row col align-self-center align-items-center justify-center align-content-center ma-1">
+    <div
+      class="row col align-self-center align-items-center justify-center align-content-center ma-1"
+    >
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
-        <template v-if="schedules.length>0">
+        <template v-if="schedules.length > 0 ">
           <v-menu offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
+                v-if="mode === 'calendar'"
                 color="purple"
                 dark
                 rounded
@@ -29,7 +54,10 @@
                 Exportar
               </v-btn>
             </template>
-            <ScheduleExport :dialog.sync="dialogExport" :schedule="currentSchedule" />
+            <ScheduleExport
+              :dialog.sync="dialogExport"
+              :schedule="currentSchedule"
+            />
           </v-menu>
 
           <v-btn
@@ -38,7 +66,7 @@
             rounded
             shaped
             class="ma-1"
-            @click="dialogShare=!dialogShare"
+            @click="dialogShare = !dialogShare"
           >
             <v-icon>mdi-share-variant</v-icon>
             Compartir
@@ -49,17 +77,18 @@
             :end-date="endDate"
             :start-date="startDate"
           />
-          <v-dialog
-            v-model="dialogExport"
-            max-width="600"
-          >
-            <ScheduleExport :dialog.sync="dialogExport" :schedule="currentSchedule" />
+          <v-dialog v-model="dialogExport" max-width="600">
+            <ScheduleExport
+              :dialog.sync="dialogExport"
+              :schedule="currentSchedule"
+            />
           </v-dialog>
-          <v-dialog
-            v-model="dialogShare"
-            max-width="600"
-          >
-            <ScheduleShare :path="path" :dialog.sync="dialogShare" :schedule="currentSchedule" />
+          <v-dialog v-model="dialogShare" max-width="600">
+            <ScheduleShare
+              :path="path"
+              :dialog.sync="dialogShare"
+              :schedule="currentSchedule"
+            />
           </v-dialog>
         </template>
       </slot>
@@ -72,6 +101,7 @@
         :schedules="schedules"
         :current-schedule.sync="currentSchedule"
         :week-days="weekDays"
+        :mode="mode"
       />
     </v-card-text>
     <v-card-text v-else>
@@ -82,23 +112,27 @@
   </v-card>
 </template>
 <script lang="ts">
-import { Component, namespace, Prop, PropSync, Vue } from 'nuxt-property-decorator'
+import {
+  Component,
+  namespace,
+  Prop,
+  PropSync,
+  Vue
+} from 'nuxt-property-decorator'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 const userModule = namespace('user/config')
 
-@Component(
-  {
-    components: {
-      SchedulesList,
-      GoogleAuth,
-      ScheduleShare,
-      ScheduleExport
-    }
+@Component({
+  components: {
+    SchedulesList,
+    GoogleAuth,
+    ScheduleShare,
+    ScheduleExport
   }
-)
+})
 export default class SchedulesPresentation extends Vue {
   get hourlyLoad () {
     return this.$store.state.user.config.hourlyLoad
@@ -122,31 +156,33 @@ export default class SchedulesPresentation extends Vue {
 
   vCalendar: any = null
   @Prop({ type: Array, default: [] })
-  schedules!: [];
+    schedules!: []
 
   @Prop({ type: String, default: '/subject' })
-  path!:string
+    path!: string
 
   @Prop({ type: String, default: '' })
-  title!: string;
+    title!: string
 
   @Prop({ type: String, default: 'primary' })
-  color!: string;
+    color!: string
 
   @Prop({ type: String, default: '' })
-  emptyMessage!: string;
+    emptyMessage!: string
 
   @PropSync('dialog', { type: Boolean, default: false })
-  dialogSync!:boolean
+    dialogSync!: boolean
 
-  currentSchedule:any =null
+  currentSchedule: any = null
 
-  dialogShare = false;
-  dialogExport = false;
+  dialogShare = false
+  dialogExport = false
 
   @userModule.State
-  weekDays!: Array<number>;
+    weekDays!: Array<number>
 
   message = ''
+
+  mode: 'calendar' | 'table' = 'calendar'
 }
 </script>

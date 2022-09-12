@@ -17,7 +17,8 @@
       </v-icon>
     </template>
     <v-window-item v-if="schedule">
-      <schedule-viewer :schedule="schedule" :week-days="weekDays" />
+      <schedule-viewer v-show="mode=='calendar'" :schedule="schedule" :week-days="weekDays" />
+      <view-list v-show="mode=='table'" :schedule="schedule" />
       <v-divider />
       <v-footer>
         <v-pagination v-model="page" :length="schedules.length" />
@@ -28,21 +29,25 @@
 
 <script lang="ts">
 import { Component, Prop, PropSync, Vue, Watch } from 'nuxt-property-decorator'
+import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import ScheduleOptionsBar from '~/components/ScheduleOptionsBar.vue'
 import ScheduleOptionsFAB from '~/components/ScheduleOptionsFAB.vue'
 @Component({
-  components: { ScheduleOptionsFAB, ScheduleOptionsBar, ScheduleViewer }
+  components: { ScheduleOptionsFAB, ScheduleOptionsBar, ScheduleViewer, ViewList }
 })
 export default class SchedulesList extends Vue {
   @Prop({ type: Array, default: [] })
-  schedules!: Array<any>;
+    schedules!: Array<any>
 
   @Prop({ type: Array, default: () => [1, 2, 3, 4, 5, 6] })
-  weekDays!: Array<number>
+    weekDays!: Array<number>
 
   @PropSync('currentSchedule', { type: Object })
-  syncedCurrentSchedule: any
+    syncedCurrentSchedule: any
+
+  @Prop({ type: String })
+    mode!: 'calendar'|'list'
 
   @Watch('schedules')
   onChangeSchedules (newValue: string | any[], oldValue: string | any[]) {
@@ -59,7 +64,7 @@ export default class SchedulesList extends Vue {
     this.syncedCurrentSchedule = value
   }
 
-  shareDialog = false;
+  shareDialog = false
   get schedule () {
     return this.schedules[this.index]
   }
@@ -93,7 +98,7 @@ export default class SchedulesList extends Vue {
     this.$emit('page', val)
   }
 
-  index = 0;
+  index = 0
 }
 </script>
 
