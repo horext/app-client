@@ -28,7 +28,7 @@
     <v-card-actions>
       <v-spacer />
       <v-btn :disabled="!hourlyLoad" text @click="ending">
-        Finalizar
+        Guardar
       </v-btn>
     </v-card-actions>
   </v-card>
