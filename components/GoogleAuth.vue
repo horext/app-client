@@ -335,7 +335,7 @@ export default class GoogleAuth extends Vue {
         iCalUID: 'Horext-' + v4(),
         summary: event.title,
         description: event.description,
-        location: event?.classroom,
+        location: event?.location,
         start: {
           dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.startTime, format).set({ weekday: event.day }).toISO(),
           timeZone: 'America/Lima'
