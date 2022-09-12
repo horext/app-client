@@ -126,6 +126,7 @@ import { DateTime } from 'luxon'
 import { colors, weekdayToDatetime } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
+import Event from '~/model/Event'
 
 @Component({
   name: 'GoogleAuth',
@@ -324,7 +325,7 @@ export default class GoogleAuth extends Vue {
     this.progress = 0
   }
 
-  eventRequest (event: any): Promise<any> {
+  eventRequest (event: Event): Promise<any> {
     return new Promise((resolve, reject) => {
       const format = event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
       let color = colors.findIndex(color => (event.color === color))
