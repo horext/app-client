@@ -20,7 +20,7 @@
       <schedule-viewer v-show="mode=='calendar'" :schedule="schedule" :week-days="weekDays" />
       <view-list v-show="mode=='table'" :schedule="schedule" />
       <v-divider />
-      <v-footer>
+      <v-footer class="text-center align-center justify-center">
         <v-pagination v-model="page" :length="schedules.length" />
       </v-footer>
     </v-window-item>
