@@ -1,36 +1,23 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      absolute
-      clipped-right
-      flat
-      height="72"
-    >
+    <v-app-bar app absolute clipped-right flat height="72">
       <v-app-bar-nav-icon
         aria-label="Menu Iziquierdo"
         @click.stop="drawer = !drawer"
       />
-      <v-spacer />
-      <ThemeDarkToggle />
+      <v-row justify="center" align="center" no-gutters>
+        <v-col cols="9" sm="8">
+          <AppHourlyLoadInfo class="mx-0" />
+        </v-col>
+        <v-spacer />
+        <v-col cols="3" sm="4">
+          <ThemeDarkToggle />
+        </v-col>
+      </v-row>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      fixed
-      left
-      width="300"
-    >
-      <v-card
-        tile
-        outlined
-        height="70"
-
-        width="100%"
-      >
-        <v-card-title>
-          Opciones
-        </v-card-title>
+    <v-navigation-drawer v-model="drawer" app fixed left width="300">
+      <v-card tile outlined height="70" width="100%">
+        <v-card-title> Opciones </v-card-title>
       </v-card>
 
       <v-list>
@@ -58,7 +45,13 @@
       color="primary"
       grow
     >
-      <v-btn v-for="item in denseItems" :key="item.to" exact tag="div" :to="item.to">
+      <v-btn
+        v-for="item in denseItems"
+        :key="item.to"
+        exact
+        tag="div"
+        :to="item.to"
+      >
         <div>
           {{ item.title }}
         </div>
@@ -87,15 +80,16 @@ import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
     AppHourlyLoadInfo,
     TheSnackbar
   }
-}
-)
+})
 export default class App extends Vue {
   mounted () {
-    this.$vuetify.theme.dark = JSON.parse(localStorage.getItem('darkMode') || 'false')
+    this.$vuetify.theme.dark = JSON.parse(
+      localStorage.getItem('darkMode') || 'false'
+    )
   }
 
-  drawer = true
-  dialog = true
+  drawer = true;
+  dialog = true;
   items = [
     {
       title: 'Inicio',
@@ -127,7 +121,7 @@ export default class App extends Vue {
       icon: 'mdi-cog',
       to: '/generator/settings'
     }
-  ]
+  ];
 
   denseItems = [
     {
@@ -150,7 +144,6 @@ export default class App extends Vue {
       icon: 'mdi-calendar-plus',
       to: '/generator/events'
     }
-  ]
+  ];
 }
-
 </script>

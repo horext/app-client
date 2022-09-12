@@ -3,9 +3,6 @@
     <v-card-text>
       <v-row no-gutters>
         <v-col cols="12">
-          <HourlyLoadInfo />
-        </v-col>
-        <v-col cols="12">
           <v-autocomplete
             v-model="editedItem"
             shaped
@@ -159,11 +156,9 @@
 import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
-import HourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 const userConfig = namespace('user/config')
 @Component({
   components: {
-    HourlyLoadInfo,
     SubjectScheduleList
   }
 })
