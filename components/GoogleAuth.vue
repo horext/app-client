@@ -177,15 +177,15 @@ export default class GoogleAuth extends Vue {
   }
 
   search = ''
-  calendarItem= { summary: '' }
-  monthNames= ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
+  calendarItem = { summary: '' }
+  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
     'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-  dialogCalendarSync= false
-  signInStatus= false
-  isGoogleApiLoaded= false
-  dialog= false
-  dayNames= [
+  dialogCalendarSync = false
+  signInStatus = false
+  isGoogleApiLoaded = false
+  dialog = false
+  dayNames = [
     'Do',
     'Lu', 'Ma', 'Mi', 'Ju',
     'Vi', 'Sa']
@@ -194,7 +194,7 @@ export default class GoogleAuth extends Vue {
   dateEnd = DateTime.local().plus({ months: 4 }).toFormat('yyyy-MM-dd')
 
   progress = 0
-  day= [
+  day = [
     '2021-04-11 ',
     '2021-04-05 ',
     '2021-04-06 ',
@@ -204,24 +204,24 @@ export default class GoogleAuth extends Vue {
     '2021-04-10 '
   ]
 
-  notifications= [
+  notifications = [
     {
       method: 'popup',
       minutes: 15
     }
   ]
 
-  defaultNotification= {
+  defaultNotification = {
     method: 'popup',
     minutes: 15
   }
 
-  calendarList= []
-  summary= ''
+  calendarList = []
+  summary = ''
   selected:any = null
 
-  loading= false
-  selectedError= false
+  loading = false
+  selectedError = false
 
   handleClientLoad () {
     window.gapi.load('client:auth2', this.initClient)
@@ -328,14 +328,14 @@ export default class GoogleAuth extends Vue {
     return new Promise((resolve, reject) => {
       const format = event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
       let color = colors.findIndex(color => (event.color === color))
-      if(color === -1){
+      if (color === -1) {
         color = 10
       }
       const eventData = {
         iCalUID: 'Horext-' + v4(),
         summary: event.title,
         description: event.description,
-        location: event.classroom,
+        location: event?.classroom,
         start: {
           dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.startTime, format).set({ weekday: event.day }).toISO(),
           timeZone: 'America/Lima'
@@ -345,7 +345,7 @@ export default class GoogleAuth extends Vue {
           timeZone: 'America/Lima'
         },
         recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=' + new Date(this.dateEnd).toISOString().substring(0, 10).split('-').join('') + 'T000000Z'],
-        colorId:  color,
+        colorId: color,
         source: {
           title: 'Horext',
           url: 'https://horext.octatec.io'

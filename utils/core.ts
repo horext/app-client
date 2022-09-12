@@ -128,7 +128,7 @@ function scheduleToEvent (schedule: any, color: string = 'primary'): Array<Event
       sessions[i].endTime,
       course.id + ' ' + section + ' - ' + course.name,
       ` Docente: ${sessions[i].teacher.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
-      sessions[i].classroom.code,
+      sessions[i]?.classroom?.code,
       color,
       'COURSE',
       sessions[i].type.code
