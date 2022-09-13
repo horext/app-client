@@ -18,7 +18,7 @@
             @input="editItem"
           >
             <template #selection="{ item, on , attrs}">
-              <v-list-item dense v-on="on" v-bind="attrs">
+              <v-list-item dense v-bind="attrs" v-on="on">
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ item.course.id }} - {{ item.course.name }}
@@ -26,14 +26,14 @@
                   <v-list-item-subtitle>
                     Ciclo {{ item.cycle }} |
                     <span v-if="item.type">
-                    {{ item.type.name }}
+                      {{ item.type.name }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </template>
             <template #item="{ item, on , attrs}">
-              <v-list-item dense v-on="on" v-bind="attrs">
+              <v-list-item dense v-bind="attrs" v-on="on">
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ item.course.id }} - {{ item.course.name }}
@@ -41,7 +41,7 @@
                   <v-list-item-subtitle>
                     Ciclo {{ item.cycle }} |
                     <span v-if="item.type">
-                    {{ item.type.name }}
+                      {{ item.type.name }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -53,7 +53,9 @@
       <v-row no-gutters>
         <v-spacer />
         <v-col cols="auto">
-          <nuxt-link to="/generator">Generar mis horarios</nuxt-link>
+          <nuxt-link to="/generator">
+            Generar mis horarios
+          </nuxt-link>
         </v-col>
       </v-row>
       <v-row dense>
@@ -149,6 +151,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="succcesAddCourse" color="blue" app timeout="3000">
+      <v-icon> mdi-check </v-icon>
+      Curso Agregado correctamente!
+      <template #action="{ attrs }">
+        <v-btn text small icon v-bind="attrs" @click="succcesAddCourse = false">
+          <v-icon> mdi-close </v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -173,6 +184,8 @@ export default class mySubjects extends Vue {
     })
   }
 
+  succcesAddCourse = false
+
   get availableCourses () {
     return this.subjects?.filter((c1: any) =>
       this.mySubjects?.findIndex((c2: any) => c1.id === c2.id))
@@ -184,7 +197,7 @@ export default class mySubjects extends Vue {
   }
 
   @State(state => state.user.config.subjects)
-  mySubjects!: Array<any>
+    mySubjects!: Array<any>
 
   get totalCredits () {
     return this.mySubjects.reduce((previousValue, currentValue) => {
@@ -193,13 +206,13 @@ export default class mySubjects extends Vue {
   }
 
   @userConfig.Action('deleteSubjectById')
-  deleteSubjectById!: Function
+    deleteSubjectById!: Function
 
   @userConfig.Action('updateSubject')
-  updateSubject!: Function
+    updateSubject!: Function
 
   @userConfig.Action('saveNewSubject')
-  saveNewSubject!: Function
+    saveNewSubject!: Function
 
   subjects: Array<any> = []
   dialog = false
@@ -247,6 +260,7 @@ export default class mySubjects extends Vue {
   }
 
   async save (schedules: string | any[]) {
+    this.succcesAddCourse = false
     if (this.editedIndex > -1 && schedules && schedules.length > 0) {
       await this.updateSubject({ ...this.editedItem, schedules })
       this.close()
@@ -258,6 +272,7 @@ export default class mySubjects extends Vue {
     } else {
       this.close()
     }
+    this.succcesAddCourse = true
   }
 
   search: string = ''

@@ -1,7 +1,7 @@
 <template>
   <v-window
     id="window"
-    class="pl-4 pr-4"
+    class="px-6 mx-4"
     show-arrows
     continuous
   >
