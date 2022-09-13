@@ -89,7 +89,7 @@ const userEvents = namespace('user/events')
 export default class Generator extends Vue {
   occurrences: Array<any> = []
   openMySchedules = false
-  succces = true
+  succces = false
   get crossingSubjects () {
     return this.crossings
   }
