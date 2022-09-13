@@ -3,13 +3,19 @@
     <v-toolbar flat dark :color="color">
       <slot name="top-items-right" />
       <v-spacer />
-      <v-radio-group v-model="mode" hide-details dense :column="false" hide-spin-buttons>
+      <v-radio-group
+        v-model="mode"
+        hide-details
+        dense
+        :column="false"
+        hide-spin-buttons
+      >
         <template #label>
-          <div>Modo: </div>
+          <div>Modo:</div>
         </template>
         <v-row no-gutters>
           <v-col cols="12">
-            <v-radio value="calendar" color="primary darken-2">
+            <v-radio :value="MODES.CALENDAR" color="primary darken-2">
               <template #label>
                 <v-icon small left>
                   mdi-calendar
@@ -18,7 +24,7 @@
             </v-radio>
           </v-col>
           <v-col cols="12">
-            <v-radio value="table" color="primary darken-2">
+            <v-radio :value="MODES.LIST" color="primary darken-2">
               <template #label>
                 <v-icon small left>
                   mdi-table
@@ -37,11 +43,10 @@
     >
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
-        <template v-if="schedules.length > 0 ">
-          <v-menu v-if="mode === 'calendar'" offset-y>
+        <template v-if="schedules.length > 0">
+          <v-menu v-if="mode === MODES.CALENDAR" offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
-
                 color="purple"
                 dark
                 rounded
@@ -123,6 +128,7 @@ import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
+import { ViewMode } from '~/model/ViewMode'
 const userModule = namespace('user/config')
 
 @Component({
@@ -183,6 +189,8 @@ export default class SchedulesPresentation extends Vue {
 
   message = ''
 
-  mode: 'calendar' | 'table' = 'calendar'
+  mode: ViewMode = ViewMode.CALENDAR
+
+  MODES = ViewMode
 }
 </script>

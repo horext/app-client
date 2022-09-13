@@ -1,10 +1,5 @@
 <template>
-  <v-window
-    id="window"
-    class="px-6 mx-4"
-    show-arrows
-    continuous
-  >
+  <v-window id="window" class="px-6 mx-4" show-arrows continuous>
     <template #next>
       <v-icon large @click="next">
         mdi-arrow-right-bold-circle
@@ -17,8 +12,12 @@
       </v-icon>
     </template>
     <v-window-item v-if="schedule">
-      <schedule-viewer v-show="mode=='calendar'" :schedule="schedule" :week-days="weekDays" />
-      <view-list v-show="mode=='table'" :schedule="schedule" />
+      <schedule-viewer
+        v-show="mode == MODES.CALENDAR"
+        :schedule="schedule"
+        :week-days="weekDays"
+      />
+      <view-list v-show="mode == MODES.LIST" :schedule="schedule" />
       <v-divider />
       <v-footer class="text-center align-center justify-center">
         <v-pagination v-model="page" :length="schedules.length" />
@@ -33,8 +32,15 @@ import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import ScheduleOptionsBar from '~/components/ScheduleOptionsBar.vue'
 import ScheduleOptionsFAB from '~/components/ScheduleOptionsFAB.vue'
+import { ViewMode } from '~/model/ViewMode'
+
 @Component({
-  components: { ScheduleOptionsFAB, ScheduleOptionsBar, ScheduleViewer, ViewList }
+  components: {
+    ScheduleOptionsFAB,
+    ScheduleOptionsBar,
+    ScheduleViewer,
+    ViewList
+  }
 })
 export default class SchedulesList extends Vue {
   @Prop({ type: Array, default: [] })
@@ -46,8 +52,10 @@ export default class SchedulesList extends Vue {
   @PropSync('currentSchedule', { type: Object })
     syncedCurrentSchedule: any
 
-  @Prop({ type: String })
-    mode!: 'calendar'|'list'
+  MODES = ViewMode
+
+  @Prop({ type: String, default: () => ViewMode.CALENDAR })
+    mode!: ViewMode
 
   @Watch('schedules')
   onChangeSchedules (newValue: string | any[], oldValue: string | any[]) {
@@ -103,16 +111,15 @@ export default class SchedulesList extends Vue {
 </script>
 
 <style lang="sass">
-  /* This is for documentation purposes and will not be needed in your application */
-  #lateral .v-btn--example
-    bottom: 0
-    position: absolute
-    margin: 0 0 16px 16px
+/* This is for documentation purposes and will not be needed in your application */
+#lateral .v-btn--example
+  bottom: 0
+  position: absolute
+  margin: 0 0 16px 16px
 
-  .v-application--is-ltr .v-window__next
-    right: -28px
+.v-application--is-ltr .v-window__next
+  right: -28px
 
-  .v-application--is-ltr .v-window__prev
-    left: -28px
-
+.v-application--is-ltr .v-window__prev
+  left: -28px
 </style>
