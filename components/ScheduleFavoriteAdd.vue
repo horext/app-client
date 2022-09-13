@@ -20,13 +20,13 @@ import { Component, PropSync, Vue } from 'nuxt-property-decorator'
 @Component
 export default class ScheduleFavoriteAdd extends Vue {
   @PropSync('schedule', { default: () => (null) })
-  currentSchedule!:any
+    currentSchedule!:any
 
   @PropSync('favoritesSchedules', { default: () => ([]) })
-  favoritesSchedulesSync!:Array<any>
+    favoritesSchedulesSync!:Array<any>
 
-  showMessage= false
-  message= ''
+  showMessage = false
+  message = ''
 
   changeFavoriteState () {
     if (this.currentSchedule) {

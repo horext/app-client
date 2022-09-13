@@ -20,7 +20,7 @@
           <v-col cols="12">
             <v-radio value="table" color="primary darken-2">
               <template #label>
-                <v-icon  small left>
+                <v-icon small left>
                   mdi-table
                 </v-icon> Lista
               </template>
@@ -38,10 +38,10 @@
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0 ">
-          <v-menu offset-y>
+          <v-menu v-if="mode === 'calendar'" offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
-                v-if="mode === 'calendar'"
+
                 color="purple"
                 dark
                 rounded
