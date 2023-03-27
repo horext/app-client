@@ -1955,7 +1955,7 @@
     upath "^2.0.1"
     uri-js "^4.4.1"
 
-"@nuxtjs/vuetify@^1.12.1":
+"@nuxtjs/vuetify@^1.12.3":
   version "1.12.3"
   resolved "https://registry.yarnpkg.com/@nuxtjs/vuetify/-/vuetify-1.12.3.tgz#d4adf84e18fd474044bf971e7cc978e25eb16ba1"
   integrity sha512-6uVL3cfESMB00eVjJTNkyU4jvuPTGPn1yteo7lQTH6v+fxHcPaOgvzVYHIKSHIz1DecuOiB5c9b+YjsRP5+C8A==
