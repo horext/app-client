@@ -7104,10 +7104,10 @@ loose-envify@^1.0.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
-lottie-web@^5.9.1:
-  version "5.9.1"
-  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.9.1.tgz#0090e575de74e49843606c1722767604e068f061"
-  integrity sha512-3uKtU6BhIK6ZRCE/QyiXq/KuRvPeEAz/VFwqd99jPbpgFY9gHLw2krqvcuCFGepeW94BipS/B3TqIfTc9pUeZg==
+lottie-web@^5.10.2:
+  version "5.10.2"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.10.2.tgz#a1c952b6734759fcd369eba73b6b7e3d9a76ce0b"
+  integrity sha512-d0PFIGiwuMsJYaF4uPo+qG8dEorlI+xFI2zrrFtE1bGO4WoLIz+NjremxEq1swpR7juR10aeOtmNh3d6G3ub0A==
 
 lower-case@^1.1.1:
   version "1.1.4"
