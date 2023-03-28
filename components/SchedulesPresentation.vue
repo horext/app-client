@@ -119,7 +119,7 @@
 
 <script lang="ts">
 import { computed, ref, defineComponent } from 'vue'
-import { useStore } from '@nuxtjs/composition-api'
+import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
@@ -160,9 +160,7 @@ export default defineComponent({
     }
   },
   setup () {
-    const store = useStore<any>()
-
-    const hourlyLoad = computed(() => store.state.user.config.hourlyLoad)
+    const { hourlyLoad, weekDays } = useUserConfigStore()
 
     const academicPeriodOrganizationUnit = computed(
       () => hourlyLoad.value?.academicPeriodOrganizationUnit
@@ -180,8 +178,6 @@ export default defineComponent({
 
     const dialogShare = ref(false)
     const dialogExport = ref(false)
-
-    const weekDays = computed(() => store.state.user.config.weekDays)
 
     const message = ref('')
 

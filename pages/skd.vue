@@ -30,15 +30,14 @@ import {
   defineComponent,
   ref,
   computed,
-  useStore,
   onMounted,
   useAsync,
   useRoute,
-  toRefs
 } from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { $api } from '~/utils/api'
+import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
   components: {
@@ -51,10 +50,10 @@ export default defineComponent({
     const loading = ref(false)
     const courses = ref([])
 
-    const store = useStore<any>()
+    const store = useUserConfigStore()
 
     const myFavoritesSchedules = computed(
-      () => store.state.user.config.favoritesSchedules
+      () => store.favoritesSchedules
     )
     const route = useRoute()
 
@@ -75,10 +74,10 @@ export default defineComponent({
     const sessions = computed(() => data.value?.sessions)
 
     const deleteFavoriteScheduleById = (favorites: any) =>
-      store.dispatch('user/config/deleteFavoriteScheduleById', favorites)
+      store.deleteFavoriteScheduleById(favorites)
 
     const saveNewFavoriteSchedule = (favorites: any) =>
-      store.dispatch('user/config/saveNewFavoriteSchedule', favorites)
+      store.saveNewFavoriteSchedule(favorites)
 
     const subjects = computed(() => {
       return scheduleSubjects.value.map((sb: any) => ({

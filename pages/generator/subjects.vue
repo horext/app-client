@@ -158,9 +158,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
-import { useStore } from '@nuxtjs/composition-api'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { $api } from '~/utils/api'
+import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -178,7 +178,7 @@ export default defineComponent({
       })
     })
 
-    const store = useStore<any>()
+    const configStore = useUserConfigStore()
 
     const succcesAddCourse = ref(false)
 
@@ -193,7 +193,7 @@ export default defineComponent({
       return months[section.charCodeAt(0) % months.length]
     }
 
-    const mySubjects = computed<any[]>(() => store.state.user.config.subjects)
+    const mySubjects = computed<any[]>(() => configStore.subjects)
 
     const totalCredits = computed(() => {
       return mySubjects.value.reduce(
@@ -205,15 +205,15 @@ export default defineComponent({
     })
 
     const deleteSubjectById = async (id: any) => {
-      await store.dispatch('user/config/deleteSubjectById', id)
+      await configStore.deleteSubjectById(id)
     }
 
     const updateSubject = async (subject: any) => {
-      await store.dispatch('user/config/updateSubject', subject)
+      await configStore.updateSubject(subject)
     }
 
     const saveNewSubject = async (subject: any) => {
-      await store.dispatch('user/config/saveNewSubject', subject)
+      await configStore.saveNewSubject(subject)
     }
 
     const subjects = ref<any[]>([])
@@ -283,14 +283,14 @@ export default defineComponent({
 
     const onChangeSearch = async (search: string) => {
       if (
-        store.getters['user/config/specialityId'] &&
-        store.getters['user/config/hourlyLoadId']
+        configStore.specialityId &&
+        configStore.hourlyLoadId
       ) {
         try {
           const response = await $api.course.findBySearch(
             search || '',
-            store.getters['user/config/specialityId'],
-            store.getters['user/config/hourlyLoadId']
+            configStore.specialityId,
+            configStore.hourlyLoadId
           )
           subjects.value = response.data.content
         } catch (e) {
@@ -331,7 +331,7 @@ export default defineComponent({
     })
 
     const myHourlyLoad = computed(() => {
-      return store.state.user.config.hourlyLoad
+      return configStore.hourlyLoad
     })
 
     return {

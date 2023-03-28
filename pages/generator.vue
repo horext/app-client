@@ -9,9 +9,11 @@
 
 <script lang="ts">
 import { Context } from '@nuxt/types'
-import { useRouter, useStore } from '@nuxtjs/composition-api'
+import { useRouter } from '@nuxtjs/composition-api'
 import { defineComponent, ref, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
+import { useUserConfigStore } from '~/stores/user-config'
+import { useUserEventsStore } from '~/stores/user-events'
 
 export default defineComponent({
   name: 'Generator',
@@ -20,13 +22,14 @@ export default defineComponent({
   },
   layout: 'app',
   setup () {
-    const store = useStore<any>()
+    const configStore = useUserConfigStore()
+    const eventsStore = useUserEventsStore()
     const router = useRouter()
 
     const firstEntry = ref(false)
 
     watch(
-      () => store.state.user.config.firstEntry,
+      () => configStore.firstEntry,
       (newValue, oldValue) => {
         if (oldValue && !newValue) {
           router.push('/generator/subjects')
@@ -35,24 +38,25 @@ export default defineComponent({
     )
 
     onMounted(async () => {
-      await store.dispatch('user/config/fetchSubjects')
-      await store.dispatch('user/config/fetchSchedules')
-      await store.dispatch('user/config/fetchCrossings')
-      await store.dispatch('user/config/fetchFavoritesSchedules')
-      await store.dispatch('user/events/fetchItems')
+      await configStore.fetchSubjects()
+      await configStore.fetchSchedules()
+      await configStore.fetchCrossings()
+      await configStore.fetchFavoritesSchedules()
+      await eventsStore.fetchItems()
 
-      firstEntry.value = store.state.user.config.firstEntry
+      firstEntry.value = configStore.firstEntry
     })
 
     return {
       firstEntry
     }
   },
-  async asyncData ({ store }: Context) {
-    await store.dispatch('user/config/fetchFirstEntry')
-    await store.dispatch('user/config/fetchFaculty')
-    await store.dispatch('user/config/fetchSpeciality')
-    await store.dispatch('user/config/fetchHourlyLoad')
+  async asyncData ({ $pinia }: Context) {
+    const store = useUserConfigStore($pinia)
+    await store.fetchFirstEntry()
+    await store.fetchFaculty()
+    await store.fetchSpeciality()
+    await store.fetchHourlyLoad()
   },
   head: {
     title: 'Generador de Horarios'

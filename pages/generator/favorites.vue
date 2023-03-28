@@ -24,19 +24,19 @@
 </template>
 
 <script lang="ts">
-import { useStore } from '@nuxtjs/composition-api'
 import { computed, defineComponent } from 'vue'
 import FavoriteBanner from '~/components/FavoriteBanner.vue'
+import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
   components: { FavoriteBanner },
   setup () {
-    const store = useStore<any>()
+    const store = useUserConfigStore()
     const schedules = computed(
-      () => store.state.user.config.favoritesSchedules
+      () => store.favoritesSchedules
     )
     const updateFavoritesSchedules = (schedules: any) =>
-      store.dispatch('user/config/updateFavoritesSchedules', schedules)
+      store.updateFavoritesSchedules(schedules)
     return { schedules, updateFavoritesSchedules }
   }
 })

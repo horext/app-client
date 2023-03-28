@@ -75,12 +75,13 @@
 import {
   defineComponent,
   ref,
-  computed,
-  useStore
+  computed
 } from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
+import { useUserConfigStore } from '~/stores/user-config'
+import { useUserEventsStore } from '~/stores/user-events'
 
 export default defineComponent({
   components: {
@@ -89,42 +90,41 @@ export default defineComponent({
   },
   layout: 'app',
   setup () {
-    const store = useStore<any>()
-
+    const configStore = useUserConfigStore()
+    const eventsStore = useUserEventsStore()
     const occurrences = ref<any[]>([])
     const openMySchedules = ref(false)
     const succces = ref(false)
 
     const crossingSubjects = computed({
-      get: () => store.state.user.config.crossings,
+      get: () => configStore.crossings,
       set: (crossing: number) => {
         updateCrossings(crossing)
       }
     })
 
-    const mySubjects = computed(() => store.state.user.config.subjects)
+    const mySubjects = computed(() => configStore.subjects)
 
     const updateCrossings = (crossings: number) => {
-      store.dispatch('user/config/updateCrossings', crossings)
+      configStore.updateCrossings(crossings)
     }
 
-    const myEvents = computed(() => store.state.user.events.items)
+    const myEvents = computed(() => eventsStore.items)
 
     const myFavoritesSchedules = computed(
-      () => store.state.user.config.favoritesSchedules
+      () => configStore.favoritesSchedules
     )
 
     const updateFavoritesSchedules = (favoritesSchedules: any[]) => {
-      store.dispatch(
-        'user/config/updateFavoritesSchedules',
+      configStore.updateFavoritesSchedules(
         favoritesSchedules
       )
     }
 
-    const schedules = computed(() => store.state.user.config.schedules)
+    const schedules = computed(() => configStore.schedules)
 
     const updateSchedules = (schedules: any[]) => {
-      store.dispatch('user/config/updateSchedules', schedules)
+      configStore.updateSchedules(schedules)
     }
 
     const generateAllUserSchedules = () => {

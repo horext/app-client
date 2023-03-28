@@ -71,10 +71,10 @@
 <script lang="ts">
 import { defineComponent, ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
-import { useStore } from '@nuxtjs/composition-api'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
 import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
+import { useUserEventsStore } from '~/stores/user-events'
 
 interface IEvent {
   id: null | string;
@@ -89,26 +89,20 @@ interface IEvent {
 export default defineComponent({
   components: { EventsCreator },
   setup () {
-    const store = useStore<{
-      user: {
-        events: {
-          items: any[];
-        };
-      };
-    }>()
+    const store = useUserEventsStore()
 
-    const myEvents = computed(() => store.state.user.events.items)
+    const myEvents = computed(() => store.items)
 
     const deleteEventById = async (id: string) => {
-      await store.dispatch('user/events/deleteItemById', id)
+      await store.deleteItemById(id)
     }
 
     const updateEvent = async (event: IEvent) => {
-      await store.dispatch('user/events/updateItem', event)
+      await store.updateItem(event)
     }
 
     const saveNewEvent = async (event: IEvent) => {
-      await store.dispatch('user/events/saveNewItem', event)
+      await store.saveNewItem(event)
     }
 
     const dialog = ref(false)

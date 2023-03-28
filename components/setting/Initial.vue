@@ -34,13 +34,13 @@
 
 <script lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useStore } from '@nuxtjs/composition-api'
 import { $api } from '~/utils/api'
+import { useUserConfigStore } from '~/stores/user-config'
 
 export default {
   name: 'SettingInitial',
   setup () {
-    const store = useStore<any>()
+    const store = useUserConfigStore()
 
     const faculties = ref([])
     const specialities = ref([])
@@ -84,16 +84,16 @@ export default {
     const init = async () => {
       const { data } = await $api.faculty.getAll()
       faculties.value = data
-      faculty.value = store.state.user.config.faculty
-      hourlyLoad.value = store.state.user.config.hourlyLoad
-      speciality.value = store.state.user.config.speciality
+      faculty.value = store.faculty
+      hourlyLoad.value = store.hourlyLoad
+      speciality.value = store.speciality
     }
 
     const ending = async () => {
       loading.value = true
-      await store.dispatch('user/config/updateFaculty', faculty.value)
-      await store.dispatch('user/config/updateSpeciality', speciality.value)
-      await store.dispatch('user/config/updateFirstEntry', false)
+      await store.updateFaculty(faculty.value)
+      await store.updateSpeciality(speciality.value)
+      await store.updateFirstEntry(false)
       loading.value = false
     }
 
