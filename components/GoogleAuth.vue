@@ -17,78 +17,85 @@
         <v-card-title>Google Calendar</v-card-title>
         <v-dialog
           v-model="dialog"
-          max-width="290"
+          max-width="320"
         >
           <CreateGoogleCalendar
-            :dialog.sync="dialog"
-            :item.sync="calendarItem"
+            :calendar="calendarItem"
+            :loading="loading"
+            @close="dialog=false"
+            @update:calendar="createCalendar"
           />
         </v-dialog>
         <v-card-text>
-          <template v-if="signInStatus">
-            <v-autocomplete
-              v-model="selected"
-              label="Selecciona tu calendario"
-              :items="calendarList"
-              return-object
-              :search-input.sync="search"
-              item-text="summary"
-            >
-              <template #prepend-item="">
-                <v-list-item selectable color="primary" @click="addCalendar()">
-                  <v-list-item-content class=" text--primary">
-                    <v-list-item-title class=" text primary--text">
-                      Crear mi calendario...
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-autocomplete>
-            <v-text-field v-model="dateEnd" type="date" label="Fecha de Finalizacion" />
-            <v-form>
-              <span class="heading">
-                Notificaciones
-              </span>
-              <v-text-field
-                v-for="(notification,index) in notifications"
-                :id="'not-'+index"
-                :key="index"
-                v-model="notifications[index].minutes"
-                type="number"
-                :rules="[ (a)=>(a>0||'No permitido') ]"
-                outlined
-                dense
-                :value="notification.minutes"
-                prepend-icon="mdi-bell"
-                :items="Array.from({length: 60}, (x,i) => i)"
-                suffix="minutos"
+          <v-form ref="form">
+            <template v-if="signInStatus">
+              <v-autocomplete
+                v-model="selected"
+                label="Selecciona tu calendario"
+                :items="calendarList"
+                return-object
+                clearable
+                :rules="[(r)=>(!!r||'Requerido')]"
+                :search-input.sync="search"
+                item-text="summary"
               >
-                <template #append-outer>
-                  <v-icon :key="index+'del'" color="error" @click="deleteNotification(notification)">
-                    mdi-delete
-                  </v-icon>
+                <template #prepend-item="">
+                  <v-list-item selectable color="primary" @click="addCalendar()">
+                    <v-list-item-content class=" text--primary">
+                      <v-list-item-title class=" text primary--text">
+                        Crear mi calendario...
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
-              </v-text-field>
-              <v-text-field
-                key="selected"
-                v-model="defaultNotification.minutes"
-                :rules="[ (a)=>(a>0||'No permitido') ]"
-                :value="defaultNotification.minutes"
-                prepend-icon="mdi-bell"
-                type="number"
-                :items="Array.from({length: 60}, (x,i) => i)"
-                suffix="minutos"
-                outlined
-                dense
-              >
-                <template #append-outer>
-                  <v-icon color="success" @click="addNotification()">
-                    mdi-plus
-                  </v-icon>
-                </template>
-              </v-text-field>
-            </v-form>
-          </template>
+              </v-autocomplete>
+              <v-text-field v-model="dateStart" :rules="[(r)=>!!r||'Requerido']" type="date" label="Fecha de Inicio" />
+              <v-text-field v-model="dateEnd" :rules="[(r)=>!!r||'Requerido']" type="date" label="Fecha de Fin" />
+              <v-form>
+                <span class="heading">
+                  Notificaciones
+                </span>
+                <v-text-field
+                  v-for="(notification,index) in notifications"
+                  :id="'not-'+index"
+                  :key="index"
+                  v-model="notifications[index].minutes"
+                  type="number"
+                  :rules="[ (a)=>(a>0||'No permitido') ]"
+                  outlined
+                  dense
+                  :value="notification.minutes"
+                  prepend-icon="mdi-bell"
+                  :items="Array.from({length: 60}, (x,i) => i)"
+                  suffix="minutos"
+                >
+                  <template #append-outer>
+                    <v-icon :key="index+'del'" color="error" @click="deleteNotification(notification)">
+                      mdi-delete
+                    </v-icon>
+                  </template>
+                </v-text-field>
+                <v-text-field
+                  key="selected"
+                  v-model="defaultNotification.minutes"
+                  :rules="[ (a)=>(a>0||'No permitido') ]"
+                  :value="defaultNotification.minutes"
+                  prepend-icon="mdi-bell"
+                  type="number"
+                  :items="Array.from({length: 60}, (x,i) => i)"
+                  suffix="minutos"
+                  outlined
+                  dense
+                >
+                  <template #append-outer>
+                    <v-icon color="success" @click="addNotification()">
+                      mdi-plus
+                    </v-icon>
+                  </template>
+                </v-text-field>
+              </v-form>
+            </template>
+          </v-form>
         </v-card-text>
         <v-card-actions v-if="signInStatus">
           <v-btn :loading="progress>0" text @click="exportEventToGCalendar">
@@ -101,6 +108,7 @@
               </v-progress-linear>
             </template>
           </v-btn>
+          <v-spacer />
           <v-btn text color="success" @click="handleSignOutClick()">
             Cerrar Sesión
           </v-btn>
@@ -113,9 +121,12 @@
 <script lang="ts">
 
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
-import { colors } from '~/utils/core'
+import { v4 } from 'uuid'
+import { DateTime } from 'luxon'
+import { colors, weekdayToDatetime } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
+import Event from '~/model/Event'
 
 @Component({
   name: 'GoogleAuth',
@@ -128,6 +139,26 @@ export default class GoogleAuth extends Vue {
     type: Array
   })
     events!: Array<any>
+
+  @Prop({
+    type: String
+  })
+    startDate!: string
+
+  @Prop({
+    type: String
+  })
+    endDate!: string
+
+  @Watch('startDate', { immediate: true })
+  onChangeStartDate (startDate: string) {
+    if (startDate) { this.dateStart = DateTime.fromISO(startDate).toFormat('yyyy-MM-dd') }
+  }
+
+  @Watch('endDate', { immediate: true })
+  onChangeEndDate (endDate: string) {
+    if (endDate) { this.dateEnd = DateTime.fromISO(endDate).toFormat('yyyy-MM-dd') }
+  }
 
   head () {
     return {
@@ -147,25 +178,24 @@ export default class GoogleAuth extends Vue {
   }
 
   search = ''
-  calendarItem= { name: '' }
-  monthNames= ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
+  calendarItem = { summary: '' }
+  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
     'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-  dialogCalendarSync= false
-  signInStatus= false
-  isGoogleApiLoaded= false
-  dialog= false
-  dayNames= [
+  dialogCalendarSync = false
+  signInStatus = false
+  isGoogleApiLoaded = false
+  dialog = false
+  dayNames = [
     'Do',
     'Lu', 'Ma', 'Mi', 'Ju',
     'Vi', 'Sa']
 
-  dateStart = new Date()
-  dateEnd = '2021-07-18'
-  fechaInicio = '2020-11-04'
-  fechaFin = '2021-02-20'
+  dateStart = DateTime.local().toFormat('yyyy-MM-dd')
+  dateEnd = DateTime.local().plus({ months: 4 }).toFormat('yyyy-MM-dd')
+
   progress = 0
-  day= [
+  day = [
     '2021-04-11 ',
     '2021-04-05 ',
     '2021-04-06 ',
@@ -175,26 +205,24 @@ export default class GoogleAuth extends Vue {
     '2021-04-10 '
   ]
 
-  notifications= [
+  notifications = [
     {
       method: 'popup',
       minutes: 15
     }
   ]
 
-  defaultNotification= {
+  defaultNotification = {
     method: 'popup',
     minutes: 15
   }
 
-  calendarList= []
-  summary= ''
-  selected= {
-    id: undefined
-  }
+  calendarList = []
+  summary = ''
+  selected:any = null
 
-  loading= false
-  selectedError= false
+  loading = false
+  selectedError = false
 
   handleClientLoad () {
     window.gapi.load('client:auth2', this.initClient)
@@ -253,15 +281,42 @@ export default class GoogleAuth extends Vue {
 
   addCalendar () {
     this.dialog = true
-    this.calendarItem.name = this.search
+    if (this.search) { this.calendarItem.summary = this.search }
+  }
+
+  async createCalendar ({ summary }: any) {
+    try {
+      const response = await window.gapi.client.calendar.calendars.insert({
+        resource: {
+          summary,
+          etag: 'Created by Octatec'
+        }
+      })
+      // Handle the results here (response.result has the parsed body).
+      console.log('Response', response)
+      await this.getCalendarList()
+      return response.result
+    } catch (e) {
+      console.error('Execute error', e)
+    } finally {
+      this.dialog = false
+    }
+  }
+
+  get form (): any {
+    return this.$refs.form
   }
 
   async exportEventToGCalendar () {
+    if (!this.form.validate()) {
+      return
+    }
+
     this.progress = 0
     for (let i = 0; i < this.events.length; i++) {
       const item: any = this.events[i]
       try {
-        await this.eventRequest(item, i)
+        await this.eventRequest(item)
         this.progress++
       } catch (e) {
         console.log(e)
@@ -270,26 +325,31 @@ export default class GoogleAuth extends Vue {
     this.progress = 0
   }
 
-  eventRequest (event: any, index: number): Promise<any> {
+  eventRequest (event: Event): Promise<any> {
     return new Promise((resolve, reject) => {
+      const format = event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
+      let color = colors.findIndex(color => (event.color === color))
+      if (color === -1) {
+        color = 10
+      }
       const eventData = {
-        iCalUID: 'Horext-' + (index + 20),
-        summary: event.name,
-        description: event.code + '\n' + event.type + '\n' + event.teacher.lastName + ' ,' + event.teacher.firstName,
-        location: event.classroom,
+        iCalUID: 'Horext-' + v4(),
+        summary: event.title,
+        description: event.description,
+        location: event?.location,
         start: {
-          dateTime: new Date(this.day[event.day] + event.startTime).toISOString(),
+          dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.startTime, format).set({ weekday: event.day }).toISO(),
           timeZone: 'America/Lima'
         },
         end: {
-          dateTime: new Date(this.day[event.day] + event.endTime).toISOString(),
+          dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.endTime, format).set({ weekday: event.day }).toISO(),
           timeZone: 'America/Lima'
         },
         recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=' + new Date(this.dateEnd).toISOString().substring(0, 10).split('-').join('') + 'T000000Z'],
-        colorId: colors.findIndex(color => (event.color === color)),
+        colorId: color,
         source: {
           title: 'Horext',
-          url: 'https://horext.web.app/'
+          url: 'https://horext.octatec.io'
         },
         reminders: {
           useDefault: !1,
@@ -310,14 +370,13 @@ export default class GoogleAuth extends Vue {
     })
   }
 
-  getCalendarList () {
-    return window.gapi.client.calendar.calendarList.list({})
-      .then((response: { result: { items: never[] } }) => {
-        // Handle the results here (response.result has the parsed body).
-        this.calendarList = response.result.items
-      }, (err: any) => {
-        console.error('Execute error', err)
-      })
+  async getCalendarList () {
+    try {
+      const response: { result: { items: never[] } } = await window.gapi.client.calendar.calendarList.list({})
+      this.calendarList = response.result.items
+    } catch (e) {
+      console.error('Execute error', e)
+    }
   }
 
   @Watch('signInStatus')

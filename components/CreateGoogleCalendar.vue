@@ -5,7 +5,11 @@
     </v-card-title>
 
     <v-card-text>
-      <v-text-field v-model="itemSync.name" />
+      <v-form
+        ref="form"
+      >
+        <v-text-field v-model="calendarCurrent.summary" :rules="[(r)=>(!!r||'Requerido')]" />
+      </v-form>
     </v-card-text>
 
     <v-card-actions>
@@ -14,7 +18,7 @@
       <v-btn
         color="green darken-1"
         text
-        @click="dialogSync = false"
+        @click="$emit('close')"
       >
         Cancelar
       </v-btn>
@@ -22,7 +26,7 @@
       <v-btn
         color="green darken-1"
         text
-        @click="save()"
+        @click="save"
       >
         Crear
       </v-btn>
@@ -30,34 +34,29 @@
   </v-card>
 </template>
 <script lang="ts">
-import { Component, PropSync, Vue } from 'nuxt-property-decorator'
+import { Component, Prop, PropSync, Vue, Watch } from 'nuxt-property-decorator'
 @Component
 export default class CreateGoogleCalendar extends Vue {
-  @PropSync('dialog', { type: Boolean }) dialogSync!: boolean;
   @PropSync('result', { type: Boolean }) resultSync!: boolean;
-  @PropSync('item', { type: Object }) itemSync!: any;
+  @Prop({ type: Object }) calendar!: any;
    loading: boolean = false;
 
-   async save () {
-     this.loading = true
-     this.resultSync = await this.createCalendar(this.itemSync.name)
-     this.loading = false
-     this.dialogSync = false
+   calendarCurrent: any = {
+     summary: ''
    }
 
-   async createCalendar (summary: any) {
-     try {
-       const response = await window.gapi.client.calendar.calendars.insert({
-         resource: {
-           summary,
-           etag: 'Created by Octatec'
-         }
-       })
-       // Handle the results here (response.result has the parsed body).
-       console.log('Response', response)
-       return response.result
-     } catch (e) {
-       console.error('Execute error', e)
+   @Watch('calendar')
+   onChangeValue (calendar: any) {
+     this.calendarCurrent = calendar
+   }
+
+   get form (): any {
+     return this.$refs.form
+   }
+
+   save () {
+     if (this.form.validate()) {
+       this.$emit('update:calendar', this.calendarCurrent)
      }
    }
 }

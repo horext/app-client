@@ -1,12 +1,13 @@
 <template>
-  <v-list-item>
-    <v-list-item-content>
-      <v-list-item-subtitle v-if="hourlyLoad">
-        Actualizado: {{ new Date(updatedAt).toLocaleString() }}
+  <v-list-item three-line dense>
+    <v-list-item-content v-if="hourlyLoad">
+      {{ name }}
+      <v-list-item-subtitle>
+        Ult. Actual.: {{ new Date(updatedAt).toLocaleString() }}
       </v-list-item-subtitle>
-      <v-list-item-subtitle v-else>
-        Sin carga horaria.
-      </v-list-item-subtitle>
+    </v-list-item-content>
+    <v-list-item-content v-else>
+      <v-list-item-subtitle> Sin carga horaria. </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 </template>
@@ -20,6 +21,10 @@ export default class AppHourlyLoadInfo extends Vue {
 
   get updatedAt () {
     return this.hourlyLoad?.updatedAt
+  }
+
+  get name () {
+    return this.hourlyLoad?.name
   }
 }
 </script>

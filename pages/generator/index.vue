@@ -8,15 +8,13 @@
     path="/skd"
   >
     <template #top-items-right>
-      <v-toolbar-title>
-        Generados
-      </v-toolbar-title>
+      <v-toolbar-title> Generados </v-toolbar-title>
 
       <v-btn plain class="ml-2" outlined fab small>
         {{ schedules.length }}
       </v-btn>
     </template>
-    <template #top-items-left="{item}">
+    <template #top-items-left="{ item }">
       <schedule-favorite-add
         :favorites-schedules="myFavoritesSchedules"
         :schedule="item"
@@ -25,7 +23,7 @@
     </template>
     <template #subtitle-items>
       <v-text-field
-        v-model="crossingSubjects"
+        v-model.number="crossingSubjects"
         label="Cantidad de cruces"
         hide-details
         outlined
@@ -41,20 +39,26 @@
         dark
         rounded
         shaped
-        class="ma-1 "
+        class="ma-1"
         @click="generateAllUserSchedules"
       >
         <v-icon>mdi-update</v-icon>
         Generar
       </v-btn>
+      <v-snackbar v-model="succces" color="success" app timeout="3000">
+        <v-icon> mdi-check </v-icon>
+        Horarios generados correctamente!
+        <template #action="{ attrs }">
+          <v-btn text small icon v-bind="attrs" @click="succces = false">
+            <v-icon> mdi-close </v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </template>
 
     <template #emptyBody>
       <v-container>
-        <v-alert
-          prominent
-          type="error"
-        >
+        <v-alert prominent type="error">
           <v-row align="center">
             <v-col class="grow">
               Lo sentimos, no hemos encontrados horarios :(
@@ -84,38 +88,54 @@ const userEvents = namespace('user/events')
 })
 export default class Generator extends Vue {
   occurrences: Array<any> = []
-  openMySchedules = false;
+  openMySchedules = false
+  succces = false
+  get crossingSubjects () {
+    return this.crossings
+  }
 
-  crossingSubjects = 0;
+  set crossingSubjects (crossings) {
+    this.updateCrossings(crossings)
+  }
 
-  @State(state => state.user.config.subjects)
-  mySubjects!: Array<any>;
+  @userConfig.State('subjects')
+    mySubjects!: Array<any>
+
+  @userConfig.State('crossings')
+    crossings!: number
+
+  @userConfig.Action('updateCrossings')
+    updateCrossings!: Function
 
   @userEvents.State('items')
-  myEvents!: Array<any>;
+    myEvents!: Array<any>
 
-  @State(state => state.user.config.favoritesSchedules)
-  myFavoritesSchedules!: Array<any>;
+  @userConfig.State('favoritesSchedules')
+    myFavoritesSchedules!: Array<any>
 
   @userConfig.Action('updateFavoritesSchedules')
-  updateFavoritesSchedules!: Function
+    updateFavoritesSchedules!: Function
 
-  @State(state => state.user.config.schedules)
-  schedules!: Array<any>;
+  @userConfig.State('schedules')
+    schedules!: Array<any>
 
   @userConfig.Action('updateSchedules')
-  updateSchedules!: Function
+    updateSchedules!: Function
 
   generateAllUserSchedules () {
-    const { occurrences, combinations } = getSchedules(this.mySubjects, this.myEvents, {
-      crossingSubjects: this.crossingSubjects
-    })
+    console.log('start')
+    this.succces = false
+    const { occurrences, combinations } = getSchedules(
+      this.mySubjects,
+      this.myEvents,
+      {
+        crossingSubjects: this.crossingSubjects
+      }
+    )
     this.updateSchedules(combinations)
     this.occurrences = occurrences
+    this.succces = true
+    console.log('end')
   }
 }
 </script>
-
-<style scoped>
-
-</style>

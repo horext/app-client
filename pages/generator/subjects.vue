@@ -1,7 +1,7 @@
 <template>
   <v-card tile flat>
     <v-card-text>
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="12">
           <v-autocomplete
             v-model="editedItem"
@@ -17,16 +17,56 @@
             hide-details
             @input="editItem"
           >
-            <template #selection="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #selection="{ item, on , attrs}">
+              <v-list-item dense v-bind="attrs" v-on="on">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                      {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
-            <template #item="{item}">
-              {{ item.course.id }} -  {{ item.course.name }}
+            <template #item="{ item, on , attrs}">
+              <v-list-item dense v-bind="attrs" v-on="on">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.course.id }} - {{ item.course.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Ciclo {{ item.cycle }} |
+                    <span v-if="item.type">
+                      {{ item.type.name }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
           </v-autocomplete>
         </v-col>
-        <v-col col="12">
-          <v-toolbar-title>Mis cursos seleccionados</v-toolbar-title>
+      </v-row>
+      <v-row no-gutters>
+        <v-spacer />
+        <v-col cols="auto">
+          <nuxt-link to="/generator">
+            Generar mis horarios
+          </nuxt-link>
+        </v-col>
+      </v-row>
+      <v-row dense>
+        <v-col col="auto">
+          <v-toolbar-title>
+            Mis cursos seleccionados
+          </v-toolbar-title>
+        </v-col>
+        <v-spacer />
+        <v-col cols="auto">
+          <div>Créditos Necesarios : {{ totalCredits }}</div>
         </v-col>
       </v-row>
       <v-dialog
@@ -34,6 +74,7 @@
         dense
         max-width="800"
         @click:outside="close"
+        @keydown.esc="close"
       >
         <SubjectScheduleList
           :subject="editedItem"
@@ -49,6 +90,22 @@
         sort-by="calories"
         class="elevation-1"
       >
+        <template #no-data>
+          <v-row align="center">
+            <v-col cols="12" md="6">
+              <div class="text-md-h2 text-h4 text-left">
+                Busca tus cursos en la parte superior y luego ve al <nuxt-link to="/generator">
+                  generador
+                </nuxt-link>
+              </div>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-responsive>
+                <div id="noData" />
+              </v-responsive>
+            </v-col>
+          </v-row>
+        </template>
         <template #[`item.sections`]="{ item }">
           <v-chip
             v-for="schedule in item.schedules"
@@ -94,11 +151,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="succcesAddCourse" color="blue" app timeout="3000">
+      <v-icon> mdi-check </v-icon>
+      Curso Agregado correctamente!
+      <template #action="{ attrs }">
+        <v-btn text small icon v-bind="attrs" @click="succcesAddCourse = false">
+          <v-icon> mdi-close </v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
+import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 const userConfig = namespace('user/config')
 @Component({
@@ -107,6 +174,18 @@ const userConfig = namespace('user/config')
   }
 })
 export default class mySubjects extends Vue {
+  mounted () {
+    Lottie.loadAnimation({
+      container: document.getElementById('noData') as Element,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: require('~/assets/lottie/15538-cat-woow.json')
+    })
+  }
+
+  succcesAddCourse = false
+
   get availableCourses () {
     return this.subjects?.filter((c1: any) =>
       this.mySubjects?.findIndex((c2: any) => c1.id === c2.id))
@@ -118,16 +197,22 @@ export default class mySubjects extends Vue {
   }
 
   @State(state => state.user.config.subjects)
-  mySubjects!: Array<any>
+    mySubjects!: Array<any>
+
+  get totalCredits () {
+    return this.mySubjects.reduce((previousValue, currentValue) => {
+      return currentValue.credits + previousValue
+    }, 0)
+  }
 
   @userConfig.Action('deleteSubjectById')
-  deleteSubjectById!: Function
+    deleteSubjectById!: Function
 
   @userConfig.Action('updateSubject')
-  updateSubject!: Function
+    updateSubject!: Function
 
   @userConfig.Action('saveNewSubject')
-  saveNewSubject!: Function
+    saveNewSubject!: Function
 
   subjects: Array<any> = []
   dialog = false
@@ -175,6 +260,7 @@ export default class mySubjects extends Vue {
   }
 
   async save (schedules: string | any[]) {
+    this.succcesAddCourse = false
     if (this.editedIndex > -1 && schedules && schedules.length > 0) {
       await this.updateSubject({ ...this.editedItem, schedules })
       this.close()
@@ -186,6 +272,7 @@ export default class mySubjects extends Vue {
     } else {
       this.close()
     }
+    this.succcesAddCourse = true
   }
 
   search: string = ''
@@ -220,6 +307,10 @@ export default class mySubjects extends Vue {
     {
       text: 'Secciones',
       value: 'sections'
+    },
+    {
+      text: 'Creditos',
+      value: 'credits'
     },
     {
       text: 'Acciones',

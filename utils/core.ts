@@ -1,9 +1,13 @@
 import { DateTime } from 'luxon'
 import Event from '~/model/Event'
 
-const isIntersects =
-  (eventTarget: Event, eventSource: { start: string; end: string }): boolean =>
-    !((eventTarget.end <= eventSource.start) || (eventSource.end <= eventTarget.start))
+const isIntersects = (
+  eventTarget: Event,
+  eventSource: { start: string; end: string }
+): boolean =>
+  !(
+    eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
+  )
 
 export const weekdayToDatetime = (weekday: number, time: string) => {
   const date = DateTime.fromISO(time).set({ weekday })
@@ -21,10 +25,10 @@ export const convertToDate = (day: string | number, startTime: string) => {
 export function getSchedules (
   subjects: Array<any>,
   myEvents: Array<any>,
-  options:any = {
+  options: any = {
     credits: 100,
     crossingSubjects: 0,
-    crossEvent: false,
+    crossEvent: true,
     crossPractices: false
   }
 ): { occurrences: any[]; schedules: any[]; combinations: any[] } {
@@ -34,7 +38,7 @@ export function getSchedules (
   const schedules: Array<any> = []
 
   const increment = (i: number) => {
-    if (i >= 0 && (indexSchedules[i] === (subjects[i].schedules.length - 1))) {
+    if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
       indexSchedules[i] = 0
       increment(i - 1)
     } else {
@@ -62,6 +66,7 @@ export function getSchedules (
     }))
     // calculating crossing
     let crossingCombination = 0
+    let useCombination = true
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
       const events = schedule[0].events
@@ -71,19 +76,33 @@ export function getSchedules (
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            if ((item.type?.includes('P', 0) && event.type?.includes('P', 0))) {
-              if (crossingCombination + intersections <= options.crossingSubjects) {
-                intersections++
-              } else {
-                occurrences.push({
-                  type: 'Cruce de ' + event.title + ' - ' + item.title,
-                  elementA: event,
-                  elementB: item
-                })
-                break
-              }
-            } else {
+            occurrences.push({
+              type: 'Cruce de ' + event.title + ' - ' + item.title,
+              elementA: event,
+              elementB: item
+            })
+            // if have available crossings
+            if (
+              crossingCombination + intersections <=
+              options.crossingSubjects
+            ) {
               intersections++
+            } else {
+              break
+            }
+            // if is cross practice to practice
+            if (
+              item.type?.includes('P', 0) &&
+              event.type?.includes('P', 0) &&
+              !options.crossPractices
+            ) {
+              useCombination = false
+            } else if (
+              item.type?.includes('MY_EVENT', 0) &&
+              event.type?.includes('MY_EVENT', 0) &&
+              !options.crossEvent
+            ) {
+              useCombination = false
             }
           }
         }
@@ -91,13 +110,17 @@ export function getSchedules (
         crossingCombination = crossingCombination + intersections
       }
     }
-    if ((crossingCombination) <= options.crossingSubjects) {
+    if (crossingCombination <= options.crossingSubjects && useCombination) {
       crossings[i] = crossingCombination
       schedules.push({
+        id: combination.map(c => c.scheduleSubject.id).join(','),
         scheduleSubjectIds: combination.map(c => c.scheduleSubject.id),
         schedule: combination,
         crossings: crossingCombination,
-        events: combination.map((c, index) => scheduleToEvent(c, colors[index])).flat().concat(myEvents)
+        events: combination
+          .map((c, index) => scheduleToEvent(c, colors[index]))
+          .flat()
+          .concat(myEvents)
       })
     }
 
@@ -111,7 +134,10 @@ export function getSchedules (
   }
 }
 
-function scheduleToEvent (schedule: any, color: string = 'primary'): Array<Event> {
+function scheduleToEvent (
+  schedule: any,
+  color: string = 'primary'
+): Array<Event> {
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
   for (let i = 0; i < sessions.length; i++) {
@@ -121,9 +147,9 @@ function scheduleToEvent (schedule: any, color: string = 'primary'): Array<Event
       sessions[i].day,
       sessions[i].startTime,
       sessions[i].endTime,
-      course.id + ' ' + section + ' ' + course.name,
-      course.name,
-      sessions[i].classroom.code,
+      course.id + ' ' + section + ' - ' + course.name,
+      ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
+      sessions[i]?.classroom?.code,
       color,
       'COURSE',
       sessions[i].type.code
@@ -172,12 +198,25 @@ const weekDays = [
 ]
 export { weekDays }
 
-export const colors = ['indigo', 'deep-purple',
-  'indigo darken-3', 'deep-purple darken-3', 'cyan darken-3',
-  'cyan', 'green', 'orange', 'blue ',
-  'indigo lighten-3', 'deep-purple lighten-3', 'cyan lighten-3',
-  ' green darken-3', 'orange darken-3', 'blue darken-3',
-  'green lighten-3', 'orange lighten-3', 'blue lighten-3'
+export const colors = [
+  'indigo',
+  'deep-purple',
+  'indigo darken-3',
+  'deep-purple darken-3',
+  'cyan darken-3',
+  'cyan',
+  'green',
+  'orange',
+  'blue ',
+  'indigo lighten-3',
+  'deep-purple lighten-3',
+  'cyan lighten-3',
+  ' green darken-3',
+  'orange darken-3',
+  'blue darken-3',
+  'green lighten-3',
+  'orange lighten-3',
+  'blue lighten-3'
 ]
 
 export const weekdays = [
