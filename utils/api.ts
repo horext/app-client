@@ -1,3 +1,4 @@
+import { Context } from '@nuxt/types'
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
 import { NuxtStorage } from '@nuxtjs/universal-storage'
 import { Repositories } from '~/plugins/api'
@@ -25,3 +26,11 @@ export function initializeApi (axiosInstance: Repositories) {
 }
 
 export { $api }
+
+// eslint-disable-next-line import/no-mutable-exports
+let $snackbar: Context['$snackbar']
+export function initializeSnackbar (snackbar: Context['$snackbar']) {
+  $snackbar = snackbar
+}
+
+export { $snackbar }

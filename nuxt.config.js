@@ -24,6 +24,7 @@ export default {
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
+    '~/plugins/snackbar-accessor.ts',
     { src: '~/plugins/html2canvas.client.js', mode: 'client' },
     '~/plugins/axios-accesor',
     '~/plugins/storage-accessor',
