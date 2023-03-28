@@ -24,16 +24,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, namespace, Vue } from 'nuxt-property-decorator'
 import { Context } from '@nuxt/types'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
+const userConfig = namespace('user/config')
 
 @Component({
   components: {
     ScheduleViewer
   },
-  layout: 'app'
+  layout: 'app',
+  head: {
+    title: 'Horario compartido',
+    meta: [
+      {
+        hid: 'description',
+        name: 'description',
+        content: 'Comparte tu horario a tus amigos! '
+      }
+    ]
+  }
 })
 export default class Skd extends Vue {
   query =''
@@ -43,9 +54,8 @@ export default class Skd extends Vue {
   loading = false
   courses = [] as Array<any>
 
-  get myFavoritesSchedules () {
-    return this.$store.state.modules.UserModule.myFavoritesSchedules
-  }
+  @userConfig.State('favoritesSchedules')
+  myFavoritesSchedules!: Array<any>
 
   async asyncData ({ route, $api }: Context) {
     const query: any = route.query
@@ -89,29 +99,14 @@ export default class Skd extends Vue {
     const index = this.isFavorite(this.schedules[0])
     console.log(index)
     if (index >= 0) {
-      this.$store.commit('modules/UserModule/deleteFavoriteExternalSchedule', {
-        index
-      })
+      this.$store.dispatch('user/config/deleteFavoriteScheduleById', this.schedules[0])
     } else {
-      this.$store.commit('modules/UserModule/addFavoriteExternalSchedule', {
-        schedule: this.schedules[0]
-      })
+      this.$store.dispatch('user/config/saveNewFavoriteSchedule', this.schedules[0])
     }
   }
 
   isFavorite (schedule: any) {
     return this.myFavoritesSchedules.findIndex((x: { id: any }) => x.id === schedule.id)
-  }
-
-  head = {
-    title: 'Horext - Horario compartido',
-    meta: [
-      {
-        hid: 'description',
-        name: 'description',
-        content: 'Comparte tu horario a tus amigos! '
-      }
-    ]
   }
 }
 

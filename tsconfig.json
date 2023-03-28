@@ -25,6 +25,7 @@
     },
     "types": [
       "@nuxt/types",
+      "@types/uuid",
       "@nuxtjs/axios",
       "@types/node",
       "@types/luxon",

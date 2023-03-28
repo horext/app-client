@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { Component, PropSync, Vue, Watch } from 'nuxt-property-decorator'
+import { v4 } from 'uuid'
 import { VForm } from '~/types'
 
   @Component({
@@ -50,7 +51,7 @@ export default class EventsCreator extends Vue {
     @PropSync('event', {
       type: Object,
       default: () => ({
-        id: 1,
+        id: v4(),
         title: '',
         day: null,
         color: 'primary',

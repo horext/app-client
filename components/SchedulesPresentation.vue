@@ -1,50 +1,50 @@
 <template>
   <v-card>
-    <v-toolbar
-      flat
-      dark
-      :color="color"
-    >
+    <v-toolbar flat dark :color="color">
       <slot name="top-items-right" />
       <v-spacer />
-      <slot name="top-items-left" :item="currentSchedule">
-        <template v-if="schedules.length>0">
-          <v-badge
-            v-if="currentSchedule"
-            class="ma-2"
-            color="secondary"
-            overlap
-            :content="currentSchedule.numCruces"
-          >
-            <v-btn
-              x-small
-              class="white--text"
-              color="error"
-              depressed
-            >
-              Cruces
-            </v-btn>
-          </v-badge>
-          <v-btn
-            fab
-            outlined
-            icon
-            :color="isFavoriteCurrentSchedule?'yellow':null"
-            @click="changeFavoriteCurrentSchedule"
-          >
-            <v-icon :color="isFavoriteCurrentSchedule?'yellow':null">
-              mdi-star
-            </v-icon>
-          </v-btn>
+      <v-radio-group
+        v-model="mode"
+        hide-details
+        dense
+        :column="false"
+        hide-spin-buttons
+      >
+        <template #label>
+          <div>Modo:</div>
         </template>
-      </slot>
+        <v-row no-gutters>
+          <v-col cols="12">
+            <v-radio :value="MODES.CALENDAR" color="primary darken-2">
+              <template #label>
+                <v-icon small left>
+                  mdi-calendar
+                </v-icon>Calendario
+              </template>
+            </v-radio>
+          </v-col>
+          <v-col cols="12">
+            <v-radio :value="MODES.LIST" color="primary darken-2">
+              <template #label>
+                <v-icon small left>
+                  mdi-table
+                </v-icon> Lista
+              </template>
+            </v-radio>
+          </v-col>
+        </v-row>
+      </v-radio-group>
+      <v-spacer />
+      <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
 
-    <div class="row col align-self-center align-items-center justify-center align-content-center ma-1">
+    <div
+      class="row col align-self-center align-items-center justify-center align-content-center ma-1"
+    >
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
-        <template v-if="schedules.length>0">
-          <v-menu offset-y>
+        <template v-if="schedules.length > 0">
+          <v-menu v-if="mode === MODES.CALENDAR" offset-y>
             <template #activator="{ on, attrs }">
               <v-btn
                 color="purple"
@@ -59,7 +59,10 @@
                 Exportar
               </v-btn>
             </template>
-            <ScheduleExport :dialog.sync="dialogExport" :schedule="currentSchedule" />
+            <ScheduleExport
+              :dialog.sync="dialogExport"
+              :schedule="currentSchedule"
+            />
           </v-menu>
 
           <v-btn
@@ -68,23 +71,29 @@
             rounded
             shaped
             class="ma-1"
-            @click="dialogShare=!dialogShare"
+            @click="dialogShare = !dialogShare"
           >
             <v-icon>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
-          <GoogleAuth v-if="currentSchedule" :events="currentSchedule.events" />
-          <v-dialog
-            v-model="dialogExport"
-            max-width="600"
-          >
-            <ScheduleExport :dialog.sync="dialogExport" :schedule="currentSchedule" />
+          <GoogleAuth
+            v-if="currentSchedule"
+            :events="currentSchedule.events"
+            :end-date="endDate"
+            :start-date="startDate"
+          />
+          <v-dialog v-model="dialogExport" max-width="600">
+            <ScheduleExport
+              :dialog.sync="dialogExport"
+              :schedule="currentSchedule"
+            />
           </v-dialog>
-          <v-dialog
-            v-model="dialogShare"
-            max-width="600"
-          >
-            <ScheduleShare :path="path" :dialog.sync="dialogShare" :schedule="currentSchedule" />
+          <v-dialog v-model="dialogShare" max-width="600">
+            <ScheduleShare
+              :path="path"
+              :dialog.sync="dialogShare"
+              :schedule="currentSchedule"
+            />
           </v-dialog>
         </template>
       </slot>
@@ -97,6 +106,7 @@
         :schedules="schedules"
         :current-schedule.sync="currentSchedule"
         :week-days="weekDays"
+        :mode="mode"
       />
     </v-card-text>
     <v-card-text v-else>
@@ -107,98 +117,80 @@
   </v-card>
 </template>
 <script lang="ts">
-import { Component, namespace, Prop, PropSync, Vue, Getter } from 'nuxt-property-decorator'
+import {
+  Component,
+  namespace,
+  Prop,
+  PropSync,
+  Vue
+} from 'nuxt-property-decorator'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
-const userModule = namespace('modules/UserModule')
+import GoogleAuth from '~/components/GoogleAuth.vue'
+import { ViewMode } from '~/model/ViewMode'
+const userModule = namespace('user/config')
 
-@Component(
-  {
-    components: {
-      SchedulesList,
-      ScheduleShare,
-      ScheduleExport
-    }
+@Component({
+  components: {
+    SchedulesList,
+    GoogleAuth,
+    ScheduleShare,
+    ScheduleExport
   }
-)
+})
 export default class SchedulesPresentation extends Vue {
+  get hourlyLoad () {
+    return this.$store.state.user.config.hourlyLoad
+  }
+
+  get academicPeriodOrganizationUnit () {
+    return this.hourlyLoad?.academicPeriodOrganizationUnit
+  }
+
+  get startDate () {
+    return this.academicPeriodOrganizationUnit.fromDate
+  }
+
+  get endDate () {
+    return this.academicPeriodOrganizationUnit.toDate
+  }
+
   mounted () {
     this.vCalendar = document.getElementById('calendar')
   }
 
   vCalendar: any = null
   @Prop({ type: Array, default: [] })
-  schedules!: [];
+    schedules!: []
 
   @Prop({ type: String, default: '/subject' })
-  path!:string
+    path!: string
 
   @Prop({ type: String, default: '' })
-  title!: string;
+    title!: string
 
   @Prop({ type: String, default: 'primary' })
-  color!: string;
+    color!: string
 
   @Prop({ type: String, default: '' })
-  emptyMessage!: string;
+    emptyMessage!: string
 
   @PropSync('dialog', { type: Boolean, default: false })
-  dialogSync!:boolean
+    dialogSync!: boolean
 
-  currentSchedule:any =null
+  currentSchedule: any = null
 
-  dialogShare = false;
-  dialogExport = false;
+  dialogShare = false
+  dialogExport = false
 
   @userModule.State
-  weekDays!: Array<number>;
-
-  @userModule.Mutation
-  deleteFavoriteSchedule!: (index: any) => {};
-
-  @userModule.Mutation
-  addFavoriteSchedule!: (schedule: any) => {};
-
-  get isFavoriteCurrentSchedule () {
-    return this.indexCurrentFavoriteSchedule >= 0
-  }
+    weekDays!: Array<number>
 
   message = ''
-  showMessage = false
-  changeFavoriteCurrentSchedule () {
-    const index = this.indexCurrentFavoriteSchedule
-    if (index >= 0) {
-      this.deleteFavoriteSchedule({
-        indexFavorite: index,
-        indexSchedule: this.indexCurrentSchedule
-      })
-      this.showMessage = true
-      this.message = 'Horario quitado de Favoritos'
-    } else {
-      this.addFavoriteSchedule({
-        schedule: this.currentSchedule,
-        index: this.indexCurrentSchedule
-      })
-      this.showMessage = true
-      this.message = 'Horario añadido de Favoritos'
-    }
-  }
 
-  @Getter('findIndexMyFavoriteScheduleById', { namespace: 'modules/UserModule' })
-  findIndexMyFavoriteScheduleById!: (id: string) => number;
+  mode: ViewMode = ViewMode.CALENDAR
 
-  get indexCurrentFavoriteSchedule (): number {
-    if (this.currentSchedule == null) { return -1 }
-    return this.findIndexMyFavoriteScheduleById(this.currentSchedule.id)
-  }
-
-  @Getter('findIndexMyScheduleById', { namespace: 'modules/UserModule' })
-  findIndexMyScheduleById!: (id: string) => number;
-
-  get indexCurrentSchedule () {
-    if (this.currentSchedule == null) { return -1 }
-    return this.findIndexMyScheduleById(this.currentSchedule.id)
-  }
+  MODES = ViewMode
 }
 </script>

@@ -4,6 +4,7 @@
     title="Horarios Favoritos"
     empty-message="Usted no tiene horarios favoritos"
     :schedules="schedules"
+    path="/skd"
   >
     <template #top-items-right>
       <v-toolbar-title>
@@ -19,13 +20,12 @@
       />
     </template>
     <template #emptyBody>
-      <FavoriteBanner/>
+      <FavoriteBanner />
     </template>
   </schedules-presentation>
 </template>
 
 <script lang="ts">
-import Lottie from 'lottie-web'
 import { Component, namespace, Vue } from 'nuxt-property-decorator'
 import FavoriteBanner from '~/components/FavoriteBanner.vue'
 const userConfig = namespace('user/config')
@@ -33,7 +33,6 @@ const userConfig = namespace('user/config')
   components: { FavoriteBanner }
 })
 export default class Favorites extends Vue {
-
   @userConfig.State('favoritesSchedules')
   schedules!: Array<any>
 
@@ -41,4 +40,3 @@ export default class Favorites extends Vue {
   updateFavoritesSchedules!: Function
 }
 </script>
-

@@ -14,6 +14,8 @@ export default class Config extends VuexModule {
   public events: Array<any> = []
   public schedules: Array<any>= []
   public favoritesSchedules: Array<any>= []
+  public weekDays: Array<number> = [0, 1, 2, 3, 4, 5, 6]
+  public crossings:number = 0
   public firstEntry: boolean = true
 
   public get facultyId () {
@@ -31,6 +33,11 @@ export default class Config extends VuexModule {
   @VuexMutation
   public SET_FACULTY (faculty:any) {
     this.faculty = faculty
+  }
+
+  @VuexMutation
+  public SET_CROSSINGS (faculty:any) {
+    this.crossings = faculty
   }
 
   @VuexMutation
@@ -147,6 +154,12 @@ export default class Config extends VuexModule {
     return faculty
   }
 
+  @VuexAction({ commit: 'SET_CROSSINGS' })
+  public updateCrossings (crossings: any) {
+    $storage.setUniversal('myCrossings', crossings)
+    return crossings
+  }
+
   @VuexAction
   public saveNewSubject (subject: any) {
     this.context.commit('ADD_SUBJECT', subject)
@@ -172,14 +185,27 @@ export default class Config extends VuexModule {
   }
 
   @VuexAction
-  public updateSchedules (mySchedules: any) {
-    this.context.commit('SET_SCHEDULES', mySchedules)
+  public updateSchedules (schedules: any) {
+    this.context.commit('SET_SCHEDULES', schedules)
     $storage.setLocalStorage('mySchedules', this.schedules)
   }
 
   @VuexAction
-  public updateFavoritesSchedules (mySchedules: any) {
-    this.context.commit('SET_FAVORITES_SCHEDULES', mySchedules)
+  public saveNewFavoriteSchedule (subject: any) {
+    this.context.commit('ADD_FAVORITE_SCHEDULE', subject)
+    $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
+  }
+
+  @VuexAction
+  public deleteFavoriteScheduleById (id: any) {
+    const index = this.subjects.findIndex(s => s.id === id)
+    this.context.commit('DELETE_FAVORITE_SCHEDULE_BY_INDEX', index)
+    $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
+  }
+
+  @VuexAction
+  public updateFavoritesSchedules (schedules: any) {
+    this.context.commit('SET_FAVORITES_SCHEDULES', schedules)
     $storage.setLocalStorage('myFavoritesSchedules', this.favoritesSchedules)
   }
 
@@ -209,6 +235,11 @@ export default class Config extends VuexModule {
     return $storage.getLocalStorage('mySubjects') || []
   }
 
+  @VuexAction({ commit: 'SET_CROSSINGS' })
+  public fetchCrossings () {
+    return $storage.getLocalStorage('myCrossings') || 0
+  }
+
   @VuexAction({ commit: 'SET_EVENTS' })
   public fetchEvents () {
     return $storage.getLocalStorage('myEvents') || []
@@ -217,6 +248,7 @@ export default class Config extends VuexModule {
   @VuexAction({ commit: 'SET_SCHEDULES' })
   public fetchSchedules () {
     const schedules = $storage.getLocalStorage('mySchedules') || []
+    console.log(schedules)
     return schedules.map((s: { events: any[] }) => ({
       ...s,
       events: s.events.map((e: any) => Object.assign(
