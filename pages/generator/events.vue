@@ -71,15 +71,15 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template #item.color="{item}">
+    <template #[`item.color`]="{item}">
       <v-badge :color="item.color" />
     </template>
-    <template #item.schedule="{item}">
+    <template #[`item.schedule`]="{item}">
       <div>
         {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
       </div>
     </template>
-    <template #item.actions="{ item }">
+    <template #[`item.actions`]="{ item }">
       <v-icon
         class="mr-2"
         color="primary"
