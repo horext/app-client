@@ -1,39 +1,18 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="myEvents"
-  >
+  <v-data-table :headers="headers" :items="myEvents">
     <template #top>
-      <v-toolbar
-        flat
-      >
+      <v-toolbar flat>
         <v-toolbar-title>Mis eventos</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        />
+        <v-divider class="mx-4" inset vertical />
         <v-spacer />
-        <v-dialog
-          v-model="dialog"
-          max-width="500px"
-          @click:outside="close"
-        >
+        <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
           <template #activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
               Nuevo evento
             </v-btn>
           </template>
           <v-card>
-            <v-card-title>
-              Crear tu Evento
-            </v-card-title>
+            <v-card-title> Crear tu Evento </v-card-title>
             <v-card-text>
               <events-creator
                 ref="form"
@@ -71,162 +50,178 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template #[`item.color`]="{item}">
+    <template #[`item.color`]="{ item }">
       <v-badge :color="item.color" />
     </template>
-    <template #[`item.schedule`]="{item}">
+    <template #[`item.schedule`]="{ item }">
       <div>
         {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-icon
-        class="mr-2"
-        color="primary"
-        @click="editItem(item)"
-      >
+      <v-icon class="mr-2" color="primary" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon
-        color="red"
-        @click="deleteItem(item)"
-      >
+      <v-icon color="red" @click="deleteItem(item)">
         mdi-delete
       </v-icon>
     </template>
   </v-data-table>
 </template>
-
 <script lang="ts">
-import { Component, namespace, State, Vue } from 'nuxt-property-decorator'
+import { defineComponent, ref, nextTick, computed } from 'vue'
+import { v4 } from 'uuid'
+import { useStore } from '@nuxtjs/composition-api'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
-import { VForm } from '~/types'
 import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
-import { v4 } from 'uuid'
-const userEvents = namespace('user/events')
 
-@Component({
-  components: { EventsCreator }
-})
-export default class myEvents extends Vue {
-  @State(state => state.user.events.items)
-  myEvents!: Array<any>
-
-  @userEvents.Action('deleteItemById')
-  deleteEventById!: Function
-
-  @userEvents.Action('updateItem')
-  updateEvent!: Function
-
-  @userEvents.Action('saveNewItem')
-  saveNewEvent!: Function
-
-  get weekdays () {
-    return weekdays
-  }
-
-  dialog = false
-  headers = [
-    { text: 'Color', value: 'color' },
-    {
-      text: 'titulo',
-      align: 'start',
-      sortable: false,
-      value: 'title'
-    },
-    { text: 'Horario', value: 'schedule' },
-    { text: 'Acciones', value: 'actions', sortable: false }
-  ]
-
-  defaultItem: any = {
-    id: null,
-    title: null,
-    day: null,
-    color: 'primary',
-    type: 'myEvent',
-    startTime: null,
-    endTime: null
-  }
-
-  editedItem: any = {
-    id: null,
-    title: null,
-    day: null,
-    color: 'primary',
-    type: 'myEvent',
-    startTime: null,
-    endTime: null
-  }
-
-  editedIndex: number = -1
-
-  dialogDelete = false
-  editItem (item: any) {
-    this.editedIndex = this.myEvents.findIndex((c:any) => c.id === item.id)
-    this.editedItem = Object.assign({}, item)
-    this.dialog = true
-  }
-
-  deleteItem (item: any) {
-    this.editedIndex = this.myEvents.findIndex((c:any) => c.id === item.id)
-    this.editedItem = Object.assign({}, item)
-    this.dialogDelete = true
-  }
-
-  deleteItemConfirm () {
-    this.deleteEventById(this.editedItem.id)
-    this.closeDelete()
-  }
-
-  close () {
-    this.dialog = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-    })
-  }
-
-  closeDelete () {
-    this.dialogDelete = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-    })
-  }
-
-  save () {
-    if (!this.form().validated()) {
-      return
-    }
-    const event = new Event(
-      this.editedItem.day || 0,
-      this.editedItem.startTime,
-      this.editedItem.endTime,
-      this.editedItem.title,
-      this.editedItem.title,
-      this.editedItem.title,
-      this.editedItem.color,
-      'MY_EVENT',
-      'MY_EVENT'
-    )
-    event.id = this.editedItem.id || v4()
-    if (this.editedIndex > -1) {
-      this.updateEvent(event)
-    } else {
-      this.saveNewEvent(event)
-    }
-    console.log(event.end)
-    console.log(event.start)
-    this.close()
-  }
-
-  form (): any {
-    return this.$refs?.form as VForm
-  }
+interface IEvent {
+  id: null | string;
+  title: null | string;
+  day: null | number;
+  color: string;
+  type: string;
+  startTime: null | string;
+  endTime: null | string;
 }
+
+export default defineComponent({
+  components: { EventsCreator },
+  setup () {
+    const store = useStore<{
+      user: {
+        events: {
+          items: any[];
+        };
+      };
+    }>()
+
+    const myEvents = computed(() => store.state.user.events.items)
+
+    const deleteEventById = async (id: string) => {
+      await store.dispatch('user/events/deleteItemById', id)
+    }
+
+    const updateEvent = async (event: IEvent) => {
+      await store.dispatch('user/events/updateItem', event)
+    }
+
+    const saveNewEvent = async (event: IEvent) => {
+      await store.dispatch('user/events/saveNewItem', event)
+    }
+
+    const dialog = ref(false)
+
+    const headers = [
+      { text: 'Color', value: 'color' },
+      { text: 'titulo', align: 'start', sortable: false, value: 'title' },
+      { text: 'Horario', value: 'schedule' },
+      { text: 'Acciones', value: 'actions', sortable: false }
+    ]
+
+    const defaultItem = ref<IEvent>({
+      id: null,
+      title: null,
+      day: null,
+      color: 'primary',
+      type: 'myEvent',
+      startTime: null,
+      endTime: null
+    })
+
+    const editedItem = ref<IEvent>({
+      id: null,
+      title: null,
+      day: null,
+      color: 'primary',
+      type: 'myEvent',
+      startTime: null,
+      endTime: null
+    })
+
+    const editedIndex = ref(-1)
+
+    const dialogDelete = ref(false)
+
+    const editItem = (item: any) => {
+      editedIndex.value = myEvents.value.findIndex((c: any) => c.id === item.id)
+      editedItem.value = Object.assign({}, item)
+      dialog.value = true
+    }
+
+    const deleteItem = (item: any) => {
+      editedIndex.value = myEvents.value.findIndex((c: any) => c.id === item.id)
+      editedItem.value = Object.assign({}, item)
+      dialogDelete.value = true
+    }
+
+    const deleteItemConfirm = () => {
+      deleteEventById(editedItem.value.id!)
+      closeDelete()
+    }
+
+    const close = () => {
+      dialog.value = false
+      nextTick(() => {
+        editedItem.value = Object.assign({}, defaultItem.value)
+        editedIndex.value = -1
+      })
+    }
+
+    const closeDelete = () => {
+      dialogDelete.value = false
+      nextTick(() => {
+        editedItem.value = Object.assign({}, defaultItem.value)
+        editedIndex.value = -1
+      })
+    }
+
+    const form = ref<EventsCreator>()
+
+    const save = () => {
+      if (!form?.value?.validated()) {
+        return
+      }
+
+      const item = editedItem.value
+      const event = new Event(
+        item.day || 0,
+        item.startTime!,
+        item.endTime!,
+        item.title!,
+        item.title!,
+        item.title!,
+        item.color,
+        'MY_EVENT',
+        'MY_EVENT'
+      )
+      event.id = item.id || v4()
+      if (editedIndex.value > -1) {
+        updateEvent(editedItem.value)
+      } else {
+        saveNewEvent(editedItem.value)
+      }
+      close()
+    }
+
+    return {
+      weekdays,
+      dialog,
+      headers,
+      defaultItem,
+      editedItem,
+      editedIndex,
+      dialogDelete,
+      myEvents,
+      editItem,
+      deleteItem,
+      deleteItemConfirm,
+      close,
+      closeDelete,
+      save,
+      form
+    }
+  }
+})
 </script>
-
-<style scoped>
-
-</style>

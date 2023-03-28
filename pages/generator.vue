@@ -8,44 +8,56 @@
 </template>
 
 <script lang="ts">
-import { Component, State, Vue, Watch } from 'nuxt-property-decorator'
 import { Context } from '@nuxt/types'
+import { useRouter, useStore } from '@nuxtjs/composition-api'
+import { defineComponent, ref, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
-@Component({
-  components: { InitialSettings },
+
+export default defineComponent({
+  name: 'Generator',
+  components: {
+    InitialSettings
+  },
   layout: 'app',
-  head: {
-    title: 'Generador de Horarios'
-  }
-})
-export default class Generator extends Vue {
-  @State(state => state.user.config.firstEntry)
-  firstEntry!: any;
+  setup () {
+    const store = useStore<any>()
+    const router = useRouter()
 
-  @Watch('firstEntry')
-  onChangeFirstEntry (newValue:boolean, oldValue:boolean) {
-    if (oldValue && !newValue) {
-      this.$router.push('/generator/subjects')
+    const firstEntry = ref(false)
+
+    watch(
+      () => store.state.user.config.firstEntry,
+      (newValue, oldValue) => {
+        if (oldValue && !newValue) {
+          router.push('/generator/subjects')
+        }
+      }
+    )
+
+    onMounted(async () => {
+      await store.dispatch('user/config/fetchSubjects')
+      await store.dispatch('user/config/fetchSchedules')
+      await store.dispatch('user/config/fetchCrossings')
+      await store.dispatch('user/config/fetchFavoritesSchedules')
+      await store.dispatch('user/events/fetchItems')
+
+      firstEntry.value = store.state.user.config.firstEntry
+    })
+
+    return {
+      firstEntry
     }
-  }
-
+  },
   async asyncData ({ store }: Context) {
     await store.dispatch('user/config/fetchFirstEntry')
     await store.dispatch('user/config/fetchFaculty')
     await store.dispatch('user/config/fetchSpeciality')
     await store.dispatch('user/config/fetchHourlyLoad')
+  },
+  head: {
+    title: 'Generador de Horarios'
   }
-
-  async mounted () {
-    await this.$store.dispatch('user/config/fetchSubjects')
-    await this.$store.dispatch('user/config/fetchSchedules')
-    await this.$store.dispatch('user/config/fetchCrossings')
-    await this.$store.dispatch('user/config/fetchFavoritesSchedules')
-    await this.$store.dispatch('user/events/fetchItems')
-  }
-}
+})
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

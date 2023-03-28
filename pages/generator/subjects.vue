@@ -17,7 +17,7 @@
             hide-details
             @input="editItem"
           >
-            <template #selection="{ item, on , attrs}">
+            <template #selection="{ item, on, attrs }">
               <v-list-item dense v-bind="attrs" v-on="on">
                 <v-list-item-content>
                   <v-list-item-title>
@@ -32,7 +32,7 @@
                 </v-list-item-content>
               </v-list-item>
             </template>
-            <template #item="{ item, on , attrs}">
+            <template #item="{ item, on, attrs }">
               <v-list-item dense v-bind="attrs" v-on="on">
                 <v-list-item-content>
                   <v-list-item-title>
@@ -60,9 +60,7 @@
       </v-row>
       <v-row dense>
         <v-col col="auto">
-          <v-toolbar-title>
-            Mis cursos seleccionados
-          </v-toolbar-title>
+          <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
         </v-col>
         <v-spacer />
         <v-col cols="auto">
@@ -94,7 +92,8 @@
           <v-row align="center">
             <v-col cols="12" md="6">
               <div class="text-md-h2 text-h4 text-left">
-                Busca tus cursos en la parte superior y luego ve al <nuxt-link to="/generator">
+                Busca tus cursos en la parte superior y luego ve al
+                <nuxt-link to="/generator">
                   generador
                 </nuxt-link>
               </div>
@@ -117,17 +116,10 @@
           </v-chip>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon
-            class="mr-2"
-            color="primary"
-            @click="editItem(item)"
-          >
+          <v-icon class="mr-2" color="primary" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon
-            color="red"
-            @click="deleteItem(item)"
-          >
+          <v-icon color="red" @click="deleteItem(item)">
             mdi-delete
           </v-icon>
         </template>
@@ -164,171 +156,211 @@
 </template>
 
 <script lang="ts">
-import { Component, namespace, State, Vue, Watch } from 'nuxt-property-decorator'
+import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
+import { useStore } from '@nuxtjs/composition-api'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
-const userConfig = namespace('user/config')
-@Component({
+import { $api } from '~/utils/api'
+
+export default defineComponent({
+  name: 'MySubjects',
   components: {
     SubjectScheduleList
-  }
-})
-export default class mySubjects extends Vue {
-  mounted () {
-    Lottie.loadAnimation({
-      container: document.getElementById('noData') as Element,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: require('~/assets/lottie/15538-cat-woow.json')
+  },
+  setup () {
+    onMounted(() => {
+      Lottie.loadAnimation({
+        container: document.getElementById('noData') as Element,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: require('~/assets/lottie/15538-cat-woow.json')
+      })
     })
-  }
 
-  succcesAddCourse = false
+    const store = useStore<any>()
 
-  get availableCourses () {
-    return this.subjects?.filter((c1: any) =>
-      this.mySubjects?.findIndex((c2: any) => c1.id === c2.id))
-  }
+    const succcesAddCourse = ref(false)
 
-  getColor (section: any) {
-    const months = ['blue', 'purple', 'orange', 'indigo', 'teal']
-    return months[section.charCodeAt(0) % months.length]
-  }
+    const availableCourses = computed(() => {
+      return subjects.value?.filter(c1 =>
+        mySubjects.value?.findIndex((c2: { id: any }) => c1.id === c2.id)
+      )
+    })
 
-  @State(state => state.user.config.subjects)
-    mySubjects!: Array<any>
-
-  get totalCredits () {
-    return this.mySubjects.reduce((previousValue, currentValue) => {
-      return currentValue.credits + previousValue
-    }, 0)
-  }
-
-  @userConfig.Action('deleteSubjectById')
-    deleteSubjectById!: Function
-
-  @userConfig.Action('updateSubject')
-    updateSubject!: Function
-
-  @userConfig.Action('saveNewSubject')
-    saveNewSubject!: Function
-
-  subjects: Array<any> = []
-  dialog = false
-  loading = false
-  dialogDelete = false
-
-  defaultItem: any = null
-  editedItem: any = { }
-  editedIndex: number = -1
-
-  editItem (item: any) {
-    if (!item) {
-      return
+    const getColor = (section: string) => {
+      const months = ['blue', 'purple', 'orange', 'indigo', 'teal']
+      return months[section.charCodeAt(0) % months.length]
     }
-    this.editedIndex = this.mySubjects.findIndex((c: any) => c.id === item?.id)
-    this.editedItem = Object.assign({}, item)
-    this.dialog = true
-  }
 
-  deleteItem (item: any) {
-    this.editedIndex = this.mySubjects.findIndex((c: any) => c.id === item.id)
-    this.editedItem = Object.assign({}, item)
-    this.dialogDelete = true
-  }
+    const mySubjects = computed<any[]>(() => store.state.user.config.subjects)
 
-  async deleteItemConfirm () {
-    await this.deleteSubjectById(this.editedItem.id)
-    this.closeDelete()
-  }
-
-  close () {
-    this.dialog = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
+    const totalCredits = computed(() => {
+      return mySubjects.value.reduce(
+        (previousValue: any, currentValue: { credits: any }) => {
+          return currentValue.credits + previousValue
+        },
+        0
+      )
     })
-  }
 
-  closeDelete () {
-    this.dialogDelete = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-    })
-  }
-
-  async save (schedules: string | any[]) {
-    this.succcesAddCourse = false
-    if (this.editedIndex > -1 && schedules && schedules.length > 0) {
-      await this.updateSubject({ ...this.editedItem, schedules })
-      this.close()
-    } else if (schedules && schedules.length > 0) {
-      await this.saveNewSubject({ ...this.editedItem, schedules })
-      this.close()
-    } else if (this.editedItem > -1) {
-      await this.deleteSubjectById(this.editedItem.id)
-    } else {
-      this.close()
+    const deleteSubjectById = async (id: any) => {
+      await store.dispatch('user/config/deleteSubjectById', id)
     }
-    this.succcesAddCourse = true
-  }
 
-  search: string = ''
+    const updateSubject = async (subject: any) => {
+      await store.dispatch('user/config/updateSubject', subject)
+    }
 
-  @Watch('search')
-  async onChangeSearch (search: string) {
-    if (this.$store.getters['user/config/specialityId'] && this.$store.getters['user/config/hourlyLoadId']) {
-      try {
-        const response = await this.$api.course.findBySearch(
-          search || '',
-          this.$store.getters['user/config/specialityId'],
-          this.$store.getters['user/config/hourlyLoadId']
-        )
-        this.subjects = response.data.content
-      } catch (e) {
-        console.error(e)
+    const saveNewSubject = async (subject: any) => {
+      await store.dispatch('user/config/saveNewSubject', subject)
+    }
+
+    const subjects = ref<any[]>([])
+    const dialog = ref(false)
+    const loading = ref(false)
+    const dialogDelete = ref(false)
+
+    const defaultItem = ref<any>(null)
+    const editedItem = ref<any>({})
+    const editedIndex = ref(-1)
+
+    const editItem = (item: { id: any }) => {
+      if (!item) {
+        return
+      }
+      editedIndex.value = mySubjects.value.findIndex(
+        (c: { id: any }) => c.id === item?.id
+      )
+      editedItem.value = Object.assign({}, item)
+      dialog.value = true
+    }
+
+    const deleteItem = (item: { id: any }) => {
+      editedIndex.value = mySubjects.value.findIndex(
+        (c: { id: any }) => c.id === item.id
+      )
+      editedItem.value = Object.assign({}, item)
+      dialogDelete.value = true
+    }
+
+    const deleteItemConfirm = async () => {
+      await deleteSubjectById(editedItem.value.id)
+      closeDelete()
+    }
+
+    const close = () => {
+      dialog.value = false
+      editedItem.value = Object.assign({}, defaultItem)
+      editedIndex.value = -1
+    }
+
+    const closeDelete = () => {
+      dialogDelete.value = false
+      editedItem.value = Object.assign({}, defaultItem)
+      editedIndex.value = -1
+    }
+
+    const save = async (schedules: string | any[]) => {
+      succcesAddCourse.value = false
+
+      if (editedIndex.value > -1 && schedules && schedules.length > 0) {
+        await updateSubject({ ...editedItem.value, schedules })
+        close()
+      } else if (schedules && schedules.length > 0) {
+        await saveNewSubject({ ...editedItem.value, schedules })
+        close()
+      } else if (editedIndex.value > -1) {
+        await deleteSubjectById(editedItem.value.id)
+      } else {
+        close()
+      }
+
+      succcesAddCourse.value = true
+    }
+
+    const search = ref('')
+
+    const onChangeSearch = async (search: string) => {
+      if (
+        store.getters['user/config/specialityId'] &&
+        store.getters['user/config/hourlyLoadId']
+      ) {
+        try {
+          const response = await $api.course.findBySearch(
+            search || '',
+            store.getters['user/config/specialityId'],
+            store.getters['user/config/hourlyLoadId']
+          )
+          subjects.value = response.data.content
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
-  }
+    watch(search, onChangeSearch)
 
-  headers = [
-    {
-      text: 'Código',
-      value: 'course.id'
-    },
-    {
-      text: 'Nombre de curso',
-      align: 'start',
-      sortable: false,
-      value: 'course.name'
-    },
-    {
-      text: 'Secciones',
-      value: 'sections'
-    },
-    {
-      text: 'Creditos',
-      value: 'credits'
-    },
-    {
-      text: 'Acciones',
-      value: 'actions',
-      sortable: false
+    const headers = ref([
+      {
+        text: 'Código',
+        value: 'course.id'
+      },
+      {
+        text: 'Nombre de curso',
+        align: 'start',
+        sortable: false,
+        value: 'course.name'
+      },
+      {
+        text: 'Secciones',
+        value: 'sections'
+      },
+      {
+        text: 'Creditos',
+        value: 'credits'
+      },
+      {
+        text: 'Acciones',
+        value: 'actions',
+        sortable: false
+      }
+    ])
+
+    const formTitle = computed(() => {
+      return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
+    })
+
+    const myHourlyLoad = computed(() => {
+      return store.state.user.config.hourlyLoad
+    })
+
+    return {
+      mySubjects,
+      subjects,
+      dialog,
+      dialogDelete,
+      loading,
+      editedIndex,
+      editedItem,
+      defaultItem,
+      headers,
+      search,
+      succcesAddCourse,
+      getColor,
+      deleteItem,
+      editItem,
+      closeDelete,
+      close,
+      deleteItemConfirm,
+      save,
+      onChangeSearch,
+      availableCourses,
+      totalCredits,
+      formTitle,
+      myHourlyLoad
     }
-  ]
-
-  get formTitle () {
-    return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
   }
-
-  get myHourlyLoad () {
-    return this.$store.state.user.config.hourlyLoad
-  }
-}
+})
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

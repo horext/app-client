@@ -3,115 +3,154 @@
     <v-card flat style="min-height: 100vh">
       <v-toolbar flat>
         <v-btn
-          v-if="schedules.length>0"
+          v-if="schedules.length > 0"
           outlined
           @click="addFavoriteCurrentSchedule"
         >
-          <v-icon :color="isFavorite(schedules[0])>=0?'yellow':null">
+          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : null">
             mdi-star
           </v-icon>
-          <span v-if="isFavorite(schedules[0])>=0">
+          <span v-if="isFavorite(schedules[0]) >= 0">
             Quitar de Favoritos
           </span>
-          <span v-else>
-            Añadir a Favoritos
-          </span>
+          <span v-else> Añadir a Favoritos </span>
         </v-btn>
       </v-toolbar>
-      <ScheduleViewer v-for="schedule in schedules" :key="schedule.id" :schedule="schedule" />
+      <ScheduleViewer
+        v-for="schedule in schedules"
+        :key="schedule.id"
+        :schedule="schedule"
+      />
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, namespace, Vue } from 'nuxt-property-decorator'
-import { Context } from '@nuxt/types'
+import {
+  defineComponent,
+  ref,
+  computed,
+  useStore,
+  onMounted,
+  useAsync,
+  useRoute,
+  toRefs
+} from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
-const userConfig = namespace('user/config')
+import { $api } from '~/utils/api'
 
-@Component({
+export default defineComponent({
   components: {
     ScheduleViewer
   },
   layout: 'app',
-  head: {
-    title: 'Horario compartido',
-    meta: [
-      {
-        hid: 'description',
-        name: 'description',
-        content: 'Comparte tu horario a tus amigos! '
-      }
-    ]
-  }
-})
-export default class Skd extends Vue {
-  query =''
-  sessions = [] as Array<any>
-  scheduleSubjects = [] as Array<any>
-  schedules = [] as Array<any>
-  loading = false
-  courses = [] as Array<any>
+  setup () {
+    const query = ref('')
+    const schedules = ref<any[]>([])
+    const loading = ref(false)
+    const courses = ref([])
 
-  @userConfig.State('favoritesSchedules')
-  myFavoritesSchedules!: Array<any>
+    const store = useStore<any>()
 
-  async asyncData ({ route, $api }: Context) {
-    const query: any = route.query
-    const result = Buffer.from(query.q, 'base64').toString()
-    const { data: scheduleSubjects } = await $api.scheduleSubject
-      .getAllByIds(
+    const myFavoritesSchedules = computed(
+      () => store.state.user.config.favoritesSchedules
+    )
+    const route = useRoute()
+
+    const data = useAsync(async () => {
+      const query: any = route.value.query
+      const result = Buffer.from(query.q, 'base64').toString()
+      const { data: scheduleSubjects } = await $api.scheduleSubject.getAllByIds(
         result.split(',').map(Number)
       )
-    const schedulesId = scheduleSubjects.map((ss:any) => ss.schedule.id)
-    const { data: sessions } = await $api.classSessions.findScheduleIds(schedulesId)
-    return { sessions, scheduleSubjects }
-  }
+      const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
+      const { data: sessions } = await $api.classSessions.findScheduleIds(
+        schedulesId
+      )
+      return { scheduleSubjects, sessions }
+    })
 
-  get subjects () {
-    return this.scheduleSubjects.map(
-      sb => ({
+    const scheduleSubjects = computed(() => data.value?.scheduleSubjects)
+    const sessions = computed(() => data.value?.sessions)
+
+    const deleteFavoriteScheduleById = (favorites: any) =>
+      store.dispatch('user/config/deleteFavoriteScheduleById', favorites)
+
+    const saveNewFavoriteSchedule = (favorites: any) =>
+      store.dispatch('user/config/saveNewFavoriteSchedule', favorites)
+
+    const subjects = computed(() => {
+      return scheduleSubjects.value.map((sb: any) => ({
         ...sb.subject,
-        schedules: [{
-          ...sb?.schedule,
-          scheduleSubject: {
-            id: sb.id
-          },
-          sessions: this.sessions.filter(
-            s => s.schedule.id === sb.schedule.id
-          )
-        }]
+        schedules: [
+          {
+            ...sb?.schedule,
+            scheduleSubject: {
+              id: sb.id
+            },
+            sessions: sessions.value.filter(
+              (s: any) => s.schedule.id === sb.schedule.id
+            )
+          }
+        ]
+      }))
+    })
+
+    async function fetchSchedules () {
+      loading.value = true
+      const { combinations } = await getSchedules(subjects.value, [], {
+        crossingSubjects: 100
       })
-    )
-  }
+      schedules.value = combinations
+      loading.value = false
+    }
 
-  mounted () {
-    this.loading = true
-    const { combinations } = getSchedules(this.subjects, [],
-      { crossingSubjects: 100 }
-    )
-    this.schedules = combinations
-    this.loading = false
-  }
+    onMounted(async () => {
+      await fetchSchedules()
+    })
 
-  addFavoriteCurrentSchedule () {
-    const index = this.isFavorite(this.schedules[0])
-    console.log(index)
-    if (index >= 0) {
-      this.$store.dispatch('user/config/deleteFavoriteScheduleById', this.schedules[0])
-    } else {
-      this.$store.dispatch('user/config/saveNewFavoriteSchedule', this.schedules[0])
+    const addFavoriteCurrentSchedule = () => {
+      const index = isFavorite(schedules.value[0])
+      if (index >= 0) {
+        deleteFavoriteScheduleById(schedules.value[0])
+      } else {
+        saveNewFavoriteSchedule(schedules.value[0])
+      }
+    }
+
+    const isFavorite = (schedule: any) => {
+      return myFavoritesSchedules.value.findIndex(
+        (x: { id: any }) => x.id === schedule.id
+      )
+    }
+
+    return {
+      query,
+      sessions,
+      scheduleSubjects,
+      schedules,
+      loading,
+      courses,
+      addFavoriteCurrentSchedule,
+      isFavorite,
+      myFavoritesSchedules
+
+    }
+  },
+  head () {
+    return {
+      title: 'Horario compartido',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Comparte tu horario a tus amigos! '
+        }
+      ]
     }
   }
-
-  isFavorite (schedule: any) {
-    return this.myFavoritesSchedules.findIndex((x: { id: any }) => x.id === schedule.id)
-  }
-}
-
+})
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

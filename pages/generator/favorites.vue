@@ -7,11 +7,9 @@
     path="/skd"
   >
     <template #top-items-right>
-      <v-toolbar-title>
-        Horarios favoritos
-      </v-toolbar-title>
+      <v-toolbar-title> Horarios favoritos </v-toolbar-title>
     </template>
-    <template #top-items-left="{item}">
+    <template #top-items-left="{ item }">
       <schedule-favorite-add
         v-if="item"
         :favorites-schedules="schedules"
@@ -26,17 +24,20 @@
 </template>
 
 <script lang="ts">
-import { Component, namespace, Vue } from 'nuxt-property-decorator'
+import { useStore } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from 'vue'
 import FavoriteBanner from '~/components/FavoriteBanner.vue'
-const userConfig = namespace('user/config')
-@Component({
-  components: { FavoriteBanner }
-})
-export default class Favorites extends Vue {
-  @userConfig.State('favoritesSchedules')
-  schedules!: Array<any>
 
-  @userConfig.Action('updateFavoritesSchedules')
-  updateFavoritesSchedules!: Function
-}
+export default defineComponent({
+  components: { FavoriteBanner },
+  setup () {
+    const store = useStore<any>()
+    const schedules = computed(
+      () => store.state.user.config.favoritesSchedules
+    )
+    const updateFavoritesSchedules = (schedules: any) =>
+      store.dispatch('user/config/updateFavoritesSchedules', schedules)
+    return { schedules, updateFavoritesSchedules }
+  }
+})
 </script>
