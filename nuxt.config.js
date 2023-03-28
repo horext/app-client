@@ -1,4 +1,3 @@
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -7,17 +6,19 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Horext es una aplicación web que te ayuda a generar horarios ' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Horext es una aplicación web que te ayuda a generar horarios '
+      },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -38,7 +39,9 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/google-analytics'
+    '@nuxtjs/google-analytics',
+    '@nuxtjs/composition-api/module',
+    ['@pinia/nuxt', { disableVuex: false }]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -69,7 +72,9 @@ export default {
     googleApi: {
       clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
       apiKey: process.env.NUXT_ENV_GOOGLE_API_KEY,
-      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(','),
+      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(
+        ','
+      ),
       scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
     }
   },
@@ -99,6 +104,5 @@ export default {
     customVariables: ['~/assets/variables.scss']
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {}
 }

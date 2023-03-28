@@ -30,7 +30,8 @@
       "@types/node",
       "@types/luxon",
       "@nuxtjs/universal-storage",
-      "@nuxtjs/vuetify"
+      "@nuxtjs/vuetify",
+      "@pinia/nuxt"
     ]
   },
   "exclude": [
