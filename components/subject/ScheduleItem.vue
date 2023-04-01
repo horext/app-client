@@ -35,14 +35,14 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['update:value'],
+  emits: ['input'],
   setup (props, { emit }) {
     const valueSync = computed({
       get () {
-        return props.schedules
+        return props.value
       },
       set (value) {
-        emit('update:value', value)
+        emit('input', value)
       }
     })
 
