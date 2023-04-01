@@ -1,18 +1,13 @@
-import { useStore } from '@nuxtjs/composition-api'
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import {
+  SnackbarOptions,
+  useGlobalSnackbarStore
+} from '~/stores/global-snackbar'
 
 export function useSnackbar () {
-  const store = useStore()
-  function showMessage (
-    content: string,
-    snackbarColor: string,
-    snackbarTimeout: number
-  ) {
-    store.commit('modules/snackbar/showMessage', {
-      content,
-      color: snackbarColor,
-      timeout: snackbarTimeout
-    })
+  const store = useGlobalSnackbarStore()
+  function showMessage (payload: SnackbarOptions) {
+    store.showMessage(payload)
   }
 
   return {
@@ -21,30 +16,7 @@ export function useSnackbar () {
 }
 
 export const setupSnackbar = () => {
-  const show = ref(false)
-  const message = ref('')
-  const timeout = ref(-1)
-  const color = ref('')
-  const store = useStore<any>()
-  store.subscribe((mutation, state) => {
-    if (mutation.type === 'modules/snackbar/showMessage') {
-      message.value = state.modules.snackbar.content
-      color.value = state.modules.snackbar.color
-      timeout.value = state.modules.snackbar.timeout
-      show.value = true
-
-      if (timeout.value > 0) {
-        setTimeout(() => {
-          show.value = false
-        }, timeout.value)
-      }
-    }
-  })
-
-  return {
-    show,
-    message,
-    timeout,
-    color
-  }
+  const store = useGlobalSnackbarStore()
+  const { color, content, timeout, show } = storeToRefs(store)
+  return { color, message: content, timeout, show }
 }

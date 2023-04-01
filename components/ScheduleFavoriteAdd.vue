@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
-import { $snackbar } from '~/utils/api'
+import { useSnackbar } from '~/composables/snackbar'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',
@@ -51,7 +51,7 @@ export default defineComponent({
 
     const showMessage = ref(false)
     const message = ref('')
-
+    const snackbar = useSnackbar()
     const changeFavoriteState = () => {
       if (currentSchedule.value) {
         if (isFavorite.value) {
@@ -61,7 +61,7 @@ export default defineComponent({
         } else {
           favoritesSchedulesSync.value = [...favoritesSchedulesSync.value, props.schedule]
         }
-        $snackbar({
+        snackbar.showMessage({
           content: !isFavorite.value ? 'Agregado a favoritos' : 'Quitado de Favoritos',
           timeout: 2000,
           color: 'yellow darken-3'
