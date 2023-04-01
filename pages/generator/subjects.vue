@@ -251,13 +251,13 @@ export default defineComponent({
 
     const close = () => {
       dialog.value = false
-      editedItem.value = Object.assign({}, defaultItem)
+      editedItem.value = Object.assign({}, defaultItem.value)
       editedIndex.value = -1
     }
 
     const closeDelete = () => {
       dialogDelete.value = false
-      editedItem.value = Object.assign({}, defaultItem)
+      editedItem.value = Object.assign({}, defaultItem.value)
       editedIndex.value = -1
     }
 
