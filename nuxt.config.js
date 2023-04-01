@@ -42,7 +42,7 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxtjs/google-analytics',
     '@nuxtjs/composition-api/module',
-    ['@pinia/nuxt', { disableVuex: false }]
+    ['@pinia/nuxt']
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
