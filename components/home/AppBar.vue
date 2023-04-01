@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import HomeDrawer from '@/components/home/Drawer.vue'
-import { Vue } from 'nuxt-property-decorator'
+import Vue from 'vue'
 import VuetifyLogo from '../VuetifyLogo.vue'
 export default Vue.extend({
   name: 'HomeAppBar',
