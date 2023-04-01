@@ -436,7 +436,8 @@ export default defineComponent({
       selectedError,
       dialogCalendarSync,
       dayNames,
-      day
+      day,
+      signInStatus
     }
   },
   head () {
