@@ -15,49 +15,83 @@
 </template>
 
 <script lang="ts">
-import { Component, PropSync, Vue } from 'nuxt-property-decorator'
+import { computed, defineComponent, PropType, ref } from 'vue'
+import { $snackbar } from '~/utils/api'
 
-@Component
-export default class ScheduleFavoriteAdd extends Vue {
-  @PropSync('schedule', { default: () => (null) })
-    currentSchedule!:any
-
-  @PropSync('favoritesSchedules', { default: () => ([]) })
-    favoritesSchedulesSync!:Array<any>
-
-  showMessage = false
-  message = ''
-
-  changeFavoriteState () {
-    if (this.currentSchedule) {
-      if (this.isFavorite) {
-        const schedules = [...this.favoritesSchedulesSync]
-        schedules.splice(this.indexSchedule, 1)
-        this.favoritesSchedulesSync = schedules
-      } else {
-        this.favoritesSchedulesSync = [...this.favoritesSchedulesSync, this.currentSchedule]
+export default defineComponent({
+  name: 'ScheduleFavoriteAdd',
+  props: {
+    schedule: {
+      type: Object as PropType<any>,
+      default: null
+    },
+    favoritesSchedules: {
+      type: Array as PropType<Array<any>>,
+      default: () => []
+    }
+  },
+  setup (props, { emit }) {
+    const currentSchedule = computed<any>({
+      get () {
+        return props.schedule
+      },
+      set (schedule) {
+        emit('update:schedule', schedule)
       }
-      this.$snackbar({
-        content: !this.isFavorite ? 'Agregado a favoritos' : 'Quitado de Favoritos',
-        timeout: 2000,
-        color: 'yellow darken-3'
-      })
+    })
+
+    const favoritesSchedulesSync = computed< any[]>({
+      get () {
+        return props.favoritesSchedules
+      },
+      set (favoritesSchedules) {
+        emit('update:favoritesSchedules', favoritesSchedules)
+      }
+    })
+
+    const showMessage = ref(false)
+    const message = ref('')
+
+    const changeFavoriteState = () => {
+      if (currentSchedule.value) {
+        if (isFavorite.value) {
+          const schedules = [...favoritesSchedulesSync.value]
+          schedules.splice(indexSchedule.value, 1)
+          favoritesSchedulesSync.value = schedules
+        } else {
+          favoritesSchedulesSync.value = [...favoritesSchedulesSync.value, props.schedule]
+        }
+        $snackbar({
+          content: !isFavorite.value ? 'Agregado a favoritos' : 'Quitado de Favoritos',
+          timeout: 2000,
+          color: 'yellow darken-3'
+        })
+      }
+    }
+
+    const isFavorite = computed(() => indexSchedule.value > -1)
+
+    const indexSchedule = computed(() => {
+      if (currentSchedule.value) {
+        return favoritesSchedulesSync.value.findIndex(
+          e => e && e.id === currentSchedule.value.id
+        )
+      } else {
+        return -1
+      }
+    })
+
+    return {
+      favoritesSchedulesSync,
+      currentSchedule,
+      showMessage,
+      message,
+      changeFavoriteState,
+      isFavorite,
+      indexSchedule
     }
   }
-
-  get isFavorite () {
-    return this.indexSchedule > -1
-  }
-
-  get indexSchedule () {
-    if (this.currentSchedule) {
-      return this.favoritesSchedulesSync
-        .findIndex(e => e && (e.id === this.currentSchedule.id))
-    } else {
-      return -1
-    }
-  }
-}
+})
 </script>
 
 <style scoped>

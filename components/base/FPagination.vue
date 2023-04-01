@@ -1,12 +1,8 @@
 <template>
-  <v-row
-    class="ma-2"
-    align="center"
-    justify="center"
-  >
+  <v-row class="ma-2" align="center" justify="center">
     <span class="grey--text">Items per page</span>
     <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
+      <template #activator="{ on, attrs }">
         <v-btn
           dark
           text
@@ -32,10 +28,7 @@
 
     <v-spacer />
 
-    <span
-      class="mr-2
-              grey--text"
-    >
+    <span class="mr-2 grey--text">
       Page {{ syncPage }} of {{ syncTotalPages }}
     </span>
     <v-btn
@@ -61,32 +54,77 @@
   </v-row>
 </template>
 <script lang="ts">
+import { defineComponent, computed } from 'vue'
 
-import { Component, PropSync, Vue } from 'nuxt-property-decorator'
-  @Component
-export default class CreateUpdateCourse extends Vue {
-    @PropSync('itemsPerPage')
-    syncItemsPerPage!: any ;
+export default defineComponent({
+  props: {
+    itemsPerPage: {
+      type: Number,
+      required: true
+    },
+    itemsPerPageArray: {
+      type: Array,
+      required: true
+    },
+    page: {
+      type: Number,
+      required: true
+    },
+    totalPages: {
+      type: Number,
+      required: true
+    }
+  },
+  emits: [
+    'update:itemsPerPage',
+    'update:page',
+    'update:totalPages',
+    'update:itemsPerPageArray'
+  ],
+  setup (props, { emit }) {
+    const syncItemsPerPage = computed({
+      get: () => props.itemsPerPage,
+      set: value => emit('update:itemsPerPage', value)
+    })
 
-    @PropSync('itemsPerPageArray')
-    syncItemsPerPageArray!: any ;
+    const syncItemsPerPageArray = computed({
+      get: () => props.itemsPerPageArray,
+      set: value => emit('update:itemsPerPageArray', value)
+    })
 
-    @PropSync('page')
-    syncPage!: number ;
+    const syncPage = computed({
+      get: () => props.page,
+      set: value => emit('update:page', value)
+    })
 
-    @PropSync('totalPages')
-    syncTotalPages!: number ;
+    const syncTotalPages = computed({
+      get: () => props.totalPages,
+      set: value => emit('update:totalPages', value)
+    })
 
-    nextPage () {
-      if (this.syncPage + 1 <= this.syncTotalPages) { this.syncPage += 1 }
+    const nextPage = () => {
+      if (syncPage.value + 1 <= syncTotalPages.value) {
+        syncPage.value += 1
+      }
     }
 
-    formerPage () {
-      if (this.syncPage - 1 >= 1) { this.syncPage -= 1 }
+    const formerPage = () => {
+      if (syncPage.value - 1 >= 1) { syncPage.value -= 1 }
     }
 
-    updateItemsPerPage (number: number) {
-      this.syncItemsPerPage = number
+    const updateItemsPerPage = (number: number) => {
+      syncItemsPerPage.value = number
     }
-}
+
+    return {
+      syncItemsPerPage,
+      syncItemsPerPageArray,
+      syncPage,
+      syncTotalPages,
+      nextPage,
+      formerPage,
+      updateItemsPerPage
+    }
+  }
+})
 </script>

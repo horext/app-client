@@ -171,7 +171,7 @@ export default defineComponent({
       })
     }
 
-    const form = ref<EventsCreator>()
+    const form = ref<typeof EventsCreator>()
 
     const save = () => {
       if (!form?.value?.validated()) {

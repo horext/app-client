@@ -50,76 +50,82 @@
     </v-card-actions>
   </v-card>
 </template>
+
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
-
+import { useFetch } from '@nuxtjs/composition-api'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
+import { $api } from '~/utils/api'
 
-@Component({
-  components: { ScheduleSubjectList }
-})
-export default class SubjectScheduleList extends Vue {
-  @Prop({ type: Object }) subject!: any
-  @Prop({ type: Object }) hourlyLoad!: any
+export default defineComponent({
+  components: { ScheduleSubjectList },
+  props: {
+    subject: { type: Object, required: true },
+    hourlyLoad: { type: Object, required: true }
+  },
+  setup (props, { emit }) {
+    const selected = ref<any[]>([])
+    const schedulesSubject = ref<any[]>([])
+    const sessions = ref<any[]>([])
 
-  async fetch () {
-    if (this.subject?.id && this.hourlyLoad?.id) {
-      const { data: schedulesSubject } = await this.$api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
-        this.subject?.id, this.hourlyLoad?.id
-      )
-      const ids = schedulesSubject.map((sb:any) => sb.schedule.id)
-      const { data: sessions } = await this.$api.classSessions.findScheduleIds(
-        ids
-      )
-      this.sessions = sessions
-      this.schedulesSubject = schedulesSubject
+    const fetchSchedules = async () => {
+      if (props.subject?.id && props.hourlyLoad?.id) {
+        const { data: schedulesSubjectData } = await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
+          props.subject.id, props.hourlyLoad.id
+        )
+        const ids = schedulesSubjectData.map((sb:any) => sb.schedule.id)
+        const { data: sessionsData } = await $api.classSessions.findScheduleIds(ids)
+        sessions.value = sessionsData
+        schedulesSubject.value = schedulesSubjectData
+      }
     }
-  }
+    const { fetch } = useFetch(fetchSchedules)
 
-  selected: Array<any> = []
-  schedulesSubject: Array<any> = []
-  sessions: Array<any> = []
-  get schedules () {
-    return this.schedulesSubject.map(
-      sb => ({
+    const schedules = computed(() => {
+      return schedulesSubject.value.map(sb => ({
         ...sb?.schedule,
         scheduleSubject: {
           id: sb.id
         },
-        sessions: this.sessions.filter(
-          s => s.schedule.id === sb.schedule.id
-        )
-      })
-    )
-  }
+        sessions: sessions.value.filter(s => s.schedule.id === sb.schedule.id)
+      }))
+    })
 
-  saveSections () {
-    this.$emit('save', this.selected)
-  }
+    watch(() => props.subject, () => {
+      fetch()
+    })
 
-  get title () {
-    return `${this.subject?.course?.id} - ${this.subject?.course?.name}`
-  }
-
-  @Watch('subject')
-  async onChangeSubject () {
-    await this.$fetch()
-  }
-
-  @Watch('schedules')
-  onChangeSessions () {
-    if (this.subject.schedules) {
-      this.selected = this.schedules.filter(
-        (s1: any) => {
-          const schedule = this.subject.schedules.find((s2:any) => s2.section.id === s1.section.id)
+    watch(schedules, () => {
+      if (props.subject.schedules) {
+        selected.value = schedules.value.filter((s1) => {
+          const schedule = props.subject.schedules.find((s2: any) => s2.section.id === s1.section.id)
           return schedule?.id === s1?.id
-        }
-      )
-    } else {
-      this.selected = []
+        })
+      } else {
+        selected.value = []
+      }
+    })
+
+    const saveSections = () => {
+      emit('save', selected.value)
+    }
+
+    const title = computed(() => {
+      return `${props.subject?.course?.id} - ${props.subject?.course?.name}`
+    })
+
+    onMounted(() => {
+      fetchSchedules()
+    })
+
+    return {
+      selected,
+      schedules,
+      saveSections,
+      title
     }
   }
-}
+})
 </script>
 
 <style lang="sass">

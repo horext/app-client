@@ -4,48 +4,60 @@
   </v-sheet>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { computed, onMounted, ref, watch } from 'vue'
 import Lottie, { AnimationItem } from 'lottie-web'
+import { defineComponent } from '@nuxtjs/composition-api'
+import { useVuetify } from '~/composables/vuetify'
 
-@Component
-export default class App extends Vue {
-  darkToggle: AnimationItem|any = { }
+export default defineComponent({
+  setup () {
+    const darkMode = ref<AnimationItem>()
 
-  mounted () {
-    this.darkToggle = Lottie.loadAnimation({
-      container: document.getElementById('darkMode') as Element,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: require('~/assets/lottie/71569-hamster-toggle.json')
+    onMounted(() => {
+      const darkModeEl = document.getElementById('darkMode')
+      darkMode.value = Lottie.loadAnimation({
+        container: darkModeEl!,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        animationData: require('~/assets/lottie/71569-hamster-toggle.json')
+      })
+      darkMode.value.setSpeed(2)
     })
-    this.darkToggle.setSpeed(2)
-  }
 
-  toggleDark () {
-    this.dark = !this.dark
-  }
+    const vuetify = useVuetify()
 
-  get dark () {
-    return this.$vuetify.theme.dark
-  }
+    const dark = computed({
+      get  () {
+        return vuetify.theme.dark
+      },
 
-  set dark (val: boolean) {
-    this.$vuetify.theme.dark = val
-  }
+      set  (val: boolean) {
+        vuetify.theme.dark = val
+      }
+    })
 
-  @Watch('dark')
-  darkMode (newVal: boolean) {
-    if (!newVal) {
-      this.darkToggle.setDirection(1)
-      this.darkToggle.play()
-    } else {
-      this.darkToggle.setDirection(-1)
-      this.darkToggle.play()
+    const toggleDark = () => {
+      dark.value = !dark.value
     }
-    localStorage.setItem('darkMode', JSON.stringify(newVal))
+
+    watch(dark, (newVal) => {
+      if (!newVal) {
+        darkMode.value!.setDirection(1)
+        darkMode.value!.play()
+      } else {
+        darkMode.value!.setDirection(-1)
+        darkMode.value!.play()
+      }
+      localStorage.setItem('darkMode', JSON.stringify(newVal))
+    })
+
+    return {
+      dark,
+      toggleDark
+    }
   }
-}
+})
 </script>
 <style>
 .dark-toggle {

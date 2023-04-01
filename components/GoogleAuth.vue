@@ -8,21 +8,18 @@
       rounded
       class="ma-1"
       shaped
-      @click="dialogCalendarSync=true"
+      @click="dialogCalendarSync = true"
     >
       Agregar a mi Calendario
     </v-btn>
     <v-dialog v-if="signInStatus" v-model="dialogCalendarSync">
       <v-card>
         <v-card-title>Google Calendar</v-card-title>
-        <v-dialog
-          v-model="dialog"
-          max-width="320"
-        >
+        <v-dialog v-model="dialog" max-width="320">
           <CreateGoogleCalendar
             :calendar="calendarItem"
             :loading="loading"
-            @close="dialog=false"
+            @close="dialog = false"
             @update:calendar="createCalendar"
           />
         </v-dialog>
@@ -35,42 +32,58 @@
                 :items="calendarList"
                 return-object
                 clearable
-                :rules="[(r)=>(!!r||'Requerido')]"
+                :rules="[(r) => !!r || 'Requerido']"
                 :search-input.sync="search"
                 item-text="summary"
               >
                 <template #prepend-item="">
-                  <v-list-item selectable color="primary" @click="addCalendar()">
-                    <v-list-item-content class=" text--primary">
-                      <v-list-item-title class=" text primary--text">
+                  <v-list-item
+                    selectable
+                    color="primary"
+                    @click="addCalendar()"
+                  >
+                    <v-list-item-content class="text--primary">
+                      <v-list-item-title class="text primary--text">
                         Crear mi calendario...
                       </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
               </v-autocomplete>
-              <v-text-field v-model="dateStart" :rules="[(r)=>!!r||'Requerido']" type="date" label="Fecha de Inicio" />
-              <v-text-field v-model="dateEnd" :rules="[(r)=>!!r||'Requerido']" type="date" label="Fecha de Fin" />
+              <v-text-field
+                v-model="dateStart"
+                :rules="[(r) => !!r || 'Requerido']"
+                type="date"
+                label="Fecha de Inicio"
+              />
+              <v-text-field
+                v-model="dateEnd"
+                :rules="[(r) => !!r || 'Requerido']"
+                type="date"
+                label="Fecha de Fin"
+              />
               <v-form>
-                <span class="heading">
-                  Notificaciones
-                </span>
+                <span class="heading"> Notificaciones </span>
                 <v-text-field
-                  v-for="(notification,index) in notifications"
-                  :id="'not-'+index"
+                  v-for="(notification, index) in notifications"
+                  :id="'not-' + index"
                   :key="index"
                   v-model="notifications[index].minutes"
                   type="number"
-                  :rules="[ (a)=>(a>0||'No permitido') ]"
+                  :rules="[(a) => a > 0 || 'No permitido']"
                   outlined
                   dense
                   :value="notification.minutes"
                   prepend-icon="mdi-bell"
-                  :items="Array.from({length: 60}, (x,i) => i)"
+                  :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
                 >
                   <template #append-outer>
-                    <v-icon :key="index+'del'" color="error" @click="deleteNotification(notification)">
+                    <v-icon
+                      :key="index + 'del'"
+                      color="error"
+                      @click="deleteNotification(notification)"
+                    >
                       mdi-delete
                     </v-icon>
                   </template>
@@ -78,11 +91,11 @@
                 <v-text-field
                   key="selected"
                   v-model="defaultNotification.minutes"
-                  :rules="[ (a)=>(a>0||'No permitido') ]"
+                  :rules="[(a) => a > 0 || 'No permitido']"
                   :value="defaultNotification.minutes"
                   prepend-icon="mdi-bell"
                   type="number"
-                  :items="Array.from({length: 60}, (x,i) => i)"
+                  :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
                   outlined
                   dense
@@ -98,10 +111,15 @@
           </v-form>
         </v-card-text>
         <v-card-actions v-if="signInStatus">
-          <v-btn :loading="progress>0" text @click="exportEventToGCalendar">
+          <v-btn :loading="progress > 0" text @click="exportEventToGCalendar">
             Exportar
             <template #loader>
-              <v-progress-linear color="secondary" striped :value="progress/events.length*100" :height="30">
+              <v-progress-linear
+                color="secondary"
+                striped
+                :value="(progress / events.length) * 100"
+                :height="30"
+              >
                 <template #default="{ value }">
                   <strong class="white--text">{{ Math.ceil(value) }}%</strong>
                 </template>
@@ -119,47 +137,308 @@
 </template>
 
 <script lang="ts">
-
-import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator'
-import { v4 } from 'uuid'
+import { ref, computed } from 'vue'
 import { DateTime } from 'luxon'
-import { colors, weekdayToDatetime } from '~/utils/core'
+import { defineComponent, PropType, toRefs, useContext, watch } from '@nuxtjs/composition-api'
+import { v4 } from 'uuid'
+import { colors } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 import Event from '~/model/Event'
+import { VForm } from '~/types'
 
-@Component({
+export default defineComponent({
   name: 'GoogleAuth',
-  components: { CreateGoogleCalendar, GoogleSignIn }
-})
+  components: { CreateGoogleCalendar, GoogleSignIn },
 
-export default class GoogleAuth extends Vue {
-  @Prop({
-    default: () => ([]),
-    type: Array
-  })
-    events!: Array<any>
+  props: {
+    events: {
+      type: Array as PropType<Event[]>,
+      default: () => []
+    },
+    startDate: {
+      type: String,
+      required: true
+    },
+    endDate: {
+      type: String,
+      required: true
+    }
+  },
 
-  @Prop({
-    type: String
-  })
-    startDate!: string
+  setup (props) {
+    const { events } = toRefs(props)
 
-  @Prop({
-    type: String
-  })
-    endDate!: string
+    const search = ref('')
+    const calendarItem = ref({ summary: '' })
+    const monthNames = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ]
 
-  @Watch('startDate', { immediate: true })
-  onChangeStartDate (startDate: string) {
-    if (startDate) { this.dateStart = DateTime.fromISO(startDate).toFormat('yyyy-MM-dd') }
-  }
+    const dialogCalendarSync = ref(false)
+    const signInStatus = ref(false)
+    const isGoogleApiLoaded = ref(false)
+    const dialog = ref(false)
+    const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
+    const dateStart = computed(() => DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
+    const dateEnd = computed(() => DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
 
-  @Watch('endDate', { immediate: true })
-  onChangeEndDate (endDate: string) {
-    if (endDate) { this.dateEnd = DateTime.fromISO(endDate).toFormat('yyyy-MM-dd') }
-  }
+    const progress = ref(0)
+    const day = [
+      '2021-04-11 ',
+      '2021-04-05 ',
+      '2021-04-06 ',
+      '2021-04-07 ',
+      '2021-04-08 ',
+      '2021-04-09 ',
+      '2021-04-10 '
+    ]
 
+    const notifications = ref([
+      {
+        method: 'popup',
+        minutes: 15
+      }
+    ])
+
+    let defaultNotification = {
+      method: 'popup',
+      minutes: 15
+    }
+
+    const calendarList = ref([])
+    const summary = ref('')
+    const selected = ref<any>(null)
+    const loading = ref(false)
+    const selectedError = ref(false)
+
+    const handleClientLoad = () => {
+      window.gapi.load('client:auth2', initClient)
+    }
+
+    const config = useContext().$config
+    const initClient = async () => {
+      try {
+        loading.value = true
+        await window.gapi.client.init({
+          apiKey: config.googleApi.apiKey,
+          clientId: config.googleApi.clientId,
+          discoveryDocs: config.googleApi.discoveryDocs,
+          scope: config.googleApi.scopes
+        })
+        // Listen for sign-in state changes.
+        window.gapi.auth2
+          .getAuthInstance()
+          .isSignedIn.listen(updateSigninStatus)
+        // Handle the initial sign-in state.
+        signInStatus.value = window.gapi.auth2
+          .getAuthInstance()
+          .isSignedIn.get()
+        loading.value = false
+      } catch (e) {
+        loading.value = false
+        console.log(JSON.stringify(e, null, 2))
+      }
+      console.log(signInStatus.value)
+    }
+
+    const updateSigninStatus = (isSignedIn: any) => {
+      signInStatus.value = isSignedIn
+    }
+
+    const handleAuthClick = () => {
+      window.gapi.auth2.getAuthInstance().signIn()
+    }
+
+    /**
+     *  Sign out the user upon button click.
+     */
+    const handleSignOutClick = () => {
+      window.gapi.auth2.getAuthInstance().signOut()
+    }
+
+    function deleteNotification (
+      index: { method: string; minutes: number }
+    ) {
+      console.log(index)
+      notifications.value = notifications.value.filter(
+        (notification: { method: string; minutes: number }) =>
+          notification !== index
+      )
+      defaultNotification = {
+        method: 'popup',
+        minutes: 15
+      }
+    }
+
+    function addNotification (this: any) {
+      const notification: any = {}
+      Object.assign(notification, defaultNotification)
+      notifications.value.push(notification)
+    }
+
+    function addCalendar (this: any) {
+      dialog.value = true
+      if (search.value) {
+        calendarItem.value.summary = search.value
+      }
+    }
+
+    async function createCalendar (this: any, { summary }: any) {
+      try {
+        const response = await window.gapi.client.calendar.calendars.insert({
+          resource: {
+            summary,
+            etag: 'Created by Octatec'
+          }
+        })
+        // Handle the results here (response.result has the parsed body).
+        console.log('Response', response)
+        await getCalendarList()
+        return response.result
+      } catch (e) {
+        console.error('Execute error', e)
+      } finally {
+        this.dialog = false
+      }
+    }
+
+    const form = ref<VForm>()
+
+    const exportEventToGCalendar = async () => {
+      if (!form.value?.validate()) {
+        return
+      }
+      progress.value = 0
+      for (const event of events.value) {
+        try {
+          await eventRequest(event)
+          progress.value++
+        } catch (e) {
+          console.error(e)
+        }
+      }
+      progress.value = 0
+    }
+
+    function eventRequest (event: Event): Promise<any> {
+      return new Promise((resolve, reject) => {
+        const format =
+          event.startTime.length > 5
+            ? 'yyyy-MM-dd hh:mm:ss'
+            : 'yyyy-MM-dd hh:mm'
+        let color = colors.findIndex(color => event.color === color)
+        if (color === -1) {
+          color = 10
+        }
+        const eventData = {
+          iCalUID: 'Horext-' + v4(),
+          summary: event.title,
+          description: event.description,
+          location: event?.location,
+          start: {
+            dateTime: DateTime.fromFormat(
+              dateStart.value + ' ' + event.startTime,
+              format
+            )
+              .set({ weekday: event.day })
+              .toISO(),
+            timeZone: 'America/Lima'
+          },
+          end: {
+            dateTime: DateTime.fromFormat(
+              dateStart.value + ' ' + event.endTime,
+              format
+            )
+              .set({ weekday: event.day })
+              .toISO(),
+            timeZone: 'America/Lima'
+          },
+          recurrence: [
+            'RRULE:FREQ=WEEKLY;UNTIL=' +
+              new Date(dateEnd.value)
+                .toISOString()
+                .substring(0, 10)
+                .split('-')
+                .join('') +
+              'T000000Z'
+          ],
+          colorId: color,
+          source: {
+            title: 'Horext',
+            url: 'https://horext.octatec.io'
+          },
+          reminders: {
+            useDefault: !1,
+            overrides: [...notifications.value]
+          }
+        }
+        // create the request
+        const request = window.gapi.client.calendar.events.import({
+          calendarId: selected.value?.id,
+          resource: eventData
+        })
+        // execute the request and do something with response
+        request.execute(function (resp: { status: any }) {
+          const status = resp.status
+          status === 'confirmed' ? resolve(status) : reject(status)
+          // After the request is executed, you will invoke the resolve function with the result as a parameter.
+        })
+      })
+    }
+
+    async function getCalendarList () {
+      try {
+        const response = await window.gapi.client.calendar.calendarList.list(
+          {}
+        )
+        calendarList.value = response.result.items
+      } catch (e) {
+        console.error('Execute error', e)
+      }
+    }
+
+    function onChangeSignInStatus (value: boolean) {
+      console.log(value)
+      if (value) {
+        getCalendarList()
+      }
+    }
+
+    watch(signInStatus, onChangeSignInStatus)
+
+    return {
+      isGoogleApiLoaded,
+      handleClientLoad,
+      exportEventToGCalendar,
+      addCalendar,
+      addNotification,
+      deleteNotification,
+      monthNames,
+      notifications,
+      summary,
+      dateStart,
+      dateEnd,
+      createCalendar,
+      handleAuthClick,
+      handleSignOutClick,
+      selectedError,
+      dialogCalendarSync,
+      dayNames,
+      day
+    }
+  },
   head () {
     return {
       script: [
@@ -170,221 +449,12 @@ export default class GoogleAuth extends Vue {
           callback: () => {
             this.isGoogleApiLoaded = true
             this.handleClientLoad()
-          }
+          },
+          json: {}
         }
 
       ]
     }
   }
-
-  search = ''
-  calendarItem = { summary: '' }
-  monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
-    'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-
-  dialogCalendarSync = false
-  signInStatus = false
-  isGoogleApiLoaded = false
-  dialog = false
-  dayNames = [
-    'Do',
-    'Lu', 'Ma', 'Mi', 'Ju',
-    'Vi', 'Sa']
-
-  dateStart = DateTime.local().toFormat('yyyy-MM-dd')
-  dateEnd = DateTime.local().plus({ months: 4 }).toFormat('yyyy-MM-dd')
-
-  progress = 0
-  day = [
-    '2021-04-11 ',
-    '2021-04-05 ',
-    '2021-04-06 ',
-    '2021-04-07 ',
-    '2021-04-08 ',
-    '2021-04-09 ',
-    '2021-04-10 '
-  ]
-
-  notifications = [
-    {
-      method: 'popup',
-      minutes: 15
-    }
-  ]
-
-  defaultNotification = {
-    method: 'popup',
-    minutes: 15
-  }
-
-  calendarList = []
-  summary = ''
-  selected:any = null
-
-  loading = false
-  selectedError = false
-
-  handleClientLoad () {
-    window.gapi.load('client:auth2', this.initClient)
-  }
-
-  async initClient () {
-    try {
-      this.loading = true
-      await window.gapi.client.init({
-        apiKey: this.$config.googleApi.apiKey,
-        clientId: this.$config.googleApi.clientId,
-        discoveryDocs: this.$config.googleApi.discoveryDocs,
-        scope: this.$config.googleApi.scopes
-      })
-      // Listen for sign-in state changes.
-      window.gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus)
-      // Handle the initial sign-in state.
-      this.signInStatus = window.gapi.auth2.getAuthInstance().isSignedIn.get()
-      this.loading = false
-    } catch (e) {
-      this.loading = false
-      console.log(JSON.stringify(e, null, 2))
-    }
-    console.log(this.signInStatus)
-  }
-
-  updateSigninStatus (isSignedIn: boolean) {
-    this.signInStatus = isSignedIn
-  }
-
-  handleAuthClick () {
-    window.gapi.auth2.getAuthInstance().signIn()
-  }
-
-  /**
-   *  Sign out the user upon button click.
-   */
-  handleSignOutClick () {
-    window.gapi.auth2.getAuthInstance().signOut()
-  }
-
-  deleteNotification (index: { method: string; minutes: number }) {
-    console.log(index)
-    this.notifications = this.notifications.filter(notification => notification !== index)
-    this.defaultNotification = {
-      method: 'popup',
-      minutes: 15
-    }
-  }
-
-  addNotification () {
-    const notification: any = {}
-    Object.assign(notification, this.defaultNotification)
-    this.notifications.push(notification)
-  }
-
-  addCalendar () {
-    this.dialog = true
-    if (this.search) { this.calendarItem.summary = this.search }
-  }
-
-  async createCalendar ({ summary }: any) {
-    try {
-      const response = await window.gapi.client.calendar.calendars.insert({
-        resource: {
-          summary,
-          etag: 'Created by Octatec'
-        }
-      })
-      // Handle the results here (response.result has the parsed body).
-      console.log('Response', response)
-      await this.getCalendarList()
-      return response.result
-    } catch (e) {
-      console.error('Execute error', e)
-    } finally {
-      this.dialog = false
-    }
-  }
-
-  get form (): any {
-    return this.$refs.form
-  }
-
-  async exportEventToGCalendar () {
-    if (!this.form.validate()) {
-      return
-    }
-
-    this.progress = 0
-    for (let i = 0; i < this.events.length; i++) {
-      const item: any = this.events[i]
-      try {
-        await this.eventRequest(item)
-        this.progress++
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    this.progress = 0
-  }
-
-  eventRequest (event: Event): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const format = event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
-      let color = colors.findIndex(color => (event.color === color))
-      if (color === -1) {
-        color = 10
-      }
-      const eventData = {
-        iCalUID: 'Horext-' + v4(),
-        summary: event.title,
-        description: event.description,
-        location: event?.location,
-        start: {
-          dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.startTime, format).set({ weekday: event.day }).toISO(),
-          timeZone: 'America/Lima'
-        },
-        end: {
-          dateTime: DateTime.fromFormat(this.dateStart + ' ' + event.endTime, format).set({ weekday: event.day }).toISO(),
-          timeZone: 'America/Lima'
-        },
-        recurrence: ['RRULE:FREQ=WEEKLY;UNTIL=' + new Date(this.dateEnd).toISOString().substring(0, 10).split('-').join('') + 'T000000Z'],
-        colorId: color,
-        source: {
-          title: 'Horext',
-          url: 'https://horext.octatec.io'
-        },
-        reminders: {
-          useDefault: !1,
-          overrides: [...this.notifications]
-        }
-      }
-      // create the request
-      const request = window.gapi.client.calendar.events.import({
-        calendarId: this.selected.id,
-        resource: eventData
-      })
-      // execute the request and do something with response
-      request.execute(function (resp: { status: any }) {
-        const status = resp.status
-        status === 'confirmed' ? resolve(status) : reject(status)
-        // After the request is executed, you will invoke the resolve function with the result as a parameter.
-      })
-    })
-  }
-
-  async getCalendarList () {
-    try {
-      const response: { result: { items: never[] } } = await window.gapi.client.calendar.calendarList.list({})
-      this.calendarList = response.result.items
-    } catch (e) {
-      console.error('Execute error', e)
-    }
-  }
-
-  @Watch('signInStatus')
-  onChangeSignInStatus (value: boolean) {
-    console.log(value)
-    if (value) {
-      this.getCalendarList()
-    }
-  }
-}
+})
 </script>

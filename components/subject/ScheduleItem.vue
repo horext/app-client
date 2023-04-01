@@ -18,18 +18,37 @@
 </template>
 
 <script lang="ts">
-
-import { Component, ModelSync, Prop, Vue } from 'nuxt-property-decorator'
+import { PropType } from '@nuxtjs/composition-api'
+import { computed, defineComponent } from 'vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
 
-@Component({
-  components: { ScheduleSection, ClassSessionItem }
+export default defineComponent({
+  components: { ScheduleSection, ClassSessionItem },
+  props: {
+    schedules: {
+      type: Array as PropType<any[]>,
+      required: true
+    },
+    value: {
+      type: [Array, Object],
+      required: true
+    }
+  },
+  emits: ['update:value'],
+  setup (props, { emit }) {
+    const valueSync = computed({
+      get () {
+        return props.schedules
+      },
+      set (value) {
+        emit('update:value', value)
+      }
+    })
+
+    return {
+      valueSync
+    }
+  }
 })
-
-export default class ScheduleSubjectList extends Vue {
-  @Prop({ type: Array }) schedules!: Array<any>
-
-  @ModelSync('value', 'input', { type: [Array, Object] }) valueSync!: any
-}
 </script>
