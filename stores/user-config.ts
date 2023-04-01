@@ -139,7 +139,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function saveNewSubject (subject: any) {
     ADD_SUBJECT(subject)
-    $storage.setLocalStorage('mySubjects', subjects)
+    $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
   function deleteSubjectById (id: any) {
@@ -159,7 +159,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function updateSchedules (schedules: any) {
     SET_SCHEDULES(schedules)
-    $storage.setLocalStorage('mySchedules', schedules)
+    $storage.setLocalStorage('mySchedules', schedules.value)
   }
 
   function saveNewFavoriteSchedule (subject: any) {

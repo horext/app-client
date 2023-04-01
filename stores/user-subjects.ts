@@ -18,8 +18,8 @@ export const useUserSubjects = defineStore('user/subjects', () => {
     items.value.splice(index, 1)
   }
 
-  function updateItemByIndex ({ index, item }: {index: number, item: any}) {
-    items.value = items.value.map((c, i) => i === index ? item : c)
+  function updateItemByIndex ({ index, item }: { index: number; item: any }) {
+    items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
   function saveNewItem (item: any) {
@@ -33,10 +33,10 @@ export const useUserSubjects = defineStore('user/subjects', () => {
     $storage.setLocalStorage('mySubjects', items.value)
   }
 
-  function updateItem (item:any) {
+  function updateItem (item: any) {
     const index = items.value.findIndex(s => s.id === item.id)
     updateItemByIndex({ index, item })
-    $storage.setLocalStorage('mySubjects', items)
+    $storage.setLocalStorage('mySubjects', items.value)
   }
 
   function updateItems (items: any) {
