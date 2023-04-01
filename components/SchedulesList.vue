@@ -92,7 +92,7 @@ export default defineComponent({
 
     watch(schedule, onChangeSchedule, { immediate: true })
 
-    const page = computed({
+    const page = computed<number>({
       get () {
         return index.value + 1
       },
