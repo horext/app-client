@@ -50,7 +50,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
+    // '@nuxtjs/pwa',
     '@nuxtjs/universal-storage'
   ],
 
@@ -77,12 +77,6 @@ export default {
         ','
       ),
       scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
-    }
-  },
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en'
     }
   },
 
