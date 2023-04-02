@@ -1,4 +1,5 @@
 import { Plugin } from '@nuxt/types'
+import axios from 'axios'
 import repositories from '~/repositories'
 export type Repositories = ReturnType<typeof repositories>
 
@@ -26,15 +27,11 @@ declare module 'vuex/types/index' {
   }
 }
 
-const api: Plugin = ({ $axios, $config }, inject) => {
+const api: Plugin = ({ $config }, inject) => {
   // Create a custom axios instance
   // Create a custom axios instance
-  const api = $axios.create({
+  const api = axios.create({
     baseURL: $config.baseURL + '/api'
-  })
-
-  api.onRequest((config) => {
-    console.log('Making request to ' + config.url)
   })
 
   inject('api', repositories(api))
