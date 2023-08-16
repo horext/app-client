@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'nuxt-property-decorator'
+import Vue from 'vue'
 
 export default Vue.extend({
   name: 'HomeView'

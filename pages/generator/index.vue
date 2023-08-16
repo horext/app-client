@@ -72,70 +72,91 @@
 </template>
 
 <script lang="ts">
-import { Component, namespace, State, Vue } from 'nuxt-property-decorator'
+import {
+  defineComponent,
+  ref,
+  computed
+} from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
-const userConfig = namespace('user/config')
-const userEvents = namespace('user/events')
+import { useUserConfigStore } from '~/stores/user-config'
+import { useUserEventsStore } from '~/stores/user-events'
 
-@Component({
+export default defineComponent({
   components: {
     ScheduleFavoriteAdd,
     SchedulesPresentation
   },
-  layout: 'app'
-})
-export default class Generator extends Vue {
-  occurrences: Array<any> = []
-  openMySchedules = false
-  succces = false
-  get crossingSubjects () {
-    return this.crossings
-  }
+  layout: 'app',
+  setup () {
+    const configStore = useUserConfigStore()
+    const eventsStore = useUserEventsStore()
+    const occurrences = ref<any[]>([])
+    const openMySchedules = ref(false)
+    const succces = ref(false)
 
-  set crossingSubjects (crossings) {
-    this.updateCrossings(crossings)
-  }
-
-  @userConfig.State('subjects')
-    mySubjects!: Array<any>
-
-  @userConfig.State('crossings')
-    crossings!: number
-
-  @userConfig.Action('updateCrossings')
-    updateCrossings!: Function
-
-  @userEvents.State('items')
-    myEvents!: Array<any>
-
-  @userConfig.State('favoritesSchedules')
-    myFavoritesSchedules!: Array<any>
-
-  @userConfig.Action('updateFavoritesSchedules')
-    updateFavoritesSchedules!: Function
-
-  @userConfig.State('schedules')
-    schedules!: Array<any>
-
-  @userConfig.Action('updateSchedules')
-    updateSchedules!: Function
-
-  generateAllUserSchedules () {
-    console.log('start')
-    this.succces = false
-    const { occurrences, combinations } = getSchedules(
-      this.mySubjects,
-      this.myEvents,
-      {
-        crossingSubjects: this.crossingSubjects
+    const crossingSubjects = computed({
+      get: () => configStore.crossings,
+      set: (crossing: number) => {
+        updateCrossings(crossing)
       }
+    })
+
+    const mySubjects = computed(() => configStore.subjects)
+
+    const updateCrossings = (crossings: number) => {
+      configStore.updateCrossings(crossings)
+    }
+
+    const myEvents = computed(() => eventsStore.items)
+
+    const myFavoritesSchedules = computed(
+      () => configStore.favoritesSchedules
     )
-    this.updateSchedules(combinations)
-    this.occurrences = occurrences
-    this.succces = true
-    console.log('end')
+
+    const updateFavoritesSchedules = (favoritesSchedules: any[]) => {
+      configStore.updateFavoritesSchedules(
+        favoritesSchedules
+      )
+    }
+
+    const schedules = computed(() => configStore.schedules)
+
+    const updateSchedules = (schedules: any[]) => {
+      configStore.updateSchedules(schedules)
+    }
+
+    const generateAllUserSchedules = () => {
+      console.log('start')
+      succces.value = false
+      const { occurrences: occurrencesData, combinations } = getSchedules(
+        mySubjects.value,
+        myEvents.value,
+        {
+          crossingSubjects: crossingSubjects.value
+        }
+      )
+      updateSchedules(combinations)
+      occurrences.value = occurrencesData
+      succces.value = true
+      console.log('end')
+    }
+
+    return {
+      occurrences,
+      openMySchedules,
+      succces,
+      mySubjects,
+      crossingSubjects,
+      myEvents,
+      myFavoritesSchedules,
+      schedules,
+      updateCrossings,
+      updateFavoritesSchedules,
+      updateSchedules,
+      generateAllUserSchedules
+    }
   }
-}
+})
 </script>

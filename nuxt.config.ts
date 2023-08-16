@@ -1,5 +1,6 @@
+import type { NuxtConfig } from '@nuxt/types'
 
-export default {
+const config: NuxtConfig = {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Horext',
@@ -7,22 +8,25 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Horext es una aplicación web que te ayuda a generar horarios ' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'Horext es una aplicación web que te ayuda a generar horarios '
+      },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
+    '~/plugins/snackbar-accessor.ts',
     { src: '~/plugins/html2canvas.client.js', mode: 'client' },
     '~/plugins/axios-accesor',
     '~/plugins/storage-accessor',
@@ -38,7 +42,8 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/google-analytics'
+    '@nuxtjs/composition-api/module',
+    ['@pinia/nuxt', {}]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -46,7 +51,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
+    // '@nuxtjs/pwa',
     '@nuxtjs/universal-storage'
   ],
 
@@ -69,14 +74,10 @@ export default {
     googleApi: {
       clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
       apiKey: process.env.NUXT_ENV_GOOGLE_API_KEY,
-      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(','),
+      discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(
+        ','
+      ),
       scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
-    }
-  },
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en'
     }
   },
 
@@ -91,7 +92,7 @@ export default {
         maxAge: 60 * 60 * 24 * 7 * 4
       }
     }
-  },
+  } as any,
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -99,6 +100,7 @@ export default {
     customVariables: ['~/assets/variables.scss']
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {}
 }
+
+export default config

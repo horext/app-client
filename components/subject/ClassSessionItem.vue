@@ -18,36 +18,45 @@
   </tr>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'nuxt-property-decorator'
+import { computed, defineComponent } from 'vue'
 import { weekdays } from '~/utils/core'
 
-@Component
-export default class ClassSessionItem extends Vue {
-  @Prop({ type: Object }) session!: any
+export default defineComponent({
+  props: {
+    session: {
+      type: Object,
+      required: true
+    }
+  },
+  setup (props) {
+    const dayWeek = computed(() =>
+      weekdays[props.session?.day]?.substring(0, 2).toUpperCase()
+    )
 
-  get dayWeek () {
-    return weekdays[this.session?.day].substring(0, 2).toUpperCase()
-  }
+    const type = computed(() => props.session?.type?.code)
 
-  get type () {
-    return this.session?.type?.code
-  }
+    const teacherFullName = computed(() => props.session?.teacher?.fullName)
 
-  get teacherFullName () {
-    return this.session?.teacher?.fullName
-  }
+    const classroom = computed(() => props.session?.classroom?.code)
 
-  get classroom () {
-    return this.session?.classroom?.code
-  }
+    const timeInterval = computed(
+      () =>
+        props.session?.startTime?.substring(0, 5) +
+        ' - ' +
+        props.session?.endTime?.substring(0, 5)
+    )
 
-  get timeInterval () {
-    return this.session?.startTime.substring(0, 5) + ' - ' + this.session.endTime.substring(0, 5)
+    return {
+      dayWeek,
+      type,
+      teacherFullName,
+      classroom,
+      timeInterval
+    }
   }
-}
+})
 </script>
 <style lang="sass">
 @import '~vuetify/src/styles/styles.sass'
 @media #{map-get($display-breakpoints, 'sm-and-down')}
-
 </style>

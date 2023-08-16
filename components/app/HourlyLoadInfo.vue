@@ -12,19 +12,23 @@
   </v-list-item>
 </template>
 <script lang="ts">
-import { Component, State, Vue } from 'nuxt-property-decorator'
+import { computed } from '@nuxtjs/composition-api'
+import { defineComponent } from 'vue'
+import { useUserConfigStore } from '~/stores/user-config'
 
-@Component
-export default class AppHourlyLoadInfo extends Vue {
-  @State(state => state.user.config.hourlyLoad)
-  hourlyLoad!: any;
+export default defineComponent({
+  setup () {
+    const store = useUserConfigStore()
+    const hourlyLoad = computed(() => store.hourlyLoad)
 
-  get updatedAt () {
-    return this.hourlyLoad?.updatedAt
+    const updatedAt = computed(() => hourlyLoad.value?.updatedAt)
+    const name = computed(() => hourlyLoad.value?.name)
+
+    return {
+      hourlyLoad,
+      updatedAt,
+      name
+    }
   }
-
-  get name () {
-    return this.hourlyLoad?.name
-  }
-}
+})
 </script>

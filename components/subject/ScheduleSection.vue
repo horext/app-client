@@ -13,19 +13,37 @@
   </tr>
 </template>
 <script lang="ts">
-import { Component, ModelSync, Prop, Vue } from 'nuxt-property-decorator'
-@Component
-export default class ScheduleSection extends Vue {
-  @Prop({ type: Object, default: () => ({}) }) readonly schedule!: any
+import { defineComponent, PropType, computed } from 'vue'
 
-  @ModelSync('value', 'input', { type: [Array, Object] }) valueSync!: any
+export default defineComponent({
+  props: {
+    schedule: {
+      type: Object as PropType<any>,
+      default: () => ({})
+    },
+    value: {
+      type: [Array, Object],
+      default: null
+    }
+  },
+  emits: ['input'],
+  setup (props, { emit }) {
+    const valueSync = computed({
+      get: () => props.value,
+      set: (newValue) => {
+        emit('input', newValue)
+      }
+    })
 
-  get sessionsCount () {
-    return this.schedule?.sessions?.length
+    const sessionsCount = computed(() => {
+      return props.schedule?.sessions?.length
+    })
+
+    const section = computed(() => {
+      return props.schedule?.section?.id
+    })
+
+    return { valueSync, sessionsCount, section }
   }
-
-  get section () {
-    return this.schedule?.section?.id
-  }
-}
+})
 </script>

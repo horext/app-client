@@ -6,7 +6,7 @@
       dense
       :color="selectedEvent.color"
     >
-      <v-btn  icon>
+      <v-btn icon>
         <v-icon>mdi-information</v-icon>
       </v-btn>
 
@@ -31,8 +31,10 @@
         </v-list-item-title>
       </v-list-item-content>
       <v-list-item-action>
-        <v-btn  icon>
-          <v-icon dense>mdi-information</v-icon>
+        <v-btn icon>
+          <v-icon dense>
+            mdi-information
+          </v-icon>
         </v-btn>
       </v-list-item-action>
     </v-list-item>
@@ -44,7 +46,9 @@
         </v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title style="white-space: pre-line">   {{ selectedEvent.description }}</v-list-item-title>
+        <v-list-item-title style="white-space: pre-line">
+          {{ selectedEvent.description }}
+        </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <v-divider inset />
@@ -77,24 +81,39 @@
   </v-card>
 </template>
 <script lang="ts">
-import { Vue, Prop, Component, PropSync } from 'nuxt-property-decorator'
-import { weekdays } from '~/utils/core'
-@Component
-export default class EventInfoCard extends Vue {
-  @Prop({ type: Object })
-  selectedEvent!: any
+import { useVModel } from '@vueuse/core'
+import { defineComponent, PropType, computed, Ref } from 'vue'
+import Event from '~/model/Event'
 
-  @PropSync('dialog', { type: Boolean })
-  dialogSync!: boolean
+export default defineComponent({
+  props: {
+    selectedEvent: {
+      type: Object as PropType<Event>,
+      required: true
+    },
+    dialog: {
+      type: Boolean as PropType<boolean>,
+      required: true
+    }
+  },
+  emits: ['update:dialog'],
+  setup (props, { emit }) {
+    const dialogSync = useVModel(props, 'dialog', emit)
 
-  get selectedDay (): string {
-    return this.weekdays[this.selectedEvent.day]
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+    const selectedDay: Ref<string> = computed(() => weekdays[props.selectedEvent.day])
+
+    const moreInfo = () => {
+      // do something
+    }
+
+    return {
+      selectedDay,
+      weekdays,
+      moreInfo,
+      dialogSync
+    }
   }
-
-  moreInfo () {
-
-  }
-
-  weekdays = weekdays
-}
+})
 </script>
