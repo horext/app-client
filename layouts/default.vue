@@ -8,7 +8,7 @@
   </v-app>
 </template>
 <script lang="ts">
-import { Vue } from 'nuxt-property-decorator'
+import Vue from 'vue'
 import HomeAppBar from '~/components/home/AppBar.vue'
 import HomeFooter from '~/components/home/Footer.vue'
 import HomeView from '~/components/home/View.vue'

@@ -46,18 +46,18 @@
 </template>
 
 <script lang="ts">
-import { Prop } from 'nuxt-property-decorator'
-import { Component, Vue } from 'vue-property-decorator'
-
+import { defineComponent } from '@nuxtjs/composition-api'
 import ScheduleSection from './ViewListSubjectSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 
-@Component({
+export default defineComponent({
+  name: 'ScheduleViewList',
   components: { ScheduleSection, ClassSessionItem },
-  name: 'ScheduleViewList'
+  props: {
+    schedule: {
+      type: Object,
+      required: true
+    }
+  }
 })
-export default class extends Vue {
-  @Prop({ type: Object })
-    schedule!: any
-}
 </script>

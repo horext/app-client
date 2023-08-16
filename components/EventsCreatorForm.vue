@@ -38,18 +38,15 @@
   </v-form>
 </template>
 
-<script lang="ts">
-import { Component, PropSync, Vue, Watch } from 'nuxt-property-decorator'
+<script lang="ts">import { defineComponent, PropType, ref, watch } from 'vue'
 import { v4 } from 'uuid'
 import { VForm } from '~/types'
 
-  @Component({
-    name: 'EventsCreator',
-    components: { }
-  })
-export default class EventsCreator extends Vue {
-    @PropSync('event', {
-      type: Object,
+export default defineComponent({
+  name: 'EventsCreator',
+  props: {
+    event: {
+      type: Object as PropType<any>,
       default: () => ({
         id: v4(),
         title: '',
@@ -59,47 +56,58 @@ export default class EventsCreator extends Vue {
         startTime: '12:00',
         endTime: '14:00'
       })
-    })
-    eventSync!: any
+    }
+  },
+  emits: ['update:event'],
+  setup (props, { emit }) {
+    const color = ref(null)
 
-    color = null
-
-    @Watch('color')
-    onChangeColor (newVal: any) {
-      this.eventSync.color = newVal.hex
+    const onChangeColor = (newVal: any) => {
+      emit('update:event', {
+        ...props.event,
+        color: newVal.hex
+      })
     }
 
-    get rules () {
-      return {
-        required: (value: any) => !!value || 'Requerido.',
-        requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-        max: (value: any) => value < this.eventSync.endTime || 'Tiene que ser menor que el fin',
-        min: (value: any) => value > this.eventSync.startTime || 'Tiene que ser mayor que el inicio'
-      }
+    const rules = {
+      required: (value: any) => !!value || 'Requerido.',
+      requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
+      max: (value: any) => value < props.event.endTime || 'Tiene que ser menor que el fin',
+      min: (value: any) => value > props.event.startTime || 'Tiene que ser mayor que el inicio'
     }
 
-    form (): any {
-      return this.$refs.form as VForm
-    }
+    const form = ref<VForm>()
 
-    validated ():boolean {
-      const validate = this.form().validate()
+    const validated = () => {
+      const validate = form.value?.validate()
       if (validate) {
         return true
       }
       return validate
     }
 
-  weekdays = [
-    { index: 0, value: 'Domingo' },
-    { index: 1, value: 'Lunes' },
-    { index: 2, value: 'Martes' },
-    { index: 3, value: 'Miercoles' },
-    { index: 4, value: 'Jueves' },
-    { index: 5, value: 'Viernes' },
-    { index: 6, value: 'Sábado' }
-  ]
+    watch(color, onChangeColor)
 
-    dialog=false
-}
+    const weekdays = [
+      { index: 0, value: 'Domingo' },
+      { index: 1, value: 'Lunes' },
+      { index: 2, value: 'Martes' },
+      { index: 3, value: 'Miercoles' },
+      { index: 4, value: 'Jueves' },
+      { index: 5, value: 'Viernes' },
+      { index: 6, value: 'Sábado' }
+    ]
+
+    const dialog = ref(false)
+
+    return {
+      color,
+      rules,
+      form,
+      validated,
+      weekdays,
+      dialog
+    }
+  }
+})
 </script>

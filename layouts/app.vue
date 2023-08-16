@@ -69,81 +69,90 @@
 </template>
 
 <script lang="ts">
-import { Component, State, Vue } from 'nuxt-property-decorator'
+import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
+import { useVuetify } from '~/composables/vuetify'
 
-@Component({
+export default defineComponent({
   components: {
     ThemeDarkToggle,
     AppHourlyLoadInfo,
     TheSnackbar
+  },
+  setup () {
+    const vuetify = useVuetify()
+    onMounted(() => {
+      vuetify.theme.dark = JSON.parse(
+        localStorage.getItem('darkMode') || 'false'
+      )
+    })
+
+    const drawer = ref(true)
+    const dialog = ref(true)
+    const items = [
+      {
+        title: 'Inicio',
+        icon: 'mdi-calendar',
+        to: '/'
+      },
+      {
+        title: 'Generador de Horarios',
+        icon: 'mdi-calendar',
+        to: '/generator'
+      },
+      {
+        title: 'Horarios Favoritos',
+        icon: 'mdi-calendar-star',
+        to: '/generator/favorites'
+      },
+      {
+        title: 'Mis cursos y secciones',
+        icon: 'mdi-book',
+        to: '/generator/subjects'
+      },
+      {
+        title: 'Mis eventos',
+        icon: 'mdi-calendar-plus',
+        to: '/generator/events'
+      },
+      {
+        title: 'Avanzado',
+        icon: 'mdi-cog',
+        to: '/generator/settings'
+      }
+    ]
+
+    const denseItems = [
+      {
+        title: 'Generador',
+        icon: 'mdi-calendar',
+        to: '/generator'
+      },
+      {
+        title: 'Favoritos',
+        icon: 'mdi-calendar-star',
+        to: '/generator/favorites'
+      },
+      {
+        title: 'Mis cursos',
+        icon: 'mdi-book',
+        to: '/generator/subjects'
+      },
+      {
+        title: 'Mis eventos',
+        icon: 'mdi-calendar-plus',
+        to: '/generator/events'
+      }
+    ]
+
+    return {
+      items,
+      drawer,
+      dialog,
+      denseItems
+    }
   }
 })
-export default class App extends Vue {
-  mounted () {
-    this.$vuetify.theme.dark = JSON.parse(
-      localStorage.getItem('darkMode') || 'false'
-    )
-  }
-
-  drawer = true;
-  dialog = true;
-  items = [
-    {
-      title: 'Inicio',
-      icon: 'mdi-calendar',
-      to: '/'
-    },
-    {
-      title: 'Generador de Horarios',
-      icon: 'mdi-calendar',
-      to: '/generator'
-    },
-    {
-      title: 'Horarios Favoritos',
-      icon: 'mdi-calendar-star',
-      to: '/generator/favorites'
-    },
-    {
-      title: 'Mis cursos y secciones',
-      icon: 'mdi-book',
-      to: '/generator/subjects'
-    },
-    {
-      title: 'Mis eventos',
-      icon: 'mdi-calendar-plus',
-      to: '/generator/events'
-    },
-    {
-      title: 'Avanzado',
-      icon: 'mdi-cog',
-      to: '/generator/settings'
-    }
-  ];
-
-  denseItems = [
-    {
-      title: 'Generador',
-      icon: 'mdi-calendar',
-      to: '/generator'
-    },
-    {
-      title: 'Favoritos',
-      icon: 'mdi-calendar-star',
-      to: '/generator/favorites'
-    },
-    {
-      title: 'Mis cursos',
-      icon: 'mdi-book',
-      to: '/generator/subjects'
-    },
-    {
-      title: 'Mis eventos',
-      icon: 'mdi-calendar-plus',
-      to: '/generator/events'
-    }
-  ];
-}
 </script>

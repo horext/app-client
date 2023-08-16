@@ -1,6 +1,6 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios'
+import { AxiosInstance } from 'axios'
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
-export default ($axios: NuxtAxiosInstance) => ({
+export default ($axios: AxiosInstance) => ({
   findBySubjectIdAndHourlyLoadId (subject:number, hourlyLoad:number) {
     return $axios.get(PATH_SCHEDULE_SUBJECTS,
       {

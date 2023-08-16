@@ -1,4 +1,6 @@
-export default {
+import type { NuxtConfig } from '@nuxt/types'
+
+const config: NuxtConfig = {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Horext',
@@ -24,6 +26,7 @@ export default {
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
+    '~/plugins/snackbar-accessor.ts',
     { src: '~/plugins/html2canvas.client.js', mode: 'client' },
     '~/plugins/axios-accesor',
     '~/plugins/storage-accessor',
@@ -39,9 +42,8 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    '@nuxtjs/google-analytics',
     '@nuxtjs/composition-api/module',
-    ['@pinia/nuxt', { disableVuex: false }]
+    ['@pinia/nuxt', {}]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -49,7 +51,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
+    // '@nuxtjs/pwa',
     '@nuxtjs/universal-storage'
   ],
 
@@ -78,12 +80,6 @@ export default {
       scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
     }
   },
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en'
-    }
-  },
 
   storage: {
     initialState: {
@@ -96,7 +92,7 @@ export default {
         maxAge: 60 * 60 * 24 * 7 * 4
       }
     }
-  },
+  } as any,
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -106,3 +102,5 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {}
 }
+
+export default config

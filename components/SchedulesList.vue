@@ -27,87 +27,100 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, PropSync, Vue, Watch } from 'nuxt-property-decorator'
+import { defineComponent, computed, ref, watch } from 'vue'
+import { WatchCallback } from '@nuxtjs/composition-api'
+import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
-import ScheduleOptionsBar from '~/components/ScheduleOptionsBar.vue'
-import ScheduleOptionsFAB from '~/components/ScheduleOptionsFAB.vue'
 import { ViewMode } from '~/model/ViewMode'
 
-@Component({
+export default defineComponent({
+  name: 'SchedulesList',
+
   components: {
-    ScheduleOptionsFAB,
-    ScheduleOptionsBar,
     ScheduleViewer,
     ViewList
+  },
+
+  props: {
+    schedules: {
+      type: Array,
+      default: () => []
+    },
+    weekDays: {
+      type: Array,
+      default: () => [1, 2, 3, 4, 5, 6]
+    },
+    currentSchedule: {
+      type: Object
+    },
+    mode: {
+      type: String,
+      default: () => ViewMode.CALENDAR
+    }
+  },
+  emits: ['update:currentSchedule'],
+  setup (props, { emit }) {
+    const index = ref(0)
+
+    const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
+
+    const MODES = ViewMode
+
+    const onChangeSchedules: WatchCallback = (newValue, oldValue) => {
+      if (oldValue.length !== newValue.length) {
+        index.value = 0
+      }
+    }
+    watch(() => props.schedules, onChangeSchedules)
+
+    const onChangeSchedule: WatchCallback = (value) => {
+      if (index.value >= props.schedules.length) {
+        index.value = props.schedules.length - 1
+      }
+      syncedCurrentSchedule.value = value
+    }
+
+    const shareDialog = ref(false)
+    const schedule = computed(() => props.schedules[index.value])
+
+    watch(schedule, onChangeSchedule, { immediate: true })
+
+    const page = computed<number>({
+      get () {
+        return index.value + 1
+      },
+      set (value) {
+        index.value = value - 1
+      }
+    })
+
+    const next = () => {
+      if (page.value < props.schedules.length) {
+        page.value = page.value + 1
+      } else {
+        page.value = 1
+      }
+    }
+
+    const prev = () => {
+      if (page.value > 1) {
+        page.value = page.value - 1
+      } else {
+        page.value = props.schedules.length
+      }
+    }
+
+    return {
+      schedule,
+      page,
+      next,
+      prev,
+      MODES,
+      shareDialog
+    }
   }
 })
-export default class SchedulesList extends Vue {
-  @Prop({ type: Array, default: [] })
-    schedules!: Array<any>
-
-  @Prop({ type: Array, default: () => [1, 2, 3, 4, 5, 6] })
-    weekDays!: Array<number>
-
-  @PropSync('currentSchedule', { type: Object })
-    syncedCurrentSchedule: any
-
-  MODES = ViewMode
-
-  @Prop({ type: String, default: () => ViewMode.CALENDAR })
-    mode!: ViewMode
-
-  @Watch('schedules')
-  onChangeSchedules (newValue: string | any[], oldValue: string | any[]) {
-    if (oldValue.length !== newValue.length) {
-      this.index = 0
-    }
-  }
-
-  @Watch('schedule', { immediate: true })
-  onChangeSchedule (value: any) {
-    if (this.index >= this.schedules.length) {
-      this.index = this.schedules.length - 1
-    }
-    this.syncedCurrentSchedule = value
-  }
-
-  shareDialog = false
-  get schedule () {
-    return this.schedules[this.index]
-  }
-
-  next () {
-    if (this.page < this.schedules.length) {
-      this.page++
-    } else {
-      this.page = 1
-    }
-  }
-
-  prev () {
-    if (this.page > 1) {
-      this.page--
-    } else {
-      this.page = this.schedules.length
-    }
-  }
-
-  get page () {
-    return this.index + 1
-  }
-
-  set page (page) {
-    this.index = page - 1
-  }
-
-  @Watch('page')
-  onChangePage (val: any) {
-    this.$emit('page', val)
-  }
-
-  index = 0
-}
 </script>
 
 <style lang="sass">

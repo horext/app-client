@@ -1,5 +1,6 @@
 import { Context, Plugin } from '@nuxt/types'
 import { Inject } from '@nuxt/types/app'
+import { useGlobalSnackbarStore } from '~/stores/global-snackbar'
 
 declare module 'vue/types/vue' {
   // this.$myInjectedFunction inside Vue components
@@ -19,9 +20,9 @@ declare module '@nuxt/types' {
   }
 }
 
-const snackbar: Plugin = ({ store }: Context, inject: Inject) => {
+const snackbar: Plugin = ({ $pinia }: Context, inject: Inject) => {
   inject('snackbar', ({ content = '', color = '', timeout = null }) => {
-    store.commit('modules/snackbar/showMessage', { content, color, timeout })
+    useGlobalSnackbarStore($pinia).showMessage({ content, color, timeout })
   })
 }
 

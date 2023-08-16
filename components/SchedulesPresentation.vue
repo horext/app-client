@@ -116,81 +116,86 @@
     </v-card-text>
   </v-card>
 </template>
+
 <script lang="ts">
-import {
-  Component,
-  namespace,
-  Prop,
-  PropSync,
-  Vue
-} from 'nuxt-property-decorator'
+import { computed, ref, defineComponent } from 'vue'
+import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/model/ViewMode'
-const userModule = namespace('user/config')
 
-@Component({
+export default defineComponent({
   components: {
     SchedulesList,
     GoogleAuth,
     ScheduleShare,
     ScheduleExport
+  },
+  props: {
+    schedules: {
+      type: Array,
+      default: () => []
+    },
+    path: {
+      type: String,
+      default: '/subject'
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    color: {
+      type: String,
+      default: 'primary'
+    },
+    emptyMessage: {
+      type: String,
+      default: ''
+    },
+    dialog: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup () {
+    const { hourlyLoad, weekDays } = useUserConfigStore()
+
+    const academicPeriodOrganizationUnit = computed(
+      () => hourlyLoad.value?.academicPeriodOrganizationUnit
+    )
+
+    const startDate = computed(
+      () => academicPeriodOrganizationUnit.value?.fromDate
+    )
+
+    const endDate = computed(
+      () => academicPeriodOrganizationUnit.value?.toDate
+    )
+
+    const currentSchedule = ref<any>(null)
+
+    const dialogShare = ref(false)
+    const dialogExport = ref(false)
+
+    const message = ref('')
+
+    const mode = ref(ViewMode.CALENDAR)
+
+    const MODES = ref(ViewMode)
+
+    return {
+      weekDays,
+      dialogShare,
+      dialogExport,
+      message,
+      mode,
+      startDate,
+      endDate,
+      MODES,
+      currentSchedule
+    }
   }
 })
-export default class SchedulesPresentation extends Vue {
-  get hourlyLoad () {
-    return this.$store.state.user.config.hourlyLoad
-  }
-
-  get academicPeriodOrganizationUnit () {
-    return this.hourlyLoad?.academicPeriodOrganizationUnit
-  }
-
-  get startDate () {
-    return this.academicPeriodOrganizationUnit.fromDate
-  }
-
-  get endDate () {
-    return this.academicPeriodOrganizationUnit.toDate
-  }
-
-  mounted () {
-    this.vCalendar = document.getElementById('calendar')
-  }
-
-  vCalendar: any = null
-  @Prop({ type: Array, default: [] })
-    schedules!: []
-
-  @Prop({ type: String, default: '/subject' })
-    path!: string
-
-  @Prop({ type: String, default: '' })
-    title!: string
-
-  @Prop({ type: String, default: 'primary' })
-    color!: string
-
-  @Prop({ type: String, default: '' })
-    emptyMessage!: string
-
-  @PropSync('dialog', { type: Boolean, default: false })
-    dialogSync!: boolean
-
-  currentSchedule: any = null
-
-  dialogShare = false
-  dialogExport = false
-
-  @userModule.State
-    weekDays!: Array<number>
-
-  message = ''
-
-  mode: ViewMode = ViewMode.CALENDAR
-
-  MODES = ViewMode
-}
 </script>

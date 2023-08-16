@@ -9,25 +9,35 @@
   </tr>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'nuxt-property-decorator'
-@Component
-export default class ScheduleSection extends Vue {
-  @Prop({ type: Object, default: () => ({}) }) readonly schedule!: any
+import { defineComponent, PropType, computed } from 'vue'
 
-  get sessionsCount () {
-    return this.schedule?.sessions?.length
-  }
+export default defineComponent({
+  props: {
+    schedule: {
+      type: Object as PropType<any>,
+      default: () => ({})
+    }
+  },
+  setup (props) {
+    const sessionsCount = computed(() => {
+      return props.schedule?.sessions?.length
+    })
 
-  get courseName () {
-    return (
-      this.schedule?.subject?.course.name
-    )
-  }
+    const courseName = computed(() => {
+      return props.schedule?.subject?.course.name
+    })
 
-  get subjectSection () {
-    return (
-      this.schedule?.subject?.course.id + ' ' + this.schedule?.section?.id
-    )
+    const subjectSection = computed(() => {
+      return (
+        props.schedule?.subject?.course.id + ' ' + props.schedule?.section?.id
+      )
+    })
+
+    return {
+      sessionsCount,
+      courseName,
+      subjectSection
+    }
   }
-}
+})
 </script>

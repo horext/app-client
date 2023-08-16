@@ -1,6 +1,7 @@
+import { Context } from '@nuxt/types'
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { NuxtStorage } from '@nuxtjs/universal-storage'
 import { Repositories } from '~/plugins/api'
+import { NuxtStorageExtended } from '~/plugins/storage-accessor'
 
 // eslint-disable-next-line import/no-mutable-exports
 let $axios: NuxtAxiosInstance
@@ -11,8 +12,8 @@ export function initializeAxios (axiosInstance: NuxtAxiosInstance) {
 export { $axios }
 
 // eslint-disable-next-line import/no-mutable-exports
-let $storage: NuxtStorage
-export function initializeStorage (axiosInstance: NuxtStorage) {
+let $storage: Context['$storage']
+export function initializeStorage (axiosInstance: NuxtStorageExtended) {
   $storage = axiosInstance
 }
 
@@ -25,3 +26,11 @@ export function initializeApi (axiosInstance: Repositories) {
 }
 
 export { $api }
+
+// eslint-disable-next-line import/no-mutable-exports
+let $snackbar: Context['$snackbar']
+export function initializeSnackbar (snackbar: Context['$snackbar']) {
+  $snackbar = snackbar
+}
+
+export { $snackbar }

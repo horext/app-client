@@ -33,63 +33,87 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
-@Component
-export default class SettingInitial extends Vue {
-  faculties: Array<any> = [];
-  specialities: Array<any> = [];
-  errorMessage = '';
-  showErrorMessage = false;
-  loading = false;
-  async mounted () {
-    await this.init()
-  }
+import { ref, watch, onMounted } from 'vue'
+import { $api } from '~/utils/api'
+import { useUserConfigStore } from '~/stores/user-config'
 
-  @Watch('faculty')
-  async initSpecialities (faculty: any) {
-    if (faculty) {
-      this.speciality = null
-      const { data } = await this.$api.speciality.getAllByFaculty(faculty.id)
-      this.specialities = data
-    }
-  }
+export default {
+  name: 'SettingInitial',
+  setup () {
+    const store = useUserConfigStore()
 
-  @Watch('speciality')
-  async onChangeSpeciality (speciality: any) {
-    this.showErrorMessage = false
-    if (speciality) {
-      this.hourlyLoad = null
-      try {
-        const { data } = await this.$api.hourlyLoad.getLatestByFaculty(
-          this.faculty.id
-        )
-        this.hourlyLoad = data
-      } catch (e) {
-        const { data } = e.response
-        this.errorMessage = data.message
-        this.showErrorMessage = true
+    const faculties = ref([])
+    const specialities = ref([])
+    const errorMessage = ref('')
+    const showErrorMessage = ref(false)
+    const loading = ref(false)
+
+    const faculty = ref<any>(null)
+    const speciality = ref<any>(null)
+    const hourlyLoad = ref<any>(null)
+
+    const initSpecialities = async (selectedFaculty: any) => {
+      if (selectedFaculty) {
+        speciality.value = null
+        const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
+        specialities.value = data
       }
     }
-  }
+    watch(faculty, async (newValue) => {
+      await initSpecialities(newValue)
+    })
 
-  faculty: any = null;
-  speciality: any = null;
-  hourlyLoad: any = null;
+    const onChangeSpeciality = async (selectedSpeciality: any) => {
+      showErrorMessage.value = false
+      if (selectedSpeciality) {
+        hourlyLoad.value = null
+        try {
+          const { data } = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
+          hourlyLoad.value = data
+        } catch (e:any) {
+          const { data } = e.response
+          errorMessage.value = data.message
+          showErrorMessage.value = true
+        }
+      }
+    }
+    watch(speciality, async (newValue) => {
+      await onChangeSpeciality(newValue)
+    })
 
-  async init () {
-    const { data } = await this.$api.faculty.getAll()
-    this.faculties = data
-    this.faculty = this.$store.state.user.config.faculty
-    this.hourlyLoad = this.$store.state.user.config.hourlyLoad
-    this.speciality = this.$store.state.user.config.speciality
-  }
+    const init = async () => {
+      const { data } = await $api.faculty.getAll()
+      faculties.value = data
+      faculty.value = store.faculty
+      hourlyLoad.value = store.hourlyLoad
+      speciality.value = store.speciality
+    }
 
-  async ending () {
-    this.loading = true
-    await this.$store.dispatch('user/config/updateFaculty', this.faculty)
-    await this.$store.dispatch('user/config/updateSpeciality', this.speciality)
-    await this.$store.dispatch('user/config/updateFirstEntry', false)
-    this.loading = false
+    const ending = async () => {
+      loading.value = true
+      await store.updateFaculty(faculty.value)
+      await store.updateSpeciality(speciality.value)
+      await store.updateFirstEntry(false)
+      loading.value = false
+    }
+
+    onMounted(async () => {
+      await init()
+    })
+
+    return {
+      faculties,
+      specialities,
+      errorMessage,
+      showErrorMessage,
+      loading,
+      faculty,
+      speciality,
+      hourlyLoad,
+      initSpecialities,
+      onChangeSpeciality,
+      ending
+    }
   }
 }
 </script>
