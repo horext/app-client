@@ -1,4 +1,6 @@
-export default {
+import type { NuxtConfig } from '@nuxt/types'
+
+const config: NuxtConfig = {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Horext',
@@ -41,7 +43,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     '@nuxtjs/composition-api/module',
-    ['@pinia/nuxt']
+    ['@pinia/nuxt', {}]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -90,7 +92,7 @@ export default {
         maxAge: 60 * 60 * 24 * 7 * 4
       }
     }
-  },
+  } as any,
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -100,3 +102,5 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {}
 }
+
+export default config
