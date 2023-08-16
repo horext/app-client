@@ -54,7 +54,8 @@
   </v-row>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { useVModel } from '@vueuse/core'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
@@ -82,25 +83,13 @@ export default defineComponent({
     'update:itemsPerPageArray'
   ],
   setup (props, { emit }) {
-    const syncItemsPerPage = computed({
-      get: () => props.itemsPerPage,
-      set: value => emit('update:itemsPerPage', value)
-    })
+    const syncItemsPerPage = useVModel(props, 'itemsPerPage', emit)
 
-    const syncItemsPerPageArray = computed({
-      get: () => props.itemsPerPageArray,
-      set: value => emit('update:itemsPerPageArray', value)
-    })
+    const syncItemsPerPageArray = useVModel(props, 'itemsPerPageArray', emit)
 
-    const syncPage = computed({
-      get: () => props.page,
-      set: value => emit('update:page', value)
-    })
+    const syncPage = useVModel(props, 'page', emit)
 
-    const syncTotalPages = computed({
-      get: () => props.totalPages,
-      set: value => emit('update:totalPages', value)
-    })
+    const syncTotalPages = useVModel(props, 'totalPages', emit)
 
     const nextPage = () => {
       if (syncPage.value + 1 <= syncTotalPages.value) {
