@@ -10,7 +10,8 @@
 <script lang="ts">
 import { Context } from '@nuxt/types'
 import { useRouter } from '@nuxtjs/composition-api'
-import { defineComponent, ref, watch, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { defineComponent, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
@@ -26,16 +27,13 @@ export default defineComponent({
     const eventsStore = useUserEventsStore()
     const router = useRouter()
 
-    const firstEntry = ref(false)
+    const { firstEntry } = storeToRefs(configStore)
 
-    watch(
-      () => configStore.firstEntry,
-      (newValue, oldValue) => {
-        if (oldValue && !newValue) {
-          router.push('/generator/subjects')
-        }
+    watch(firstEntry, (newValue, oldValue) => {
+      if (oldValue && !newValue) {
+        router.push('/generator/subjects')
       }
-    )
+    })
 
     onMounted(async () => {
       await configStore.fetchSubjects()
@@ -43,8 +41,6 @@ export default defineComponent({
       await configStore.fetchCrossings()
       await configStore.fetchFavoritesSchedules()
       await eventsStore.fetchItems()
-
-      firstEntry.value = configStore.firstEntry
     })
 
     return {
