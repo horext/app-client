@@ -27,7 +27,8 @@
   </v-card>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from 'vue'
+import { useVModel } from '@vueuse/core'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import { VForm } from '~/types'
 
 export default defineComponent({
@@ -43,14 +44,7 @@ export default defineComponent({
   },
   emits: ['update:calendar', 'update:result'],
   setup (props, { emit }) {
-    const resultSync = computed({
-      get () {
-        return props.result
-      },
-      set (result) {
-        emit('update:result', result)
-      }
-    })
+    const resultSync = useVModel(props, 'result', emit)
 
     const loading = ref(false)
     const calendarCurrent = ref({

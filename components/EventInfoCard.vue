@@ -81,6 +81,7 @@
   </v-card>
 </template>
 <script lang="ts">
+import { useVModel } from '@vueuse/core'
 import { defineComponent, PropType, computed, Ref } from 'vue'
 import Event from '~/model/Event'
 
@@ -97,14 +98,7 @@ export default defineComponent({
   },
   emits: ['update:dialog'],
   setup (props, { emit }) {
-    const dialogSync = computed({
-      get () {
-        return props.dialog
-      },
-      set (result) {
-        emit('update:dialog', result)
-      }
-    })
+    const dialogSync = useVModel(props, 'dialog', emit)
 
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 

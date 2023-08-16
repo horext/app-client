@@ -29,6 +29,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue'
 import { WatchCallback } from '@nuxtjs/composition-api'
+import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { ViewMode } from '~/model/ViewMode'
@@ -58,18 +59,11 @@ export default defineComponent({
       default: () => ViewMode.CALENDAR
     }
   },
-
+  emits: ['update:currentSchedule'],
   setup (props, { emit }) {
     const index = ref(0)
 
-    const syncedCurrentSchedule = computed({
-      get () {
-        return props.currentSchedule
-      },
-      set (value) {
-        emit('update:currentSchedule', value)
-      }
-    })
+    const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
 
     const MODES = ViewMode
 
