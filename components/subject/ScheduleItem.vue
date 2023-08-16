@@ -1,8 +1,6 @@
 <template>
   <tbody>
-    <template
-      v-for="schedule in schedules"
-    >
+    <template v-for="schedule in schedules">
       <ScheduleSection
         :key="schedule.id"
         v-model="valueSync"
@@ -38,7 +36,9 @@ export default defineComponent({
   },
   emits: ['input'],
   setup (props, { emit }) {
-    const valueSync = useVModel(props, 'value', emit)
+    const valueSync = useVModel(props, 'value', emit, {
+      eventName: 'input'
+    })
 
     return {
       valueSync
