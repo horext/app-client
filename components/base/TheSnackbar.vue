@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from 'vue'
 import { setupSnackbar } from '~/composables/snackbar'
 export default defineComponent({
   name: 'TheSnackbar',

@@ -1,4 +1,4 @@
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { $storage } from '~/utils/api'
 

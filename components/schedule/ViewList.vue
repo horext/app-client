@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from 'vue'
 import ScheduleSection from './ViewListSubjectSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 

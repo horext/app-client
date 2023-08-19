@@ -12,7 +12,7 @@
   </v-list-item>
 </template>
 <script lang="ts">
-import { computed } from '@nuxtjs/composition-api'
+import { computed } from 'vue'
 import { defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 
