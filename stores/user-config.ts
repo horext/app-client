@@ -121,7 +121,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     SET_FACULTY(faculty)
   }
 
-  async function updateSpeciality (speciality: any) {
+  async function updateSpeciality (speciality: IOrganization) {
     $storage.setUniversal('mySpeciality', speciality)
     await SET_SPECIALITY(speciality)
     await fetchHourlyLoad()

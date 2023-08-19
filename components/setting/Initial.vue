@@ -97,7 +97,7 @@ export default defineComponent({
     const ending = async () => {
       loading.value = true
       await store.updateFaculty(faculty.value!)
-      await store.updateSpeciality(speciality.value)
+      await store.updateSpeciality(speciality.value!)
       await store.updateFirstEntry(false)
       loading.value = false
     }
