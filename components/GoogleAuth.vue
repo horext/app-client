@@ -139,7 +139,8 @@
 <script lang="ts">
 import { ref, computed } from 'vue'
 import { DateTime } from 'luxon'
-import { defineComponent, PropType, toRefs, useContext, watch } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, toRefs, watch } from 'vue'
+import { useContext } from '@nuxtjs/composition-api'
 import { v4 } from 'uuid'
 import { colors } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
