@@ -157,8 +157,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSchedules (schedules: any) {
-    SET_SCHEDULES(schedules)
+  function updateSchedules (_schedules: any[]) {
+    SET_SCHEDULES(_schedules)
     $storage.setLocalStorage('mySchedules', schedules.value)
   }
 
