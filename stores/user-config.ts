@@ -200,7 +200,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   function fetchCrossings () {
-    SET_CROSSINGS($storage.getLocalStorage('myCrossings') || 0)
+    const data: number | undefined = $storage.getLocalStorage('myCrossings')
+    SET_CROSSINGS(Number(data) || 0)
   }
 
   function fetchEvents () {
@@ -208,27 +209,30 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   function fetchSchedules () {
-    const schedules = $storage.getLocalStorage('mySchedules') || []
-    console.log(schedules)
+    const data: any[] | undefined =
+      $storage.getLocalStorage('mySchedules')
+    const schedules = data?.map((s: { events: any[] }) => ({
+      ...s,
+      events: s.events.map((e: any) =>
+        Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+      )
+    })) || []
     SET_SCHEDULES(
-      schedules.map((s: { events: any[] }) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
-        )
-      }))
+      schedules
     )
   }
 
   function fetchFavoritesSchedules () {
-    const schedules = $storage.getLocalStorage('myFavoritesSchedules') || []
+    const data: any[] | undefined =
+    $storage.getLocalStorage('myFavoritesSchedules')
+    const schedules = data?.map((s: { events: any[] }) => ({
+      ...s,
+      events: s.events.map((e: any) =>
+        Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+      )
+    })) || []
     SET_FAVORITES_SCHEDULES(
-      schedules.map((s: { events: any[] }) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
-        )
-      }))
+      schedules
     )
   }
 
