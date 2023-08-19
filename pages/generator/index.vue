@@ -80,13 +80,15 @@ import {
 import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
+import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 
 export default defineComponent({
   components: {
     ScheduleFavoriteAdd,
-    SchedulesPresentation
+    SchedulesPresentation,
+    OccurrencesList
   },
   layout: 'app',
   setup () {
