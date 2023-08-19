@@ -1,4 +1,4 @@
-import { computed, ref } from 'vues'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Faculty, Speciality } from '~/types'
 import { $storage, $api } from '~/utils/api'
