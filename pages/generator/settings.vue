@@ -1,13 +1,18 @@
 <template>
-  <v-container >
+  <v-container>
     <v-card>
-      <SettingInitial/>
+      <SettingInitial />
     </v-card>
   </v-container>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+import SettingInitial from '~/components/setting/Initial.vue'
+export default defineComponent({
   name: 'Advance',
-}
+  components: {
+    SettingInitial
+  }
+})
 </script>
