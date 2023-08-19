@@ -209,31 +209,29 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   function fetchSchedules () {
-    const data: any[] | undefined =
-      $storage.getLocalStorage('mySchedules')
-    const schedules = data?.map((s: { events: any[] }) => ({
-      ...s,
-      events: s.events.map((e: any) =>
-        Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
-      )
-    })) || []
-    SET_SCHEDULES(
-      schedules
-    )
+    const data: any[] | undefined = $storage.getLocalStorage('mySchedules')
+    const schedules =
+        data?.map?.((s: { events: any[] }) => ({
+          ...s,
+          events: s.events.map((e: any) =>
+            Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+          )
+        })) || []
+    SET_SCHEDULES(schedules)
   }
 
   function fetchFavoritesSchedules () {
-    const data: any[] | undefined =
-    $storage.getLocalStorage('myFavoritesSchedules')
-    const schedules = data?.map((s: { events: any[] }) => ({
-      ...s,
-      events: s.events.map((e: any) =>
-        Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
-      )
-    })) || []
-    SET_FAVORITES_SCHEDULES(
-      schedules
+    const data: any[] | undefined = $storage.getLocalStorage(
+      'myFavoritesSchedules'
     )
+    const schedules =
+      data?.map?.((s: { events: any[] }) => ({
+        ...s,
+        events: s.events.map((e: any) =>
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+        )
+      })) || []
+    SET_FAVORITES_SCHEDULES(schedules)
   }
 
   async function fetchHourlyLoad () {
