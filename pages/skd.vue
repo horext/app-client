@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from "vue";
-import { useAsync, useRoute } from "@nuxtjs/composition-api";
+import { defineComponent, ref, computed, onMounted } from 'vue'
+import { useAsync, useRoute } from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { $api } from '~/utils/api'
