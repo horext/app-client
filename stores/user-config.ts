@@ -32,8 +32,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     faculty.value = _faculty
   }
 
-  function SET_CROSSINGS (_faculty: any) {
-    crossings.value = _faculty
+  function SET_CROSSINGS (_crossings: number) {
+    crossings.value = _crossings
   }
 
   function SET_SPECIALITY (_speciality: any) {
@@ -48,15 +48,15 @@ export const useUserConfigStore = defineStore('user-config', () => {
     events.value = _events
   }
 
-  function SET_SCHEDULES (_schedules: any) {
+  function SET_SCHEDULES (_schedules: any[]) {
     schedules.value = _schedules
   }
 
-  function SET_FAVORITES_SCHEDULES (_favoritesSchedules: any) {
+  function SET_FAVORITES_SCHEDULES (_favoritesSchedules: any[]) {
     favoritesSchedules.value = _favoritesSchedules
   }
 
-  function SET_FIRST_ENTRY (_firstEntry: any) {
+  function SET_FIRST_ENTRY (_firstEntry: boolean) {
     firstEntry.value = _firstEntry
   }
 
@@ -127,9 +127,9 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await fetchHourlyLoad()
   }
 
-  async function updateFirstEntry (faculty: any) {
-    await $storage.setUniversal('myFirstEntry', faculty)
-    SET_FIRST_ENTRY(faculty)
+  async function updateFirstEntry (myFirstEntry: any) {
+    await $storage.setUniversal('myFirstEntry', myFirstEntry)
+    SET_FIRST_ENTRY(myFirstEntry)
   }
 
   function updateCrossings (crossings: any) {
@@ -137,8 +137,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     SET_CROSSINGS(crossings)
   }
 
-  function saveNewSubject (subject: any) {
-    ADD_SUBJECT(subject)
+  function saveNewSubject (_subject: any) {
+    ADD_SUBJECT(_subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
@@ -148,22 +148,22 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSubject (subject: any) {
-    const index = subjects.value.findIndex(s => s.id === subject.id)
+  function updateSubject (_subject: any) {
+    const index = subjects.value.findIndex(s => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX({
       index,
-      subject
+      _subject
     })
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSchedules (schedules: any) {
-    SET_SCHEDULES(schedules)
+  function updateSchedules (_schedules: any[]) {
+    SET_SCHEDULES(_schedules)
     $storage.setLocalStorage('mySchedules', schedules.value)
   }
 
-  function saveNewFavoriteSchedule (subject: any) {
-    ADD_FAVORITE_SCHEDULE(subject)
+  function saveNewFavoriteSchedule (_favoritesSchedule: any) {
+    ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
@@ -173,14 +173,14 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateFavoritesSchedules (schedules: any) {
-    SET_FAVORITES_SCHEDULES(schedules)
+  function updateFavoritesSchedules (_favoritesSchedules: any[]) {
+    SET_FAVORITES_SCHEDULES(_favoritesSchedules)
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateEvents (events: any) {
-    SET_SCHEDULES(events)
-    $storage.setLocalStorage('myEvents', events)
+  function updateEvents (_events: any[]) {
+    SET_SCHEDULES(_events)
+    $storage.setLocalStorage('myEvents', events.value)
   }
 
   function fetchFaculty () {
@@ -211,12 +211,12 @@ export const useUserConfigStore = defineStore('user-config', () => {
   function fetchSchedules () {
     const data: any[] | undefined = $storage.getLocalStorage('mySchedules')
     const schedules =
-        data?.map?.((s: { events: any[] }) => ({
-          ...s,
-          events: s.events.map((e: any) =>
-            Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
-          )
-        })) || []
+      data?.map?.((s: { events: any[] }) => ({
+        ...s,
+        events: s.events.map((e: any) =>
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+        )
+      })) || []
     SET_SCHEDULES(schedules)
   }
 
