@@ -33,52 +33,57 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, defineComponent } from 'vue'
 import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
+import { IOrganization } from '~/interfaces/organization'
 
-export default {
+export default defineComponent({
   name: 'SettingInitial',
   setup () {
     const store = useUserConfigStore()
 
-    const faculties = ref([])
-    const specialities = ref([])
+    const faculties = ref<IOrganization[]>([])
+    const specialities = ref<IOrganization[]>([])
     const errorMessage = ref('')
     const showErrorMessage = ref(false)
     const loading = ref(false)
 
-    const faculty = ref<any>(null)
-    const speciality = ref<any>(null)
+    const faculty = ref<IOrganization | undefined>()
+    const speciality = ref<IOrganization | undefined>()
     const hourlyLoad = ref<any>(null)
 
-    const initSpecialities = async (selectedFaculty: any) => {
-      if (selectedFaculty) {
-        speciality.value = null
-        const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
-        specialities.value = data
-      }
+    const initSpecialities = async (selectedFaculty: IOrganization) => {
+      speciality.value = undefined
+      const { data } = await $api.speciality.getAllByFaculty(
+        selectedFaculty.id
+      )
+      specialities.value = data
     }
     watch(faculty, async (newValue) => {
-      await initSpecialities(newValue)
+      if (newValue) {
+        await initSpecialities(newValue)
+      }
     })
 
-    const onChangeSpeciality = async (selectedSpeciality: any) => {
-      showErrorMessage.value = false
-      if (selectedSpeciality) {
-        hourlyLoad.value = null
-        try {
-          const { data } = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
-          hourlyLoad.value = data
-        } catch (e:any) {
-          const { data } = e.response
-          errorMessage.value = data.message
-          showErrorMessage.value = true
-        }
+    const onChangeSpeciality = async (_speciality: IOrganization) => {
+      hourlyLoad.value = null
+      try {
+        const { data } = await $api.hourlyLoad.getLatestByFaculty(
+          faculty.value!.id
+        )
+        hourlyLoad.value = data
+      } catch (e: any) {
+        const { data } = e.response
+        errorMessage.value = data.message
+        showErrorMessage.value = true
       }
     }
     watch(speciality, async (newValue) => {
-      await onChangeSpeciality(newValue)
+      showErrorMessage.value = false
+      if (newValue) {
+        await onChangeSpeciality(newValue)
+      }
     })
 
     const init = async () => {
@@ -91,8 +96,8 @@ export default {
 
     const ending = async () => {
       loading.value = true
-      await store.updateFaculty(faculty.value)
-      await store.updateSpeciality(speciality.value)
+      await store.updateFaculty(faculty.value!)
+      await store.updateSpeciality(speciality.value!)
       await store.updateFirstEntry(false)
       loading.value = false
     }
@@ -115,5 +120,5 @@ export default {
       ending
     }
   }
-}
+})
 </script>

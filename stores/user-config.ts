@@ -1,12 +1,12 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Faculty, Speciality } from '~/types'
+import { IOrganization } from '~/interfaces/organization'
 import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const faculty = ref<Faculty>()
-  const speciality = ref<Speciality>()
+  const faculty = ref<IOrganization>()
+  const speciality = ref<IOrganization>()
   const hourlyLoad = ref<any>({})
   const subjects = ref<Array<any>>([])
   const events = ref<Array<any>>([])
@@ -28,7 +28,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     return hourlyLoad?.value.id
   })
 
-  function SET_FACULTY (_faculty: any) {
+  function SET_FACULTY (_faculty: IOrganization) {
     faculty.value = _faculty
   }
 
@@ -36,7 +36,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     crossings.value = _crossings
   }
 
-  function SET_SPECIALITY (_speciality: any) {
+  function SET_SPECIALITY (_speciality: IOrganization) {
     speciality.value = _speciality
   }
 
@@ -116,12 +116,12 @@ export const useUserConfigStore = defineStore('user-config', () => {
     )
   }
 
-  async function updateFaculty (faculty: any) {
+  async function updateFaculty (faculty: IOrganization) {
     await $storage.setUniversal('myFaculty', faculty)
     SET_FACULTY(faculty)
   }
 
-  async function updateSpeciality (speciality: any) {
+  async function updateSpeciality (speciality: IOrganization) {
     $storage.setUniversal('mySpeciality', speciality)
     await SET_SPECIALITY(speciality)
     await fetchHourlyLoad()
