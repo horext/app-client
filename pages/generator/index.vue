@@ -76,7 +76,7 @@ import {
   defineComponent,
   ref,
   computed
-} from '@nuxtjs/composition-api'
+} from 'vue'
 import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from 'vue'
 import { $storage } from '~/utils/api'
 
 export const useUserSubjects = defineStore('user/subjects', () => {

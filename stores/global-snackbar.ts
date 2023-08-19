@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from 'vue'
 
 export interface SnackbarOptions {
   content: string;

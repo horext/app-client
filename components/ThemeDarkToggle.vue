@@ -6,7 +6,7 @@
 <script lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import Lottie, { AnimationItem } from 'lottie-web'
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent } from 'vue'
 import { useVuetify } from '~/composables/vuetify'
 
 export default defineComponent({

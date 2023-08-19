@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { PropType } from '@nuxtjs/composition-api'
+import type { PropType } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { defineComponent } from 'vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
