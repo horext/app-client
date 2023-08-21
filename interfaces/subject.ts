@@ -1,3 +1,5 @@
+import { IScheduleSubject } from './schedule-subject'
+
 export interface ICourse {
   id: string;
   name: string;
@@ -16,10 +18,6 @@ export interface IStudyPlan {
   organizationUnit: {
     id: number;
   };
-}
-
-export interface IScheduleSubject {
-  id: number;
 }
 
 export interface IClassroom {
@@ -48,15 +46,6 @@ export interface ISession {
   endTime: string;
 }
 
-export interface ISubjectSchedule {
-  id: number;
-  section: {
-    id: string;
-  };
-  scheduleSubject: IScheduleSubject;
-  sessions: ISession[];
-}
-
 export interface ISubject {
   id: number;
   course: ICourse;
@@ -64,5 +53,18 @@ export interface ISubject {
   studyPlan: IStudyPlan;
   credits: number;
   cycle: number;
+}
+
+export interface ISubjectSchedule {
+  id: number;
+  section: {
+    id: string;
+  };
+  scheduleSubject: Pick<IScheduleSubject, 'id'>;
+  subject: ISubject;
+  sessions: ISession[];
+}
+
+export interface ISelectedSubject extends ISubject {
   schedules: ISubjectSchedule[];
 }

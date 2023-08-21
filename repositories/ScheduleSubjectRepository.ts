@@ -1,8 +1,10 @@
 import { AxiosInstance } from 'axios'
+import { IScheduleSubject } from '~/interfaces/schedule-subject'
+
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
 export default ($axios: AxiosInstance) => ({
   findBySubjectIdAndHourlyLoadId (subject:number, hourlyLoad:number) {
-    return $axios.get(PATH_SCHEDULE_SUBJECTS,
+    return $axios.get<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS,
       {
         params: {
           subject,

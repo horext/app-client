@@ -1,4 +1,6 @@
 import { DateTime } from 'luxon'
+import { ISchedule } from '~/interfaces/schedule'
+import { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
 
 const isIntersects = (
@@ -23,19 +25,19 @@ export const convertToDate = (day: string | number, startTime: string) => {
 }
 
 export function getSchedules (
-  subjects: Array<any>,
-  myEvents: Array<any>,
+  subjects: Array<ISelectedSubject>,
+  myEvents: Array<Event>,
   options: any = {
     credits: 100,
     crossingSubjects: 0,
     crossEvent: true,
     crossPractices: false
   }
-): { occurrences: any[]; schedules: any[]; combinations: any[] } {
+): { occurrences: any[]; schedules: any[]; combinations: ISchedule[] } {
   const occurrences = []
   const maxQuantity = subjects.length
   const indexSchedules = Array(maxQuantity).fill(0)
-  const schedules: Array<any> = []
+  const schedules: Array<ISchedule> = []
 
   const increment = (i: number) => {
     if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
@@ -135,9 +137,10 @@ export function getSchedules (
 }
 
 function scheduleToEvent (
-  schedule: any,
+  schedule: ISubjectSchedule,
   color: string = 'primary'
 ): Array<Event> {
+  console.log(schedule)
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
   for (let i = 0; i < sessions.length; i++) {

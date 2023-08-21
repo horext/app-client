@@ -54,26 +54,32 @@
 <script lang="ts">
 import { useFetch } from '@nuxtjs/composition-api'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
+import { IScheduleSubject } from '~/interfaces/schedule-subject'
+import { ISelectedSubject, ISession, ISubjectSchedule } from '~/interfaces/subject'
 import { $api } from '~/utils/api'
 
 export default defineComponent({
   components: { ScheduleSubjectList },
   props: {
-    subject: { type: Object, required: true },
+    subject: {
+      type: Object as PropType<ISelectedSubject>,
+      required: true
+    },
     hourlyLoad: { type: Object, required: true }
   },
   setup (props, { emit }) {
-    const selected = ref<any[]>([])
-    const schedulesSubject = ref<any[]>([])
-    const sessions = ref<any[]>([])
+    const selected = ref<ISubjectSchedule[]>([])
+    const schedulesSubject = ref<IScheduleSubject[]>([])
+    const sessions = ref<ISession[]>([])
 
     const fetchSchedules = async () => {
       if (props.subject?.id && props.hourlyLoad?.id) {
         const { data: schedulesSubjectData } = await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
           props.subject.id, props.hourlyLoad.id
         )
-        const ids = schedulesSubjectData.map((sb:any) => sb.schedule.id)
+        const ids = schedulesSubjectData.map(sb => sb.schedule.id)
         const { data: sessionsData } = await $api.classSessions.findScheduleIds(ids)
         sessions.value = sessionsData
         schedulesSubject.value = schedulesSubjectData
@@ -81,13 +87,14 @@ export default defineComponent({
     }
     const { fetch } = useFetch(fetchSchedules)
 
-    const schedules = computed(() => {
+    const schedules = computed<ISubjectSchedule[]>(() => {
       return schedulesSubject.value.map(sb => ({
         ...sb?.schedule,
         scheduleSubject: {
           id: sb.id
         },
-        sessions: sessions.value.filter(s => s.schedule.id === sb.schedule.id)
+        sessions: sessions.value.filter(s => s.schedule.id === sb.schedule.id),
+        subject: props.subject
       }))
     })
 
@@ -98,7 +105,7 @@ export default defineComponent({
     watch(schedules, () => {
       if (props.subject.schedules) {
         selected.value = schedules.value.filter((s1) => {
-          const schedule = props.subject.schedules.find((s2: any) => s2.section.id === s1.section.id)
+          const schedule = props.subject.schedules.find(s2 => s2.section.id === s1.section.id)
           return schedule?.id === s1?.id
         })
       } else {
