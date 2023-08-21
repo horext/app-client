@@ -1,17 +1,20 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { IOrganization } from '~/interfaces/organization'
+import { ISubject } from '~/interfaces/subject'
 import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
+import { IEvent } from '~/interfaces/event'
+import { ISchedule } from '~/interfaces/schedule'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<any>({})
-  const subjects = ref<Array<any>>([])
-  const events = ref<Array<any>>([])
-  const schedules = ref<Array<any>>([])
-  const favoritesSchedules = ref<Array<any>>([])
+  const subjects = ref<Array<ISubject>>([])
+  const events = ref<Array<IEvent>>([])
+  const schedules = ref<Array<ISchedule>>([])
+  const favoritesSchedules = ref<Array<ISchedule>>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
@@ -40,19 +43,19 @@ export const useUserConfigStore = defineStore('user-config', () => {
     speciality.value = _speciality
   }
 
-  function SET_SUBJECTS (_subjects: any) {
+  function SET_SUBJECTS (_subjects: ISubject[]) {
     subjects.value = _subjects
   }
 
-  function SET_EVENTS (_events: any) {
+  function SET_EVENTS (_events: IEvent[]) {
     events.value = _events
   }
 
-  function SET_SCHEDULES (_schedules: any[]) {
+  function SET_SCHEDULES (_schedules: ISchedule[]) {
     schedules.value = _schedules
   }
 
-  function SET_FAVORITES_SCHEDULES (_favoritesSchedules: any[]) {
+  function SET_FAVORITES_SCHEDULES (_favoritesSchedules: ISchedule[]) {
     favoritesSchedules.value = _favoritesSchedules
   }
 
@@ -64,53 +67,53 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoad.value = _hourlyLoad
   }
 
-  function ADD_SUBJECT (subject: any) {
+  function ADD_SUBJECT (subject: ISubject) {
     subjects.value.push(Object.assign({}, subject))
   }
 
-  function DELETE_SUBJECT_BY_INDEX (index: any) {
+  function DELETE_SUBJECT_BY_INDEX (index: number) {
     subjects.value.splice(index, 1)
   }
 
-  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: any) {
+  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: ISubject) {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
-  function ADD_EVENT (subject: any) {
+  function ADD_EVENT (subject: IEvent) {
     events.value.push(Object.assign({}, subject))
   }
 
-  function DELETE_EVENT_BY_INDEX (index: any) {
+  function DELETE_EVENT_BY_INDEX (index: number) {
     events.value.splice(index, 1)
   }
 
-  function UPDATE_EVENT_BY_INDEX (index:number, subject:any) {
+  function UPDATE_EVENT_BY_INDEX (index: number, subject: IEvent) {
     events.value = events.value.map((c, i) => (i === index ? subject : c))
   }
 
-  function ADD_SCHEDULE (subject: any) {
+  function ADD_SCHEDULE (subject: ISchedule) {
     schedules.value.push(Object.assign({}, subject))
   }
 
-  function DELETE_SCHEDULE_BY_INDEX (index: any) {
+  function DELETE_SCHEDULE_BY_INDEX (index: number) {
     schedules.value.splice(index, 1)
   }
 
-  function UPDATE_SCHEDULE_BY_INDEX (index: number, subject: number) {
+  function UPDATE_SCHEDULE_BY_INDEX (index: number, schedule: ISchedule) {
     schedules.value = schedules.value.map((c, i) =>
-      i === index ? subject : c
+      i === index ? schedule : c
     )
   }
 
-  function ADD_FAVORITE_SCHEDULE (subject: any) {
+  function ADD_FAVORITE_SCHEDULE (subject: ISchedule) {
     favoritesSchedules.value.push(Object.assign({}, subject))
   }
 
-  function DELETE_FAVORITE_SCHEDULE_BY_INDEX (index: any) {
+  function DELETE_FAVORITE_SCHEDULE_BY_INDEX (index: number) {
     favoritesSchedules.value.splice(index, 1)
   }
 
-  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX (index:number, subject:any) {
+  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX (index: number, subject: ISchedule) {
     favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
       i === index ? subject : c
     )
@@ -127,56 +130,56 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await fetchHourlyLoad()
   }
 
-  async function updateFirstEntry (myFirstEntry: any) {
+  async function updateFirstEntry (myFirstEntry: boolean) {
     await $storage.setUniversal('myFirstEntry', myFirstEntry)
     SET_FIRST_ENTRY(myFirstEntry)
   }
 
-  function updateCrossings (crossings: any) {
+  function updateCrossings (crossings: number) {
     $storage.setUniversal('myCrossings', crossings)
     SET_CROSSINGS(crossings)
   }
 
-  function saveNewSubject (_subject: any) {
+  function saveNewSubject (_subject: ISubject) {
     ADD_SUBJECT(_subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function deleteSubjectById (id: any) {
+  function deleteSubjectById (id: number) {
     const index = subjects.value.findIndex(s => s.id === id)
     DELETE_SUBJECT_BY_INDEX(index)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSubject (_subject: any) {
+  function updateSubject (_subject: ISubject) {
     const index = subjects.value.findIndex(s => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSchedules (_schedules: any[]) {
+  function updateSchedules (_schedules: ISchedule[]) {
     SET_SCHEDULES(_schedules)
     $storage.setLocalStorage('mySchedules', schedules.value)
   }
 
-  function saveNewFavoriteSchedule (_favoritesSchedule: any) {
+  function saveNewFavoriteSchedule (_favoritesSchedule: ISchedule) {
     ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function deleteFavoriteScheduleById (id: any) {
+  function deleteFavoriteScheduleById (id: number) {
     const index = subjects.value.findIndex(s => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateFavoritesSchedules (_favoritesSchedules: any[]) {
+  function updateFavoritesSchedules (_favoritesSchedules: ISchedule[]) {
     SET_FAVORITES_SCHEDULES(_favoritesSchedules)
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateEvents (_events: any[]) {
-    SET_SCHEDULES(_events)
+  function updateEvents (_events: IEvent[]) {
+    SET_EVENTS(_events)
     $storage.setLocalStorage('myEvents', events.value)
   }
 
@@ -210,8 +213,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function fetchSchedules () {
     const data: any[] | undefined = $storage.getLocalStorage('mySchedules')
-    const schedules =
-      data?.map?.((s: { events: any[] }) => ({
+    const schedules: ISchedule[] =
+      data?.map?.(s => ({
         ...s,
         events: s.events.map((e: any) =>
           Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
@@ -224,8 +227,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const data: any[] | undefined = $storage.getLocalStorage(
       'myFavoritesSchedules'
     )
-    const schedules =
-      data?.map?.((s: { events: any[] }) => ({
+    const schedules:ISchedule[] =
+      data?.map?.(s => ({
         ...s,
         events: s.events.map((e: any) =>
           Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)

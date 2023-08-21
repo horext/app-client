@@ -1,28 +1,28 @@
 import { defineStore } from 'pinia'
-import { v4 as uuidv4 } from 'uuid'
 import { ref } from 'vue'
+import { ISubject } from '~/interfaces/subject'
 import { $storage } from '~/utils/api'
 
 export const useUserSubjects = defineStore('user/subjects', () => {
-  const items = ref<any[]>([])
+  const items = ref<ISubject[]>([])
 
-  function setItems (newItems: any) {
+  function setItems (newItems: ISubject[]) {
     items.value = newItems
   }
 
-  function addItem (newItem: any) {
-    items.value.push({ ...newItem, id: uuidv4() })
+  function addItem (newItem: ISubject) {
+    items.value.push({ ...newItem })
   }
 
   function deleteItemByIndex (index: number) {
     items.value.splice(index, 1)
   }
 
-  function updateItemByIndex ({ index, item }: { index: number; item: any }) {
+  function updateItemByIndex ({ index, item }: { index: number; item: ISubject }) {
     items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
-  function saveNewItem (item: any) {
+  function saveNewItem (item: ISubject) {
     addItem(item)
     $storage.setLocalStorage('mySubjects', items.value)
   }
@@ -33,13 +33,13 @@ export const useUserSubjects = defineStore('user/subjects', () => {
     $storage.setLocalStorage('mySubjects', items.value)
   }
 
-  function updateItem (item: any) {
+  function updateItem (item: ISubject) {
     const index = items.value.findIndex(s => s.id === item.id)
     updateItemByIndex({ index, item })
     $storage.setLocalStorage('mySubjects', items.value)
   }
 
-  function updateItems (items: any) {
+  function updateItems (items: ISubject[]) {
     setItems(items)
     $storage.setLocalStorage('mySubjects', items)
   }

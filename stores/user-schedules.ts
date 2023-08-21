@@ -1,44 +1,45 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { $storage } from '~/utils/api'
+import { ISchedule } from '~/interfaces/schedule'
 
 export const userUserSchedulesStore = defineStore('user/schedules', () => {
-  const items = ref<any[]>([])
+  const items = ref<ISchedule[]>([])
 
-  const setItems = (newItems: any) => {
+  const setItems = (newItems: ISchedule[]) => {
     items.value = newItems
   }
 
-  const addItem = (item: any) => {
+  const addItem = (item: ISchedule) => {
     items.value.push(Object.assign({}, item))
   }
 
-  const deleteItemByIndex = (index: any) => {
+  const deleteItemByIndex = (index: number) => {
     items.value.splice(index, 1)
   }
 
-  const updateItemByIndex = ({ index, item }: { item: any; index: number }) => {
+  const updateItemByIndex = ({ index, item }: { item: ISchedule; index: number }) => {
     items.value = items.value.map((c: any, i: any) => (i === index ? item : c))
   }
 
-  const saveNewItem = (item: any) => {
+  const saveNewItem = (item: ISchedule) => {
     addItem(item)
     $storage.setLocalStorage('mySchedules', items.value)
   }
 
-  const deleteItemById = (id: any) => {
-    const index = items.value.findIndex((s: { id: any }) => s.id === id)
+  const deleteItemById = (id: string) => {
+    const index = items.value.findIndex(s => s.id === id)
     deleteItemByIndex(index)
     $storage.setLocalStorage('mySchedules', items.value)
   }
 
-  const updateItem = (item: { id: any }) => {
-    const index = items.value.findIndex((s: { id: any }) => s.id === item.id)
+  const updateItem = (item: ISchedule) => {
+    const index = items.value.findIndex(s => s.id === item.id)
     updateItemByIndex({ index, item })
     $storage.setLocalStorage('mySchedules', items.value)
   }
 
-  const updateItems = (newItems: any) => {
+  const updateItems = (newItems: ISchedule[]) => {
     setItems(newItems)
     $storage.setLocalStorage('mySchedules', items.value)
   }
