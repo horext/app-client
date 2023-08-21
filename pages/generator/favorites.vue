@@ -29,13 +29,14 @@ import FavoriteBanner from '~/components/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
+import { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },
   setup () {
     const store = useUserConfigStore()
     const schedules = computed(() => store.favoritesSchedules)
-    const updateFavoritesSchedules = (schedules: any) =>
+    const updateFavoritesSchedules = (schedules: ISchedule[]) =>
       store.updateFavoritesSchedules(schedules)
     return { schedules, updateFavoritesSchedules }
   }

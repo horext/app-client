@@ -72,17 +72,15 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed
-} from 'vue'
+import { defineComponent, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
+import { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -98,39 +96,29 @@ export default defineComponent({
     const openMySchedules = ref(false)
     const succces = ref(false)
 
-    const crossingSubjects = computed({
-      get: () => configStore.crossings,
-      set: (crossing: number) => {
-        updateCrossings(crossing)
-      }
-    })
-
-    const mySubjects = computed(() => configStore.subjects)
+    const {
+      crossings: crossingSubjects,
+      subjects: mySubjects,
+      favoritesSchedules: myFavoritesSchedules,
+      schedules
+    } = storeToRefs(configStore)
+    const {
+      items: myEvents
+    } = storeToRefs(eventsStore)
 
     const updateCrossings = (crossings: number) => {
       configStore.updateCrossings(crossings)
     }
 
-    const myEvents = computed(() => eventsStore.items)
-
-    const myFavoritesSchedules = computed(
-      () => configStore.favoritesSchedules
-    )
-
-    const updateFavoritesSchedules = (favoritesSchedules: any[]) => {
-      configStore.updateFavoritesSchedules(
-        favoritesSchedules
-      )
+    const updateFavoritesSchedules = (favoritesSchedules: ISchedule[]) => {
+      configStore.updateFavoritesSchedules(favoritesSchedules)
     }
 
-    const schedules = computed(() => configStore.schedules)
-
-    const updateSchedules = (schedules: any[]) => {
+    const updateSchedules = (schedules: ISchedule[]) => {
       configStore.updateSchedules(schedules)
     }
 
     const generateAllUserSchedules = () => {
-      console.log('start')
       succces.value = false
       const { occurrences: occurrencesData, combinations } = getSchedules(
         mySubjects.value,
@@ -142,7 +130,6 @@ export default defineComponent({
       updateSchedules(combinations)
       occurrences.value = occurrencesData
       succces.value = true
-      console.log('end')
     }
 
     return {

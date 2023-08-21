@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { IOrganization } from '~/interfaces/organization'
-import { ISubject } from '~/interfaces/subject'
+import { ISelectedSubject } from '~/interfaces/subject'
 import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
 import { IEvent } from '~/interfaces/event'
@@ -11,7 +11,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<any>({})
-  const subjects = ref<Array<ISubject>>([])
+  const subjects = ref<Array<ISelectedSubject>>([])
   const events = ref<Array<IEvent>>([])
   const schedules = ref<Array<ISchedule>>([])
   const favoritesSchedules = ref<Array<ISchedule>>([])
@@ -43,7 +43,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     speciality.value = _speciality
   }
 
-  function SET_SUBJECTS (_subjects: ISubject[]) {
+  function SET_SUBJECTS (_subjects: ISelectedSubject[]) {
     subjects.value = _subjects
   }
 
@@ -67,7 +67,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoad.value = _hourlyLoad
   }
 
-  function ADD_SUBJECT (subject: ISubject) {
+  function ADD_SUBJECT (subject: ISelectedSubject) {
     subjects.value.push(Object.assign({}, subject))
   }
 
@@ -75,7 +75,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value.splice(index, 1)
   }
 
-  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: ISubject) {
+  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: ISelectedSubject) {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
@@ -140,7 +140,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     SET_CROSSINGS(crossings)
   }
 
-  function saveNewSubject (_subject: ISubject) {
+  function saveNewSubject (_subject: ISelectedSubject) {
     ADD_SUBJECT(_subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
@@ -151,7 +151,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSubject (_subject: ISubject) {
+  function updateSubject (_subject: ISelectedSubject) {
     const index = subjects.value.findIndex(s => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
     $storage.setLocalStorage('mySubjects', subjects.value)

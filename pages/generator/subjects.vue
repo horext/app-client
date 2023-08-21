@@ -161,7 +161,7 @@ import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
-import { ISubject } from '~/interfaces/subject'
+import { ISelectedSubject, ISubject } from '~/interfaces/subject'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -214,7 +214,7 @@ export default defineComponent({
     const editedItem = ref<any>({})
     const editedIndex = ref(-1)
 
-    const editItem = (item: ISubject) => {
+    const editItem = (item: ISelectedSubject) => {
       if (!item) {
         return
       }
@@ -225,7 +225,7 @@ export default defineComponent({
       dialog.value = true
     }
 
-    const deleteItem = (item: ISubject) => {
+    const deleteItem = (item: ISelectedSubject) => {
       editedIndex.value = mySubjects.value.findIndex(
         c => c.id === item.id
       )
