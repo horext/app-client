@@ -1,72 +1,100 @@
 <template>
-  <v-data-table :headers="headers" :items="myEvents">
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Mis eventos</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical />
-        <v-spacer />
-        <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-          <template #activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              Nuevo evento
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title> Crear tu Evento </v-card-title>
-            <v-card-text>
-              <events-creator
-                ref="form"
-                :event="editedItem"
-                @update:event="save"
-              />
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn text @click="close">
-                Cancelar
-              </v-btn>
-              <v-btn text @click="save">
-                Guardar
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline">
-              ¿Está seguro de eliminar este evento?
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn color="blue darken-1" text @click="closeDelete">
-                Cancelar
-              </v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">
-                Aceptar
-              </v-btn>
-              <v-spacer />
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template #[`item.color`]="{ item }">
-      <v-badge :color="item.color" />
-    </template>
-    <template #[`item.schedule`]="{ item }">
-      <div>
-        {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
-      </div>
-    </template>
-    <template #[`item.actions`]="{ item }">
-      <v-icon class="mr-2" color="primary" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
-      <v-icon color="red" @click="deleteItem(item)">
-        mdi-delete
-      </v-icon>
-    </template>
-  </v-data-table>
+  <v-row dense>
+    <v-col cols="12">
+      <v-data-table :headers="headers" :items="myEvents">
+        <template #top>
+          <v-toolbar flat>
+            <v-toolbar-title>Mis Actividades</v-toolbar-title>
+            <v-divider class="mx-4" inset vertical />
+            <v-spacer />
+            <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
+              <template #activator="{ on, attrs }">
+                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                  Nueva Actividad
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title> Crear tu Actividad </v-card-title>
+                <v-card-text>
+                  <events-creator
+                    ref="form"
+                    :event.sync="editedItem"
+                  />
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn text @click="close">
+                    Cancelar
+                  </v-btn>
+                  <v-btn text @click="save">
+                    Guardar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogDelete" max-width="500px">
+              <v-card>
+                <v-card-title class="headline">
+                  ¿Está seguro de eliminar esta actividad?
+                </v-card-title>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn color="blue darken-1" text @click="closeDelete">
+                    Cancelar
+                  </v-btn>
+                  <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+                    Aceptar
+                  </v-btn>
+                  <v-spacer />
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template #[`item.color`]="{ item }">
+          <v-badge :color="item.color" />
+        </template>
+        <template #[`item.schedule`]="{ item }">
+          <div>
+            {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
+          </div>
+        </template>
+        <template #[`item.actions`]="{ item }">
+          <v-icon class="mr-2" color="primary" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon color="red" @click="deleteItem(item)">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+
+      <v-snackbar
+        v-model="succcesAddEvent"
+        color="blue"
+        app
+        timeout="3000"
+        bottom
+      >
+        <v-icon> mdi-check </v-icon>
+        <span class="mr-4"> Actividad creada correctamente </span>
+        <template #action="{ attrs }">
+          <v-btn text small icon v-bind="attrs" @click="succcesAddEvent = false">
+            <v-icon> mdi-close </v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <v-snackbar v-model="succcesUpdateEvent" color="blue" app timeout="3000" bottom>
+        <v-icon> mdi-check </v-icon>
+        <span class="mr-4"> Actividad actualizada correctamente </span>
+        <template #action="{ attrs }">
+          <v-btn text small icon v-bind="attrs" @click="succcesUpdateEvent = false">
+            <v-icon> mdi-close </v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </v-col>
+  </v-row>
 </template>
 <script lang="ts">
 import { defineComponent, ref, nextTick, computed } from 'vue'
@@ -83,7 +111,8 @@ export default defineComponent({
     const store = useUserEventsStore()
 
     const myEvents = computed(() => store.items)
-
+    const succcesAddEvent = ref(false)
+    const succcesUpdateEvent = ref(false)
     const dialog = ref(false)
 
     const headers = [
@@ -172,8 +201,10 @@ export default defineComponent({
       event.id = item.id || v4()
       if (editedIndex.value > -1) {
         store.updateItem(event)
+        succcesUpdateEvent.value = true
       } else {
         store.saveNewItem(event)
+        succcesAddEvent.value = true
       }
       close()
     }
@@ -193,7 +224,9 @@ export default defineComponent({
       close,
       closeDelete,
       save,
-      form
+      form,
+      succcesAddEvent,
+      succcesUpdateEvent
     }
   }
 })

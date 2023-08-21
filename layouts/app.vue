@@ -113,7 +113,7 @@ export default defineComponent({
         to: '/generator/subjects'
       },
       {
-        title: 'Mis eventos',
+        title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
         to: '/generator/events'
       },
@@ -141,7 +141,7 @@ export default defineComponent({
         to: '/generator/subjects'
       },
       {
-        title: 'Mis eventos',
+        title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
         to: '/generator/events'
       }
