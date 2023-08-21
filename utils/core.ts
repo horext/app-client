@@ -27,7 +27,7 @@ export const convertToDate = (day: string | number, startTime: string) => {
 export function getSchedules (
   subjects: Array<ISelectedSubject>,
   myEvents: Array<Event>,
-  options: any = {
+  options = {
     credits: 100,
     crossingSubjects: 0,
     crossEvent: true,
