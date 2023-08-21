@@ -24,10 +24,17 @@ export const convertToDate = (day: string | number, startTime: string) => {
   return weekdayToDatetime(<number>day, startTime)
 }
 
+export type ScheduleOptions = {
+  credits?: number;
+  crossingSubjects: number;
+  crossEvent?: boolean;
+  crossPractices?: boolean;
+};
+
 export function getSchedules (
   subjects: Array<ISelectedSubject>,
   myEvents: Array<Event>,
-  options = {
+  options: ScheduleOptions = {
     credits: 100,
     crossingSubjects: 0,
     crossEvent: true,
