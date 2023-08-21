@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { IOrganization } from '~/interfaces/organization'
+import { ISubject } from '~/interfaces/subject'
 import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
 
@@ -8,7 +9,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<any>({})
-  const subjects = ref<Array<any>>([])
+  const subjects = ref<Array<ISubject>>([])
   const events = ref<Array<any>>([])
   const schedules = ref<Array<any>>([])
   const favoritesSchedules = ref<Array<any>>([])
@@ -64,7 +65,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoad.value = _hourlyLoad
   }
 
-  function ADD_SUBJECT (subject: any) {
+  function ADD_SUBJECT (subject: ISubject) {
     subjects.value.push(Object.assign({}, subject))
   }
 
@@ -72,7 +73,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value.splice(index, 1)
   }
 
-  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: any) {
+  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: ISubject) {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
@@ -137,7 +138,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     SET_CROSSINGS(crossings)
   }
 
-  function saveNewSubject (_subject: any) {
+  function saveNewSubject (_subject: ISubject) {
     ADD_SUBJECT(_subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
@@ -148,7 +149,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
-  function updateSubject (_subject: any) {
+  function updateSubject (_subject: ISubject) {
     const index = subjects.value.findIndex(s => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
