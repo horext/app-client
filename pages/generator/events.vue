@@ -5,6 +5,24 @@
         <v-toolbar-title>Mis Actividades</v-toolbar-title>
         <v-divider class="mx-4" inset vertical />
         <v-spacer />
+        <v-snackbar v-model="succcesAddEvent" color="blue" app timeout="3000">
+          <v-icon> mdi-check </v-icon>
+          <span class="mr-4"> Actividad creada correctamente </span>
+          <template #action="{ attrs }">
+            <v-btn text small icon v-bind="attrs" @click="succcesAddEvent = false">
+              <v-icon> mdi-close </v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
+        <v-snackbar v-model="succcesUpdateEvent" color="blue" app timeout="3000">
+          <v-icon> mdi-check </v-icon>
+          <span class="mr-4"> Actividad actualizada correctamente </span>
+          <template #action="{ attrs }">
+            <v-btn text small icon v-bind="attrs" @click="succcesUpdateEvent = false">
+              <v-icon> mdi-close </v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
         <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
           <template #activator="{ on, attrs }">
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
@@ -82,7 +100,8 @@ export default defineComponent({
     const store = useUserEventsStore()
 
     const myEvents = computed(() => store.items)
-
+    const succcesAddEvent = ref(false)
+    const succcesUpdateEvent = ref(false)
     const dialog = ref(false)
 
     const headers = [
@@ -171,8 +190,10 @@ export default defineComponent({
       event.id = item.id || v4()
       if (editedIndex.value > -1) {
         store.updateItem(event)
+        succcesUpdateEvent.value = true
       } else {
         store.saveNewItem(event)
+        succcesAddEvent.value = true
       }
       close()
     }
@@ -192,7 +213,9 @@ export default defineComponent({
       close,
       closeDelete,
       save,
-      form
+      form,
+      succcesAddEvent,
+      succcesUpdateEvent
     }
   }
 })
