@@ -4,7 +4,6 @@ import { IOrganization } from '~/interfaces/organization'
 import { ISelectedSubject } from '~/interfaces/subject'
 import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
-import { IEvent } from '~/interfaces/event'
 import { ISchedule } from '~/interfaces/schedule'
 import { IHourlyLoad } from '~/interfaces/houly-load'
 
@@ -13,7 +12,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
-  const events = ref<Array<IEvent>>([])
   const schedules = ref<Array<ISchedule>>([])
   const favoritesSchedules = ref<Array<ISchedule>>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
@@ -48,10 +46,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value = _subjects
   }
 
-  function SET_EVENTS (_events: IEvent[]) {
-    events.value = _events
-  }
-
   function SET_SCHEDULES (_schedules: ISchedule[]) {
     schedules.value = _schedules
   }
@@ -78,18 +72,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function UPDATE_SUBJECT_BY_INDEX (index: number, subject: ISelectedSubject) {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
-  }
-
-  function ADD_EVENT (subject: IEvent) {
-    events.value.push(Object.assign({}, subject))
-  }
-
-  function DELETE_EVENT_BY_INDEX (index: number) {
-    events.value.splice(index, 1)
-  }
-
-  function UPDATE_EVENT_BY_INDEX (index: number, subject: IEvent) {
-    events.value = events.value.map((c, i) => (i === index ? subject : c))
   }
 
   function ADD_SCHEDULE (subject: ISchedule) {
@@ -179,11 +161,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateEvents (_events: IEvent[]) {
-    SET_EVENTS(_events)
-    $storage.setLocalStorage('myEvents', events.value)
-  }
-
   function fetchFaculty () {
     SET_FACULTY($storage.getUniversal('myFaculty'))
   }
@@ -206,10 +183,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   function fetchCrossings () {
     const data: number | undefined = $storage.getLocalStorage('myCrossings')
     SET_CROSSINGS(Number(data) || 0)
-  }
-
-  function fetchEvents () {
-    SET_EVENTS($storage.getLocalStorage('myEvents') || [])
   }
 
   function fetchSchedules () {
@@ -259,7 +232,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     speciality,
     hourlyLoad,
     subjects,
-    events,
     schedules,
     favoritesSchedules,
     weekDays,
@@ -271,7 +243,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     SET_CROSSINGS,
     SET_SPECIALITY,
     SET_SUBJECTS,
-    SET_EVENTS,
     SET_SCHEDULES,
     SET_FAVORITES_SCHEDULES,
     SET_FIRST_ENTRY,
@@ -279,9 +250,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     ADD_SUBJECT,
     DELETE_SUBJECT_BY_INDEX,
     UPDATE_SUBJECT_BY_INDEX,
-    ADD_EVENT,
-    DELETE_EVENT_BY_INDEX,
-    UPDATE_EVENT_BY_INDEX,
     ADD_SCHEDULE,
     DELETE_SCHEDULE_BY_INDEX,
     UPDATE_SCHEDULE_BY_INDEX,
@@ -299,13 +267,11 @@ export const useUserConfigStore = defineStore('user-config', () => {
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
     updateFavoritesSchedules,
-    updateEvents,
     fetchFaculty,
     fetchSpeciality,
     fetchFirstEntry,
     fetchSubjects,
     fetchCrossings,
-    fetchEvents,
     fetchSchedules,
     fetchFavoritesSchedules
   }
