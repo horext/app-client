@@ -72,7 +72,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value.splice(index, 1)
   }
 
-  function UPDATE_SUBJECT_BY_INDEX ({ index, subject }: any) {
+  function UPDATE_SUBJECT_BY_INDEX (index: number, subject: any) {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
@@ -84,7 +84,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     events.value.splice(index, 1)
   }
 
-  function UPDATE_EVENT_BY_INDEX ({ index, subject }: any) {
+  function UPDATE_EVENT_BY_INDEX (index:number, subject:any) {
     events.value = events.value.map((c, i) => (i === index ? subject : c))
   }
 
@@ -96,7 +96,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     schedules.value.splice(index, 1)
   }
 
-  function UPDATE_SCHEDULE_BY_INDEX ({ index, subject }: any) {
+  function UPDATE_SCHEDULE_BY_INDEX (index: number, subject: number) {
     schedules.value = schedules.value.map((c, i) =>
       i === index ? subject : c
     )
@@ -110,7 +110,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     favoritesSchedules.value.splice(index, 1)
   }
 
-  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX ({ index, subject }: any) {
+  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX (index:number, subject:any) {
     favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
       i === index ? subject : c
     )
@@ -150,10 +150,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function updateSubject (_subject: any) {
     const index = subjects.value.findIndex(s => s.id === _subject.id)
-    UPDATE_SUBJECT_BY_INDEX({
-      index,
-      _subject
-    })
+    UPDATE_SUBJECT_BY_INDEX(index, _subject)
     $storage.setLocalStorage('mySubjects', subjects.value)
   }
 
@@ -196,7 +193,10 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   function fetchSubjects () {
-    SET_SUBJECTS($storage.getLocalStorage('mySubjects') || [])
+    const data: any[] | null = $storage.getLocalStorage('mySubjects')
+    SET_SUBJECTS(
+      data?.filter(subject => subject?.schedules?.length > 0) || []
+    )
   }
 
   function fetchCrossings () {
