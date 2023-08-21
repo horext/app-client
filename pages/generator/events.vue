@@ -2,17 +2,17 @@
   <v-data-table :headers="headers" :items="myEvents">
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Mis eventos</v-toolbar-title>
+        <v-toolbar-title>Mis Actividades</v-toolbar-title>
         <v-divider class="mx-4" inset vertical />
         <v-spacer />
         <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
           <template #activator="{ on, attrs }">
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              Nuevo evento
+              Nueva Actividad
             </v-btn>
           </template>
           <v-card>
-            <v-card-title> Crear tu Evento </v-card-title>
+            <v-card-title> Crear tu Actividad </v-card-title>
             <v-card-text>
               <events-creator
                 ref="form"
@@ -34,7 +34,7 @@
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="headline">
-              ¿Está seguro de eliminar este evento?
+              ¿Está seguro de eliminar esta actividad?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
