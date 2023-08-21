@@ -5,13 +5,13 @@ import { $storage } from '~/utils/api'
 import Event from '~/model/Event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const items = ref<any[]>([])
+  const items = ref<Event[]>([])
 
-  function setItems (newItems: any[]) {
+  function setItems (newItems: Event[]) {
     items.value = newItems
   }
 
-  function addItem (item: any) {
+  function addItem (item: Event) {
     items.value.push(
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), item)
     )
@@ -25,18 +25,18 @@ export const useUserEventsStore = defineStore('user/events', () => {
     items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
-  function saveNewItem (item: any) {
+  function saveNewItem (item: Event) {
     addItem(item)
     $storage.setLocalStorage('myEvents', items.value)
   }
 
-  function deleteItemById (id: any) {
+  function deleteItemById (id: string) {
     const index = items.value.findIndex(s => s.id === id)
     deleteItemByIndex(index)
     $storage.setLocalStorage('myEvents', items.value)
   }
 
-  function updateItem (item: { id: any }) {
+  function updateItem (item: Event) {
     const index = items.value.findIndex(s => s.id === item.id)
     if (index >= 0) {
       updateItemByIndex({
