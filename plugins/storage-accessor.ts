@@ -1,17 +1,21 @@
 import { Plugin } from '@nuxt/types'
 import { NuxtStorage } from '@nuxtjs/universal-storage'
+import { IEvent } from '~/interfaces/event'
+import { IOrganization } from '~/interfaces/organization'
+import { ISchedule } from '~/interfaces/schedule'
+import { ISubject } from '~/interfaces/subject'
 import { initializeStorage } from '~/utils/api'
 
 export interface NuxtStorageExtended extends NuxtStorage {
-  setLocalStorage(key: 'mySubjects', value: any[]): void;
-  setLocalStorage(key: 'mySchedules', value: any[]): void;
-  setLocalStorage(key: 'myFavoritesSchedules', value: any[]): void;
-  setLocalStorage(key: 'myEvents', value: any[]): void;
+  setLocalStorage(key: 'mySubjects', value: ISubject[]): void;
+  setLocalStorage(key: 'mySchedules', value: ISchedule[]): void;
+  setLocalStorage(key: 'myFavoritesSchedules', value: ISchedule[]): void;
+  setLocalStorage(key: 'myEvents', value: IEvent[]): void;
   setUniversal(key: 'myFirstEntry', value: boolean): void;
   setUniversal(key: 'myCrossings', value: number): void;
-  setUniversal(key: 'mySpeciality', value: any): void;
-  setUniversal(key: 'myFaculty', value: any): void;
-  setUniversal(key: 'myFirstEntry', value: any): void;
+  setUniversal(key: 'mySpeciality', value: IOrganization): void;
+  setUniversal(key: 'myFaculty', value: IOrganization): void;
+  setUniversal(key: 'myFirstEntry', value: boolean): void;
 }
 interface StorageExtended {
   $storage: NuxtStorageExtended;
