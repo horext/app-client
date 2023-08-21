@@ -21,16 +21,17 @@ import { useVModel } from '@vueuse/core'
 import { defineComponent } from 'vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
+import { ISubjectSchedule } from '~/interfaces/subject'
 
 export default defineComponent({
   components: { ScheduleSection, ClassSessionItem },
   props: {
     schedules: {
-      type: Array as PropType<any[]>,
+      type: Array as PropType<ISubjectSchedule[]>,
       required: true
     },
     value: {
-      type: [Array, Object],
+      type: Array as PropType<ISubjectSchedule[]>,
       required: true
     }
   },

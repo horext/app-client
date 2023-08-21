@@ -185,7 +185,7 @@ export default defineComponent({
 
     const availableCourses = computed(() => {
       return subjects.value?.filter(c1 =>
-        mySubjects.value?.findIndex(c2 => c1.id === c2.id)
+        !mySubjects.value.some(c2 => c1.id === c2.id)
       )
     })
 

@@ -14,15 +14,16 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
+import { ISubjectSchedule } from '~/interfaces/subject'
 
 export default defineComponent({
   props: {
     schedule: {
-      type: Object as PropType<any>,
-      default: () => ({})
+      type: Object as PropType<ISubjectSchedule>,
+      required: true
     },
     value: {
-      type: [Array, Object],
+      type: Array as PropType<ISubjectSchedule[]>,
       default: null
     }
   },
