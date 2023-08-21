@@ -20,13 +20,13 @@
       v-model="eventSync.startTime"
       label="Hora de Inicio"
       type="time"
-      :rules="[rules.required, rules.max]"
+      :rules="startRules"
     />
     <v-text-field
       v-model="eventSync.endTime"
       label="Hora de Fin"
       type="time"
-      :rules="[rules.required, rules.min]"
+      :rules="endRules"
     />
     <v-color-picker
       v-model="color"
@@ -38,7 +38,8 @@
   </v-form>
 </template>
 
-<script lang="ts">import { defineComponent, PropType, ref, watch } from 'vue'
+<script lang="ts">
+import { computed, defineComponent, PropType, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { VForm } from '~/types'
 import { IEvent } from '~/interfaces/event'
@@ -63,12 +64,34 @@ export default defineComponent({
       })
     }
 
-    const rules = {
-      required: (value: any) => !!value || 'Requerido.',
-      requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-      max: (value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin',
-      min: (value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio'
-    }
+    const rules = computed(
+      () => ({
+        required: (value: any) => !!value || 'Requerido.',
+        requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
+        max: (value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin',
+        min: (value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio'
+      })
+    )
+
+    const startRules = computed(
+      () => {
+        const rules:any[] = [(value: any) => !!value || 'Requerido.']
+        if (props.event?.endTime! < props.event?.startTime!) {
+          rules.push((value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin')
+        }
+        return rules
+      }
+    )
+
+    const endRules = computed(
+      () => {
+        const rules:any[] = [(value: any) => !!value || 'Requerido.']
+        if (props.event?.startTime! > props.event?.endTime!) {
+          rules.push((value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio')
+        }
+        return rules
+      }
+    )
 
     const form = ref<VForm>()
 
@@ -101,7 +124,9 @@ export default defineComponent({
       validated,
       weekdays,
       dialog,
-      eventSync
+      eventSync,
+      startRules,
+      endRules
     }
   }
 })
