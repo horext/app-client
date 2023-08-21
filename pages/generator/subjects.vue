@@ -204,18 +204,6 @@ export default defineComponent({
       )
     })
 
-    const deleteSubjectById = async (id: any) => {
-      await configStore.deleteSubjectById(id)
-    }
-
-    const updateSubject = async (subject: any) => {
-      await configStore.updateSubject(subject)
-    }
-
-    const saveNewSubject = async (subject: any) => {
-      await configStore.saveNewSubject(subject)
-    }
-
     const subjects = ref<any[]>([])
     const dialog = ref(false)
     const loading = ref(false)
@@ -245,7 +233,7 @@ export default defineComponent({
     }
 
     const deleteItemConfirm = async () => {
-      await deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value.id)
       closeDelete()
     }
 
@@ -265,13 +253,13 @@ export default defineComponent({
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value.id)
       } else {
         close()
       }
