@@ -320,7 +320,7 @@ export default defineComponent({
     })
 
     const myHourlyLoad = computed(() => {
-      return configStore.hourlyLoad
+      return configStore.hourlyLoad!
     })
 
     return {
