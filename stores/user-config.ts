@@ -6,11 +6,12 @@ import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
 import { IEvent } from '~/interfaces/event'
 import { ISchedule } from '~/interfaces/schedule'
+import { IHourlyLoad } from '~/interfaces/houly-load'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
-  const hourlyLoad = ref<any>({})
+  const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
   const events = ref<Array<IEvent>>([])
   const schedules = ref<Array<ISchedule>>([])
@@ -28,7 +29,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   })
 
   const hourlyLoadId = computed(() => {
-    return hourlyLoad?.value.id
+    return hourlyLoad?.value?.id
   })
 
   function SET_FACULTY (_faculty: IOrganization) {
@@ -63,7 +64,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     firstEntry.value = _firstEntry
   }
 
-  function SET_HOURLY_LOAD (_hourlyLoad: any) {
+  function SET_HOURLY_LOAD (_hourlyLoad: IHourlyLoad) {
     hourlyLoad.value = _hourlyLoad
   }
 

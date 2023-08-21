@@ -118,13 +118,15 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent } from 'vue'
+import { computed, ref, defineComponent, PropType } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/model/ViewMode'
+import { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -135,7 +137,7 @@ export default defineComponent({
   },
   props: {
     schedules: {
-      type: Array,
+      type: Array as PropType<ISchedule[]>,
       default: () => []
     },
     path: {
@@ -160,10 +162,10 @@ export default defineComponent({
     }
   },
   setup () {
-    const { hourlyLoad, weekDays } = useUserConfigStore()
-
+    const store = useUserConfigStore()
+    const { weekDays, hourlyLoad } = storeToRefs(store)
     const academicPeriodOrganizationUnit = computed(
-      () => hourlyLoad.value?.academicPeriodOrganizationUnit
+      () => hourlyLoad.value?.academicPeriodOrganizationUnit!
     )
 
     const startDate = computed(
@@ -174,7 +176,7 @@ export default defineComponent({
       () => academicPeriodOrganizationUnit.value?.toDate
     )
 
-    const currentSchedule = ref<any>(null)
+    const currentSchedule = ref<ISchedule>()
 
     const dialogShare = ref(false)
     const dialogExport = ref(false)

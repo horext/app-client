@@ -56,6 +56,7 @@ import { useFetch } from '@nuxtjs/composition-api'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
+import { IHourlyLoad } from '~/interfaces/houly-load'
 import { IScheduleSubject } from '~/interfaces/schedule-subject'
 import { ISelectedSubject, ISession, ISubjectSchedule } from '~/interfaces/subject'
 import { $api } from '~/utils/api'
@@ -67,7 +68,10 @@ export default defineComponent({
       type: Object as PropType<ISelectedSubject>,
       required: true
     },
-    hourlyLoad: { type: Object, required: true }
+    hourlyLoad: {
+      type: Object as PropType<IHourlyLoad>,
+      required: true
+    }
   },
   setup (props, { emit }) {
     const selected = ref<ISubjectSchedule[]>([])
