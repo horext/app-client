@@ -116,12 +116,30 @@
           </v-chip>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon class="mr-2" color="primary" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon color="red" @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+          <v-tooltip bottom>
+            <template #activator="{ on }">
+              <v-icon
+                color="blue"
+                v-on="on"
+                @click="editItem(item)"
+              >
+                mdi-pencil
+              </v-icon>
+            </template>
+            <span>Editar</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template #activator="{ on }">
+              <v-icon
+                color="red"
+                v-on="on"
+                @click="deleteItem(item)"
+              >
+                mdi-delete
+              </v-icon>
+            </template>
+            <span>Eliminar</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-card-text>
