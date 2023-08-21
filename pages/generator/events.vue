@@ -16,8 +16,7 @@
             <v-card-text>
               <events-creator
                 ref="form"
-                :event="editedItem"
-                @update:event="save"
+                :event.sync="editedItem"
               />
             </v-card-text>
             <v-card-actions>
