@@ -39,27 +39,21 @@
 </template>
 
 <script lang="ts">import { defineComponent, PropType, ref, watch } from 'vue'
-import { v4 } from 'uuid'
+import { useVModel } from '@vueuse/core'
 import { VForm } from '~/types'
+import { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   name: 'EventsCreator',
   props: {
     event: {
-      type: Object as PropType<any>,
-      default: () => ({
-        id: v4(),
-        title: '',
-        day: null,
-        color: 'primary',
-        type: 'myEvent',
-        startTime: '12:00',
-        endTime: '14:00'
-      })
+      type: Object as PropType<IEvent>,
+      required: true
     }
   },
   emits: ['update:event'],
   setup (props, { emit }) {
+    const eventSync = useVModel(props, 'event', emit)
     const color = ref(null)
 
     const onChangeColor = (newVal: any) => {
@@ -72,8 +66,8 @@ export default defineComponent({
     const rules = {
       required: (value: any) => !!value || 'Requerido.',
       requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-      max: (value: any) => value < props.event.endTime || 'Tiene que ser menor que el fin',
-      min: (value: any) => value > props.event.startTime || 'Tiene que ser mayor que el inicio'
+      max: (value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin',
+      min: (value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio'
     }
 
     const form = ref<VForm>()
@@ -106,7 +100,8 @@ export default defineComponent({
       form,
       validated,
       weekdays,
-      dialog
+      dialog,
+      eventSync
     }
   }
 })

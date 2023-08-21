@@ -161,6 +161,7 @@ import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
+import { ISubject } from '~/interfaces/subject'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -184,7 +185,7 @@ export default defineComponent({
 
     const availableCourses = computed(() => {
       return subjects.value?.filter(c1 =>
-        mySubjects.value?.findIndex((c2: { id: any }) => c1.id === c2.id)
+        mySubjects.value?.findIndex(c2 => c1.id === c2.id)
       )
     })
 
@@ -193,30 +194,18 @@ export default defineComponent({
       return months[section.charCodeAt(0) % months.length]
     }
 
-    const mySubjects = computed<any[]>(() => configStore.subjects)
+    const mySubjects = computed(() => configStore.subjects)
 
     const totalCredits = computed(() => {
       return mySubjects.value.reduce(
-        (previousValue: any, currentValue: { credits: any }) => {
+        (previousValue, currentValue) => {
           return currentValue.credits + previousValue
         },
         0
       )
     })
 
-    const deleteSubjectById = async (id: any) => {
-      await configStore.deleteSubjectById(id)
-    }
-
-    const updateSubject = async (subject: any) => {
-      await configStore.updateSubject(subject)
-    }
-
-    const saveNewSubject = async (subject: any) => {
-      await configStore.saveNewSubject(subject)
-    }
-
-    const subjects = ref<any[]>([])
+    const subjects = ref<ISubject[]>([])
     const dialog = ref(false)
     const loading = ref(false)
     const dialogDelete = ref(false)
@@ -225,27 +214,27 @@ export default defineComponent({
     const editedItem = ref<any>({})
     const editedIndex = ref(-1)
 
-    const editItem = (item: { id: any }) => {
+    const editItem = (item: ISubject) => {
       if (!item) {
         return
       }
       editedIndex.value = mySubjects.value.findIndex(
-        (c: { id: any }) => c.id === item?.id
+        c => c.id === item?.id
       )
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
-    const deleteItem = (item: { id: any }) => {
+    const deleteItem = (item: ISubject) => {
       editedIndex.value = mySubjects.value.findIndex(
-        (c: { id: any }) => c.id === item.id
+        c => c.id === item.id
       )
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
     }
 
     const deleteItemConfirm = async () => {
-      await deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value.id)
       closeDelete()
     }
 
@@ -261,17 +250,17 @@ export default defineComponent({
       editedIndex.value = -1
     }
 
-    const save = async (schedules: string | any[]) => {
+    const save = async (schedules:ISubject[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value.id)
       } else {
         close()
       }

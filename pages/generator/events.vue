@@ -75,16 +75,7 @@ import EventsCreator from '~/components/EventsCreatorForm.vue'
 import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
 import { useUserEventsStore } from '~/stores/user-events'
-
-interface IEvent {
-  id: null | string;
-  title: null | string;
-  day: null | number;
-  color: string;
-  type: string;
-  startTime: null | string;
-  endTime: null | string;
-}
+import { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   components: { EventsCreator },
@@ -92,18 +83,6 @@ export default defineComponent({
     const store = useUserEventsStore()
 
     const myEvents = computed(() => store.items)
-
-    const deleteEventById = async (id: string) => {
-      await store.deleteItemById(id)
-    }
-
-    const updateEvent = async (event: IEvent) => {
-      await store.updateItem(event)
-    }
-
-    const saveNewEvent = async (event: IEvent) => {
-      await store.saveNewItem(event)
-    }
 
     const dialog = ref(false)
 
@@ -115,43 +94,43 @@ export default defineComponent({
     ]
 
     const defaultItem = ref<IEvent>({
-      id: null,
-      title: null,
-      day: null,
+      id: undefined,
+      title: '',
+      day: undefined,
       color: 'primary',
       type: 'myEvent',
-      startTime: null,
-      endTime: null
+      startTime: undefined,
+      endTime: undefined
     })
 
     const editedItem = ref<IEvent>({
-      id: null,
-      title: null,
-      day: null,
+      id: undefined,
+      title: '',
+      day: undefined,
       color: 'primary',
       type: 'myEvent',
-      startTime: null,
-      endTime: null
+      startTime: undefined,
+      endTime: undefined
     })
 
     const editedIndex = ref(-1)
 
     const dialogDelete = ref(false)
 
-    const editItem = (item: any) => {
-      editedIndex.value = myEvents.value.findIndex((c: any) => c.id === item.id)
+    const editItem = (item: Event) => {
+      editedIndex.value = myEvents.value.findIndex(c => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
-    const deleteItem = (item: any) => {
-      editedIndex.value = myEvents.value.findIndex((c: any) => c.id === item.id)
+    const deleteItem = (item: Event) => {
+      editedIndex.value = myEvents.value.findIndex(c => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
     }
 
     const deleteItemConfirm = () => {
-      deleteEventById(editedItem.value.id!)
+      store.deleteItemById(editedItem.value.id!)
       closeDelete()
     }
 
@@ -192,9 +171,9 @@ export default defineComponent({
       )
       event.id = item.id || v4()
       if (editedIndex.value > -1) {
-        updateEvent(editedItem.value)
+        store.updateItem(event)
       } else {
-        saveNewEvent(editedItem.value)
+        store.saveNewItem(event)
       }
       close()
     }
