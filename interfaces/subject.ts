@@ -48,7 +48,7 @@ export interface ISession {
   endTime: string;
 }
 
-export interface ISchedule {
+export interface ISubjectSchedule {
   id: number;
   section: {
     id: string;
@@ -64,5 +64,5 @@ export interface ISubject {
   studyPlan: IStudyPlan;
   credits: number;
   cycle: number;
-  schedules: ISchedule[];
+  schedules: ISubjectSchedule[];
 }
