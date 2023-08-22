@@ -6,10 +6,10 @@
     class="elevation-1"
     show-group-by
   >
-    <template #item[`elementA.day`]="{ item }">
+    <template #[`item.elementA.day`]="{ item }">
       <div>{{ item.elementA.start }} - {{ item.elementA.end }}</div>
     </template>
-    <template #item[`elementB.day`]="{ item }">
+    <template #[`item.elementB.day`]="{ item }">
       <div>{{ item.elementB.start }} - {{ item.elementB.end }}</div>
     </template>
   </v-data-table>
