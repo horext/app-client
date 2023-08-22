@@ -3,14 +3,7 @@
     <span class="grey--text">Items per page</span>
     <v-menu offset-y>
       <template #activator="{ on, attrs }">
-        <v-btn
-          dark
-          text
-          color="primary"
-          class="ml-2"
-          v-bind="attrs"
-          v-on="on"
-        >
+        <v-btn dark text color="primary" class="ml-2" v-bind="attrs" v-on="on">
           {{ syncItemsPerPage }}
           <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
@@ -41,14 +34,7 @@
     >
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-btn
-      fab
-      dark
-      small
-      color="blue darken-3"
-      class="ml-1"
-      @click="nextPage"
-    >
+    <v-btn fab dark small color="blue darken-3" class="ml-1" @click="nextPage">
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
   </v-row>
@@ -61,28 +47,28 @@ export default defineComponent({
   props: {
     itemsPerPage: {
       type: Number,
-      required: true
+      required: true,
     },
     itemsPerPageArray: {
       type: Array,
-      required: true
+      required: true,
     },
     page: {
       type: Number,
-      required: true
+      required: true,
     },
     totalPages: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: [
     'update:itemsPerPage',
     'update:page',
     'update:totalPages',
-    'update:itemsPerPageArray'
+    'update:itemsPerPageArray',
   ],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const syncItemsPerPage = useVModel(props, 'itemsPerPage', emit)
 
     const syncItemsPerPageArray = useVModel(props, 'itemsPerPageArray', emit)
@@ -98,7 +84,9 @@ export default defineComponent({
     }
 
     const formerPage = () => {
-      if (syncPage.value - 1 >= 1) { syncPage.value -= 1 }
+      if (syncPage.value - 1 >= 1) {
+        syncPage.value -= 1
+      }
     }
 
     const updateItemsPerPage = (number: number) => {
@@ -112,8 +100,8 @@ export default defineComponent({
       syncTotalPages,
       nextPage,
       formerPage,
-      updateItemsPerPage
+      updateItemsPerPage,
     }
-  }
+  },
 })
 </script>

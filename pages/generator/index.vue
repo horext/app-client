@@ -86,10 +86,10 @@ export default defineComponent({
   components: {
     ScheduleFavoriteAdd,
     SchedulesPresentation,
-    OccurrencesList
+    OccurrencesList,
   },
   layout: 'app',
-  setup () {
+  setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
     const occurrences = ref<any[]>([])
@@ -100,11 +100,9 @@ export default defineComponent({
       crossings: crossingSubjects,
       subjects: mySubjects,
       favoritesSchedules: myFavoritesSchedules,
-      schedules
+      schedules,
     } = storeToRefs(configStore)
-    const {
-      items: myEvents
-    } = storeToRefs(eventsStore)
+    const { items: myEvents } = storeToRefs(eventsStore)
 
     const updateCrossings = (crossings: number) => {
       configStore.updateCrossings(crossings)
@@ -124,7 +122,7 @@ export default defineComponent({
         mySubjects.value,
         myEvents.value,
         {
-          crossingSubjects: crossingSubjects.value
+          crossingSubjects: crossingSubjects.value,
         }
       )
       updateSchedules(combinations)
@@ -144,8 +142,8 @@ export default defineComponent({
       updateCrossings,
       updateFavoritesSchedules,
       updateSchedules,
-      generateAllUserSchedules
+      generateAllUserSchedules,
     }
-  }
+  },
 })
 </script>

@@ -1,4 +1,4 @@
-image:  docker:latest
+image: docker:latest
 services:
   - docker:dind
 
@@ -14,7 +14,6 @@ variables:
 
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
-
 
 publish:
   stage: publish

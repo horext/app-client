@@ -79,9 +79,9 @@ export default defineComponent({
   components: {
     ThemeDarkToggle,
     AppHourlyLoadInfo,
-    TheSnackbar
+    TheSnackbar,
   },
-  setup () {
+  setup() {
     const vuetify = useVuetify()
     onMounted(() => {
       vuetify.theme.dark = JSON.parse(
@@ -95,64 +95,64 @@ export default defineComponent({
       {
         title: 'Inicio',
         icon: 'mdi-calendar',
-        to: '/'
+        to: '/',
       },
       {
         title: 'Generador de Horarios',
         icon: 'mdi-calendar',
-        to: '/generator'
+        to: '/generator',
       },
       {
         title: 'Horarios Favoritos',
         icon: 'mdi-calendar-star',
-        to: '/generator/favorites'
+        to: '/generator/favorites',
       },
       {
         title: 'Mis cursos y secciones',
         icon: 'mdi-book',
-        to: '/generator/subjects'
+        to: '/generator/subjects',
       },
       {
         title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
-        to: '/generator/events'
+        to: '/generator/events',
       },
       {
         title: 'Avanzado',
         icon: 'mdi-cog',
-        to: '/generator/settings'
-      }
+        to: '/generator/settings',
+      },
     ]
 
     const denseItems = [
       {
         title: 'Generador',
         icon: 'mdi-calendar',
-        to: '/generator'
+        to: '/generator',
       },
       {
         title: 'Favoritos',
         icon: 'mdi-calendar-star',
-        to: '/generator/favorites'
+        to: '/generator/favorites',
       },
       {
         title: 'Mis cursos',
         icon: 'mdi-book',
-        to: '/generator/subjects'
+        to: '/generator/subjects',
       },
       {
         title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
-        to: '/generator/events'
-      }
+        to: '/generator/events',
+      },
     ]
 
     return {
       items,
       drawer,
       dialog,
-      denseItems
+      denseItems,
     }
-  }
+  },
 })
 </script>

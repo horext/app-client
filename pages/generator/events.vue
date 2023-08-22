@@ -9,26 +9,25 @@
             <v-spacer />
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
               <template #activator="{ on, attrs }">
-                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
                   Nueva Actividad
                 </v-btn>
               </template>
               <v-card>
                 <v-card-title> Crear tu Actividad </v-card-title>
                 <v-card-text>
-                  <events-creator
-                    ref="form"
-                    :event.sync="editedItem"
-                  />
+                  <events-creator ref="form" :event.sync="editedItem" />
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn text @click="close">
-                    Cancelar
-                  </v-btn>
-                  <v-btn text @click="save">
-                    Guardar
-                  </v-btn>
+                  <v-btn text @click="close"> Cancelar </v-btn>
+                  <v-btn text @click="save"> Guardar </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -63,9 +62,7 @@
           <v-icon class="mr-2" color="primary" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon color="red" @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+          <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
       </v-data-table>
 
@@ -79,16 +76,34 @@
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
         <template #action="{ attrs }">
-          <v-btn text small icon v-bind="attrs" @click="succcesAddEvent = false">
+          <v-btn
+            text
+            small
+            icon
+            v-bind="attrs"
+            @click="succcesAddEvent = false"
+          >
             <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
       </v-snackbar>
-      <v-snackbar v-model="succcesUpdateEvent" color="blue" app timeout="3000" bottom>
+      <v-snackbar
+        v-model="succcesUpdateEvent"
+        color="blue"
+        app
+        timeout="3000"
+        bottom
+      >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad actualizada correctamente </span>
         <template #action="{ attrs }">
-          <v-btn text small icon v-bind="attrs" @click="succcesUpdateEvent = false">
+          <v-btn
+            text
+            small
+            icon
+            v-bind="attrs"
+            @click="succcesUpdateEvent = false"
+          >
             <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
@@ -107,7 +122,7 @@ import { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   components: { EventsCreator },
-  setup () {
+  setup() {
     const store = useUserEventsStore()
 
     const myEvents = computed(() => store.items)
@@ -119,7 +134,7 @@ export default defineComponent({
       { text: 'Color', value: 'color' },
       { text: 'titulo', align: 'start', sortable: false, value: 'title' },
       { text: 'Horario', value: 'schedule' },
-      { text: 'Acciones', value: 'actions', sortable: false }
+      { text: 'Acciones', value: 'actions', sortable: false },
     ]
 
     const defaultItem = ref<IEvent>({
@@ -129,7 +144,7 @@ export default defineComponent({
       color: 'primary',
       type: 'myEvent',
       startTime: undefined,
-      endTime: undefined
+      endTime: undefined,
     })
 
     const editedItem = ref<IEvent>({
@@ -139,7 +154,7 @@ export default defineComponent({
       color: 'primary',
       type: 'myEvent',
       startTime: undefined,
-      endTime: undefined
+      endTime: undefined,
     })
 
     const editedIndex = ref(-1)
@@ -147,13 +162,13 @@ export default defineComponent({
     const dialogDelete = ref(false)
 
     const editItem = (item: Event) => {
-      editedIndex.value = myEvents.value.findIndex(c => c.id === item.id)
+      editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
     const deleteItem = (item: Event) => {
-      editedIndex.value = myEvents.value.findIndex(c => c.id === item.id)
+      editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
     }
@@ -226,8 +241,8 @@ export default defineComponent({
       save,
       form,
       succcesAddEvent,
-      succcesUpdateEvent
+      succcesUpdateEvent,
     }
-  }
+  },
 })
 </script>

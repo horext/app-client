@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   ssr-client:
-    image:  ${IMAGE_NAME}
+    image: ${IMAGE_NAME}
     environment:
       HOST: ${NUXT_ENV_HOST}
       PORT: ${NUXT_ENV_PORT}

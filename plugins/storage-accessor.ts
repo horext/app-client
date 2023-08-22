@@ -7,18 +7,18 @@ import { ISubject } from '~/interfaces/subject'
 import { initializeStorage } from '~/utils/api'
 
 export interface NuxtStorageExtended extends NuxtStorage {
-  setLocalStorage(key: 'mySubjects', value: ISubject[]): void;
-  setLocalStorage(key: 'mySchedules', value: ISchedule[]): void;
-  setLocalStorage(key: 'myFavoritesSchedules', value: ISchedule[]): void;
-  setLocalStorage(key: 'myEvents', value: IEvent[]): void;
-  setUniversal(key: 'myFirstEntry', value: boolean): void;
-  setUniversal(key: 'myCrossings', value: number): void;
-  setUniversal(key: 'mySpeciality', value: IOrganization): void;
-  setUniversal(key: 'myFaculty', value: IOrganization): void;
-  setUniversal(key: 'myFirstEntry', value: boolean): void;
+  setLocalStorage(key: 'mySubjects', value: ISubject[]): void
+  setLocalStorage(key: 'mySchedules', value: ISchedule[]): void
+  setLocalStorage(key: 'myFavoritesSchedules', value: ISchedule[]): void
+  setLocalStorage(key: 'myEvents', value: IEvent[]): void
+  setUniversal(key: 'myFirstEntry', value: boolean): void
+  setUniversal(key: 'myCrossings', value: number): void
+  setUniversal(key: 'mySpeciality', value: IOrganization): void
+  setUniversal(key: 'myFaculty', value: IOrganization): void
+  setUniversal(key: 'myFirstEntry', value: boolean): void
 }
 interface StorageExtended {
-  $storage: NuxtStorageExtended;
+  $storage: NuxtStorageExtended
 }
 
 declare module 'vue/types/vue' {

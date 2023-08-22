@@ -25,10 +25,10 @@ export default defineComponent({
   props: {
     session: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  setup (props) {
+  setup(props) {
     const dayWeek = computed(() =>
       weekdays[props.session?.day]?.substring(0, 2).toUpperCase()
     )
@@ -51,9 +51,9 @@ export default defineComponent({
       type,
       teacherFullName,
       classroom,
-      timeInterval
+      timeInterval,
     }
-  }
+  },
 })
 </script>
 <style lang="sass">

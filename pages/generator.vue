@@ -19,10 +19,10 @@ import { useUserEventsStore } from '~/stores/user-events'
 export default defineComponent({
   name: 'Generator',
   components: {
-    InitialSettings
+    InitialSettings,
   },
   layout: 'app',
-  setup () {
+  setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
     const router = useRouter()
@@ -44,10 +44,10 @@ export default defineComponent({
     })
 
     return {
-      firstEntry
+      firstEntry,
     }
   },
-  async asyncData ({ $pinia }: Context) {
+  async asyncData({ $pinia }: Context) {
     const store = useUserConfigStore($pinia)
     await store.fetchFirstEntry()
     await store.fetchFaculty()
@@ -55,8 +55,8 @@ export default defineComponent({
     await store.fetchHourlyLoad()
   },
   head: {
-    title: 'Generador de Horarios'
-  }
+    title: 'Generador de Horarios',
+  },
 })
 </script>
 

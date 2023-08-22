@@ -1,4 +1,34 @@
-# horext-ssr-client
+# Horext SSR Client
+
+## Development Setup
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en/) (>= 14.x)
+- [Yarn](https://yarnpkg.com/)
+
+### Install dependencies
+
+```bash
+yarn install
+```
+
+### Create .env file
+
+- Copy .env.example to .env file via command below
+
+```bash
+cp .env.example .env
+```
+
+- Fill in the environment variables in the .env file
+- If you want to use the default value, you can skip this step
+
+### Run development server
+
+```bash
+yarn dev
+```
 
 ## Build Setup
 
@@ -40,7 +70,6 @@ More information about the usage of this directory in [the documentation](https:
 Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
 
 ### `pages`
 

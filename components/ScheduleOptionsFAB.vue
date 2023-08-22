@@ -2,7 +2,7 @@
   <v-speed-dial
     v-model="fab"
     bottom
-    :class="{'mr-12':$vuetify.breakpoint.smAndUp}"
+    :class="{ 'mr-12': $vuetify.breakpoint.smAndUp }"
     class="mb-11"
     fixed
     right
@@ -10,31 +10,24 @@
     direction="top"
   >
     <template #activator>
-      <v-btn
-        v-model="fab"
-        color="blue darken-2"
-        dark
-        fab
-      >
+      <v-btn v-model="fab" color="blue darken-2" dark fab>
         <v-icon>
-          {{ fab?'mdi-close':icon }}
+          {{ fab ? 'mdi-close' : icon }}
         </v-icon>
       </v-btn>
     </template>
   </v-speed-dial>
 </template>
 <script lang="ts">
-
 import Vue from 'vue'
 export default Vue.extend({
   name: 'ScheduleOptionsFAB',
   props: {
     // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
-    icon: {
-    }
+    icon: {},
   },
   data: () => ({
-    fab: false
-  })
+    fab: false,
+  }),
 })
 </script>

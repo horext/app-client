@@ -7,41 +7,41 @@ import Event from '~/model/Event'
 export const useUserEventsStore = defineStore('user/events', () => {
   const items = ref<Event[]>([])
 
-  function setItems (newItems: Event[]) {
+  function setItems(newItems: Event[]) {
     items.value = newItems
   }
 
-  function addItem (item: Event) {
+  function addItem(item: Event) {
     items.value.push(
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), item)
     )
   }
 
-  function deleteItemByIndex (index: number) {
+  function deleteItemByIndex(index: number) {
     items.value.splice(index, 1)
   }
 
-  function updateItemByIndex ({ index, item }: { index: number; item: any }) {
+  function updateItemByIndex({ index, item }: { index: number; item: any }) {
     items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
-  function saveNewItem (item: Event) {
+  function saveNewItem(item: Event) {
     addItem(item)
     $storage.setLocalStorage('myEvents', items.value)
   }
 
-  function deleteItemById (id: string) {
-    const index = items.value.findIndex(s => s.id === id)
+  function deleteItemById(id: string) {
+    const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
     $storage.setLocalStorage('myEvents', items.value)
   }
 
-  function updateItem (item: Event) {
-    const index = items.value.findIndex(s => s.id === item.id)
+  function updateItem(item: Event) {
+    const index = items.value.findIndex((s) => s.id === item.id)
     if (index >= 0) {
       updateItemByIndex({
         index,
-        item
+        item,
       })
       $storage.setLocalStorage('myEvents', items.value)
     } else {
@@ -49,7 +49,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     }
   }
 
-  function updateItems (items: any[]) {
+  function updateItems(items: any[]) {
     setItems(items)
     $storage.setLocalStorage('myEvents', items)
   }
@@ -59,7 +59,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     const events = myEvents.map((e: { id: any }) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
-        type: 'MY_EVENT'
+        type: 'MY_EVENT',
       })
     )
     setItems(events)
@@ -75,6 +75,6 @@ export const useUserEventsStore = defineStore('user/events', () => {
     deleteItemById,
     updateItem,
     updateItems,
-    fetchItems
+    fetchItems,
   }
 })

@@ -1,4 +1,3 @@
-
 import { AxiosInstance } from 'axios'
 import CourseRepository from '~/repositories/CourseRepository'
 import ScheduleSubjectRepository from '~/repositories/ScheduleSubjectRepository'
@@ -13,5 +12,5 @@ export default ($axios: AxiosInstance) => ({
   speciality: SpecialityRepository($axios),
   faculty: FacultyRepository($axios),
   hourlyLoad: HourlyLoadRepository($axios),
-  scheduleSubject: ScheduleSubjectRepository($axios)
+  scheduleSubject: ScheduleSubjectRepository($axios),
 })

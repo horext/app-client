@@ -35,10 +35,10 @@ import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
   components: {
-    ScheduleViewer
+    ScheduleViewer,
   },
   layout: 'app',
-  setup () {
+  setup() {
     const query = ref('')
     const schedules = ref<any[]>([])
     const loading = ref(false)
@@ -46,9 +46,7 @@ export default defineComponent({
 
     const store = useUserConfigStore()
 
-    const myFavoritesSchedules = computed(
-      () => store.favoritesSchedules
-    )
+    const myFavoritesSchedules = computed(() => store.favoritesSchedules)
     const route = useRoute()
 
     const data = useAsync(async () => {
@@ -80,20 +78,20 @@ export default defineComponent({
           {
             ...sb?.schedule,
             scheduleSubject: {
-              id: sb.id
+              id: sb.id,
             },
             sessions: sessions.value.filter(
               (s: any) => s.schedule.id === sb.schedule.id
-            )
-          }
-        ]
+            ),
+          },
+        ],
       }))
     })
 
-    async function fetchSchedules () {
+    async function fetchSchedules() {
       loading.value = true
       const { combinations } = await getSchedules(subjects.value, [], {
-        crossingSubjects: 100
+        crossingSubjects: 100,
       })
       schedules.value = combinations
       loading.value = false
@@ -127,22 +125,21 @@ export default defineComponent({
       courses,
       addFavoriteCurrentSchedule,
       isFavorite,
-      myFavoritesSchedules
-
+      myFavoritesSchedules,
     }
   },
-  head () {
+  head() {
     return {
       title: 'Horario compartido',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: 'Comparte tu horario a tus amigos! '
-        }
-      ]
+          content: 'Comparte tu horario a tus amigos! ',
+        },
+      ],
     }
-  }
+  },
 })
 </script>
 

@@ -20,20 +20,20 @@ export default {
   props: {
     color: {
       type: String,
-      default: 'primary'
+      default: 'primary',
     },
     depressed: {
       type: Boolean,
-      default: true
+      default: true,
     },
     minWidth: {
       type: [Number, String],
-      default: 164
+      default: 164,
     },
     tile: {
       type: Boolean,
-      default: true
-    }
-  }
+      default: true,
+    },
+  },
 }
 </script>

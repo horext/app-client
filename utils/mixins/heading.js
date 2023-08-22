@@ -7,7 +7,7 @@ export default {
     },
   },
 
-  provide () {
+  provide() {
     return {
       heading: {
         align: this.align,
@@ -18,18 +18,21 @@ export default {
   props: {
     align: {
       type: String,
-      default () {
+      default() {
         return this.heading.align
       },
     },
   },
 
   computed: {
-    justify () {
+    justify() {
       switch (this.align) {
-        case 'center': return 'center'
-        case 'right': return 'end'
-        default: return 'start'
+        case 'center':
+          return 'center'
+        case 'right':
+          return 'end'
+        default:
+          return 'start'
       }
     },
   },

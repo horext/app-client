@@ -33,12 +33,12 @@ import { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },
-  setup () {
+  setup() {
     const store = useUserConfigStore()
     const schedules = computed(() => store.favoritesSchedules)
     const updateFavoritesSchedules = (schedules: ISchedule[]) =>
       store.updateFavoritesSchedules(schedules)
     return { schedules, updateFavoritesSchedules }
-  }
+  },
 })
 </script>

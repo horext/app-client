@@ -11,7 +11,7 @@
     v-on="$listeners"
   >
     <v-list
-      :color="$vuetify.theme.dark?'grey darken-4':'grey lighten-5'"
+      :color="$vuetify.theme.dark ? 'grey darken-4' : 'grey lighten-5'"
       shaped
     >
       <v-list-item
@@ -21,7 +21,9 @@
         color="primary"
       >
         <v-list-item-content>
-          <v-list-item-title v-text="item.name" />
+          <v-list-item-title>
+            {{ item.name }}
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -37,8 +39,8 @@ export default Vue.extend({
   props: {
     items: {
       type: Array,
-      default: () => ([])
-    }
-  }
+      default: () => [],
+    },
+  },
 })
 </script>

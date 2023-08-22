@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td :rowspan="sessionsCount+1">
+    <td :rowspan="sessionsCount + 1">
       <v-checkbox
         v-model="valueSync"
         class="text-caption"
@@ -20,20 +20,20 @@ export default defineComponent({
   props: {
     schedule: {
       type: Object as PropType<ISubjectSchedule>,
-      required: true
+      required: true,
     },
     value: {
       type: Array as PropType<ISubjectSchedule[]>,
-      default: null
-    }
+      default: null,
+    },
   },
   emits: ['input'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const valueSync = computed({
       get: () => props.value,
       set: (newValue) => {
         emit('input', newValue)
-      }
+      },
     })
 
     const sessionsCount = computed(() => {
@@ -45,6 +45,6 @@ export default defineComponent({
     })
 
     return { valueSync, sessionsCount, section }
-  }
+  },
 })
 </script>

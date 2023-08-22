@@ -18,7 +18,13 @@ export const userUserSchedulesStore = defineStore('user/schedules', () => {
     items.value.splice(index, 1)
   }
 
-  const updateItemByIndex = ({ index, item }: { item: ISchedule; index: number }) => {
+  const updateItemByIndex = ({
+    index,
+    item,
+  }: {
+    item: ISchedule
+    index: number
+  }) => {
     items.value = items.value.map((c: any, i: any) => (i === index ? item : c))
   }
 
@@ -28,13 +34,13 @@ export const userUserSchedulesStore = defineStore('user/schedules', () => {
   }
 
   const deleteItemById = (id: string) => {
-    const index = items.value.findIndex(s => s.id === id)
+    const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
     $storage.setLocalStorage('mySchedules', items.value)
   }
 
   const updateItem = (item: ISchedule) => {
-    const index = items.value.findIndex(s => s.id === item.id)
+    const index = items.value.findIndex((s) => s.id === item.id)
     updateItemByIndex({ index, item })
     $storage.setLocalStorage('mySchedules', items.value)
   }
@@ -60,6 +66,6 @@ export const userUserSchedulesStore = defineStore('user/schedules', () => {
     deleteItemById,
     updateItem,
     updateItems,
-    fetchItems
+    fetchItems,
   }
 })

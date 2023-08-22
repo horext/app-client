@@ -4,13 +4,12 @@
   </v-sheet>
 </template>
 <script lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, defineComponent } from 'vue'
 import Lottie, { AnimationItem } from 'lottie-web'
-import { defineComponent } from 'vue'
 import { useVuetify } from '~/composables/vuetify'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const darkMode = ref<AnimationItem>()
 
     onMounted(() => {
@@ -20,7 +19,7 @@ export default defineComponent({
         renderer: 'svg',
         loop: false,
         autoplay: false,
-        animationData: require('~/assets/lottie/71569-hamster-toggle.json')
+        animationData: require('~/assets/lottie/71569-hamster-toggle.json'),
       })
       darkMode.value.setSpeed(2)
     })
@@ -28,13 +27,13 @@ export default defineComponent({
     const vuetify = useVuetify()
 
     const dark = computed({
-      get  () {
+      get() {
         return vuetify.theme.dark
       },
 
-      set  (val: boolean) {
+      set(val: boolean) {
         vuetify.theme.dark = val
-      }
+      },
     })
 
     const toggleDark = () => {
@@ -54,9 +53,9 @@ export default defineComponent({
 
     return {
       dark,
-      toggleDark
+      toggleDark,
     }
-  }
+  },
 })
 </script>
 <style>

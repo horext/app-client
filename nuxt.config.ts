@@ -12,11 +12,11 @@ const config: NuxtConfig = {
         hid: 'description',
         name: 'description',
         content:
-          'Horext es una aplicación web que te ayuda a generar horarios '
+          'Horext es una aplicación web que te ayuda a generar horarios ',
       },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -30,7 +30,7 @@ const config: NuxtConfig = {
     { src: '~/plugins/html2canvas.client.js', mode: 'client' },
     '~/plugins/axios-accesor',
     '~/plugins/storage-accessor',
-    '~/plugins/api-accessor'
+    '~/plugins/api-accessor',
   ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
@@ -40,7 +40,7 @@ const config: NuxtConfig = {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     '@nuxtjs/composition-api/module',
-    ['@pinia/nuxt', {}]
+    ['@pinia/nuxt', {}],
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -49,23 +49,23 @@ const config: NuxtConfig = {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     // '@nuxtjs/pwa',
-    '@nuxtjs/universal-storage'
+    '@nuxtjs/universal-storage',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    proxy: true
+    proxy: true,
   },
   proxy: {
     '/api': {
       target: process.env.NUXT_ENV_API_URL,
-      pathRewrite: { '^/api/': '/' }
-    }
+      pathRewrite: { '^/api/': '/' },
+    },
   },
   publicRuntimeConfig: {
     googleAnalytics: {
-      id: process.env.NUXT_ENV_GOOGLE_ANALYTICS_ID
+      id: process.env.NUXT_ENV_GOOGLE_ANALYTICS_ID,
     },
     baseURL: process.env.BASE_URL,
     googleApi: {
@@ -74,30 +74,30 @@ const config: NuxtConfig = {
       discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(
         ','
       ),
-      scopes: process.env.NUXT_ENV_GOOGLE_SCOPES
-    }
+      scopes: process.env.NUXT_ENV_GOOGLE_SCOPES,
+    },
   },
 
   storage: {
     initialState: {
-      myFirstEntry: true
+      myFirstEntry: true,
     },
     cookie: {
       prefix: '',
       options: {
         path: '/',
-        maxAge: 60 * 60 * 24 * 7 * 4
-      }
-    }
+        maxAge: 60 * 60 * 24 * 7 * 4,
+      },
+    },
   } as any,
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     optionsPath: '~/config/vuetify.options.js',
-    customVariables: ['~/assets/variables.scss']
+    customVariables: ['~/assets/variables.scss'],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {},
 }
 
 export default config

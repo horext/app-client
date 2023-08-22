@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export interface SnackbarOptions {
-  content: string;
-  timeout?: number | null;
-  color?: string | null;
+  content: string
+  timeout?: number | null
+  color?: string | null
 }
 
 export const useGlobalSnackbarStore = defineStore('global/snackbar', () => {
@@ -25,6 +25,6 @@ export const useGlobalSnackbarStore = defineStore('global/snackbar', () => {
     timeout,
     color,
     showMessage,
-    show
+    show,
   }
 })

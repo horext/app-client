@@ -1,9 +1,6 @@
 <template>
-  <v-form
-    ref="form"
-  >
+  <v-form ref="form">
     <v-text-field
-
       v-model="eventSync.title"
       label="Titulo del Evento"
       :rules="[rules.required]"
@@ -49,49 +46,52 @@ export default defineComponent({
   props: {
     event: {
       type: Object as PropType<IEvent>,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['update:event'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const eventSync = useVModel(props, 'event', emit)
     const color = ref(null)
 
     const onChangeColor = (newVal: any) => {
       emit('update:event', {
         ...props.event,
-        color: newVal.hex
+        color: newVal.hex,
       })
     }
 
-    const rules = computed(
-      () => ({
-        required: (value: any) => !!value || 'Requerido.',
-        requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-        max: (value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin',
-        min: (value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio'
-      })
-    )
+    const rules = computed(() => ({
+      required: (value: any) => !!value || 'Requerido.',
+      requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
+      max: (value: any) =>
+        value < props.event?.endTime! || 'Tiene que ser menor que el fin',
+      min: (value: any) =>
+        value > props.event?.startTime! || 'Tiene que ser mayor que el inicio',
+    }))
 
-    const startRules = computed(
-      () => {
-        const rules:any[] = [(value: any) => !!value || 'Requerido.']
-        if (props.event?.endTime! < props.event?.startTime!) {
-          rules.push((value: any) => value < props.event?.endTime! || 'Tiene que ser menor que el fin')
-        }
-        return rules
+    const startRules = computed(() => {
+      const rules: any[] = [(value: any) => !!value || 'Requerido.']
+      if (props.event?.endTime! < props.event?.startTime!) {
+        rules.push(
+          (value: any) =>
+            value < props.event?.endTime! || 'Tiene que ser menor que el fin'
+        )
       }
-    )
+      return rules
+    })
 
-    const endRules = computed(
-      () => {
-        const rules:any[] = [(value: any) => !!value || 'Requerido.']
-        if (props.event?.startTime! > props.event?.endTime!) {
-          rules.push((value: any) => value > props.event?.startTime! || 'Tiene que ser mayor que el inicio')
-        }
-        return rules
+    const endRules = computed(() => {
+      const rules: any[] = [(value: any) => !!value || 'Requerido.']
+      if (props.event?.startTime! > props.event?.endTime!) {
+        rules.push(
+          (value: any) =>
+            value > props.event?.startTime! ||
+            'Tiene que ser mayor que el inicio'
+        )
       }
-    )
+      return rules
+    })
 
     const form = ref<VForm>()
 
@@ -112,7 +112,7 @@ export default defineComponent({
       { index: 3, value: 'Miercoles' },
       { index: 4, value: 'Jueves' },
       { index: 5, value: 'Viernes' },
-      { index: 6, value: 'Sábado' }
+      { index: 6, value: 'Sábado' },
     ]
 
     const dialog = ref(false)
@@ -126,8 +126,8 @@ export default defineComponent({
       dialog,
       eventSync,
       startRules,
-      endRules
+      endRules,
     }
-  }
+  },
 })
 </script>
