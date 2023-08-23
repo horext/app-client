@@ -27,9 +27,10 @@
   </v-container>
 </template>
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
 
-export default {
+export default defineComponent({
   name: 'ScheduleOptionsBar',
   props: {
     shareDialog: {
@@ -44,5 +45,5 @@ export default {
       dialog,
     }
   },
-}
+})
 </script>
