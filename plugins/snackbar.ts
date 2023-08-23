@@ -5,18 +5,18 @@ import { useGlobalSnackbarStore } from '~/stores/global-snackbar'
 declare module 'vue/types/vue' {
   // this.$myInjectedFunction inside Vue components
   interface Vue {
-    $snackbar(options :any): void
+    $snackbar(options: any): void
   }
 }
 
 declare module '@nuxt/types' {
   // nuxtContext.app.$myInjectedFunction inside asyncData, fetch, plugins, middleware, nuxtServerInit
   interface NuxtAppOptions {
-    $snackbar(options :any): void
+    $snackbar(options: any): void
   }
   // nuxtContext.$myInjectedFunction
   interface Context {
-    $snackbar(options :any): void
+    $snackbar(options: any): void
   }
 }
 

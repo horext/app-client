@@ -53,9 +53,7 @@
       <v-row no-gutters>
         <v-spacer />
         <v-col cols="auto">
-          <nuxt-link to="/generator">
-            Generar mis horarios
-          </nuxt-link>
+          <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
         </v-col>
       </v-row>
       <v-row dense>
@@ -93,9 +91,7 @@
             <v-col cols="12" md="6">
               <div class="text-md-h2 text-h4 text-left">
                 Busca tus cursos en la parte superior y luego ve al
-                <nuxt-link to="/generator">
-                  generador
-                </nuxt-link>
+                <nuxt-link to="/generator"> generador </nuxt-link>
               </div>
             </v-col>
             <v-col cols="12" md="6">
@@ -118,11 +114,7 @@
         <template #[`item.actions`]="{ item }">
           <v-tooltip bottom>
             <template #activator="{ on }">
-              <v-icon
-                color="blue"
-                v-on="on"
-                @click="editItem(item)"
-              >
+              <v-icon color="blue" v-on="on" @click="editItem(item)">
                 mdi-pencil
               </v-icon>
             </template>
@@ -130,11 +122,7 @@
           </v-tooltip>
           <v-tooltip bottom>
             <template #activator="{ on }">
-              <v-icon
-                color="red"
-                v-on="on"
-                @click="deleteItem(item)"
-              >
+              <v-icon color="red" v-on="on" @click="deleteItem(item)">
                 mdi-delete
               </v-icon>
             </template>
@@ -184,16 +172,16 @@ import { ISelectedSubject, ISubject } from '~/interfaces/subject'
 export default defineComponent({
   name: 'MySubjects',
   components: {
-    SubjectScheduleList
+    SubjectScheduleList,
   },
-  setup () {
+  setup() {
     onMounted(() => {
       Lottie.loadAnimation({
         container: document.getElementById('noData') as Element,
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: require('~/assets/lottie/15538-cat-woow.json')
+        animationData: require('~/assets/lottie/15538-cat-woow.json'),
       })
     })
 
@@ -202,8 +190,8 @@ export default defineComponent({
     const succcesAddCourse = ref(false)
 
     const availableCourses = computed(() => {
-      return subjects.value?.filter(c1 =>
-        !mySubjects.value.some(c2 => c1.id === c2.id)
+      return subjects.value?.filter(
+        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id)
       )
     })
 
@@ -215,12 +203,9 @@ export default defineComponent({
     const mySubjects = computed(() => configStore.subjects)
 
     const totalCredits = computed(() => {
-      return mySubjects.value.reduce(
-        (previousValue, currentValue) => {
-          return currentValue.credits + previousValue
-        },
-        0
-      )
+      return mySubjects.value.reduce((previousValue, currentValue) => {
+        return currentValue.credits + previousValue
+      }, 0)
     })
 
     const subjects = ref<ISubject[]>([])
@@ -236,17 +221,13 @@ export default defineComponent({
       if (!item) {
         return
       }
-      editedIndex.value = mySubjects.value.findIndex(
-        c => c.id === item?.id
-      )
+      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
     const deleteItem = (item: ISelectedSubject) => {
-      editedIndex.value = mySubjects.value.findIndex(
-        c => c.id === item.id
-      )
+      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
     }
@@ -268,7 +249,7 @@ export default defineComponent({
       editedIndex.value = -1
     }
 
-    const save = async (schedules:ISubject[]) => {
+    const save = async (schedules: ISubject[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
@@ -289,10 +270,7 @@ export default defineComponent({
     const search = ref('')
 
     const onChangeSearch = async (search: string) => {
-      if (
-        configStore.specialityId &&
-        configStore.hourlyLoadId
-      ) {
+      if (configStore.specialityId && configStore.hourlyLoadId) {
         try {
           const response = await $api.course.findBySearch(
             search || '',
@@ -310,27 +288,27 @@ export default defineComponent({
     const headers = ref([
       {
         text: 'Código',
-        value: 'course.id'
+        value: 'course.id',
       },
       {
         text: 'Nombre de curso',
         align: 'start',
         sortable: false,
-        value: 'course.name'
+        value: 'course.name',
       },
       {
         text: 'Secciones',
-        value: 'sections'
+        value: 'sections',
       },
       {
         text: 'Creditos',
-        value: 'credits'
+        value: 'credits',
       },
       {
         text: 'Acciones',
         value: 'actions',
-        sortable: false
-      }
+        sortable: false,
+      },
     ])
 
     const formTitle = computed(() => {
@@ -364,9 +342,9 @@ export default defineComponent({
       availableCourses,
       totalCredits,
       formTitle,
-      myHourlyLoad
+      myHourlyLoad,
     }
-  }
+  },
 })
 </script>
 

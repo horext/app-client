@@ -17,12 +17,12 @@ import { defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const store = useUserConfigStore()
     const { hourlyLoad } = storeToRefs(store)
     return {
-      hourlyLoad
+      hourlyLoad,
     }
-  }
+  },
 })
 </script>

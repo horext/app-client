@@ -28,22 +28,22 @@ export default defineComponent({
   props: {
     schedules: {
       type: Array as PropType<ISubjectSchedule[]>,
-      required: true
+      required: true,
     },
     value: {
       type: Array as PropType<ISubjectSchedule[]>,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['input'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const valueSync = useVModel(props, 'value', emit, {
-      eventName: 'input'
+      eventName: 'input',
     })
 
     return {
-      valueSync
+      valueSync,
     }
-  }
+  },
 })
 </script>

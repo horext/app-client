@@ -1,10 +1,22 @@
 <template>
-  <v-card @click="$emit('click')" class="abcRioButton" width="240" height="50" :color="$vuetify.theme.dark?'#4285F4':'#FFFFFF'">
-    <v-row class="fill-height abcRioButtonContentWrapper  " align-content="center" align="center" justify="center" no-gutters>
+  <v-card
+    class="abcRioButton"
+    width="240"
+    height="50"
+    :color="$vuetify.theme.dark ? '#4285F4' : '#FFFFFF'"
+    @click="$emit('click')"
+  >
+    <v-row
+      class="fill-height abcRioButtonContentWrapper"
+      align-content="center"
+      align="center"
+      justify="center"
+      no-gutters
+    >
       <v-col cols="auto">
-        <div class="abcRioButtonIcon" style="padding: 15px;">
+        <div class="abcRioButtonIcon" style="padding: 15px">
           <div
-            style="width: 18px; height: 18px;"
+            style="width: 18px; height: 18px"
             class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18"
           >
             <svg
@@ -46,18 +58,18 @@
 
 <script>
 export default {
-  name: 'GoogleSignIn'
+  name: 'GoogleSignIn',
 }
 </script>
 
 <style scoped>
-
 .abcRioButton {
   border-radius: 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  -webkit-transition: background-color 0.218s, border-color 0.218s,
+    box-shadow 0.218s;
   transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
   -webkit-user-select: none;
   -webkit-appearance: none;
@@ -89,5 +101,4 @@ export default {
 .abcRioButton .abcRioButtonContentWrapper {
   border: 1px solid transparent;
 }
-
 </style>

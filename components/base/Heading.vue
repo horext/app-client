@@ -1,10 +1,5 @@
 <template>
-  <component
-    :is="tag"
-    :class="classes"
-    v-bind="$attrs"
-    v-on="$listeners"
-  >
+  <component :is="tag" :class="classes" v-bind="$attrs" v-on="$listeners">
     <template v-if="title">
       {{ title }}
     </template>
@@ -19,78 +14,78 @@ export default {
 
   inject: {
     theme: {
-      default: () => ({ isDark: false })
+      default: () => ({ isDark: false }),
     },
     heading: {
-      default: () => ({ align: 'left' })
-    }
+      default: () => ({ align: 'left' }),
+    },
   },
 
-  provide () {
+  provide() {
     return {
       heading: {
-        align: this.align
-      }
+        align: this.align,
+      },
     }
   },
 
   props: {
     align: {
       type: String,
-      default () {
+      default() {
         return this.heading.align
-      }
+      },
     },
     dense: {
       type: Boolean,
-      default () {
+      default() {
         return this.isDense
-      }
+      },
     },
     size: {
       type: String,
-      default: 'display-2'
+      default: 'display-2',
     },
     space: {
       type: [Number, String],
-      default: 4
+      default: 4,
     },
     mobileSize: {
       type: String,
-      default: 'display-1'
+      default: 'display-1',
     },
     mobileBreakPoint: {
       type: [Number, String],
-      default: 768
+      default: 768,
     },
     tag: {
       type: String,
-      default: 'h1'
+      default: 'h1',
     },
     title: String,
     weight: {
       type: String,
-      default: 'black'
-    }
+      default: 'black',
+    },
   },
 
   computed: {
-    classes () {
+    classes() {
       const classes = [
         this.fontSize,
-          `font-weight-${this.weight}`,
-          `mb-${this.space}`,
-          `text-${this.align}`,
-          this.theme.isDark && 'white--text'
+        `font-weight-${this.weight}`,
+        `mb-${this.space}`,
+        `text-${this.align}`,
+        this.theme.isDark && 'white--text',
       ]
 
       return classes
     },
-    fontSize () {
+    fontSize() {
       return this.$vuetify.breakpoint.width >= this.mobileBreakPoint
         ? this.size
         : this.mobileSize
-    }
-  }
+    },
+  },
 }
 </script>

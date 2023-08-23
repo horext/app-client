@@ -17,18 +17,14 @@
           <v-col cols="12">
             <v-radio :value="MODES.CALENDAR" color="primary darken-2">
               <template #label>
-                <v-icon small left>
-                  mdi-calendar
-                </v-icon>Calendario
+                <v-icon small left> mdi-calendar </v-icon>Calendario
               </template>
             </v-radio>
           </v-col>
           <v-col cols="12">
             <v-radio :value="MODES.LIST" color="primary darken-2">
               <template #label>
-                <v-icon small left>
-                  mdi-table
-                </v-icon> Lista
+                <v-icon small left> mdi-table </v-icon> Lista
               </template>
             </v-radio>
           </v-col>
@@ -133,35 +129,35 @@ export default defineComponent({
     SchedulesList,
     GoogleAuth,
     ScheduleShare,
-    ScheduleExport
+    ScheduleExport,
   },
   props: {
     schedules: {
       type: Array as PropType<ISchedule[]>,
-      default: () => []
+      default: () => [],
     },
     path: {
       type: String,
-      default: '/subject'
+      default: '/subject',
     },
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     color: {
       type: String,
-      default: 'primary'
+      default: 'primary',
     },
     emptyMessage: {
       type: String,
-      default: ''
+      default: '',
     },
     dialog: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  setup () {
+  setup() {
     const store = useUserConfigStore()
     const { weekDays, hourlyLoad } = storeToRefs(store)
     const academicPeriodOrganizationUnit = computed(
@@ -172,9 +168,7 @@ export default defineComponent({
       () => academicPeriodOrganizationUnit.value?.fromDate
     )
 
-    const endDate = computed(
-      () => academicPeriodOrganizationUnit.value?.toDate
-    )
+    const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 
     const currentSchedule = ref<ISchedule>()
 
@@ -196,8 +190,8 @@ export default defineComponent({
       startDate,
       endDate,
       MODES,
-      currentSchedule
+      currentSchedule,
     }
-  }
+  },
 })
 </script>

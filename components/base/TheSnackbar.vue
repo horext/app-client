@@ -2,9 +2,7 @@
   <v-snackbar v-model="show" :color="color" :timeout="timeout">
     {{ message }}
     <template #action="{ attrs }">
-      <v-btn text v-bind="attrs" @click="show = false">
-        Cerrar
-      </v-btn>
+      <v-btn text v-bind="attrs" @click="show = false"> Cerrar </v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -14,6 +12,6 @@ import { defineComponent } from 'vue'
 import { setupSnackbar } from '~/composables/snackbar'
 export default defineComponent({
   name: 'TheSnackbar',
-  setup: setupSnackbar
+  setup: setupSnackbar,
 })
 </script>

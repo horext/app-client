@@ -11,14 +11,14 @@ import Lottie from 'lottie-web'
 
 export default {
   name: 'FavoriteBanner',
-  mounted () {
+  mounted() {
     Lottie.loadAnimation({
       container: document.getElementById('bm') as Element,
       renderer: 'svg',
       loop: false,
       autoplay: true,
-      animationData: require('~/assets/lottie/156-star-blast.json')
+      animationData: require('~/assets/lottie/156-star-blast.json'),
     })
-  }
+  },
 }
 </script>

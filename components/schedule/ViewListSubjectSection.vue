@@ -15,10 +15,10 @@ export default defineComponent({
   props: {
     schedule: {
       type: Object as PropType<any>,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
-  setup (props) {
+  setup(props) {
     const sessionsCount = computed(() => {
       return props.schedule?.sessions?.length
     })
@@ -36,8 +36,8 @@ export default defineComponent({
     return {
       sessionsCount,
       courseName,
-      subjectSection
+      subjectSection,
     }
-  }
+  },
 })
 </script>

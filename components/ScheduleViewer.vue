@@ -12,15 +12,13 @@
       interval-width="40"
       :short-intervals="false"
       :interval-format="intervalFormat"
-      :weekdays="[0,1,2,3,4,5,6]"
+      :weekdays="[0, 1, 2, 3, 4, 5, 6]"
       @click:event="showEvent"
     >
       <template #day-label-header>
         <div />
       </template>
-      <template
-        #event="{event, attrs,on}"
-      >
+      <template #event="{ event, attrs, on }">
         <v-hover>
           <template #default="{ hover }">
             <schedule-event-info
@@ -58,19 +56,19 @@ import { weekdayToDate } from '~/utils/core'
 export default {
   components: {
     ScheduleEventInfo,
-    EventInfoCard
+    EventInfoCard,
   },
   props: {
     schedule: {
       type: Object,
-      required: true
+      required: true,
     },
     weekDays: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5, 6]
-    }
+      default: () => [1, 2, 3, 4, 5, 6],
+    },
   },
-  setup () {
+  setup() {
     const hover = ref(false)
     const focus = ref('')
     const type = ref('week')
@@ -90,7 +88,13 @@ export default {
       return event.color
     }
 
-    const showEvent = ({ nativeEvent, event }: { nativeEvent: any, event : any}) => {
+    const showEvent = ({
+      nativeEvent,
+      event,
+    }: {
+      nativeEvent: any
+      event: any
+    }) => {
       const open = () => {
         selectedEvent.value = event
         selectedElement.value = nativeEvent.target
@@ -120,9 +124,8 @@ export default {
       intervalFormat,
       start,
       getEventColor,
-      showEvent
+      showEvent,
     }
-  }
+  },
 }
-
 </script>

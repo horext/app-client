@@ -4,11 +4,7 @@
       <v-row dense>
         <v-col cols="12" md="6">
           <div
-            class="
-              d-flex
-              flex-wrap
-              justify-md-start justify-center justify-md-none
-            "
+            class="d-flex flex-wrap justify-md-start justify-center justify-md-none"
           >
             <template v-for="(s, i) in social">
               <a
@@ -32,19 +28,13 @@
         <v-col class="text-center text-md-right" cols="12" md="6">
           <v-row justify-md="end" justify="center" dense>
             <v-col cols="auto">
-              <nuxt-link to="/security">
-                Seguridad
-              </nuxt-link>
+              <nuxt-link to="/security"> Seguridad </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link to="/terms">
-                Términos y Condiciones
-              </nuxt-link>
+              <nuxt-link to="/terms"> Términos y Condiciones </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link to="/privacy">
-                Politica de Privacidad
-              </nuxt-link>
+              <nuxt-link to="/privacy"> Politica de Privacidad </nuxt-link>
             </v-col>
           </v-row>
         </v-col>
@@ -65,14 +55,14 @@ export default Vue.extend({
     social: [
       {
         name: 'Facebook',
-        link: 'https://www.facebook.com/OctatecOficial'
+        link: 'https://www.facebook.com/OctatecOficial',
       },
       {
         name: 'Linkedin',
-        link: 'https://www.linkedin.com/in/franz-antony-bendezu-isidro/'
-      }
-    ]
-  })
+        link: 'https://www.linkedin.com/in/franz-antony-bendezu-isidro/',
+      },
+    ],
+  }),
 })
 </script>
 

@@ -35,15 +35,12 @@
       con la Política de datos de usuario de los servicios API de Google,
       incluidos los requisitos de uso limitado.
     </p>
-    <h2>
-      Privacidad de datos
-    </h2>
+    <h2>Privacidad de datos</h2>
     <p>
-      Nuestra prioridad es ser transparentes en la forma en
-      que recopilamos, usamos y manejamos su información cuando utiliza nuestro
-      sitio web y nuestro software. Consulte nuestra <nuxt-link to="/privacy">
-        política de privacidad
-      </nuxt-link>
+      Nuestra prioridad es ser transparentes en la forma en que recopilamos,
+      usamos y manejamos su información cuando utiliza nuestro sitio web y
+      nuestro software. Consulte nuestra
+      <nuxt-link to="/privacy"> política de privacidad </nuxt-link>
       completa para obtener más detalles.
     </p>
   </v-container>

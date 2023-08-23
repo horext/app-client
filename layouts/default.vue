@@ -16,16 +16,15 @@ export default Vue.extend({
   components: {
     HomeAppBar,
     HomeFooter,
-    HomeView
+    HomeView,
   },
-  data () {
+  data() {
     return {
       listenersStarted: false,
       permissionGranted: false,
       idToken: '',
-      loading: false
+      loading: false,
     }
-  }
-
+  },
 })
 </script>

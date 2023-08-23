@@ -35,25 +35,25 @@ import { exportToPNG, exportToPDF } from '~/utils/exportToPNG'
 import { useVuetify } from '~/composables/vuetify'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const vuetify = useVuetify()
 
     const loading = ref(false)
     const loadingPdf = ref(false)
     const loadingImage = ref(false)
 
-    function getCalendar (): HTMLElement | null {
+    function getCalendar(): HTMLElement | null {
       return document.getElementById('calendar')
     }
 
-    async function downloadImage () {
+    async function downloadImage() {
       loadingImage.value = true
       await vuetify.goTo(0)
       await exportToPNG(getCalendar())
       loadingImage.value = false
     }
 
-    async function downloadPdf () {
+    async function downloadPdf() {
       loadingPdf.value = true
       await vuetify.goTo(0)
       await exportToPDF(getCalendar())
@@ -67,12 +67,10 @@ export default defineComponent({
       loadingPdf,
       loadingImage,
       downloadImage,
-      downloadPdf
+      downloadPdf,
     }
-  }
+  },
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

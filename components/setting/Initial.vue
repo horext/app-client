@@ -41,7 +41,7 @@ import { IHourlyLoad } from '~/interfaces/houly-load'
 
 export default defineComponent({
   name: 'SettingInitial',
-  setup () {
+  setup() {
     const store = useUserConfigStore()
 
     const faculties = ref<IOrganization[]>([])
@@ -56,9 +56,7 @@ export default defineComponent({
 
     const initSpecialities = async (selectedFaculty: IOrganization) => {
       speciality.value = undefined
-      const { data } = await $api.speciality.getAllByFaculty(
-        selectedFaculty.id
-      )
+      const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
       specialities.value = data
     }
     watch(faculty, async (newValue) => {
@@ -118,8 +116,8 @@ export default defineComponent({
       hourlyLoad,
       initSpecialities,
       onChangeSpeciality,
-      ending
+      ending,
     }
-  }
+  },
 })
 </script>

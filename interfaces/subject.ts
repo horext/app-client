@@ -1,70 +1,70 @@
 import { IScheduleSubject } from './schedule-subject'
 
 export interface ICourse {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export interface ICourseType {
-  id: number;
-  name: string;
-  code: string;
+  id: number
+  name: string
+  code: string
 }
 
 export interface IStudyPlan {
-  id: number;
-  fromDate: string;
-  code: string;
+  id: number
+  fromDate: string
+  code: string
   organizationUnit: {
-    id: number;
-  };
+    id: number
+  }
 }
 
 export interface IClassroom {
-  id: number;
-  code: string;
+  id: number
+  code: string
 }
 
 export interface ITeacher {
-  id: number;
-  fullName: string;
+  id: number
+  fullName: string
 }
 
 export interface ISession {
-  id: number;
+  id: number
   schedule: {
-    id: number;
-  };
-  classroom: IClassroom;
-  teacher: ITeacher;
+    id: number
+  }
+  classroom: IClassroom
+  teacher: ITeacher
   type: {
-    id: number;
-    code: string;
-  };
-  day: number;
-  startTime: string;
-  endTime: string;
+    id: number
+    code: string
+  }
+  day: number
+  startTime: string
+  endTime: string
 }
 
 export interface ISubject {
-  id: number;
-  course: ICourse;
-  type: ICourseType;
-  studyPlan: IStudyPlan;
-  credits: number;
-  cycle: number;
+  id: number
+  course: ICourse
+  type: ICourseType
+  studyPlan: IStudyPlan
+  credits: number
+  cycle: number
 }
 
 export interface ISubjectSchedule {
-  id: number;
+  id: number
   section: {
-    id: string;
-  };
-  scheduleSubject: Pick<IScheduleSubject, 'id'>;
-  subject: ISubject;
-  sessions: ISession[];
+    id: string
+  }
+  scheduleSubject: Pick<IScheduleSubject, 'id'>
+  subject: ISubject
+  sessions: ISession[]
 }
 
 export interface ISelectedSubject extends ISubject {
-  schedules: ISubjectSchedule[];
+  schedules: ISubjectSchedule[]
 }

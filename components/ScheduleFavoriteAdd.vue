@@ -7,9 +7,7 @@
       :color="isFavorite ? 'yellow' : null"
       @click="changeFavoriteState"
     >
-      <v-icon :color="isFavorite ? 'yellow' : null">
-        mdi-star
-      </v-icon>
+      <v-icon :color="isFavorite ? 'yellow' : null"> mdi-star </v-icon>
     </v-btn>
   </div>
 </template>
@@ -25,15 +23,15 @@ export default defineComponent({
   props: {
     schedule: {
       type: Object as PropType<ISchedule>,
-      required: true
+      required: true,
     },
     favoritesSchedules: {
       type: Array as PropType<Array<ISchedule>>,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   emits: ['update:schedule', 'update:favoritesSchedules'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const currentSchedule = useVModel(props, 'schedule', emit)
 
     const favoritesSchedulesSync = useVModel(props, 'favoritesSchedules', emit)
@@ -50,7 +48,7 @@ export default defineComponent({
         } else {
           favoritesSchedulesSync.value = [
             ...favoritesSchedulesSync.value,
-            props.schedule
+            props.schedule,
           ]
         }
         snackbar.showMessage({
@@ -58,7 +56,7 @@ export default defineComponent({
             ? 'Agregado a favoritos'
             : 'Quitado de Favoritos',
           timeout: 2000,
-          color: 'yellow darken-3'
+          color: 'yellow darken-3',
         })
       }
     }
@@ -68,7 +66,7 @@ export default defineComponent({
     const indexSchedule = computed(() => {
       if (currentSchedule.value) {
         return favoritesSchedulesSync.value.findIndex(
-          e => e && e.id === currentSchedule.value.id
+          (e) => e && e.id === currentSchedule.value.id
         )
       } else {
         return -1
@@ -82,8 +80,8 @@ export default defineComponent({
       message,
       changeFavoriteState,
       isFavorite,
-      indexSchedule
+      indexSchedule,
     }
-  }
+  },
 })
 </script>

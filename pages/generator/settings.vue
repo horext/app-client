@@ -12,7 +12,7 @@ import SettingInitial from '~/components/setting/Initial.vue'
 export default defineComponent({
   name: 'Advance',
   components: {
-    SettingInitial
-  }
+    SettingInitial,
+  },
 })
 </script>
