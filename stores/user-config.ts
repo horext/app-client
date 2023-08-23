@@ -17,6 +17,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
+  const isNewHourlyLoad = ref(false)
+  const isUpdateHourlyLoad = ref(false)
 
   const facultyId = computed(() => {
     return faculty.value?.id
@@ -186,13 +188,30 @@ export const useUserConfigStore = defineStore('user-config', () => {
     favoritesSchedules.value = _schedules
   }
 
+  function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
+    hourlyLoad.value = newHourlyLoad
+    const currentHourlyLoad: IHourlyLoad | null | undefined =
+      $storage.getUniversal('myHourlyLoad')
+    if (currentHourlyLoad) {
+      if (currentHourlyLoad.id !== newHourlyLoad.id) {
+        isNewHourlyLoad.value = true
+      } else if (
+        currentHourlyLoad.id === newHourlyLoad.id &&
+        currentHourlyLoad.updatedAt !== newHourlyLoad.updatedAt
+      ) {
+        isUpdateHourlyLoad.value = true
+      }
+    }
+    $storage.setUniversal('myHourlyLoad', newHourlyLoad)
+  }
+
   async function fetchHourlyLoad() {
     if (facultyId.value) {
       try {
         const { data } = await $api.hourlyLoad.getLatestByFaculty(
           facultyId.value
         )
-        hourlyLoad.value = data
+        updateHourlyLoad(data)
       } catch (e) {
         console.error(e)
       }
@@ -213,6 +232,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     facultyId,
     specialityId,
     hourlyLoadId,
+    isNewHourlyLoad,
+    isUpdateHourlyLoad,
     ADD_SUBJECT,
     DELETE_SUBJECT_BY_INDEX,
     UPDATE_SUBJECT_BY_INDEX,
@@ -226,6 +247,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateSpeciality,
     updateFirstEntry,
     updateCrossings,
+    updateHourlyLoad,
     saveNewSubject,
     deleteSubjectById,
     updateSubject,

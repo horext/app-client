@@ -1,6 +1,7 @@
 import { Plugin } from '@nuxt/types'
 import { NuxtStorage } from '@nuxtjs/universal-storage'
 import { IEvent } from '~/interfaces/event'
+import { IHourlyLoad } from '~/interfaces/houly-load'
 import { IOrganization } from '~/interfaces/organization'
 import { ISchedule } from '~/interfaces/schedule'
 import { ISubject } from '~/interfaces/subject'
@@ -11,6 +12,7 @@ export interface NuxtStorageExtended extends NuxtStorage {
   setLocalStorage(key: 'mySchedules', value: ISchedule[]): void
   setLocalStorage(key: 'myFavoritesSchedules', value: ISchedule[]): void
   setLocalStorage(key: 'myEvents', value: IEvent[]): void
+  setUniversal(key: 'myHourlyLoad', value: IHourlyLoad): void
   setUniversal(key: 'myFirstEntry', value: boolean): void
   setUniversal(key: 'myCrossings', value: number): void
   setUniversal(key: 'mySpeciality', value: IOrganization): void
