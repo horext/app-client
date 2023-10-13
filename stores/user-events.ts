@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { v4 } from 'uuid'
 import { ref } from 'vue'
-import { $storage } from '~/utils/api'
+import { useStorage } from '~/composables/storage'
 import Event from '~/model/Event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
+  const $storage = useStorage()
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {

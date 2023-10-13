@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useStorage } from '~/composables/storage'
 import { ISubject } from '~/interfaces/subject'
-import { $storage } from '~/utils/api'
+
 
 export const useUserSubjects = defineStore('user/subjects', () => {
+  const $storage = useStorage()
   const items = ref<ISubject[]>([])
 
   function setItems(newItems: ISubject[]) {

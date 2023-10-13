@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { $storage } from '~/utils/api'
 import { ISchedule } from '~/interfaces/schedule'
+import { useStorage } from '~/composables/storage'
 
 export const userUserSchedulesStore = defineStore('user/schedules', () => {
+  const $storage = useStorage()
   const items = ref<ISchedule[]>([])
 
   const setItems = (newItems: ISchedule[]) => {

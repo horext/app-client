@@ -2,12 +2,15 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { IOrganization } from '~/interfaces/organization'
 import { ISelectedSubject } from '~/interfaces/subject'
-import { $storage, $api } from '~/utils/api'
 import Event from '~/model/Event'
 import { ISchedule } from '~/interfaces/schedule'
 import { IHourlyLoad } from '~/interfaces/houly-load'
+import { useStorage } from '~/composables/storage'
+import { useApi } from '~/composables/api'
 
 export const useUserConfigStore = defineStore('user-config', () => {
+  const $storage = useStorage()
+  const $api = useApi()
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()

@@ -34,14 +34,15 @@
 
 <script lang="ts">
 import { ref, watch, onMounted, defineComponent } from 'vue'
-import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
 import { IOrganization } from '~/interfaces/organization'
 import { IHourlyLoad } from '~/interfaces/houly-load'
+import { useApi } from '~/composables/api'
 
 export default defineComponent({
   name: 'SettingInitial',
   setup() {
+    const $api = useApi()
     const store = useUserConfigStore()
 
     const faculties = ref<IOrganization[]>([])

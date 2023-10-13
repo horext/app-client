@@ -30,8 +30,8 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useAsync, useRoute } from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
-import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
+import { useApi } from '~/composables/api'
 
 export default defineComponent({
   components: {
@@ -39,6 +39,7 @@ export default defineComponent({
   },
   layout: 'app',
   setup() {
+    const $api = useApi()
     const query = ref('')
     const schedules = ref<any[]>([])
     const loading = ref(false)
