@@ -26,11 +26,7 @@ const config: NuxtConfig = {
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/snackbar.ts',
-    '~/plugins/snackbar-accessor.ts',
     { src: '~/plugins/html2canvas.client.js', mode: 'client' },
-    '~/plugins/axios-accesor',
-    '~/plugins/storage-accessor',
-    '~/plugins/api-accessor',
   ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules

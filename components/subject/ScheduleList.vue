@@ -33,6 +33,7 @@ import { useFetch } from '@nuxtjs/composition-api'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
+import { useApi } from '~/composables/api'
 import { IHourlyLoad } from '~/interfaces/houly-load'
 import { IScheduleSubject } from '~/interfaces/schedule-subject'
 import {
@@ -40,7 +41,6 @@ import {
   ISession,
   ISubjectSchedule,
 } from '~/interfaces/subject'
-import { $api } from '~/utils/api'
 
 export default defineComponent({
   components: { ScheduleSubjectList },
@@ -55,6 +55,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const $api = useApi()
     const selected = ref<ISubjectSchedule[]>([])
     const schedulesSubject = ref<IScheduleSubject[]>([])
     const sessions = ref<ISession[]>([])

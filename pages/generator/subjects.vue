@@ -165,9 +165,9 @@
 import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
-import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
 import { ISelectedSubject, ISubject } from '~/interfaces/subject'
+import { useApi } from '~/composables/api'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -175,6 +175,7 @@ export default defineComponent({
     SubjectScheduleList,
   },
   setup() {
+    const $api = useApi()
     onMounted(() => {
       Lottie.loadAnimation({
         container: document.getElementById('noData') as Element,
