@@ -44,8 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Context } from '@nuxt/types'
-import { useRouter } from '@nuxtjs/composition-api'
+import { useFetch, useRouter } from '@nuxtjs/composition-api'
 import { storeToRefs } from 'pinia'
 import { defineComponent, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
@@ -71,6 +70,13 @@ export default defineComponent({
         router.push('/generator/subjects')
       }
     })
+    const { fetch, fetchState } = useFetch(async () => {
+      const store = useUserConfigStore()
+      await store.fetchFirstEntry()
+      await store.fetchFaculty()
+      await store.fetchSpeciality()
+      await store.fetchHourlyLoad()
+    })
 
     onMounted(async () => {
       await configStore.fetchSubjects()
@@ -84,14 +90,9 @@ export default defineComponent({
       firstEntry,
       isNewHourlyLoad,
       isUpdateHourlyLoad,
+      fetch,
+      fetchState,
     }
-  },
-  async asyncData({ $pinia }: Context) {
-    const store = useUserConfigStore($pinia)
-    await store.fetchFirstEntry()
-    await store.fetchFaculty()
-    await store.fetchSpeciality()
-    await store.fetchHourlyLoad()
   },
   head: {
     title: 'Generador de Horarios',
