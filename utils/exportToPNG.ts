@@ -1,12 +1,12 @@
 let JsPDF: any = null
 if (process.client) {
-  const { jsPDF } = require('jspdf')
+  const { jsPDF } = await import('jspdf')
   JsPDF = jsPDF
 }
 
 let html2canvas: any = null
 if (process.client) {
-  html2canvas = require('html2canvas')
+  html2canvas = await import('html2canvas')
 }
 export const exportToCanvas = async function (element: any) {
   let options: any = {
