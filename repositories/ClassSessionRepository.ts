@@ -1,15 +1,17 @@
-import { AxiosInstance } from 'axios'
+import type { $Fetch } from 'nitropack'
 const PATH_SUBJECTS = 'classSessions'
-export default ($axios: AxiosInstance) => ({
+export default ($axios: $Fetch) => ({
   findScheduleId(schedule: number) {
-    return $axios.get(PATH_SUBJECTS, {
+    return $axios(PATH_SUBJECTS, {
+      method: 'GET',
       params: {
         schedule,
       },
     })
   },
   findScheduleIds(schedulesIds: Array<number>) {
-    return $axios.get(PATH_SUBJECTS, {
+    return $axios(PATH_SUBJECTS, {
+      method: 'GET',
       params: {
         schedules: schedulesIds.join(','),
       },

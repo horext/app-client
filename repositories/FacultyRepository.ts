@@ -1,9 +1,9 @@
-import { AxiosInstance } from 'axios'
-import { IOrganization } from '~/interfaces/organization'
+import type { $Fetch } from 'nitropack'
+import type { IOrganization } from '~/interfaces/organization'
 
 const PATH_SUBJECTS = 'faculties'
-export default ($axios: AxiosInstance) => ({
+export default ($axios: $Fetch) => ({
   getAll() {
-    return $axios.get<IOrganization[]>(PATH_SUBJECTS)
+    return $axios<IOrganization[]>(PATH_SUBJECTS)
   },
 })

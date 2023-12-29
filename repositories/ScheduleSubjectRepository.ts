@@ -1,10 +1,10 @@
-import { AxiosInstance } from 'axios'
-import { IScheduleSubject } from '~/interfaces/schedule-subject'
+import type { $Fetch } from 'nitropack'
+import type{ IScheduleSubject } from '~/interfaces/schedule-subject'
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
-export default ($axios: AxiosInstance) => ({
+export default ($axios: $Fetch) => ({
   findBySubjectIdAndHourlyLoadId(subject: number, hourlyLoad: number) {
-    return $axios.get<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
+    return $axios<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {
         subject,
         hourlyLoad,
@@ -12,14 +12,14 @@ export default ($axios: AxiosInstance) => ({
     })
   },
   getAllByIds(ids: Array<number>) {
-    return $axios.get(PATH_SCHEDULE_SUBJECTS, {
+    return $axios(PATH_SCHEDULE_SUBJECTS, {
       params: {
         ids: ids.join(','),
       },
     })
   },
   findBySearch(search: string, speciality: string, hourlyLoad: string) {
-    return $axios.get(PATH_SCHEDULE_SUBJECTS + '?search=' + search, {
+    return $axios(PATH_SCHEDULE_SUBJECTS + '?search=' + search, {
       params: {
         speciality,
         hourlyLoad,
