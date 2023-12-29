@@ -92,7 +92,7 @@ export default defineComponent({
       return rules
     })
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const validated = () => {
       const validate = form.value?.validate()

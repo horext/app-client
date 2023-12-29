@@ -135,15 +135,20 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent, PropType, toRefs, watch } from 'vue'
+import {
+  ref,
+  computed,
+  defineComponent,
+  type PropType,
+  toRefs,
+  watch,
+} from 'vue'
 import { DateTime } from 'luxon'
-import { useContext } from '@nuxtjs/composition-api'
 import { v4 } from 'uuid'
 import { colors } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 import Event from '~/model/Event'
-import { VForm } from '~/types'
 
 export default defineComponent({
   name: 'GoogleAuth',

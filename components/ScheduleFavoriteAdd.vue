@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
+import { computed, defineComponent, type  PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { useSnackbar } from '~/composables/snackbar'
-import { ISchedule } from '~/interfaces/schedule'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',

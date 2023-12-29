@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent, PropType } from 'vue'
+import { computed, ref, defineComponent, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
@@ -109,7 +109,7 @@ import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/model/ViewMode'
-import { ISchedule } from '~/interfaces/schedule'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {

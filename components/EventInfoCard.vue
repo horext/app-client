@@ -58,7 +58,7 @@
 </template>
 <script lang="ts">
 import { useVModel } from '@vueuse/core'
-import { defineComponent, PropType, computed, Ref } from 'vue'
+import { defineComponent, type PropType, computed, type Ref } from 'vue'
 import Event from '~/model/Event'
 
 export default defineComponent({

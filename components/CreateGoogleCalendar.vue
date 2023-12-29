@@ -24,8 +24,7 @@
 </template>
 <script lang="ts">
 import { useVModel } from '@vueuse/core'
-import { defineComponent, PropType, ref, watch } from 'vue'
-import { VForm } from '~/types'
+import { defineComponent, type PropType, ref, watch } from 'vue'
 
 export default defineComponent({
   props: {
@@ -54,7 +53,7 @@ export default defineComponent({
       }
     )
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const save = () => {
       if (form.value?.validate()) {

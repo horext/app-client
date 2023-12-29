@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { ISchedule } from '~/interfaces/schedule'
-import { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type { ISchedule } from '~/interfaces/schedule'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
 
 const isIntersects = (
@@ -145,9 +145,8 @@ export function getSchedules(
 
 function scheduleToEvent(
   schedule: ISubjectSchedule,
-  color: string = 'primary'
+  color = 'primary'
 ): Array<Event> {
-  console.log(schedule)
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
   for (let i = 0; i < sessions.length; i++) {

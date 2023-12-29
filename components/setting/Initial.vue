@@ -40,8 +40,8 @@
 <script lang="ts">
 import { ref, watch, onMounted, defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { IOrganization } from '~/interfaces/organization'
-import { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IOrganization } from '~/interfaces/organization'
 import { useApi } from '~/composables/api'
 
 export default defineComponent({
@@ -97,11 +97,11 @@ export default defineComponent({
       speciality.value = store.speciality
     }
 
-    const ending = async () => {
+    const ending = () => {
       loading.value = true
-      await store.updateFaculty(faculty.value!)
-      await store.updateSpeciality(speciality.value!)
-      await store.updateFirstEntry(false)
+      store.updateFaculty(faculty.value!)
+      store.updateSpeciality(speciality.value!)
+      store.updateFirstEntry(false)
       loading.value = false
     }
 
