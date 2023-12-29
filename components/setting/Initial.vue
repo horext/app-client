@@ -62,7 +62,7 @@ export default defineComponent({
 
     const initSpecialities = async (selectedFaculty: IOrganization) => {
       speciality.value = undefined
-      const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
+      const data = await $api.speciality.getAllByFaculty(selectedFaculty.id)
       specialities.value = data
     }
     watch(faculty, async (newValue) => {
@@ -74,12 +74,10 @@ export default defineComponent({
     const onChangeSpeciality = async (_speciality: IOrganization) => {
       hourlyLoad.value = undefined
       try {
-        const { data } = await $api.hourlyLoad.getLatestByFaculty(
-          faculty.value!.id
-        )
+        const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value!.id)
         hourlyLoad.value = data
       } catch (e: any) {
-        const { data } = e.response
+        const data = e.response
         errorMessage.value = data.message
         showErrorMessage.value = true
       }
@@ -92,7 +90,7 @@ export default defineComponent({
     })
 
     const init = async () => {
-      const { data } = await $api.faculty.getAll()
+      const data = await $api.faculty.getAll()
       faculties.value = data
       faculty.value = store.faculty
       hourlyLoad.value = store.hourlyLoad

@@ -211,9 +211,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function fetchHourlyLoad() {
     if (facultyId.value) {
       try {
-        const { data } = await $api.hourlyLoad.getLatestByFaculty(
-          facultyId.value
-        )
+        const data = await $api.hourlyLoad.getLatestByFaculty(facultyId.value)
         updateHourlyLoad(data)
       } catch (e) {
         console.error(e)

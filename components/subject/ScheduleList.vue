@@ -66,15 +66,13 @@ export default defineComponent({
 
     const fetchSchedules = async () => {
       if (props.subject?.id && props.hourlyLoad?.id) {
-        const { data: schedulesSubjectData } =
+        const schedulesSubjectData =
           await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
             props.subject.id,
             props.hourlyLoad.id
           )
         const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
-        const { data: sessionsData } = await $api.classSessions.findScheduleIds(
-          ids
-        )
+        const sessionsData = await $api.classSessions.findScheduleIds(ids)
         sessions.value = sessionsData
         schedulesSubject.value = schedulesSubjectData
       }

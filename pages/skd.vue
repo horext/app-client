@@ -51,15 +51,13 @@ export default defineComponent({
     const route = useRoute()
 
     const data = useAsync(async () => {
-      const query: any = route.value.query
+      const query: any = route.query
       const result = Buffer.from(query.q, 'base64').toString()
-      const { data: scheduleSubjects } = await $api.scheduleSubject.getAllByIds(
+      const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
         result.split(',').map(Number)
       )
       const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
-      const { data: sessions } = await $api.classSessions.findScheduleIds(
-        schedulesId
-      )
+      const sessions = await $api.classSessions.findScheduleIds(schedulesId)
       return { scheduleSubjects, sessions }
     })
 

@@ -278,7 +278,7 @@ export default defineComponent({
             configStore.specialityId,
             configStore.hourlyLoadId
           )
-          subjects.value = response.data.content
+          subjects.value = response.content
         } catch (e) {
           console.error(e)
         }
