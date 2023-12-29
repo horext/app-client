@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-app>
     <v-app-bar flat height="72">
       <template #prepend>
         <v-app-bar-nav-icon
@@ -18,7 +18,7 @@
         </v-col>
       </v-row>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" left width="300">
+    <v-navigation-drawer v-model="drawer" width="300">
       <v-card rounded="0" variant="outlined" height="70" width="100%">
         <v-card-title> Opciones </v-card-title>
       </v-card>
@@ -39,7 +39,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
+    <v-bottom-navigation  v-if="$vuetify.display.smAndDown" color="primary" grow>
       <v-btn
         v-for="item in denseItems"
         :key="item.to"
@@ -60,7 +60,7 @@
         <slot />
       </v-container>
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
 
 <script lang="ts">

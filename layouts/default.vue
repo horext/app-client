@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-app>
     <!--    <home-system-bar />-->
     <home-app-bar />
     <home-view>
@@ -7,13 +7,14 @@
     </home-view>
     <home-footer />
     <!--    <home-settings />-->
-  </v-layout>
+  </v-app>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import HomeAppBar from '~/components/home/AppBar.vue'
 import HomeFooter from '~/components/home/Footer.vue'
 import HomeView from '~/components/home/View.vue'
+
 export default defineComponent({
   components: {
     HomeAppBar,
