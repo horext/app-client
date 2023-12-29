@@ -234,7 +234,7 @@ export default defineComponent({
       window.gapi.load('client:auth2', initClient)
     }
 
-    const config = useContext().$config
+    const config = useNuxtApp().$config.public
     const initClient = async () => {
       try {
         loading.value = true
@@ -319,7 +319,7 @@ export default defineComponent({
       }
     }
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const exportEventToGCalendar = async () => {
       if (!form.value?.validate()) {
