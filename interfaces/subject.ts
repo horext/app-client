@@ -1,4 +1,4 @@
-import { IScheduleSubject } from './schedule-subject'
+import type { IScheduleSubject } from './schedule-subject'
 
 export interface ICourse {
   id: string

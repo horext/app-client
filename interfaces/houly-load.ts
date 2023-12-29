@@ -1,4 +1,4 @@
-import { IOrganization } from './organization'
+import type { IOrganization } from './organization'
 
 export interface IAcademicPeriod {
   id: number
