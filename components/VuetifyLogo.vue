@@ -1,5 +1,5 @@
 <template>
-  <img class="VuetifyLogo" alt="Vuetify Logo" src="/horext-logo.svg" />
+  <img class="VuetifyLogo" alt="Vuetify Logo" src="~/assets/images/horext-logo.svg" />
 </template>
 
 <style>
