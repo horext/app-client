@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container> 
     <v-dialog
       v-show="firstEntry"
       v-model="firstEntry"
@@ -49,7 +49,7 @@
       </v-card>
     </v-dialog>
     <NuxtPage />
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">

@@ -39,7 +39,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-bottom-navigation  v-if="$vuetify.display.smAndDown" color="primary" grow>
+    <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
       <v-btn
         v-for="item in denseItems"
         :key="item.to"
@@ -56,9 +56,7 @@
     </v-bottom-navigation>
     <the-snackbar />
     <v-main>
-      <v-container>
-        <slot />
-      </v-container>
+      <slot />
     </v-main>
   </v-app>
 </template>
