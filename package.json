@@ -26,7 +26,7 @@
     "luxon": "^2.0.2",
     "pinia": "2.1.7",
     "uuid": "^8.3.2",
-    "vue": "3.3.13",
+    "vue": "^3.4.0",
     "vuetify": "^3.4.9"
   },
   "devDependencies": {
@@ -47,5 +47,5 @@
   },
   "resolutions": {
     "string-width": "4.2.3"
- }
+  }
 }
