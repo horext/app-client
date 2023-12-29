@@ -1,11 +1,14 @@
+import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { v4 } from 'uuid'
 import { ref } from 'vue'
-import { useStorage } from '~/composables/storage'
 import Event from '~/model/Event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const $storage = useStorage()
+  const storageEvent = useLocalStorage<any[]>('myEvents', [], {
+    initOnMounted: true,
+    writeDefaults: false,
+  })
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {
@@ -28,13 +31,13 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function saveNewItem(item: Event) {
     addItem(item)
-    $storage.setLocalStorage('myEvents', items.value)
+    storageEvent.value = items.value
   }
 
   function deleteItemById(id: string) {
     const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
-    $storage.setLocalStorage('myEvents', items.value)
+    storageEvent.value = items.value
   }
 
   function updateItem(item: Event) {
@@ -44,7 +47,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
         index,
         item,
       })
-      $storage.setLocalStorage('myEvents', items.value)
+      storageEvent.value = items.value
     } else {
       console.error(index)
     }
@@ -52,11 +55,11 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function updateItems(items: any[]) {
     setItems(items)
-    $storage.setLocalStorage('myEvents', items)
+    storageEvent.value = items
   }
 
   const fetchItems = () => {
-    const myEvents = $storage.getLocalStorage('myEvents') || []
+    const myEvents = storageEvent.value
     const events = myEvents.map((e: { id: any }) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
