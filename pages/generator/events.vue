@@ -8,40 +8,42 @@
             <v-divider class="mx-4" inset vertical />
             <v-spacer />
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  dark
-                  class="mb-2"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <template #activator="{ props }">
+                <v-btn color="primary" theme="dark" class="mb-2" v-bind="props">
                   Nueva Actividad
                 </v-btn>
               </template>
               <v-card>
                 <v-card-title> Crear tu Actividad </v-card-title>
                 <v-card-text>
-                  <events-creator ref="form" :event.sync="editedItem" />
+                  <events-creator ref="form" v-model:event="editedItem" />
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn text @click="close"> Cancelar </v-btn>
-                  <v-btn text @click="save"> Guardar </v-btn>
+                  <v-btn variant="text" @click="close"> Cancelar </v-btn>
+                  <v-btn variant="text" @click="save"> Guardar </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
-                <v-card-title class="headline">
+                <v-card-title class="text-h5">
                   ¿Está seguro de eliminar esta actividad?
                 </v-card-title>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="blue darken-1" text @click="closeDelete">
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="closeDelete"
+                  >
                     Cancelar
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="deleteItemConfirm"
+                  >
                     Aceptar
                   </v-btn>
                   <v-spacer />
@@ -69,16 +71,15 @@
       <v-snackbar
         v-model="succcesAddEvent"
         color="blue"
-        app
         timeout="3000"
-        bottom
+        location="bottom"
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
         <template #action="{ attrs }">
           <v-btn
-            text
-            small
+            variant="text"
+            size="small"
             icon
             v-bind="attrs"
             @click="succcesAddEvent = false"
@@ -90,16 +91,15 @@
       <v-snackbar
         v-model="succcesUpdateEvent"
         color="blue"
-        app
         timeout="3000"
-        bottom
+        location="bottom"
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad actualizada correctamente </span>
         <template #action="{ attrs }">
           <v-btn
-            text
-            small
+            variant="text"
+            size="small"
             icon
             v-bind="attrs"
             @click="succcesUpdateEvent = false"
@@ -118,7 +118,7 @@ import EventsCreator from '~/components/EventsCreatorForm.vue'
 import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
 import { useUserEventsStore } from '~/stores/user-events'
-import { IEvent } from '~/interfaces/event'
+import type { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   components: { EventsCreator },

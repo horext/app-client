@@ -1,19 +1,27 @@
 <template>
   <div>
-    <NuxtChild />
-    <v-dialog v-if="firstEntry" v-model="firstEntry" max-width="600" persistent>
-      <InitialSettings :dialog.sync="firstEntry" />
+    <v-dialog
+      v-show="firstEntry"
+      v-model="firstEntry"
+      max-width="600"
+      persistent
+    >
+      <InitialSettings />
     </v-dialog>
     <v-dialog v-model="isNewHourlyLoad" max-width="600">
       <v-card>
-        <v-card-title class="headline">Nueva Carga Horaria</v-card-title>
+        <v-card-title class="text-h5">Nueva Carga Horaria</v-card-title>
         <v-card-text>
           Se ha encontrado una nueva carga horaria. Actualiza las secciones de
           los cursos que ya tenias guardadas si deseas los nuevos horarios.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="isNewHourlyLoad = false">
+          <v-btn
+            color="green-darken-1"
+            variant="text"
+            @click="isNewHourlyLoad = false"
+          >
             Cerrar
           </v-btn>
         </v-card-actions>
@@ -21,7 +29,7 @@
     </v-dialog>
     <v-dialog v-model="isUpdateHourlyLoad" persistent>
       <v-card>
-        <v-card-title class="headline"
+        <v-card-title class="text-h5"
           >Se ha actualizado la Carga Horaria</v-card-title
         >
         <v-card-text>
@@ -31,8 +39,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="green darken-1"
-            text
+            color="green-darken-1"
+            variant="text"
             @click="isUpdateHourlyLoad = false"
           >
             Cerrar
@@ -40,6 +48,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <NuxtPage />
   </div>
 </template>
 

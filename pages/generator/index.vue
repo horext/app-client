@@ -1,16 +1,16 @@
 <template>
   <schedules-presentation
+    v-model:dialog="openMySchedules"
     color="blue"
     title="Generados"
     empty-message="Usted no tiene horarios generados"
     :schedules="schedules"
-    :dialog.sync="openMySchedules"
     path="/skd"
   >
     <template #top-items-right>
       <v-toolbar-title> Generados </v-toolbar-title>
 
-      <v-btn plain class="ml-2" outlined fab small>
+      <v-btn  class="ml-2" variant="outlined"  size="small">
         {{ schedules.length }}
       </v-btn>
     </template>
@@ -18,7 +18,7 @@
       <schedule-favorite-add
         :favorites-schedules="myFavoritesSchedules"
         :schedule="item"
-        @update:favoritesSchedules="updateFavoritesSchedules"
+        @update:favorites-schedules="updateFavoritesSchedules"
       />
     </template>
     <template #subtitle-items>
@@ -26,8 +26,8 @@
         v-model.number="crossingSubjects"
         label="Cantidad de cruces"
         hide-details
-        outlined
-        dense
+        variant="outlined"
+        density="compact"
         max="5"
         min="0"
         class="shrink"
@@ -36,20 +36,20 @@
 
       <v-btn
         color="success"
-        dark
+        theme="dark"
         rounded
-        shaped
+        variant="outlined"
         class="ma-1"
         @click="generateAllUserSchedules"
       >
         <v-icon>mdi-update</v-icon>
         Generar
       </v-btn>
-      <v-snackbar v-model="succces" color="success" app timeout="3000">
+      <v-snackbar v-model="succces" color="success"  timeout="3000">
         <v-icon> mdi-check </v-icon>
         Horarios generados correctamente!
         <template #action="{ attrs }">
-          <v-btn text small icon v-bind="attrs" @click="succces = false">
+          <v-btn variant="text" size="small" icon v-bind="attrs" @click="succces = false">
             <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
@@ -61,7 +61,7 @@
         <v-alert prominent type="error">
           <v-row align="center">
             <v-col class="grow">
-              Lo sentimos, no hemos encontrados horarios :(
+              Lo sentimos, no hemos encontrados horarios para usted.
             </v-col>
           </v-row>
         </v-alert>

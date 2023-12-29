@@ -4,7 +4,7 @@
       <v-toolbar flat>
         <v-btn
           v-if="schedules.length > 0"
-          outlined
+          variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
           <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : null">
