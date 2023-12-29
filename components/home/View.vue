@@ -1,15 +1,15 @@
 <template>
   <v-main>
     <v-fade-transition mode="out-in">
-      <nuxt />
+      <slot></slot>
     </v-fade-transition>
   </v-main>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 
-export default Vue.extend({
+export default defineComponent({
   name: 'HomeView',
 })
 </script>

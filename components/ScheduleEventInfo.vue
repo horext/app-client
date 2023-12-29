@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     :color="event.color"
-    class="white--text text-wrap pa-1 ma-0"
+    class="text-white text-wrap pa-1 ma-0"
     style="max-width: inherit"
   >
     <template v-if="!event.code">
@@ -20,7 +20,7 @@
     </template>
     <br />
     <v-fade-transition>
-      <v-overlay v-if="hover" z-index="0" absolute :color="event.color">
+      <v-overlay v-if="hover" z-index="0" absolute :scrim="event.color">
         <v-icon>mdi-information</v-icon>
       </v-overlay>
     </v-fade-transition>

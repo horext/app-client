@@ -8,8 +8,8 @@
             :close-on-content-click="false"
             :max-width="500"
           >
-            <template #activator="{ on, attrs }">
-              <v-btn color="indigo" dark v-bind="attrs" v-on="on">
+            <template #activator="{ props }">
+              <v-btn color="indigo" theme="dark" v-bind="props">
                 Exportar
               </v-btn>
             </template>
@@ -20,7 +20,7 @@
       </v-col>
       <v-col>
         <v-row align="center" justify="center">
-          <v-btn outlined> Compartir </v-btn>
+          <v-btn variant="outlined"> Compartir </v-btn>
         </v-row>
       </v-col>
     </v-row>

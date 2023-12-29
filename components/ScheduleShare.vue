@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="title font-weight-bold">Compartir</span>
+      <span class="text-h6 font-weight-bold">Compartir</span>
       <v-spacer />
       <v-btn class="mx-0" icon @click="close">
         <v-icon>mdi-close-circle-outline</v-icon>
@@ -12,9 +12,9 @@
         :href="'https://www.facebook.com/sharer/sharer.php?u=' + link"
         target="_blank"
       >
-        <v-list-item-action>
+        <template #prepend>
           <v-icon color="indigo"> mdi-facebook </v-icon>
-        </v-list-item-action>
+        </template>
         <v-card-title>Facebook</v-card-title>
       </v-list-item>
       <v-list-item
@@ -25,9 +25,9 @@
         "
         target="_blank"
       >
-        <v-list-item-action>
+        <template #prepend>
           <v-icon color="cyan"> mdi-twitter </v-icon>
-        </v-list-item-action>
+        </template>
         <v-card-title>Twitter</v-card-title>
       </v-list-item>
       <v-list-item
@@ -35,9 +35,9 @@
         target="_blank"
         data-action="share/whatsapp/share"
       >
-        <v-list-item-action>
+        <template #prepend>
           <v-icon color="success"> mdi-whatsapp </v-icon>
-        </v-list-item-action>
+        </template>
         <v-card-title>Whatsapp</v-card-title>
       </v-list-item>
       <v-list-item
@@ -45,9 +45,9 @@
         target="_blank"
         data-action="share/telegram/share"
       >
-        <v-list-item-action>
+        <template #prepend>
           <v-icon color="#54a9eb"> mdi-telegram </v-icon>
-        </v-list-item-action>
+        </template>
         <v-card-title>Telegram</v-card-title>
       </v-list-item>
     </v-list>
@@ -57,7 +57,7 @@
       :label="copied ? 'Enlace copiado' : 'Click to copiar el link'"
       class="pa-4"
       readonly
-      :value="link"
+      :model-value="link"
       @click="copy"
     />
   </v-card>

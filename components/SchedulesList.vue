@@ -1,11 +1,11 @@
 <template>
   <v-window id="window" class="px-6 mx-4" show-arrows continuous>
     <template #next>
-      <v-icon large @click="next"> mdi-arrow-right-bold-circle </v-icon>
+      <v-icon size="large" @click="next"> mdi-arrow-right-bold-circle </v-icon>
     </template>
 
     <template #prev>
-      <v-icon large @click="prev"> mdi-arrow-left-bold-circle </v-icon>
+      <v-icon size="large" @click="prev"> mdi-arrow-left-bold-circle </v-icon>
     </template>
     <v-window-item v-if="schedule">
       <schedule-viewer

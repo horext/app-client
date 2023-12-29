@@ -1,6 +1,6 @@
 <template>
   <v-card :loading="loading" :disabled="loading">
-    <v-card-title class="headline"> Crea un nuevo calendario </v-card-title>
+    <v-card-title class="text-h5"> Crea un nuevo calendario </v-card-title>
 
     <v-card-text>
       <v-form ref="form">
@@ -14,11 +14,11 @@
     <v-card-actions>
       <v-spacer />
 
-      <v-btn color="green darken-1" text @click="$emit('close')">
+      <v-btn color="green-darken-1" variant="text" @click="$emit('close')">
         Cancelar
       </v-btn>
 
-      <v-btn color="green darken-1" text @click="save"> Crear </v-btn>
+      <v-btn color="green-darken-1" variant="text" @click="save"> Crear </v-btn>
     </v-card-actions>
   </v-card>
 </template>

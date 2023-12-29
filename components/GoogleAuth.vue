@@ -7,7 +7,7 @@
       v-else
       rounded
       class="ma-1"
-      shaped
+      variant="outlined"
       @click="dialogCalendarSync = true"
     >
       Agregar a mi Calendario
@@ -28,13 +28,13 @@
             <template v-if="signInStatus">
               <v-autocomplete
                 v-model="selected"
+                v-model:search-input="search"
                 label="Selecciona tu calendario"
                 :items="calendarList"
                 return-object
                 clearable
                 :rules="[(r) => !!r || 'Requerido']"
-                :search-input.sync="search"
-                item-text="summary"
+                item-title="summary"
               >
                 <template #prepend-item="">
                   <v-list-item
@@ -42,11 +42,9 @@
                     color="primary"
                     @click="addCalendar()"
                   >
-                    <v-list-item-content class="text--primary">
-                      <v-list-item-title class="text primary--text">
+                      <v-list-item-title class="text text-primary">
                         Crear mi calendario...
                       </v-list-item-title>
-                    </v-list-item-content>
                   </v-list-item>
                 </template>
               </v-autocomplete>
@@ -71,9 +69,9 @@
                   v-model="notifications[index].minutes"
                   type="number"
                   :rules="[(a) => a > 0 || 'No permitido']"
-                  outlined
-                  dense
-                  :value="notification.minutes"
+                  variant="outlined"
+                  density="compact"
+                  :model-value="notification.minutes"
                   prepend-icon="mdi-bell"
                   :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
@@ -92,13 +90,13 @@
                   key="selected"
                   v-model="defaultNotification.minutes"
                   :rules="[(a) => a > 0 || 'No permitido']"
-                  :value="defaultNotification.minutes"
+                  :model-value="defaultNotification.minutes"
                   prepend-icon="mdi-bell"
                   type="number"
                   :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
-                  outlined
-                  dense
+                  variant="outlined"
+                  density="compact"
                 >
                   <template #append-outer>
                     <v-icon color="success" @click="addNotification()">
@@ -111,23 +109,23 @@
           </v-form>
         </v-card-text>
         <v-card-actions v-if="signInStatus">
-          <v-btn :loading="progress > 0" text @click="exportEventToGCalendar">
+          <v-btn :loading="progress > 0" variant="text" @click="exportEventToGCalendar">
             Exportar
             <template #loader>
               <v-progress-linear
                 color="secondary"
                 striped
-                :value="(progress / events.length) * 100"
+                :model-value="(progress / events.length) * 100"
                 :height="30"
               >
                 <template #default="{ value }">
-                  <strong class="white--text">{{ Math.ceil(value) }}%</strong>
+                  <strong class="text-white">{{ Math.ceil(value) }}%</strong>
                 </template>
               </v-progress-linear>
             </template>
           </v-btn>
           <v-spacer />
-          <v-btn text color="success" @click="handleSignOutClick()">
+          <v-btn variant="text" color="success" @click="handleSignOutClick()">
             Cerrar Sesión
           </v-btn>
         </v-card-actions>

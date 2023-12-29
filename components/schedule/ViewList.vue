@@ -1,5 +1,5 @@
 <template>
-  <v-simple-table dense>
+  <v-table dense>
     <template #default>
       <thead>
         <tr>
@@ -13,8 +13,8 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="item in schedule.schedule">
-          <schedule-section :key="item.id" :schedule="item" />
+        <template v-for="item in schedule.schedule" :key="item.id">
+          <schedule-section :schedule="item" />
           <class-session-item
             v-for="session in item.sessions"
             :key="session.id"
@@ -23,7 +23,7 @@
         </template>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-table>
 </template>
 
 <script lang="ts">

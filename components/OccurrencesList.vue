@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="itemsSync"
-    group-by="type"
+    :group-by="[{ key: 'type' }]"
     class="elevation-1"
     show-group-by
   >

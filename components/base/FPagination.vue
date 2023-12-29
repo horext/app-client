@@ -1,9 +1,17 @@
 <template>
   <v-row class="ma-2" align="center" justify="center">
-    <span class="grey--text">Items per page</span>
-    <v-menu offset-y>
-      <template #activator="{ on, attrs }">
-        <v-btn dark text color="primary" class="ml-2" v-bind="attrs" v-on="on">
+    <span class="text-grey">Items per page</span>
+    <v-menu
+     
+    >
+      <template #activator="{ props }">
+        <v-btn
+          theme="dark"
+          variant="text"
+          color="primary"
+          class="ml-2"
+          v-bind="props"
+        >
           {{ syncItemsPerPage }}
           <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
@@ -21,20 +29,26 @@
 
     <v-spacer />
 
-    <span class="mr-2 grey--text">
+    <span class="mr-2 text-grey">
       Page {{ syncPage }} of {{ syncTotalPages }}
     </span>
     <v-btn
-      fab
-      dark
-      small
-      color="blue darken-3"
+      theme="dark"
+      size="small"
+      color="blue-darken-3"
       class="mr-1"
       @click="formerPage"
     >
       <v-icon>mdi-chevron-left</v-icon>
     </v-btn>
-    <v-btn fab dark small color="blue darken-3" class="ml-1" @click="nextPage">
+    <v-btn
+      fab
+      theme="dark"
+      size="small"
+      color="blue-darken-3"
+      class="ml-1"
+      @click="nextPage"
+    >
       <v-icon>mdi-chevron-right</v-icon>
     </v-btn>
   </v-row>

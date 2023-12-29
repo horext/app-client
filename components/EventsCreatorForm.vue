@@ -9,7 +9,7 @@
       v-model="eventSync.day"
       :items="weekdays"
       item-value="index"
-      item-text="value"
+      item-title="value"
       label="Dia"
       :rules="[rules.requiredDay]"
     />
@@ -29,7 +29,6 @@
       v-model="color"
       class="ma-2"
       hide-canvas
-      hide-mode-switch
       hide-inputs
     />
   </v-form>

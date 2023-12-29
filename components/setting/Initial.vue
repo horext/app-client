@@ -7,25 +7,30 @@
           v-model="faculty"
           :items="faculties"
           return-object
-          item-text="name"
+          item-title="name"
           label="Facultades"
         />
         <v-autocomplete
           v-model="speciality"
           :disabled="!faculty"
           return-object
-          item-text="name"
+          item-title="name"
           :items="specialities"
           label="Especialidades"
         />
       </v-form>
-      <v-alert v-model="showErrorMessage" dismissible type="error">
+      <v-alert v-model="showErrorMessage" closable type="error">
         {{ errorMessage }}
       </v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn :loading="loading" :disabled="!hourlyLoad" text @click="ending">
+      <v-btn
+        :loading="loading"
+        :disabled="!hourlyLoad"
+        variant="text"
+        @click="ending"
+      >
         Guardar
       </v-btn>
     </v-card-actions>

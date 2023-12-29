@@ -1,10 +1,10 @@
 <template>
-  <v-card :loading="$fetchState.pending">
+  <v-card :loading="pending">
     <v-card-title>
-      <span class="headline">{{ title }}</span>
+      <span class="text-h5">{{ title }}</span>
     </v-card-title>
     <v-card-text>
-      <v-simple-table dense>
+      <v-table dense>
         <template #default>
           <thead>
             <tr>
@@ -18,12 +18,16 @@
           </thead>
           <ScheduleSubjectList v-model="selected" :schedules="schedules" />
         </template>
-      </v-simple-table>
+      </v-table>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn color="primary" text @click="$emit('cancel')"> Cancelar </v-btn>
-      <v-btn color="primary" text @click="saveSections"> Guardar </v-btn>
+      <v-btn color="primary" variant="text" @click="$emit('cancel')">
+        Cancelar
+      </v-btn>
+      <v-btn color="primary" variant="text" @click="saveSections">
+        Guardar
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
