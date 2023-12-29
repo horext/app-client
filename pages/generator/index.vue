@@ -80,7 +80,7 @@ import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
-import { ISchedule } from '~/interfaces/schedule'
+import  type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -88,7 +88,6 @@ export default defineComponent({
     SchedulesPresentation,
     OccurrencesList,
   },
-  layout: 'app',
   setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()

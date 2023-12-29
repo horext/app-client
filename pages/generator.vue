@@ -44,7 +44,6 @@
 </template>
 
 <script lang="ts">
-import { useFetch, useRouter } from '@nuxtjs/composition-api'
 import { storeToRefs } from 'pinia'
 import { defineComponent, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
@@ -56,8 +55,11 @@ export default defineComponent({
   components: {
     InitialSettings,
   },
-  layout: 'app',
   setup() {
+    definePageMeta({
+      layout: 'app',
+    })
+
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
     const router = useRouter()
@@ -65,17 +67,17 @@ export default defineComponent({
     const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
       storeToRefs(configStore)
 
-    watch(firstEntry, (newValue, oldValue) => {
+    watch(firstEntry, async (newValue, oldValue) => {
       if (oldValue && !newValue) {
-        router.push('/generator/subjects')
+        await router.push('/generator/subjects')
       }
     })
-    const { fetch, fetchState } = useFetch(async () => {
-      const store = useUserConfigStore()
-      await store.fetchFirstEntry()
-      await store.fetchFaculty()
-      await store.fetchSpeciality()
-      await store.fetchHourlyLoad()
+    const store = useUserConfigStore()
+    const { refresh } = useAsyncData(() => {
+      store.fetchFirstEntry()
+      store.fetchFaculty()
+      store.fetchSpeciality()
+      store.fetchHourlyLoad()
     })
 
     onMounted(async () => {
@@ -90,8 +92,7 @@ export default defineComponent({
       firstEntry,
       isNewHourlyLoad,
       isUpdateHourlyLoad,
-      fetch,
-      fetchState,
+      refresh,
     }
   },
   head: {

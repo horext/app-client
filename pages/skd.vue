@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import { useAsync, useRoute } from '@nuxtjs/composition-api'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
@@ -50,7 +49,7 @@ export default defineComponent({
     const myFavoritesSchedules = computed(() => store.favoritesSchedules)
     const route = useRoute()
 
-    const data = useAsync(async () => {
+    const { data } = useAsyncData(async () => {
       const query: any = route.query
       const result = Buffer.from(query.q, 'base64').toString()
       const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
