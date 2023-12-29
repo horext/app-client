@@ -1,7 +1,6 @@
 <template>
   <v-navigation-drawer
     location="bottom"
-    color="transparent"
     scrim="secondary"
     temporary
   >
