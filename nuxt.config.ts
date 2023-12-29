@@ -25,7 +25,15 @@ const config = defineNuxtConfig({
     '@mdi/font/css/materialdesignicons.min.css',
   ],
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@pinia/nuxt'],
+  modules: [
+    '@pinia/nuxt',
+    [
+      '@vueuse/nuxt',
+      {
+        ssrHandlers: true,
+      },
+    ],
+  ],
   runtimeConfig: {
     public: {
       googleApi: {
@@ -54,9 +62,11 @@ const config = defineNuxtConfig({
   },
   hooks: {
     'vite:extendConfig': (config) => {
-      config.plugins?.push(vuetify({
-        autoImport: true,
-      }))
+      config.plugins?.push(
+        vuetify({
+          autoImport: true,
+        })
+      )
     },
   },
 })
