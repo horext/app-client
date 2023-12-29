@@ -19,7 +19,7 @@ export default defineComponent({
         renderer: 'svg',
         loop: false,
         autoplay: false,
-        animationData: require('~/assets/lottie/71569-hamster-toggle.json'),
+        animationData: Animation,
       })
       darkMode.value.setSpeed(2)
     })

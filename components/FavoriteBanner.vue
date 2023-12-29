@@ -8,17 +8,18 @@
 </template>
 <script lang="ts">
 import Lottie from 'lottie-web'
-
-export default {
+import { defineComponent } from 'vue'
+import Animation from '~/assets/lottie/156-star-blast.json'
+export default defineComponent({
   name: 'FavoriteBanner',
   mounted() {
     Lottie.loadAnimation({
-      container: document.getElementById('bm') as Element,
+      container: document.getElementById('bm')!,
       renderer: 'svg',
       loop: false,
       autoplay: true,
-      animationData: require('~/assets/lottie/156-star-blast.json'),
+      animationData: Animation,
     })
   },
-}
+})
 </script>
