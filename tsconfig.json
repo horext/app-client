@@ -1,11 +1,8 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "composite": true,
     "types": [
       "@types/uuid",
-      "@nuxtjs/axios",
-      "@types/node",
       "@types/luxon",
       "@pinia/nuxt"
     ]
