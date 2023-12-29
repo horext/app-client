@@ -1,32 +1,30 @@
 <template>
-  <div>
-    <v-app-bar id="home-app-bar" elevation="1" height="64">
-      <vuetify-logo style="max-width: 48px" />
-      <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="invertMode">
-        <v-icon>mdi-brightness-6</v-icon>
-      </v-btn>
-      <v-tabs class="hidden-sm-and-down" optional>
-        <v-tab
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.route"
-          :ripple="false"
-          selected-class="text--primary"
-          class="font-weight-bold"
-          min-width="96"
-          variant="text"
-        >
-          {{ item.name }}
-        </v-tab>
-      </v-tabs>
+  <v-app-bar id="home-app-bar" elevation="1" height="64">
+    <vuetify-logo style="max-width: 48px" />
+    <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
+    <v-spacer />
+    <v-btn icon @click="invertMode">
+      <v-icon>mdi-brightness-6</v-icon>
+    </v-btn>
+    <v-tabs class="hidden-sm-and-down" optional>
+      <v-tab
+        v-for="(item, i) in items"
+        :key="i"
+        :to="item.route"
+        :ripple="false"
+        selected-class="text--primary"
+        class="font-weight-bold"
+        min-width="96"
+        variant="text"
+      >
+        {{ item.name }}
+      </v-tab>
+    </v-tabs>
 
-      <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
-    </v-app-bar>
+    <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
+  </v-app-bar>
 
-    <home-drawer v-model="drawer" :items="items" />
-  </div>
+  <home-drawer v-model="drawer" :items="items" />
 </template>
 
 <script lang="ts">
@@ -55,7 +53,7 @@ export default defineComponent({
       },
     })
 
-    return {darkMode}
+    return { darkMode }
   },
   data: () => ({
     drawer: null,
