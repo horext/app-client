@@ -1,18 +1,20 @@
 <template>
-  <v-app>
+  <v-layout>
     <!--    <home-system-bar />-->
     <home-app-bar />
-    <home-view />
+    <home-view>
+      <slot />
+    </home-view>
     <home-footer />
     <!--    <home-settings />-->
-  </v-app>
+  </v-layout>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import HomeAppBar from '~/components/home/AppBar.vue'
 import HomeFooter from '~/components/home/Footer.vue'
 import HomeView from '~/components/home/View.vue'
-export default Vue.extend({
+export default defineComponent({
   components: {
     HomeAppBar,
     HomeFooter,
