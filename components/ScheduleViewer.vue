@@ -2,16 +2,10 @@
   <v-sheet>
     <v-calendar
       id="calendar"
-      v-model="focus"
-      :start="start"
-      :events="schedule.events"
       first-interval="7"
       interval-count="16"
-      :event-color="getEventColor"
-      :type="type"
+      type="month"
       interval-width="40"
-      :short-intervals="false"
-      :interval-format="intervalFormat"
       :weekdays="[0, 1, 2, 3, 4, 5, 6]"
       @click:event="showEvent"
     >
@@ -40,15 +34,18 @@
     >
       <EventInfoCard
         v-if="selectedEvent"
+        v-model:dialog="selectedOpen"
         :selected-event="selectedEvent"
-        :dialog.sync="selectedOpen"
       />
     </v-menu>
+    {{ internalEvents }}
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue'
+import { VCalendar } from 'vuetify/labs/VCalendar'
+import { useDate } from 'vuetify'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import { weekdayToDate } from '~/utils/core'
@@ -57,6 +54,7 @@ export default {
   components: {
     ScheduleEventInfo,
     EventInfoCard,
+    VCalendar,
   },
   props: {
     schedule: {
@@ -68,9 +66,9 @@ export default {
       default: () => [1, 2, 3, 4, 5, 6],
     },
   },
-  setup() {
+  setup(props) {
     const hover = ref(false)
-    const focus = ref('')
+    const focus = ref()
     const type = ref('week')
 
     const intervalFormat = (interval: any) => {
@@ -113,6 +111,19 @@ export default {
       nativeEvent.stopPropagation()
     }
 
+    const dateAdapter = useDate()
+
+    const internalEvents = computed(() =>
+      props.schedule?.events?.map((event) => {
+        console.log('event', event)
+        return {
+          ...event,
+          start: dateAdapter.startOfDay(event.start),
+          end: dateAdapter.startOfDay(event.end),
+        }
+      })
+    )
+
     return {
       hover,
       focus,
@@ -125,6 +136,7 @@ export default {
       start,
       getEventColor,
       showEvent,
+      internalEvents,
     }
   },
 }

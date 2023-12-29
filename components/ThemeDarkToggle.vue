@@ -4,9 +4,10 @@
   </v-sheet>
 </template>
 <script lang="ts">
+import { useTheme } from 'vuetify'
 import { computed, onMounted, ref, watch, defineComponent } from 'vue'
-import Lottie, { AnimationItem } from 'lottie-web'
-import { useVuetify } from '~/composables/vuetify'
+import Lottie, { type AnimationItem } from 'lottie-web'
+import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
 export default defineComponent({
   setup() {
@@ -24,15 +25,15 @@ export default defineComponent({
       darkMode.value.setSpeed(2)
     })
 
-    const vuetify = useVuetify()
+    const theme = useTheme()
 
     const dark = computed({
       get() {
-        return vuetify.theme.dark
+        return theme.global.current.value.dark
       },
 
       set(val: boolean) {
-        vuetify.theme.dark = val
+        theme.global.name.value = val ? 'dark' : 'light'
       },
     })
 

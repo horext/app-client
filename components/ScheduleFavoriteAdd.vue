@@ -1,13 +1,12 @@
 <template>
   <div>
     <v-btn
-      fab
-      outlined
+      variant="outlined"
       icon
-      :color="isFavorite ? 'yellow' : null"
+      :color="isFavorite ? 'yellow' : undefined"
       @click="changeFavoriteState"
     >
-      <v-icon :color="isFavorite ? 'yellow' : null"> mdi-star </v-icon>
+      <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
     </v-btn>
   </div>
 </template>

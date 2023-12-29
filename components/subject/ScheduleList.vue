@@ -33,14 +33,13 @@
 </template>
 
 <script lang="ts">
-import { useFetch } from '@nuxtjs/composition-api'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import { useApi } from '~/composables/api'
-import { IHourlyLoad } from '~/interfaces/houly-load'
-import { IScheduleSubject } from '~/interfaces/schedule-subject'
-import {
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IScheduleSubject } from '~/interfaces/schedule-subject'
+import type {
   ISelectedSubject,
   ISession,
   ISubjectSchedule,
@@ -77,7 +76,7 @@ export default defineComponent({
         schedulesSubject.value = schedulesSubjectData
       }
     }
-    const { fetch } = useFetch(fetchSchedules)
+    const { refresh, pending } = useAsyncData(fetchSchedules)
 
     const schedules = computed<ISubjectSchedule[]>(() => {
       return schedulesSubject.value.map((sb) => ({
@@ -95,7 +94,7 @@ export default defineComponent({
     watch(
       () => props.subject,
       () => {
-        fetch()
+        refresh()
       }
     )
 
@@ -129,18 +128,8 @@ export default defineComponent({
       schedules,
       saveSections,
       title,
+      pending,
     }
   },
 })
 </script>
-
-<style lang="sass">
-@import '~vuetify/src/styles/styles.sass'
-@media #{map-get($display-breakpoints, 'sm-and-down')}
-  .v-data-table
-    td, th
-      padding: 0 10px
-
-    td
-      font-size: 0.75rem
-</style>

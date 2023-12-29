@@ -1,11 +1,7 @@
 <template>
   <tbody>
-    <template v-for="schedule in schedules">
-      <ScheduleSection
-        :key="schedule.id"
-        v-model="valueSync"
-        :schedule="schedule"
-      />
+    <template v-for="schedule in schedules" :key="schedule.id">
+      <ScheduleSection v-model="valueSync" :schedule="schedule" />
       <ClassSessionItem
         v-for="session in schedule.sessions"
         :key="session.id"
@@ -21,7 +17,7 @@ import { useVModel } from '@vueuse/core'
 import { defineComponent } from 'vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
-import { ISubjectSchedule } from '~/interfaces/subject'
+import type { ISubjectSchedule } from '~/interfaces/subject'
 
 export default defineComponent({
   components: { ScheduleSection, ClassSessionItem },
@@ -30,16 +26,14 @@ export default defineComponent({
       type: Array as PropType<ISubjectSchedule[]>,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Array as PropType<ISubjectSchedule[]>,
       required: true,
     },
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const valueSync = useVModel(props, 'value', emit, {
-      eventName: 'input',
-    })
+    const valueSync = useVModel(props, 'modelValue', emit)
 
     return {
       valueSync,
