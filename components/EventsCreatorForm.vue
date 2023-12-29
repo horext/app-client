@@ -35,10 +35,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from 'vue'
+import { computed, defineComponent, type PropType, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { VForm } from '~/types'
-import { IEvent } from '~/interfaces/event'
+import type { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   name: 'EventsCreator',
