@@ -35,6 +35,9 @@ dependencies:
   uuid:
     specifier: ^8.3.2
     version: 8.3.2
+  vite:
+    specifier: ^5.0.10
+    version: 5.0.10(sass@1.69.6)
   vue:
     specifier: ^3.4.3
     version: 3.4.3(typescript@5.3.3)
