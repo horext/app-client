@@ -1,5 +1,5 @@
 <template>
-  <v-container> 
+  <v-container>
     <v-dialog
       v-show="firstEntry"
       v-model="firstEntry"

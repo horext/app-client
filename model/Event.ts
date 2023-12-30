@@ -23,7 +23,7 @@ export default class Event {
     location: string = '',
     color: string,
     category: string,
-    type: string
+    type: string,
   ) {
     this.day = day
     this.startTime = startTime

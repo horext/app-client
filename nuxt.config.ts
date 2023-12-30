@@ -41,7 +41,7 @@ const config = defineNuxtConfig({
         clientId: process.env.NUXT_ENV_GOOGLE_CLIENT_ID,
         apiKey: process.env.NUXT_ENV_GOOGLE_API_KEY,
         discoveryDocs: (process.env.NUXT_ENV_GOOGLE_DISCOVERY_DOCS || '').split(
-          ','
+          ',',
         ),
         scopes: process.env.NUXT_ENV_GOOGLE_SCOPES,
       },
@@ -66,7 +66,7 @@ const config = defineNuxtConfig({
       config.plugins?.push(
         vuetify({
           autoImport: true,
-        })
+        }),
       )
     },
   },

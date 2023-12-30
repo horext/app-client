@@ -16,7 +16,7 @@ const api = defineNuxtPlugin((nuxtApp) => {
   // Create a custom axios instance
   // Create a custom axios instance
   const api = $fetch.create({
-    baseURL:  '/api',
+    baseURL: '/api',
   })
 
   nuxtApp.provide('api', repositories(api))

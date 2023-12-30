@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, type  PropType, ref } from 'vue'
+import { computed, defineComponent, type PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { useSnackbar } from '~/composables/snackbar'
 import type { ISchedule } from '~/interfaces/schedule'
@@ -65,7 +65,7 @@ export default defineComponent({
     const indexSchedule = computed(() => {
       if (currentSchedule.value) {
         return favoritesSchedulesSync.value.findIndex(
-          (e) => e && e.id === currentSchedule.value.id
+          (e) => e && e.id === currentSchedule.value.id,
         )
       } else {
         return -1

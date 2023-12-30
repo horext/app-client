@@ -148,11 +148,11 @@ export default defineComponent({
     const store = useUserConfigStore()
     const { weekDays, hourlyLoad } = storeToRefs(store)
     const academicPeriodOrganizationUnit = computed(
-      () => hourlyLoad.value?.academicPeriodOrganizationUnit!
+      () => hourlyLoad.value?.academicPeriodOrganizationUnit!,
     )
 
     const startDate = computed(
-      () => academicPeriodOrganizationUnit.value?.fromDate
+      () => academicPeriodOrganizationUnit.value?.fromDate,
     )
 
     const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)

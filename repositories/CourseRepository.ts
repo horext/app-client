@@ -1,6 +1,6 @@
 import type { $Fetch } from 'nitropack'
-import type{ IPage } from '~/interfaces/page'
-import type{ ISubject } from '~/interfaces/subject'
+import type { IPage } from '~/interfaces/page'
+import type { ISubject } from '~/interfaces/subject'
 
 const PATH_SUBJECTS = 'subjects'
 export default ($fetch: $Fetch) => ({

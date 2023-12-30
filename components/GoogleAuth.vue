@@ -42,9 +42,9 @@
                     color="primary"
                     @click="addCalendar()"
                   >
-                      <v-list-item-title class="text text-primary">
-                        Crear mi calendario...
-                      </v-list-item-title>
+                    <v-list-item-title class="text text-primary">
+                      Crear mi calendario...
+                    </v-list-item-title>
                   </v-list-item>
                 </template>
               </v-autocomplete>
@@ -109,7 +109,11 @@
           </v-form>
         </v-card-text>
         <v-card-actions v-if="signInStatus">
-          <v-btn :loading="progress > 0" variant="text" @click="exportEventToGCalendar">
+          <v-btn
+            :loading="progress > 0"
+            variant="text"
+            @click="exportEventToGCalendar"
+          >
             Exportar
             <template #loader>
               <v-progress-linear
@@ -195,10 +199,10 @@ export default defineComponent({
     const dialog = ref(false)
     const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
     const dateStart = computed(() =>
-      DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd')
+      DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'),
     )
     const dateEnd = computed(() =>
-      DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd')
+      DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'),
     )
 
     const progress = ref(0)
@@ -279,7 +283,7 @@ export default defineComponent({
       console.log(index)
       notifications.value = notifications.value.filter(
         (notification: { method: string; minutes: number }) =>
-          notification !== index
+          notification !== index,
       )
       defaultNotification = {
         method: 'popup',
@@ -355,7 +359,7 @@ export default defineComponent({
           start: {
             dateTime: DateTime.fromFormat(
               dateStart.value + ' ' + event.startTime,
-              format
+              format,
             )
               .set({ weekday: event.day })
               .toISO(),
@@ -364,7 +368,7 @@ export default defineComponent({
           end: {
             dateTime: DateTime.fromFormat(
               dateStart.value + ' ' + event.endTime,
-              format
+              format,
             )
               .set({ weekday: event.day })
               .toISO(),

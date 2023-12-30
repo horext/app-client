@@ -30,7 +30,7 @@
       v-model="selectedOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
-      offset-x
+      location="bottom left"
     >
       <EventInfoCard
         v-if="selectedEvent"
@@ -113,15 +113,16 @@ export default {
 
     const dateAdapter = useDate()
 
-    const internalEvents = computed(() =>
-      props.schedule?.events?.map((event) => {
-        console.log('event', event)
-        return {
-          ...event,
-          start: dateAdapter.startOfDay(event.start),
-          end: dateAdapter.startOfDay(event.end),
-        }
-      })
+    const internalEvents = computed(
+      () =>
+        props.schedule?.events?.map((event) => {
+          console.log('event', event)
+          return {
+            ...event,
+            start: dateAdapter.startOfDay(event.start),
+            end: dateAdapter.startOfDay(event.end),
+          }
+        }),
     )
 
     return {

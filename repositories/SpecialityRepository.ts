@@ -1,5 +1,5 @@
 import type { $Fetch } from 'nitropack'
-import type{ IOrganization } from '~/interfaces/organization'
+import type { IOrganization } from '~/interfaces/organization'
 const PATH_SUBJECTS = 'specialities'
 export default ($axios: $Fetch) => ({
   getAllByFaculty(facultyId: any) {

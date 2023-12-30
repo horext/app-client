@@ -1,11 +1,9 @@
 <template>
-  <v-navigation-drawer
-    location="bottom"
-    scrim="secondary"
-    temporary
-  >
+  <v-navigation-drawer location="bottom" scrim="secondary" temporary>
     <v-list
-      :color="$vuetify.theme.name === 'dark' ? 'grey darken-4' : 'grey lighten-5'"
+      :color="
+        $vuetify.theme.name === 'dark' ? 'grey darken-4' : 'grey lighten-5'
+      "
       variant="outlined"
     >
       <v-list-item
@@ -14,9 +12,9 @@
         :to="item.route"
         color="primary"
       >
-          <v-list-item-title>
-            {{ item.name }}
-          </v-list-item-title>
+        <v-list-item-title>
+          {{ item.name }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

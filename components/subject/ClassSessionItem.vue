@@ -29,8 +29,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const dayWeek = computed(() =>
-      weekdays[props.session?.day]?.substring(0, 2).toUpperCase()
+    const dayWeek = computed(
+      () => weekdays[props.session?.day]?.substring(0, 2).toUpperCase(),
     )
 
     const type = computed(() => props.session?.type?.code)
@@ -43,7 +43,7 @@ export default defineComponent({
       () =>
         props.session?.startTime?.substring(0, 5) +
         ' - ' +
-        props.session?.endTime?.substring(0, 5)
+        props.session?.endTime?.substring(0, 5),
     )
 
     return {

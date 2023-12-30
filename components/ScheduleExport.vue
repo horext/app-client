@@ -35,7 +35,6 @@ import { exportToPNG, exportToPDF } from '~/utils/exportToPNG'
 
 export default defineComponent({
   setup() {
-
     const loading = ref(false)
     const loadingPdf = ref(false)
     const loadingImage = ref(false)

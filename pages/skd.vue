@@ -53,7 +53,7 @@ export default defineComponent({
       const query: any = route.query
       const result = Buffer.from(query.q, 'base64').toString()
       const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
-        result.split(',').map(Number)
+        result.split(',').map(Number),
       )
       const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
       const sessions = await $api.classSessions.findScheduleIds(schedulesId)
@@ -79,7 +79,7 @@ export default defineComponent({
               id: sb.id,
             },
             sessions: sessions.value.filter(
-              (s: any) => s.schedule.id === sb.schedule.id
+              (s: any) => s.schedule.id === sb.schedule.id,
             ),
           },
         ],
@@ -110,7 +110,7 @@ export default defineComponent({
 
     const isFavorite = (schedule: any) => {
       return myFavoritesSchedules.value.findIndex(
-        (x: { id: any }) => x.id === schedule.id
+        (x: { id: any }) => x.id === schedule.id,
       )
     }
 

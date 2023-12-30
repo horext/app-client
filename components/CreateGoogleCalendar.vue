@@ -50,7 +50,7 @@ export default defineComponent({
       () => props.calendar,
       (calendar) => {
         calendarCurrent.value = calendar
-      }
+      },
     )
 
     const form = ref<any>()

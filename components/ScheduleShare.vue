@@ -63,51 +63,53 @@
   </v-card>
 </template>
 <script lang="js">
-
 export default {
   name: 'ScheduleShare',
   props: {
     schedule: { type: Object },
     path: { type: String, default: '/subject' },
     dialog: { type: Boolean },
-    postId: { type: Number, default: 1 }
+    postId: { type: Number, default: 1 },
   },
   data: () => ({
     copied: false,
-    dialogSync: true
+    dialogSync: true,
   }),
   computed: {
-    link () {
+    link() {
       return location.origin + this.path + '?q=' + this.query
     },
-    query () {
+    query() {
       return btoa(this.schedule.scheduleSubjectIds.join(','))
-    }
+    },
   },
   watch: {
-    dialog (newValue) {
+    dialog(newValue) {
       this.dialogSync = newValue
     },
-    dialogSync (newValue) {
+    dialogSync(newValue) {
       this.$emit('update:dialog', newValue)
-    }
+    },
   },
   methods: {
-    close () {
+    close() {
       this.dialogSync = false
     },
-    copy () {
+    copy() {
       const copyText = document.querySelector('#link')
       if (copyText) {
         copyText.select()
-        navigator.clipboard.writeText(this.link).then(() => {
-          /* clipboard successfully set */
-          this.copied = true
-        }, function () {
-          /* clipboard write failed */
-        })
+        navigator.clipboard.writeText(this.link).then(
+          () => {
+            /* clipboard successfully set */
+            this.copied = true
+          },
+          function () {
+            /* clipboard write failed */
+          },
+        )
       }
-    }
-  }
+    },
+  },
 }
 </script>

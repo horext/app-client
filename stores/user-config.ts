@@ -9,7 +9,6 @@ import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-
   const mySubjects = useLocalStorage<any[]>('mySubjects', [], {
     initOnMounted: true,
     writeDefaults: false,
@@ -24,7 +23,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     {
       initOnMounted: true,
       writeDefaults: false,
-    }
+    },
   )
   const myCrossings = useLocalStorage<number>('myCrossings', 0, {
     initOnMounted: true,
@@ -82,7 +81,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function UPDATE_SCHEDULE_BY_INDEX(index: number, schedule: ISchedule) {
     schedules.value = schedules.value.map((c, i) =>
-      i === index ? schedule : c
+      i === index ? schedule : c,
     )
   }
 
@@ -96,10 +95,10 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function UPDATE_FAVORITE_SCHEDULE_BY_INDEX(
     index: number,
-    subject: ISchedule
+    subject: ISchedule,
   ) {
     favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
-      i === index ? subject : c
+      i === index ? subject : c,
     )
   }
 
@@ -196,7 +195,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
         ),
       })) || []
     schedules.value = _schedules
@@ -208,7 +207,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
         ),
       })) || []
     favoritesSchedules.value = _schedules

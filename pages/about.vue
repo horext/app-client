@@ -8,7 +8,10 @@
       <v-divider />
     </v-responsive>
 
-    <v-responsive class="mx-auto text-h6 font-weight-light mb-8" max-width="720">
+    <v-responsive
+      class="mx-auto text-h6 font-weight-light mb-8"
+      max-width="720"
+    >
       Horext es una aplicación web que se encarga de gestionar los horarios de
       tus curso, para asi generar todos los posibles horarios.
     </v-responsive>
@@ -31,7 +34,12 @@
 
     <div />
 
-    <v-btn color="grey" href="https://vuetifyjs.com" variant="outlined" size="large">
+    <v-btn
+      color="grey"
+      href="https://vuetifyjs.com"
+      variant="outlined"
+      size="large"
+    >
       <span class="text-grey-darken-1 font-weight-bold">
         Vuetify Documentation
       </span>

@@ -182,7 +182,7 @@ export default defineComponent({
 
     const availableCourses = computed(() => {
       return subjects.value?.filter(
-        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id)
+        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
       )
     })
 
@@ -265,7 +265,7 @@ export default defineComponent({
           const response = await $api.course.findBySearch(
             search || '',
             configStore.specialityId,
-            configStore.hourlyLoadId
+            configStore.hourlyLoadId,
           )
           subjects.value = response.content
         } catch (e) {

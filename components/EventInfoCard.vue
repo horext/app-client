@@ -13,10 +13,9 @@
     </v-toolbar>
 
     <v-list-item>
-   
       <template #prepend>
         <v-icon :color="selectedEvent.color + ' lighten-2'"> mdi-book </v-icon>
-     </template>
+      </template>
       <v-list-item-title>
         {{ selectedEvent.title }}
       </v-list-item-title>
@@ -87,7 +86,7 @@ export default defineComponent({
     ]
 
     const selectedDay: Ref<string> = computed(
-      () => weekdays[props.selectedEvent.day]
+      () => weekdays[props.selectedEvent.day],
     )
 
     const moreInfo = () => {

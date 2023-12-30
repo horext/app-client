@@ -29,7 +29,7 @@ import FavoriteBanner from '~/components/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import  type { ISchedule } from '~/interfaces/schedule'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },

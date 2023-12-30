@@ -79,7 +79,7 @@ export default defineComponent({
     const theme = useTheme()
     onMounted(() => {
       theme.global.name.value = JSON.parse(
-        localStorage.getItem('darkMode') || 'false'
+        localStorage.getItem('darkMode') || 'false',
       )
         ? 'dark'
         : 'light'

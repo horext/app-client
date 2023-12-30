@@ -211,7 +211,7 @@ export default defineComponent({
         item.title!,
         item.color,
         'MY_EVENT',
-        'MY_EVENT'
+        'MY_EVENT',
       )
       event.id = item.id || v4()
       if (editedIndex.value > -1) {

@@ -3,7 +3,7 @@
     class="abcRioButton"
     width="240"
     height="50"
-    :color="$vuetify.theme.name === 'dark'  ? 'white' : 'grey lighten-2'"
+    :color="$vuetify.theme.name === 'dark' ? 'white' : 'grey lighten-2'"
     @click="$emit('click')"
   >
     <v-row
@@ -69,9 +69,14 @@ export default defineComponent({
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-transition: background-color 0.218s, border-color 0.218s,
+  -webkit-transition:
+    background-color 0.218s,
+    border-color 0.218s,
     box-shadow 0.218s;
-  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  transition:
+    background-color 0.218s,
+    border-color 0.218s,
+    box-shadow 0.218s;
   -webkit-user-select: none;
   -webkit-appearance: none;
   background-color: #fff;

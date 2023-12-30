@@ -68,7 +68,7 @@ export default defineComponent({
         const schedulesSubjectData =
           await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
             props.subject.id,
-            props.hourlyLoad.id
+            props.hourlyLoad.id,
           )
         const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
         const sessionsData = await $api.classSessions.findScheduleIds(ids)
@@ -85,7 +85,7 @@ export default defineComponent({
           id: sb.id,
         },
         sessions: sessions.value.filter(
-          (s) => s.schedule.id === sb.schedule.id
+          (s) => s.schedule.id === sb.schedule.id,
         ),
         subject: props.subject,
       }))
@@ -95,14 +95,14 @@ export default defineComponent({
       () => props.subject,
       () => {
         refresh()
-      }
+      },
     )
 
     watch(schedules, () => {
       if (props.subject.schedules) {
         selected.value = schedules.value.filter((s1) => {
           const schedule = props.subject.schedules.find(
-            (s2) => s2.section.id === s1.section.id
+            (s2) => s2.section.id === s1.section.id,
           )
           return schedule?.id === s1?.id
         })

@@ -10,7 +10,7 @@
     <template #top-items-right>
       <v-toolbar-title> Generados </v-toolbar-title>
 
-      <v-btn  class="ml-2" variant="outlined"  size="small">
+      <v-btn class="ml-2" variant="outlined" size="small">
         {{ schedules.length }}
       </v-btn>
     </template>
@@ -45,11 +45,17 @@
         <v-icon>mdi-update</v-icon>
         Generar
       </v-btn>
-      <v-snackbar v-model="succces" color="success"  timeout="3000">
+      <v-snackbar v-model="succces" color="success" timeout="3000">
         <v-icon> mdi-check </v-icon>
         Horarios generados correctamente!
         <template #action="{ attrs }">
-          <v-btn variant="text" size="small" icon v-bind="attrs" @click="succces = false">
+          <v-btn
+            variant="text"
+            size="small"
+            icon
+            v-bind="attrs"
+            @click="succces = false"
+          >
             <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
@@ -80,7 +86,7 @@ import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
-import  type { ISchedule } from '~/interfaces/schedule'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -122,7 +128,7 @@ export default defineComponent({
         myEvents.value,
         {
           crossingSubjects: crossingSubjects.value,
-        }
+        },
       )
       updateSchedules(combinations)
       occurrences.value = occurrencesData

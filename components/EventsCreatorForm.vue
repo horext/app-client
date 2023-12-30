@@ -25,12 +25,7 @@
       type="time"
       :rules="endRules"
     />
-    <v-color-picker
-      v-model="color"
-      class="ma-2"
-      hide-canvas
-      hide-inputs
-    />
+    <v-color-picker v-model="color" class="ma-2" hide-canvas hide-inputs />
   </v-form>
 </template>
 
@@ -63,17 +58,17 @@ export default defineComponent({
       required: (value: any) => !!value || 'Requerido.',
       requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
       max: (value: any) =>
-        value < props.event?.endTime! || 'Tiene que ser menor que el fin',
+        value < props.event?.endTime || 'Tiene que ser menor que el fin',
       min: (value: any) =>
-        value > props.event?.startTime! || 'Tiene que ser mayor que el inicio',
+        value > props.event?.startTime || 'Tiene que ser mayor que el inicio',
     }))
 
     const startRules = computed(() => {
       const rules: any[] = [(value: any) => !!value || 'Requerido.']
-      if (props.event?.endTime! < props.event?.startTime!) {
+      if (props.event?.endTime < props.event?.startTime) {
         rules.push(
           (value: any) =>
-            value < props.event?.endTime! || 'Tiene que ser menor que el fin'
+            value < props.event?.endTime || 'Tiene que ser menor que el fin',
         )
       }
       return rules
@@ -81,11 +76,11 @@ export default defineComponent({
 
     const endRules = computed(() => {
       const rules: any[] = [(value: any) => !!value || 'Requerido.']
-      if (props.event?.startTime! > props.event?.endTime!) {
+      if (props.event?.startTime > props.event?.endTime) {
         rules.push(
           (value: any) =>
-            value > props.event?.startTime! ||
-            'Tiene que ser mayor que el inicio'
+            value > props.event?.startTime ||
+            'Tiene que ser mayor que el inicio',
         )
       }
       return rules

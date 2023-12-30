@@ -1,5 +1,5 @@
 import type { $Fetch } from 'nitropack'
-import type{ IScheduleSubject } from '~/interfaces/schedule-subject'
+import type { IScheduleSubject } from '~/interfaces/schedule-subject'
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
 export default ($axios: $Fetch) => ({

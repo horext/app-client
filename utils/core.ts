@@ -5,7 +5,7 @@ import Event from '~/model/Event'
 
 const isIntersects = (
   eventTarget: Event,
-  eventSource: { start: string; end: string }
+  eventSource: { start: string; end: string },
 ): boolean =>
   !(
     eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
@@ -39,7 +39,7 @@ export function getSchedules(
     crossingSubjects: 0,
     crossEvent: true,
     crossPractices: false,
-  }
+  },
 ): { occurrences: any[]; schedules: any[]; combinations: ISchedule[] } {
   const occurrences = []
   const maxQuantity = subjects.length
@@ -145,7 +145,7 @@ export function getSchedules(
 
 function scheduleToEvent(
   schedule: ISubjectSchedule,
-  color = 'primary'
+  color = 'primary',
 ): Array<Event> {
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
@@ -161,7 +161,7 @@ function scheduleToEvent(
       sessions[i]?.classroom?.code,
       color,
       'COURSE',
-      sessions[i].type.code
+      sessions[i].type.code,
     )
     events.push(event)
   }

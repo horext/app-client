@@ -1,10 +1,6 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "@types/uuid",
-      "@types/luxon",
-      "@pinia/nuxt"
-    ]
+    "types": ["@types/uuid", "@types/luxon", "@pinia/nuxt"]
   }
 }
