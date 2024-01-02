@@ -1,11 +1,12 @@
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import * as directives from 'vuetify/directives'
 import { es, en } from 'vuetify/locale'
 import colors from 'vuetify/util/colors'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
-    directives,
+    ssr: true,
     locale: {
       locale: 'es',
       messages: {

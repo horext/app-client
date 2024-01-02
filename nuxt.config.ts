@@ -1,4 +1,3 @@
-import vuetify from 'vite-plugin-vuetify'
 
 const config = defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -20,11 +19,6 @@ const config = defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     },
   },
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    'vuetify/lib/styles/main.sass',
-    '@mdi/font/css/materialdesignicons.min.css',
-  ],
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
@@ -57,18 +51,8 @@ const config = defineNuxtConfig({
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-
   build: {
     transpile: ['vuetify'],
-  },
-  hooks: {
-    'vite:extendConfig': (config) => {
-      config.plugins?.push(
-        vuetify({
-          autoImport: true,
-        }),
-      )
-    },
   },
 })
 
