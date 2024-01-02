@@ -83,15 +83,14 @@
     </div>
 
     <v-divider />
-    <v-card-text v-if="schedules.length > 0">
-      <schedules-list
-        ref="calendar"
-        v-model:current-schedule="currentSchedule"
-        :schedules="schedules"
-        :week-days="weekDays"
-        :mode="mode"
-      />
-    </v-card-text>
+    <schedules-list
+      v-if="schedules.length > 0"
+      ref="calendar"
+      v-model:current-schedule="currentSchedule"
+      :schedules="schedules"
+      :week-days="weekDays"
+      :mode="mode"
+    />
     <v-card-text v-else>
       <slot name="emptyBody">
         {{ emptyMessage }}

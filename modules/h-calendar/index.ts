@@ -1,4 +1,4 @@
-import { createResolver, defineNuxtModule, } from 'nuxt/kit'
+import { createResolver, defineNuxtModule } from 'nuxt/kit'
 
 export default defineNuxtModule({
   meta: {
@@ -12,6 +12,6 @@ export default defineNuxtModule({
         path: resolve('./runtime/components'),
         prefix: 'H',
       })
-    }
+    },
   },
 })

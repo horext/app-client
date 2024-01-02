@@ -1,5 +1,8 @@
-import { HOUR_IN_MINUTES, HOUR_PAD_LENGTH, MINUTE_PAD_LENGTH } from "../constants/time"
-
+import {
+  HOUR_IN_MINUTES,
+  HOUR_PAD_LENGTH,
+  MINUTE_PAD_LENGTH,
+} from '../constants/time'
 
 export const timeToHours = (time: string) => {
   const hours = Number(time.split(':')[0])

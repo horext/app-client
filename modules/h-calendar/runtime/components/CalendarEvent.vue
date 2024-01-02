@@ -1,6 +1,6 @@
 <template>
   <div
-   class="h-calendar-event-timed"
+    class="h-calendar-event-timed"
     @dblclick="$emit('dblclick', $event)"
     @click.stop.prevent="$emit('click', $event)"
     @mousedown="$emit('mousedown', $event)"

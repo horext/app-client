@@ -24,7 +24,9 @@ export default defineNuxtModule({
       addComponent({
         name: component,
         export: component,
-        filePath: 'vuetify/' + componentsMap[component].from.replace(/\/index\.mjs$/, ''),
+        filePath:
+          'vuetify/' +
+          componentsMap[component].from.replace(/\/index\.mjs$/, ''),
       })
     }
 

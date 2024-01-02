@@ -155,7 +155,7 @@ const internalEvents = computed(() => {
           position: {
             ...event.position,
             left: width * index,
-            width: width + (collisionsLength - index-1)*15,
+            width: width + (collisionsLength - index - 1) * 15,
           },
         }
       }
