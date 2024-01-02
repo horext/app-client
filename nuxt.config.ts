@@ -1,4 +1,3 @@
-
 const config = defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
@@ -43,7 +42,6 @@ const config = defineNuxtConfig({
         id: process.env.NUXT_ENV_GOOGLE_ANALYTICS_ID,
       },
     },
-    baseURL: process.env.BASE_URL,
     apiUrl: process.env.NUXT_ENV_API_URL,
   },
 
