@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useTheme } from 'vuetify'
 import VuetifyLogo from '../VuetifyLogo.vue'
 import HomeDrawer from '@/components/home/Drawer.vue'
 
