@@ -1,9 +1,6 @@
 <template>
-  <v-form
-    ref="form"
-  >
+  <v-form ref="form">
     <v-text-field
-
       v-model="eventSync.title"
       label="Titulo del Evento"
       :rules="[rules.required]"
@@ -12,7 +9,7 @@
       v-model="eventSync.day"
       :items="weekdays"
       item-value="index"
-      item-text="value"
+      item-title="value"
       label="Dia"
       :rules="[rules.requiredDay]"
     />
@@ -20,63 +17,76 @@
       v-model="eventSync.startTime"
       label="Hora de Inicio"
       type="time"
-      :rules="[rules.required, rules.max]"
+      :rules="startRules"
     />
     <v-text-field
       v-model="eventSync.endTime"
       label="Hora de Fin"
       type="time"
-      :rules="[rules.required, rules.min]"
+      :rules="endRules"
     />
-    <v-color-picker
-      v-model="color"
-      class="ma-2"
-      hide-canvas
-      hide-mode-switch
-      hide-inputs
-    />
+    <v-color-picker v-model="color" class="ma-2" hide-canvas hide-inputs />
   </v-form>
 </template>
 
-<script lang="ts">import { defineComponent, PropType, ref, watch } from 'vue'
-import { v4 } from 'uuid'
-import { VForm } from '~/types'
+<script lang="ts">
+import { computed, defineComponent, type PropType, ref, watch } from 'vue'
+import { useVModel } from '@vueuse/core'
+import type { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   name: 'EventsCreator',
   props: {
     event: {
-      type: Object as PropType<any>,
-      default: () => ({
-        id: v4(),
-        title: '',
-        day: null,
-        color: 'primary',
-        type: 'myEvent',
-        startTime: '12:00',
-        endTime: '14:00'
-      })
-    }
+      type: Object as PropType<IEvent>,
+      required: true,
+    },
   },
   emits: ['update:event'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
+    const eventSync = useVModel(props, 'event', emit)
     const color = ref(null)
 
     const onChangeColor = (newVal: any) => {
       emit('update:event', {
         ...props.event,
-        color: newVal.hex
+        color: newVal.hex,
       })
     }
 
-    const rules = {
+    const rules = computed(() => ({
       required: (value: any) => !!value || 'Requerido.',
       requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-      max: (value: any) => value < props.event.endTime || 'Tiene que ser menor que el fin',
-      min: (value: any) => value > props.event.startTime || 'Tiene que ser mayor que el inicio'
-    }
+      max: (value: any) =>
+        value < props.event?.endTime || 'Tiene que ser menor que el fin',
+      min: (value: any) =>
+        value > props.event?.startTime || 'Tiene que ser mayor que el inicio',
+    }))
 
-    const form = ref<VForm>()
+    const startRules = computed(() => {
+      const rules: any[] = [(value: any) => !!value || 'Requerido.']
+      if (props.event?.endTime < props.event?.startTime) {
+        rules.push(
+          (value: any) =>
+            value < props.event?.endTime || 'Tiene que ser menor que el fin',
+        )
+      }
+      return rules
+    })
+
+    const endRules = computed(() => {
+      const rules: any[] = [(value: any) => !!value || 'Requerido.']
+      if (props.event?.startTime > props.event?.endTime) {
+        rules.push(
+          (value: any) =>
+            value > props.event?.startTime ||
+            'Tiene que ser mayor que el inicio',
+        )
+      }
+      return rules
+    })
+
+    const form = ref<any>()
 
     const validated = () => {
       const validate = form.value?.validate()
@@ -95,7 +105,7 @@ export default defineComponent({
       { index: 3, value: 'Miercoles' },
       { index: 4, value: 'Jueves' },
       { index: 5, value: 'Viernes' },
-      { index: 6, value: 'Sábado' }
+      { index: 6, value: 'Sábado' },
     ]
 
     const dialog = ref(false)
@@ -106,8 +116,11 @@ export default defineComponent({
       form,
       validated,
       weekdays,
-      dialog
+      dialog,
+      eventSync,
+      startRules,
+      endRules,
     }
-  }
+  },
 })
 </script>

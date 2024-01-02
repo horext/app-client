@@ -1,38 +1,22 @@
 <template>
   <v-card>
-    <v-toolbar flat dark :color="color">
+    <v-toolbar flat theme="dark" :color="color">
       <slot name="top-items-right" />
       <v-spacer />
-      <v-radio-group
-        v-model="mode"
-        hide-details
-        dense
-        :column="false"
-        hide-spin-buttons
-      >
+      <v-radio-group v-model="mode" hide-details density="compact" inline>
         <template #label>
           <div>Modo:</div>
         </template>
-        <v-row no-gutters>
-          <v-col cols="12">
-            <v-radio :value="MODES.CALENDAR" color="primary darken-2">
-              <template #label>
-                <v-icon small left>
-                  mdi-calendar
-                </v-icon>Calendario
-              </template>
-            </v-radio>
-          </v-col>
-          <v-col cols="12">
-            <v-radio :value="MODES.LIST" color="primary darken-2">
-              <template #label>
-                <v-icon small left>
-                  mdi-table
-                </v-icon> Lista
-              </template>
-            </v-radio>
-          </v-col>
-        </v-row>
+        <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
+          <template #label>
+            <v-icon size="small" start> mdi-calendar </v-icon>Calendario
+          </template>
+        </v-radio>
+        <v-radio :value="MODES.LIST" color="primary-darken-2">
+          <template #label>
+            <v-icon size="small" start> mdi-table </v-icon> Lista
+          </template>
+        </v-radio>
       </v-radio-group>
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
@@ -45,31 +29,30 @@
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0">
           <v-menu v-if="mode === MODES.CALENDAR" offset-y>
-            <template #activator="{ on, attrs }">
+            <template #activator="{ props }">
               <v-btn
                 color="purple"
-                dark
+                theme="dark"
                 rounded
-                shaped
+                variant="outlined"
                 class="ma-1"
-                v-bind="attrs"
-                v-on="on"
+                v-bind="props"
               >
                 <v-icon>mdi-export</v-icon>
                 Exportar
               </v-btn>
             </template>
             <ScheduleExport
-              :dialog.sync="dialogExport"
+              v-model:dialog="dialogExport"
               :schedule="currentSchedule"
             />
           </v-menu>
 
           <v-btn
             color="indigo"
-            dark
+            theme="dark"
             rounded
-            shaped
+            variant="outlined"
             class="ma-1"
             @click="dialogShare = !dialogShare"
           >
@@ -84,14 +67,14 @@
           />
           <v-dialog v-model="dialogExport" max-width="600">
             <ScheduleExport
-              :dialog.sync="dialogExport"
+              v-model:dialog="dialogExport"
               :schedule="currentSchedule"
             />
           </v-dialog>
           <v-dialog v-model="dialogShare" max-width="600">
             <ScheduleShare
+              v-model:dialog="dialogShare"
               :path="path"
-              :dialog.sync="dialogShare"
               :schedule="currentSchedule"
             />
           </v-dialog>
@@ -103,8 +86,8 @@
     <v-card-text v-if="schedules.length > 0">
       <schedules-list
         ref="calendar"
+        v-model:current-schedule="currentSchedule"
         :schedules="schedules"
-        :current-schedule.sync="currentSchedule"
         :week-days="weekDays"
         :mode="mode"
       />
@@ -118,63 +101,63 @@
 </template>
 
 <script lang="ts">
-import { computed, ref, defineComponent } from 'vue'
+import { computed, ref, defineComponent, type PropType } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/model/ViewMode'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
     SchedulesList,
     GoogleAuth,
     ScheduleShare,
-    ScheduleExport
+    ScheduleExport,
   },
   props: {
     schedules: {
-      type: Array,
-      default: () => []
+      type: Array as PropType<ISchedule[]>,
+      default: () => [],
     },
     path: {
       type: String,
-      default: '/subject'
+      default: '/subject',
     },
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     color: {
       type: String,
-      default: 'primary'
+      default: 'primary',
     },
     emptyMessage: {
       type: String,
-      default: ''
+      default: '',
     },
     dialog: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  setup () {
-    const { hourlyLoad, weekDays } = useUserConfigStore()
-
+  setup() {
+    const store = useUserConfigStore()
+    const { weekDays, hourlyLoad } = storeToRefs(store)
     const academicPeriodOrganizationUnit = computed(
-      () => hourlyLoad.value?.academicPeriodOrganizationUnit
+      () => hourlyLoad.value?.academicPeriodOrganizationUnit!,
     )
 
     const startDate = computed(
-      () => academicPeriodOrganizationUnit.value?.fromDate
+      () => academicPeriodOrganizationUnit.value?.fromDate,
     )
 
-    const endDate = computed(
-      () => academicPeriodOrganizationUnit.value?.toDate
-    )
+    const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 
-    const currentSchedule = ref<any>(null)
+    const currentSchedule = ref<ISchedule>()
 
     const dialogShare = ref(false)
     const dialogExport = ref(false)
@@ -194,8 +177,8 @@ export default defineComponent({
       startDate,
       endDate,
       MODES,
-      currentSchedule
+      currentSchedule,
     }
-  }
+  },
 })
 </script>

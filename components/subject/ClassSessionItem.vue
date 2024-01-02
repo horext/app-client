@@ -25,12 +25,12 @@ export default defineComponent({
   props: {
     session: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  setup (props) {
-    const dayWeek = computed(() =>
-      weekdays[props.session?.day]?.substring(0, 2).toUpperCase()
+  setup(props) {
+    const dayWeek = computed(
+      () => weekdays[props.session?.day]?.substring(0, 2).toUpperCase(),
     )
 
     const type = computed(() => props.session?.type?.code)
@@ -43,7 +43,7 @@ export default defineComponent({
       () =>
         props.session?.startTime?.substring(0, 5) +
         ' - ' +
-        props.session?.endTime?.substring(0, 5)
+        props.session?.endTime?.substring(0, 5),
     )
 
     return {
@@ -51,12 +51,8 @@ export default defineComponent({
       type,
       teacherFullName,
       classroom,
-      timeInterval
+      timeInterval,
     }
-  }
+  },
 })
 </script>
-<style lang="sass">
-@import '~vuetify/src/styles/styles.sass'
-@media #{map-get($display-breakpoints, 'sm-and-down')}
-</style>

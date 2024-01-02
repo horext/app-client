@@ -2,25 +2,17 @@
   <v-sheet>
     <v-calendar
       id="calendar"
-      v-model="focus"
-      :start="start"
-      :events="schedule.events"
       first-interval="7"
       interval-count="16"
-      :event-color="getEventColor"
-      :type="type"
+      type="month"
       interval-width="40"
-      :short-intervals="false"
-      :interval-format="intervalFormat"
-      :weekdays="[0,1,2,3,4,5,6]"
+      :weekdays="[0, 1, 2, 3, 4, 5, 6]"
       @click:event="showEvent"
     >
       <template #day-label-header>
         <div />
       </template>
-      <template
-        #event="{event, attrs,on}"
-      >
+      <template #event="{ event, attrs, on }">
         <v-hover>
           <template #default="{ hover }">
             <schedule-event-info
@@ -38,19 +30,22 @@
       v-model="selectedOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
-      offset-x
+      location="bottom left"
     >
       <EventInfoCard
         v-if="selectedEvent"
+        v-model:dialog="selectedOpen"
         :selected-event="selectedEvent"
-        :dialog.sync="selectedOpen"
       />
     </v-menu>
+    {{ internalEvents }}
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue'
+import { VCalendar } from 'vuetify/labs/VCalendar'
+import { useDate } from 'vuetify'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import { weekdayToDate } from '~/utils/core'
@@ -58,21 +53,22 @@ import { weekdayToDate } from '~/utils/core'
 export default {
   components: {
     ScheduleEventInfo,
-    EventInfoCard
+    EventInfoCard,
+    VCalendar,
   },
   props: {
     schedule: {
       type: Object,
-      required: true
+      required: true,
     },
     weekDays: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5, 6]
-    }
+      default: () => [1, 2, 3, 4, 5, 6],
+    },
   },
-  setup () {
+  setup(props) {
     const hover = ref(false)
-    const focus = ref('')
+    const focus = ref()
     const type = ref('week')
 
     const intervalFormat = (interval: any) => {
@@ -90,7 +86,13 @@ export default {
       return event.color
     }
 
-    const showEvent = ({ nativeEvent, event }: { nativeEvent: any, event : any}) => {
+    const showEvent = ({
+      nativeEvent,
+      event,
+    }: {
+      nativeEvent: any
+      event: any
+    }) => {
       const open = () => {
         selectedEvent.value = event
         selectedElement.value = nativeEvent.target
@@ -109,6 +111,20 @@ export default {
       nativeEvent.stopPropagation()
     }
 
+    const dateAdapter = useDate()
+
+    const internalEvents = computed(
+      () =>
+        props.schedule?.events?.map((event) => {
+          console.log('event', event)
+          return {
+            ...event,
+            start: dateAdapter.startOfDay(event.start),
+            end: dateAdapter.startOfDay(event.end),
+          }
+        }),
+    )
+
     return {
       hover,
       focus,
@@ -120,9 +136,9 @@ export default {
       intervalFormat,
       start,
       getEventColor,
-      showEvent
+      showEvent,
+      internalEvents,
     }
-  }
+  },
 }
-
 </script>

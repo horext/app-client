@@ -1,34 +1,28 @@
 <template>
-  <v-list-item three-line dense>
-    <v-list-item-content v-if="hourlyLoad">
-      {{ name }}
+  <v-list-item lines="three" density="compact">
+    <template v-if="hourlyLoad">
+      {{ hourlyLoad.name }}
       <v-list-item-subtitle>
-        Ult. Actual.: {{ new Date(updatedAt).toLocaleString() }}
+        Ult. Actual.: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
       </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-content v-else>
+    </template>
+    <template v-else>
       <v-list-item-subtitle> Sin carga horaria. </v-list-item-subtitle>
-    </v-list-item-content>
+    </template>
   </v-list-item>
 </template>
 <script lang="ts">
-import { computed } from '@nuxtjs/composition-api'
+import { storeToRefs } from 'pinia'
 import { defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const store = useUserConfigStore()
-    const hourlyLoad = computed(() => store.hourlyLoad)
-
-    const updatedAt = computed(() => hourlyLoad.value?.updatedAt)
-    const name = computed(() => hourlyLoad.value?.name)
-
+    const { hourlyLoad } = storeToRefs(store)
     return {
       hourlyLoad,
-      updatedAt,
-      name
     }
-  }
+  },
 })
 </script>

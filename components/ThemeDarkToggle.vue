@@ -4,13 +4,13 @@
   </v-sheet>
 </template>
 <script lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import Lottie, { AnimationItem } from 'lottie-web'
-import { defineComponent } from '@nuxtjs/composition-api'
-import { useVuetify } from '~/composables/vuetify'
+import { useTheme } from 'vuetify'
+import { computed, onMounted, ref, watch, defineComponent } from 'vue'
+import Lottie, { type AnimationItem } from 'lottie-web'
+import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const darkMode = ref<AnimationItem>()
 
     onMounted(() => {
@@ -20,21 +20,21 @@ export default defineComponent({
         renderer: 'svg',
         loop: false,
         autoplay: false,
-        animationData: require('~/assets/lottie/71569-hamster-toggle.json')
+        animationData: Animation,
       })
       darkMode.value.setSpeed(2)
     })
 
-    const vuetify = useVuetify()
+    const theme = useTheme()
 
     const dark = computed({
-      get  () {
-        return vuetify.theme.dark
+      get() {
+        return theme.global.current.value.dark
       },
 
-      set  (val: boolean) {
-        vuetify.theme.dark = val
-      }
+      set(val: boolean) {
+        theme.global.name.value = val ? 'dark' : 'light'
+      },
     })
 
     const toggleDark = () => {
@@ -54,9 +54,9 @@ export default defineComponent({
 
     return {
       dark,
-      toggleDark
+      toggleDark,
     }
-  }
+  },
 })
 </script>
 <style>

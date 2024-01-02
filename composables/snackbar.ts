@@ -1,17 +1,17 @@
 import { storeToRefs } from 'pinia'
 import {
-  SnackbarOptions,
-  useGlobalSnackbarStore
+  type SnackbarOptions,
+  useGlobalSnackbarStore,
 } from '~/stores/global-snackbar'
 
-export function useSnackbar () {
+export function useSnackbar() {
   const store = useGlobalSnackbarStore()
-  function showMessage (payload: SnackbarOptions) {
+  function showMessage(payload: SnackbarOptions) {
     store.showMessage(payload)
   }
 
   return {
-    showMessage
+    showMessage,
   }
 }
 

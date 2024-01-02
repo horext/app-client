@@ -1,10 +1,10 @@
 <template>
   <tr>
-    <td :rowspan="sessionsCount+1">
+    <td :rowspan="sessionsCount + 1">
       <v-checkbox
         v-model="valueSync"
         class="text-caption"
-        dense
+        density="compact"
         :label="section"
         :value="schedule"
         multiple
@@ -13,26 +13,27 @@
   </tr>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, type PropType, computed } from 'vue'
+import type { ISubjectSchedule } from '~/interfaces/subject'
 
 export default defineComponent({
   props: {
     schedule: {
-      type: Object as PropType<any>,
-      default: () => ({})
+      type: Object as PropType<ISubjectSchedule>,
+      required: true,
     },
-    value: {
-      type: [Array, Object],
-      default: null
-    }
+    modelValue: {
+      type: Array as PropType<ISubjectSchedule[]>,
+      default: null,
+    },
   },
-  emits: ['input'],
-  setup (props, { emit }) {
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
     const valueSync = computed({
-      get: () => props.value,
+      get: () => props.modelValue,
       set: (newValue) => {
-        emit('input', newValue)
-      }
+        emit('update:modelValue', newValue)
+      },
     })
 
     const sessionsCount = computed(() => {
@@ -44,6 +45,6 @@ export default defineComponent({
     })
 
     return { valueSync, sessionsCount, section }
-  }
+  },
 })
 </script>

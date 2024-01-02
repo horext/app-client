@@ -1,20 +1,30 @@
 import { convertToDate } from '~/utils/core'
 
 export default class Event {
-  id?: string|number
+  id?: string
   day: number
   startTime: string
   endTime: string
 
-  title?: string
+  title: string = ''
   description?: string
   location?: string
-  color?: string
+  color: string
 
   category?: string
-  type?: string
+  type: string
 
-  constructor (day: number, startTime: string, endTime: string, title: string, description: string, location: string = '', color: string, category: string, type: string) {
+  constructor(
+    day: number,
+    startTime: string,
+    endTime: string,
+    title: string,
+    description: string,
+    location: string = '',
+    color: string,
+    category: string,
+    type: string,
+  ) {
     this.day = day
     this.startTime = startTime
     this.endTime = endTime
@@ -26,11 +36,11 @@ export default class Event {
     this.type = type
   }
 
-  get start () {
+  get start() {
     return convertToDate(this.day, this.startTime)
   }
 
-  get end () {
+  get end() {
     return convertToDate(this.day, this.endTime)
   }
 }

@@ -1,30 +1,21 @@
 <template>
   <v-row no-gutters>
     <v-img
-      :src="require('~/assets/material2.jpg')"
+      :src="Material"
       gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
-      :min-height="'calc(100vh - ' + $vuetify.application.top + 'px)'"
     >
       <v-container fill-height>
-        <v-row
-          align="center"
-          class="white--text mx-auto"
-          justify="center"
-        >
-          <v-col
-            class="white--text text-center"
-            cols="12"
-            tag="h1"
-          >
+        <v-row align="center" class="text-white mx-auto" justify="center">
+          <v-col class="text-white text-center" cols="12" tag="h1">
             <span
-              :class="[$vuetify.breakpoint.smAndDown ? 'display-1' : 'display-2']"
+              :class="[$vuetify.display.smAndDown ? 'display-1' : 'display-2']"
               class="font-weight-light"
             >
               Bienvenido a
             </span>
-            <br>
+            <br />
             <span
-              :class="[$vuetify.breakpoint.smAndDown ? 'display-3': 'display-4']"
+              :class="[$vuetify.display.smAndDown ? 'display-3' : 'display-4']"
               class="font-weight-black"
             >
               Horext
@@ -33,8 +24,8 @@
 
           <v-btn
             class="align-self-end"
-            outlined
-            dark
+            variant="outlined"
+            theme="dark"
             to="/generator"
           >
             <v-icon>mdi-chevron-double-right</v-icon>
@@ -46,12 +37,6 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  components: {
-  }
-}
+<script setup lang="ts">
+import Material from '~/assets/material2.jpg'
 </script>
-<style>
-
-</style>

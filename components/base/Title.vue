@@ -12,20 +12,20 @@ export default {
   props: {
     size: {
       type: String,
-      default: 'title'
+      default: 'title',
     },
     mobileSize: {
       type: String,
-      default: 'subtitle-1'
+      default: 'subtitle-1',
     },
     tag: {
       type: String,
-      default: 'h3'
+      default: 'h3',
     },
     weight: {
       type: String,
-      default: 'bold'
-    }
-  }
+      default: 'bold',
+    },
+  },
 }
 </script>

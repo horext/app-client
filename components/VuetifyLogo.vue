@@ -2,8 +2,8 @@
   <img
     class="VuetifyLogo"
     alt="Vuetify Logo"
-    src="/horext-logo.svg"
-  >
+    src="~/assets/images/horext-logo.svg"
+  />
 </template>
 
 <style>

@@ -4,7 +4,7 @@
       <v-toolbar flat>
         <v-btn
           v-if="schedules.length > 0"
-          outlined
+          variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
           <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : null">
@@ -26,25 +26,19 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  useAsync,
-  useRoute,
-} from '@nuxtjs/composition-api'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
-import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
+import { useApi } from '~/composables/api'
 
 export default defineComponent({
   components: {
-    ScheduleViewer
+    ScheduleViewer,
   },
   layout: 'app',
-  setup () {
+  setup() {
+    const $api = useApi()
     const query = ref('')
     const schedules = ref<any[]>([])
     const loading = ref(false)
@@ -52,21 +46,17 @@ export default defineComponent({
 
     const store = useUserConfigStore()
 
-    const myFavoritesSchedules = computed(
-      () => store.favoritesSchedules
-    )
+    const myFavoritesSchedules = computed(() => store.favoritesSchedules)
     const route = useRoute()
 
-    const data = useAsync(async () => {
-      const query: any = route.value.query
+    const { data } = useAsyncData(async () => {
+      const query: any = route.query
       const result = Buffer.from(query.q, 'base64').toString()
-      const { data: scheduleSubjects } = await $api.scheduleSubject.getAllByIds(
-        result.split(',').map(Number)
+      const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
+        result.split(',').map(Number),
       )
       const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
-      const { data: sessions } = await $api.classSessions.findScheduleIds(
-        schedulesId
-      )
+      const sessions = await $api.classSessions.findScheduleIds(schedulesId)
       return { scheduleSubjects, sessions }
     })
 
@@ -86,20 +76,20 @@ export default defineComponent({
           {
             ...sb?.schedule,
             scheduleSubject: {
-              id: sb.id
+              id: sb.id,
             },
             sessions: sessions.value.filter(
-              (s: any) => s.schedule.id === sb.schedule.id
-            )
-          }
-        ]
+              (s: any) => s.schedule.id === sb.schedule.id,
+            ),
+          },
+        ],
       }))
     })
 
-    async function fetchSchedules () {
+    async function fetchSchedules() {
       loading.value = true
       const { combinations } = await getSchedules(subjects.value, [], {
-        crossingSubjects: 100
+        crossingSubjects: 100,
       })
       schedules.value = combinations
       loading.value = false
@@ -120,7 +110,7 @@ export default defineComponent({
 
     const isFavorite = (schedule: any) => {
       return myFavoritesSchedules.value.findIndex(
-        (x: { id: any }) => x.id === schedule.id
+        (x: { id: any }) => x.id === schedule.id,
       )
     }
 
@@ -133,22 +123,21 @@ export default defineComponent({
       courses,
       addFavoriteCurrentSchedule,
       isFavorite,
-      myFavoritesSchedules
-
+      myFavoritesSchedules,
     }
   },
-  head () {
+  head() {
     return {
       title: 'Horario compartido',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: 'Comparte tu horario a tus amigos! '
-        }
-      ]
+          content: 'Comparte tu horario a tus amigos! ',
+        },
+      ],
     }
-  }
+  },
 })
 </script>
 

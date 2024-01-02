@@ -7,25 +7,30 @@
           v-model="faculty"
           :items="faculties"
           return-object
-          item-text="name"
+          item-title="name"
           label="Facultades"
         />
         <v-autocomplete
           v-model="speciality"
           :disabled="!faculty"
           return-object
-          item-text="name"
+          item-title="name"
           :items="specialities"
           label="Especialidades"
         />
       </v-form>
-      <v-alert v-model="showErrorMessage" dismissible type="error">
+      <v-alert v-model="showErrorMessage" closable type="error">
         {{ errorMessage }}
       </v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn :loading="loading" :disabled="!hourlyLoad" text @click="ending">
+      <v-btn
+        :loading="loading"
+        :disabled="!hourlyLoad"
+        variant="text"
+        @click="ending"
+      >
         Guardar
       </v-btn>
     </v-card-actions>
@@ -33,67 +38,70 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, onMounted } from 'vue'
-import { $api } from '~/utils/api'
+import { ref, watch, onMounted, defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IOrganization } from '~/interfaces/organization'
+import { useApi } from '~/composables/api'
 
-export default {
+export default defineComponent({
   name: 'SettingInitial',
-  setup () {
+  setup() {
+    const $api = useApi()
     const store = useUserConfigStore()
 
-    const faculties = ref([])
-    const specialities = ref([])
+    const faculties = ref<IOrganization[]>([])
+    const specialities = ref<IOrganization[]>([])
     const errorMessage = ref('')
     const showErrorMessage = ref(false)
     const loading = ref(false)
 
-    const faculty = ref<any>(null)
-    const speciality = ref<any>(null)
-    const hourlyLoad = ref<any>(null)
+    const faculty = ref<IOrganization | undefined>()
+    const speciality = ref<IOrganization | undefined>()
+    const hourlyLoad = ref<IHourlyLoad>()
 
-    const initSpecialities = async (selectedFaculty: any) => {
-      if (selectedFaculty) {
-        speciality.value = null
-        const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
-        specialities.value = data
-      }
+    const initSpecialities = async (selectedFaculty: IOrganization) => {
+      speciality.value = undefined
+      const data = await $api.speciality.getAllByFaculty(selectedFaculty.id)
+      specialities.value = data
     }
     watch(faculty, async (newValue) => {
-      await initSpecialities(newValue)
+      if (newValue) {
+        await initSpecialities(newValue)
+      }
     })
 
-    const onChangeSpeciality = async (selectedSpeciality: any) => {
-      showErrorMessage.value = false
-      if (selectedSpeciality) {
-        hourlyLoad.value = null
-        try {
-          const { data } = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
-          hourlyLoad.value = data
-        } catch (e:any) {
-          const { data } = e.response
-          errorMessage.value = data.message
-          showErrorMessage.value = true
-        }
+    const onChangeSpeciality = async (_speciality: IOrganization) => {
+      hourlyLoad.value = undefined
+      try {
+        const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value!.id)
+        hourlyLoad.value = data
+      } catch (e: any) {
+        const data = e.response
+        errorMessage.value = data.message
+        showErrorMessage.value = true
       }
     }
     watch(speciality, async (newValue) => {
-      await onChangeSpeciality(newValue)
+      showErrorMessage.value = false
+      if (newValue) {
+        await onChangeSpeciality(newValue)
+      }
     })
 
     const init = async () => {
-      const { data } = await $api.faculty.getAll()
+      const data = await $api.faculty.getAll()
       faculties.value = data
       faculty.value = store.faculty
       hourlyLoad.value = store.hourlyLoad
       speciality.value = store.speciality
     }
 
-    const ending = async () => {
+    const ending = () => {
       loading.value = true
-      await store.updateFaculty(faculty.value)
-      await store.updateSpeciality(speciality.value)
-      await store.updateFirstEntry(false)
+      store.updateFaculty(faculty.value!)
+      store.updateSpeciality(speciality.value!)
+      store.updateFirstEntry(false)
       loading.value = false
     }
 
@@ -112,8 +120,8 @@ export default {
       hourlyLoad,
       initSpecialities,
       onChangeSpeciality,
-      ending
+      ending,
     }
-  }
-}
+  },
+})
 </script>

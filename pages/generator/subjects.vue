@@ -1,51 +1,35 @@
 <template>
-  <v-card tile flat>
+  <v-card rounded="0" flat>
     <v-card-text>
       <v-row no-gutters>
         <v-col cols="12">
           <v-autocomplete
             v-model="editedItem"
-            shaped
-            filled
-            :search-input.sync="search"
+            v-model:search="search"
+            variant="outlined"
             :items="availableCourses"
             append-icon="mdi-magnify"
             label="Busca cursos para agregar"
             return-object
             no-filter
-            :cache-items="false"
             hide-details
-            @input="editItem"
+            item-title="course.name"
+            item-value="id"
+            @update:model-value="editItem"
           >
-            <template #selection="{ item, on, attrs }">
-              <v-list-item dense v-bind="attrs" v-on="on">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.course.id }} - {{ item.course.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Ciclo {{ item.cycle }} |
-                    <span v-if="item.type">
-                      {{ item.type.name }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <template #selection="{ item }">
+              <v-list-item
+                v-if="item.raw"
+                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+              ></v-list-item>
             </template>
-            <template #item="{ item, on, attrs }">
-              <v-list-item dense v-bind="attrs" v-on="on">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.course.id }} - {{ item.course.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Ciclo {{ item.cycle }} |
-                    <span v-if="item.type">
-                      {{ item.type.name }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <template #item="{ props, item }">
+              <v-list-item
+                v-bind="props"
+                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+              ></v-list-item>
             </template>
           </v-autocomplete>
         </v-col>
@@ -53,9 +37,7 @@
       <v-row no-gutters>
         <v-spacer />
         <v-col cols="auto">
-          <nuxt-link to="/generator">
-            Generar mis horarios
-          </nuxt-link>
+          <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
         </v-col>
       </v-row>
       <v-row dense>
@@ -75,6 +57,7 @@
         @keydown.esc="close"
       >
         <SubjectScheduleList
+          v-if="editedItem"
           :subject="editedItem"
           :hourly-load="myHourlyLoad"
           @save="save"
@@ -82,20 +65,13 @@
         />
       </v-dialog>
 
-      <v-data-table
-        :headers="headers"
-        :items="mySubjects"
-        sort-by="calories"
-        class="elevation-1"
-      >
+      <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
         <template #no-data>
           <v-row align="center">
             <v-col cols="12" md="6">
               <div class="text-md-h2 text-h4 text-left">
                 Busca tus cursos en la parte superior y luego ve al
-                <nuxt-link to="/generator">
-                  generador
-                </nuxt-link>
+                <nuxt-link to="/generator"> generador </nuxt-link>
               </div>
             </v-col>
             <v-col cols="12" md="6">
@@ -109,45 +85,65 @@
           <v-chip
             v-for="schedule in item.schedules"
             :key="schedule.id"
-            dark
+            theme="dark"
             :color="getColor(schedule.section.id)"
           >
             {{ schedule.section.id }}
           </v-chip>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon class="mr-2" color="primary" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon color="red" @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+          <v-tooltip location="bottom">
+            <template #activator="{ props }">
+              <v-icon color="blue" v-bind="props" @click="editItem(item)">
+                mdi-pencil
+              </v-icon>
+            </template>
+            <span>Editar</span>
+          </v-tooltip>
+          <v-tooltip location="bottom">
+            <template #activator="{ props }">
+              <v-icon color="red" v-bind="props" @click="deleteItem(item)">
+                mdi-delete
+              </v-icon>
+            </template>
+            <span>Eliminar</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-card-text>
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
-        <v-card-title class="headline">
+        <v-card-title class="text-h5">
           ¿Estás segura de que quieres eliminar este curso?
         </v-card-title>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="closeDelete">
+          <v-btn color="blue-darken-1" variant="text" @click="closeDelete">
             Cancelar
           </v-btn>
-          <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="deleteItemConfirm"
+          >
             Aceptar
           </v-btn>
           <v-spacer />
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="succcesAddCourse" color="blue" app timeout="3000">
+    <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
       <v-icon> mdi-check </v-icon>
       Curso Agregado correctamente!
       <template #action="{ attrs }">
-        <v-btn text small icon v-bind="attrs" @click="succcesAddCourse = false">
+        <v-btn
+          variant="text"
+          size="small"
+          icon
+          v-bind="attrs"
+          @click="succcesAddCourse = false"
+        >
           <v-icon> mdi-close </v-icon>
         </v-btn>
       </template>
@@ -159,22 +155,24 @@
 import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
-import { $api } from '~/utils/api'
 import { useUserConfigStore } from '~/stores/user-config'
-
+import type { ISelectedSubject, ISubject } from '~/interfaces/subject'
+import { useApi } from '~/composables/api'
+import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
   name: 'MySubjects',
   components: {
-    SubjectScheduleList
+    SubjectScheduleList,
   },
-  setup () {
+  setup() {
+    const $api = useApi()
     onMounted(() => {
       Lottie.loadAnimation({
         container: document.getElementById('noData') as Element,
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: require('~/assets/lottie/15538-cat-woow.json')
+        animationData: Animation,
       })
     })
 
@@ -183,8 +181,8 @@ export default defineComponent({
     const succcesAddCourse = ref(false)
 
     const availableCourses = computed(() => {
-      return subjects.value?.filter(c1 =>
-        mySubjects.value?.findIndex((c2: { id: any }) => c1.id === c2.id)
+      return subjects.value?.filter(
+        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
       )
     })
 
@@ -193,85 +191,65 @@ export default defineComponent({
       return months[section.charCodeAt(0) % months.length]
     }
 
-    const mySubjects = computed<any[]>(() => configStore.subjects)
+    const mySubjects = computed(() => configStore.subjects)
 
     const totalCredits = computed(() => {
-      return mySubjects.value.reduce(
-        (previousValue: any, currentValue: { credits: any }) => {
-          return currentValue.credits + previousValue
-        },
-        0
-      )
+      return mySubjects.value.reduce((previousValue, currentValue) => {
+        return currentValue.credits + previousValue
+      }, 0)
     })
 
-    const deleteSubjectById = async (id: any) => {
-      await configStore.deleteSubjectById(id)
-    }
-
-    const updateSubject = async (subject: any) => {
-      await configStore.updateSubject(subject)
-    }
-
-    const saveNewSubject = async (subject: any) => {
-      await configStore.saveNewSubject(subject)
-    }
-
-    const subjects = ref<any[]>([])
+    const subjects = ref<ISubject[]>([])
     const dialog = ref(false)
     const loading = ref(false)
     const dialogDelete = ref(false)
 
-    const defaultItem = ref<any>(null)
-    const editedItem = ref<any>({})
+    const editedItem = ref<any>(undefined)
     const editedIndex = ref(-1)
 
-    const editItem = (item: { id: any }) => {
+    const editItem = (item: ISelectedSubject) => {
       if (!item) {
         return
       }
-      editedIndex.value = mySubjects.value.findIndex(
-        (c: { id: any }) => c.id === item?.id
-      )
+      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
-    const deleteItem = (item: { id: any }) => {
-      editedIndex.value = mySubjects.value.findIndex(
-        (c: { id: any }) => c.id === item.id
-      )
+    const deleteItem = (item: ISelectedSubject) => {
+      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
     }
 
     const deleteItemConfirm = async () => {
-      await deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value.id)
       closeDelete()
     }
 
     const close = () => {
       dialog.value = false
-      editedItem.value = Object.assign({}, defaultItem.value)
+      editedItem.value = undefined
       editedIndex.value = -1
     }
 
     const closeDelete = () => {
       dialogDelete.value = false
-      editedItem.value = Object.assign({}, defaultItem.value)
+      editedItem.value = undefined
       editedIndex.value = -1
     }
 
-    const save = async (schedules: string | any[]) => {
+    const save = async (schedules: ISubject[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value.id)
       } else {
         close()
       }
@@ -282,17 +260,14 @@ export default defineComponent({
     const search = ref('')
 
     const onChangeSearch = async (search: string) => {
-      if (
-        configStore.specialityId &&
-        configStore.hourlyLoadId
-      ) {
+      if (configStore.specialityId && configStore.hourlyLoadId) {
         try {
           const response = await $api.course.findBySearch(
             search || '',
             configStore.specialityId,
-            configStore.hourlyLoadId
+            configStore.hourlyLoadId,
           )
-          subjects.value = response.data.content
+          subjects.value = response.content
         } catch (e) {
           console.error(e)
         }
@@ -303,27 +278,27 @@ export default defineComponent({
     const headers = ref([
       {
         text: 'Código',
-        value: 'course.id'
+        value: 'course.id',
       },
       {
         text: 'Nombre de curso',
         align: 'start',
         sortable: false,
-        value: 'course.name'
+        value: 'course.name',
       },
       {
         text: 'Secciones',
-        value: 'sections'
+        value: 'sections',
       },
       {
         text: 'Creditos',
-        value: 'credits'
+        value: 'credits',
       },
       {
         text: 'Acciones',
         value: 'actions',
-        sortable: false
-      }
+        sortable: false,
+      },
     ])
 
     const formTitle = computed(() => {
@@ -331,7 +306,7 @@ export default defineComponent({
     })
 
     const myHourlyLoad = computed(() => {
-      return configStore.hourlyLoad
+      return configStore.hourlyLoad!
     })
 
     return {
@@ -342,7 +317,6 @@ export default defineComponent({
       loading,
       editedIndex,
       editedItem,
-      defaultItem,
       headers,
       search,
       succcesAddCourse,
@@ -357,9 +331,9 @@ export default defineComponent({
       availableCourses,
       totalCredits,
       formTitle,
-      myHourlyLoad
+      myHourlyLoad,
     }
-  }
+  },
 })
 </script>
 

@@ -1,10 +1,13 @@
 <template>
   <v-app>
-    <v-app-bar app absolute clipped-right flat height="72">
-      <v-app-bar-nav-icon
-        aria-label="Menu Iziquierdo"
-        @click.stop="drawer = !drawer"
-      />
+    <v-app-bar flat height="72">
+      <template #prepend>
+        <v-app-bar-nav-icon
+          aria-label="Menu Iziquierdo"
+          @click.stop="drawer = !drawer"
+        />
+      </template>
+
       <v-row justify="center" align="center" no-gutters>
         <v-col cols="9" sm="8">
           <AppHourlyLoadInfo class="mx-0" />
@@ -15,8 +18,8 @@
         </v-col>
       </v-row>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" app fixed left width="300">
-      <v-card tile outlined height="70" width="100%">
+    <v-navigation-drawer v-model="drawer" width="300">
+      <v-card rounded="0" variant="outlined" height="70" width="100%">
         <v-card-title> Opciones </v-card-title>
       </v-card>
 
@@ -28,23 +31,15 @@
           link
           exact
         >
-          <v-list-item-action>
+          <template #prepend>
             <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
+          </template>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <v-bottom-navigation
-      v-if="$vuetify.breakpoint.smAndDown"
-      app
-      fixed
-      color="primary"
-      grow
-    >
+    <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
       <v-btn
         v-for="item in denseItems"
         :key="item.to"
@@ -61,32 +56,33 @@
     </v-bottom-navigation>
     <the-snackbar />
     <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <slot />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import { defineComponent, onMounted, ref } from 'vue'
+import { useTheme } from 'vuetify'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
-import { useVuetify } from '~/composables/vuetify'
 
 export default defineComponent({
+  name: 'AppLayout',
   components: {
     ThemeDarkToggle,
     AppHourlyLoadInfo,
-    TheSnackbar
+    TheSnackbar,
   },
-  setup () {
-    const vuetify = useVuetify()
+  setup() {
+    const theme = useTheme()
     onMounted(() => {
-      vuetify.theme.dark = JSON.parse(
-        localStorage.getItem('darkMode') || 'false'
+      theme.global.name.value = JSON.parse(
+        localStorage.getItem('darkMode') || 'false',
       )
+        ? 'dark'
+        : 'light'
     })
 
     const drawer = ref(true)
@@ -95,64 +91,64 @@ export default defineComponent({
       {
         title: 'Inicio',
         icon: 'mdi-calendar',
-        to: '/'
+        to: '/',
       },
       {
         title: 'Generador de Horarios',
         icon: 'mdi-calendar',
-        to: '/generator'
+        to: '/generator',
       },
       {
         title: 'Horarios Favoritos',
         icon: 'mdi-calendar-star',
-        to: '/generator/favorites'
+        to: '/generator/favorites',
       },
       {
         title: 'Mis cursos y secciones',
         icon: 'mdi-book',
-        to: '/generator/subjects'
+        to: '/generator/subjects',
       },
       {
-        title: 'Mis eventos',
+        title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
-        to: '/generator/events'
+        to: '/generator/events',
       },
       {
         title: 'Avanzado',
         icon: 'mdi-cog',
-        to: '/generator/settings'
-      }
+        to: '/generator/settings',
+      },
     ]
 
     const denseItems = [
       {
         title: 'Generador',
         icon: 'mdi-calendar',
-        to: '/generator'
+        to: '/generator',
       },
       {
         title: 'Favoritos',
         icon: 'mdi-calendar-star',
-        to: '/generator/favorites'
+        to: '/generator/favorites',
       },
       {
         title: 'Mis cursos',
         icon: 'mdi-book',
-        to: '/generator/subjects'
+        to: '/generator/subjects',
       },
       {
-        title: 'Mis eventos',
+        title: 'Mis actividades',
         icon: 'mdi-calendar-plus',
-        to: '/generator/events'
-      }
+        to: '/generator/events',
+      },
     ]
 
     return {
       items,
       drawer,
       dialog,
-      denseItems
+      denseItems,
     }
-  }
+  },
 })
 </script>

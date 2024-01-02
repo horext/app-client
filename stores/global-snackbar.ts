@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
-import { ref } from '@nuxtjs/composition-api'
+import { ref } from 'vue'
 
 export interface SnackbarOptions {
-  content: string;
-  timeout?: number | null;
-  color?: string | null;
+  content: string
+  timeout?: number
+  color?: string
 }
 
 export const useGlobalSnackbarStore = defineStore('global/snackbar', () => {
   const content = ref('')
-  const timeout = ref<number | null | undefined>(-1)
-  const color = ref<string | null | undefined>(null)
+  const timeout = ref<number | undefined>(-1)
+  const color = ref<string | undefined>()
   const show = ref(false)
 
   const showMessage = (payload: SnackbarOptions) => {
@@ -25,6 +25,6 @@ export const useGlobalSnackbarStore = defineStore('global/snackbar', () => {
     timeout,
     color,
     showMessage,
-    show
+    show,
   }
 })

@@ -1,13 +1,16 @@
-import { AxiosInstance } from 'axios'
+import type { $Fetch } from 'nitropack'
+import type { IPage } from '~/interfaces/page'
+import type { ISubject } from '~/interfaces/subject'
+
 const PATH_SUBJECTS = 'subjects'
-export default ($axios: AxiosInstance) => ({
-  findBySearch (search: string, speciality:number, hourlyLoad:string) {
-    return $axios.get(PATH_SUBJECTS + '?search=' + search,
-      {
-        params: {
-          speciality,
-          hourlyLoad
-        }
-      })
-  }
+export default ($fetch: $Fetch) => ({
+  findBySearch(search: string, speciality: number, hourlyLoad: number) {
+    return $fetch<IPage<ISubject>>(PATH_SUBJECTS + '?search=' + search, {
+      method: 'GET',
+      params: {
+        speciality,
+        hourlyLoad,
+      },
+    })
+  },
 })

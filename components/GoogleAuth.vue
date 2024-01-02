@@ -7,7 +7,7 @@
       v-else
       rounded
       class="ma-1"
-      shaped
+      variant="outlined"
       @click="dialogCalendarSync = true"
     >
       Agregar a mi Calendario
@@ -28,13 +28,13 @@
             <template v-if="signInStatus">
               <v-autocomplete
                 v-model="selected"
+                v-model:search-input="search"
                 label="Selecciona tu calendario"
                 :items="calendarList"
                 return-object
                 clearable
                 :rules="[(r) => !!r || 'Requerido']"
-                :search-input.sync="search"
-                item-text="summary"
+                item-title="summary"
               >
                 <template #prepend-item="">
                   <v-list-item
@@ -42,11 +42,9 @@
                     color="primary"
                     @click="addCalendar()"
                   >
-                    <v-list-item-content class="text--primary">
-                      <v-list-item-title class="text primary--text">
-                        Crear mi calendario...
-                      </v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item-title class="text text-primary">
+                      Crear mi calendario...
+                    </v-list-item-title>
                   </v-list-item>
                 </template>
               </v-autocomplete>
@@ -71,9 +69,9 @@
                   v-model="notifications[index].minutes"
                   type="number"
                   :rules="[(a) => a > 0 || 'No permitido']"
-                  outlined
-                  dense
-                  :value="notification.minutes"
+                  variant="outlined"
+                  density="compact"
+                  :model-value="notification.minutes"
                   prepend-icon="mdi-bell"
                   :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
@@ -92,13 +90,13 @@
                   key="selected"
                   v-model="defaultNotification.minutes"
                   :rules="[(a) => a > 0 || 'No permitido']"
-                  :value="defaultNotification.minutes"
+                  :model-value="defaultNotification.minutes"
                   prepend-icon="mdi-bell"
                   type="number"
                   :items="Array.from({ length: 60 }, (x, i) => i)"
                   suffix="minutos"
-                  outlined
-                  dense
+                  variant="outlined"
+                  density="compact"
                 >
                   <template #append-outer>
                     <v-icon color="success" @click="addNotification()">
@@ -111,23 +109,27 @@
           </v-form>
         </v-card-text>
         <v-card-actions v-if="signInStatus">
-          <v-btn :loading="progress > 0" text @click="exportEventToGCalendar">
+          <v-btn
+            :loading="progress > 0"
+            variant="text"
+            @click="exportEventToGCalendar"
+          >
             Exportar
             <template #loader>
               <v-progress-linear
                 color="secondary"
                 striped
-                :value="(progress / events.length) * 100"
+                :model-value="(progress / events.length) * 100"
                 :height="30"
               >
                 <template #default="{ value }">
-                  <strong class="white--text">{{ Math.ceil(value) }}%</strong>
+                  <strong class="text-white">{{ Math.ceil(value) }}%</strong>
                 </template>
               </v-progress-linear>
             </template>
           </v-btn>
           <v-spacer />
-          <v-btn text color="success" @click="handleSignOutClick()">
+          <v-btn variant="text" color="success" @click="handleSignOutClick()">
             Cerrar Sesión
           </v-btn>
         </v-card-actions>
@@ -137,15 +139,20 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue'
+import {
+  ref,
+  computed,
+  defineComponent,
+  type PropType,
+  toRefs,
+  watch,
+} from 'vue'
 import { DateTime } from 'luxon'
-import { defineComponent, PropType, toRefs, useContext, watch } from '@nuxtjs/composition-api'
 import { v4 } from 'uuid'
 import { colors } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 import Event from '~/model/Event'
-import { VForm } from '~/types'
 
 export default defineComponent({
   name: 'GoogleAuth',
@@ -154,19 +161,19 @@ export default defineComponent({
   props: {
     events: {
       type: Array as PropType<Event[]>,
-      default: () => []
+      default: () => [],
     },
     startDate: {
       type: String,
-      required: true
+      required: true,
     },
     endDate: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
-  setup (props) {
+  setup(props) {
     const { events } = toRefs(props)
 
     const search = ref('')
@@ -183,7 +190,7 @@ export default defineComponent({
       'Septiembre',
       'Octubre',
       'Noviembre',
-      'Diciembre'
+      'Diciembre',
     ]
 
     const dialogCalendarSync = ref(false)
@@ -191,8 +198,12 @@ export default defineComponent({
     const isGoogleApiLoaded = ref(false)
     const dialog = ref(false)
     const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
-    const dateStart = computed(() => DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
-    const dateEnd = computed(() => DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
+    const dateStart = computed(() =>
+      DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'),
+    )
+    const dateEnd = computed(() =>
+      DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'),
+    )
 
     const progress = ref(0)
     const day = [
@@ -202,19 +213,19 @@ export default defineComponent({
       '2021-04-07 ',
       '2021-04-08 ',
       '2021-04-09 ',
-      '2021-04-10 '
+      '2021-04-10 ',
     ]
 
     const notifications = ref([
       {
         method: 'popup',
-        minutes: 15
-      }
+        minutes: 15,
+      },
     ])
 
     let defaultNotification = {
       method: 'popup',
-      minutes: 15
+      minutes: 15,
     }
 
     const calendarList = ref([])
@@ -227,7 +238,7 @@ export default defineComponent({
       window.gapi.load('client:auth2', initClient)
     }
 
-    const config = useContext().$config
+    const config = useNuxtApp().$config.public
     const initClient = async () => {
       try {
         loading.value = true
@@ -235,7 +246,7 @@ export default defineComponent({
           apiKey: config.googleApi.apiKey,
           clientId: config.googleApi.clientId,
           discoveryDocs: config.googleApi.discoveryDocs,
-          scope: config.googleApi.scopes
+          scope: config.googleApi.scopes,
         })
         // Listen for sign-in state changes.
         window.gapi.auth2
@@ -268,40 +279,38 @@ export default defineComponent({
       window.gapi.auth2.getAuthInstance().signOut()
     }
 
-    function deleteNotification (
-      index: { method: string; minutes: number }
-    ) {
+    function deleteNotification(index: { method: string; minutes: number }) {
       console.log(index)
       notifications.value = notifications.value.filter(
         (notification: { method: string; minutes: number }) =>
-          notification !== index
+          notification !== index,
       )
       defaultNotification = {
         method: 'popup',
-        minutes: 15
+        minutes: 15,
       }
     }
 
-    function addNotification (this: any) {
+    function addNotification(this: any) {
       const notification: any = {}
       Object.assign(notification, defaultNotification)
       notifications.value.push(notification)
     }
 
-    function addCalendar (this: any) {
+    function addCalendar(this: any) {
       dialog.value = true
       if (search.value) {
         calendarItem.value.summary = search.value
       }
     }
 
-    async function createCalendar (this: any, { summary }: any) {
+    async function createCalendar(this: any, { summary }: any) {
       try {
         const response = await window.gapi.client.calendar.calendars.insert({
           resource: {
             summary,
-            etag: 'Created by Octatec'
-          }
+            etag: 'Created by Octatec',
+          },
         })
         // Handle the results here (response.result has the parsed body).
         console.log('Response', response)
@@ -314,7 +323,7 @@ export default defineComponent({
       }
     }
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const exportEventToGCalendar = async () => {
       if (!form.value?.validate()) {
@@ -332,13 +341,13 @@ export default defineComponent({
       progress.value = 0
     }
 
-    function eventRequest (event: Event): Promise<any> {
+    function eventRequest(event: Event): Promise<any> {
       return new Promise((resolve, reject) => {
         const format =
           event.startTime.length > 5
             ? 'yyyy-MM-dd hh:mm:ss'
             : 'yyyy-MM-dd hh:mm'
-        let color = colors.findIndex(color => event.color === color)
+        let color = colors.findIndex((color) => event.color === color)
         if (color === -1) {
           color = 10
         }
@@ -350,20 +359,20 @@ export default defineComponent({
           start: {
             dateTime: DateTime.fromFormat(
               dateStart.value + ' ' + event.startTime,
-              format
+              format,
             )
               .set({ weekday: event.day })
               .toISO(),
-            timeZone: 'America/Lima'
+            timeZone: 'America/Lima',
           },
           end: {
             dateTime: DateTime.fromFormat(
               dateStart.value + ' ' + event.endTime,
-              format
+              format,
             )
               .set({ weekday: event.day })
               .toISO(),
-            timeZone: 'America/Lima'
+            timeZone: 'America/Lima',
           },
           recurrence: [
             'RRULE:FREQ=WEEKLY;UNTIL=' +
@@ -372,22 +381,22 @@ export default defineComponent({
                 .substring(0, 10)
                 .split('-')
                 .join('') +
-              'T000000Z'
+              'T000000Z',
           ],
           colorId: color,
           source: {
             title: 'Horext',
-            url: 'https://horext.octatec.io'
+            url: 'https://horext.octatec.io',
           },
           reminders: {
             useDefault: !1,
-            overrides: [...notifications.value]
-          }
+            overrides: [...notifications.value],
+          },
         }
         // create the request
         const request = window.gapi.client.calendar.events.import({
           calendarId: selected.value?.id,
-          resource: eventData
+          resource: eventData,
         })
         // execute the request and do something with response
         request.execute(function (resp: { status: any }) {
@@ -398,18 +407,16 @@ export default defineComponent({
       })
     }
 
-    async function getCalendarList () {
+    async function getCalendarList() {
       try {
-        const response = await window.gapi.client.calendar.calendarList.list(
-          {}
-        )
+        const response = await window.gapi.client.calendar.calendarList.list({})
         calendarList.value = response.result.items
       } catch (e) {
         console.error('Execute error', e)
       }
     }
 
-    function onChangeSignInStatus (value: boolean) {
+    function onChangeSignInStatus(value: boolean) {
       console.log(value)
       if (value) {
         getCalendarList()
@@ -437,10 +444,10 @@ export default defineComponent({
       dialogCalendarSync,
       dayNames,
       day,
-      signInStatus
+      signInStatus,
     }
   },
-  head () {
+  head() {
     return {
       script: [
         {
@@ -451,11 +458,10 @@ export default defineComponent({
             this.isGoogleApiLoaded = true
             this.handleClientLoad()
           },
-          json: {}
-        }
-
-      ]
+          json: {},
+        },
+      ],
     }
-  }
+  },
 })
 </script>

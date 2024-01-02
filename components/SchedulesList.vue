@@ -1,15 +1,11 @@
 <template>
   <v-window id="window" class="px-6 mx-4" show-arrows continuous>
     <template #next>
-      <v-icon large @click="next">
-        mdi-arrow-right-bold-circle
-      </v-icon>
+      <v-icon size="large" @click="next"> mdi-arrow-right-bold-circle </v-icon>
     </template>
 
     <template #prev>
-      <v-icon large @click="prev">
-        mdi-arrow-left-bold-circle
-      </v-icon>
+      <v-icon size="large" @click="prev"> mdi-arrow-left-bold-circle </v-icon>
     </template>
     <v-window-item v-if="schedule">
       <schedule-viewer
@@ -27,8 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from 'vue'
-import { WatchCallback } from '@nuxtjs/composition-api'
+import { defineComponent, computed, ref, watch, type WatchCallback } from 'vue'
 import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
@@ -39,28 +34,28 @@ export default defineComponent({
 
   components: {
     ScheduleViewer,
-    ViewList
+    ViewList,
   },
 
   props: {
     schedules: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     weekDays: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5, 6]
+      default: () => [1, 2, 3, 4, 5, 6],
     },
     currentSchedule: {
-      type: Object
+      type: Object,
     },
     mode: {
       type: String,
-      default: () => ViewMode.CALENDAR
-    }
+      default: () => ViewMode.CALENDAR,
+    },
   },
   emits: ['update:currentSchedule'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const index = ref(0)
 
     const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
@@ -87,12 +82,12 @@ export default defineComponent({
     watch(schedule, onChangeSchedule, { immediate: true })
 
     const page = computed<number>({
-      get () {
+      get() {
         return index.value + 1
       },
-      set (value) {
+      set(value) {
         index.value = value - 1
-      }
+      },
     })
 
     const next = () => {
@@ -117,9 +112,9 @@ export default defineComponent({
       next,
       prev,
       MODES,
-      shareDialog
+      shareDialog,
     }
-  }
+  },
 })
 </script>
 
