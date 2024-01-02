@@ -28,6 +28,13 @@ export default defineNuxtModule({
       })
     }
 
+    for (const directive in importMap.directives) {
+      addImports({
+        name: directive,
+        from: 'vuetify/directives',
+      })
+    }
+
     addImports({
       name: 'useDisplay',
       from: 'vuetify',
