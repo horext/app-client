@@ -32,10 +32,9 @@
     "vuetify": "^3.4.9"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@nuxt/eslint-config": "^0.2.0",
     "@types/luxon": "^2.0.0",
     "@types/uuid": "^8.3.1",
-    "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@vitejs/plugin-vue": "^5.0.2",
     "@vue/test-utils": "^2.4.3",
     "eslint": "^8.56.0",
@@ -43,7 +42,6 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^9.19.2",
-    "eslint-plugin-vuetify": "^2.1.1",
     "nuxt": "^3.9.0",
     "prettier": "^3.1.1",
     "sass": "^1.69.6",
