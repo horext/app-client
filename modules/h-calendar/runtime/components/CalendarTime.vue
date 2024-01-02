@@ -1,6 +1,6 @@
 <template>
-  <div class="h-calendar-time px-1 ">
-    <div v-for="hour in hours" :key="hour" class="h-calendar-time-slot ">
+  <div class="h-calendar-time px-1">
+    <div v-for="hour in hours" :key="hour" class="h-calendar-time-slot">
       {{ hour }}
     </div>
   </div>

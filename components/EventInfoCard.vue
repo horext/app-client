@@ -49,10 +49,9 @@
     <v-divider inset />
     <v-list-item density="compact">
       <template #prepend>
-
         <v-icon :color="selectedEvent.color + ' lighten-2 '">
-        mdi-map-marker
-      </v-icon>
+          mdi-map-marker
+        </v-icon>
       </template>
       <v-list-item-title>{{ selectedEvent.location }}</v-list-item-title>
     </v-list-item>
