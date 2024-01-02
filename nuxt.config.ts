@@ -27,6 +27,7 @@ const config = defineNuxtConfig({
         ssrHandlers: true,
       },
     ],
+    '@nuxt/test-utils/module'
   ],
   runtimeConfig: {
     public: {
