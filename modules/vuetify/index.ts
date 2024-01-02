@@ -28,7 +28,7 @@ export default defineNuxtModule({
       })
     }
 
-    for (const directive in importMap.directives) {
+    for (const directive of importMap.directives) {
       addImports({
         name: directive,
         from: 'vuetify/directives',
