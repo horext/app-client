@@ -1,5 +1,5 @@
 <template>
-  <v-window id="window" class="px-6 mx-4" show-arrows continuous>
+  <v-window id="window"  show-arrows continuous>
     <template #next>
       <v-icon size="large" @click="next"> mdi-arrow-right-bold-circle </v-icon>
     </template>

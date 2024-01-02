@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="400">
+  <v-card density="compact" class="text-caption" max-width="400">
     <v-toolbar dense :color="selectedEvent.color">
       <v-btn icon>
         <v-icon>mdi-information</v-icon>
@@ -19,15 +19,12 @@
       <v-list-item-title>
         {{ selectedEvent.title }}
       </v-list-item-title>
-      <v-list-item-action>
-        <v-btn icon>
-          <v-icon size="small"> mdi-information </v-icon>
-        </v-btn>
-      </v-list-item-action>
     </v-list-item>
     <v-divider inset />
     <v-list-item density="compact" lines="three">
-      <v-icon :color="selectedEvent.color + ' lighten-2'"> mdi-text </v-icon>
+      <template #prepend>
+        <v-icon :color="selectedEvent.color + ' lighten-2'"> mdi-text </v-icon>
+      </template>
 
       <v-list-item-title style="white-space: pre-line">
         {{ selectedEvent.description }}
@@ -35,9 +32,12 @@
     </v-list-item>
     <v-divider inset />
     <v-list-item density="compact">
-      <v-icon :color="selectedEvent.color + ' lighten-2'">
-        mdi-calendar
-      </v-icon>
+      <template #prepend>
+        <v-icon :color="selectedEvent.color + ' lighten-2'">
+          mdi-calendar
+        </v-icon>
+      </template>
+
       <v-list-item-title>
         {{ selectedDay }}, {{ selectedEvent.startTime }}-{{
           selectedEvent.endTime
@@ -48,9 +48,12 @@
 
     <v-divider inset />
     <v-list-item density="compact">
-      <v-icon :color="selectedEvent.color + ' lighten-2 '">
+      <template #prepend>
+
+        <v-icon :color="selectedEvent.color + ' lighten-2 '">
         mdi-map-marker
       </v-icon>
+      </template>
       <v-list-item-title>{{ selectedEvent.location }}</v-list-item-title>
     </v-list-item>
   </v-card>

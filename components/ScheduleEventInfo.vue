@@ -2,15 +2,16 @@
   <v-sheet
     :color="event.color"
     class="text-white text-wrap pa-1 ma-0"
-    style="max-width: inherit"
+    width="100%"
   >
     <template v-if="!event.code">
-      <span class="font-weight-black">
+      <v-icon start size="small">mdi-information</v-icon>
+      <span class="font-weight-bold">
         {{ event.title }}
       </span>
     </template>
     <template v-else>
-      <span class="font-weight-black">
+      <span>
         {{ event.code }}
         {{ event.section }}
         ({{ event.type }})
@@ -18,22 +19,19 @@
       <br />
       {{ event.name }}
     </template>
-    <br />
-    <v-fade-transition>
-      <v-overlay v-if="hover" z-index="0" absolute :scrim="event.color">
-        <v-icon>mdi-information</v-icon>
-      </v-overlay>
-    </v-fade-transition>
   </v-sheet>
 </template>
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+export default defineComponent({
   name: 'ScheduleEventInfo',
   props: {
-    event: {},
-    hover: {},
+    event: {
+      type: Object,
+      required: true,
+    },
   },
-}
+})
 </script>
 <style lang="sass">
 
