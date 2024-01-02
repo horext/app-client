@@ -19,10 +19,8 @@
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" width="300">
-      <v-card rounded="0" variant="outlined" height="70" width="100%">
-        <v-card-title> Opciones </v-card-title>
-      </v-card>
-
+      <v-card-title> Opciones </v-card-title>
+      <v-divider />
       <v-list>
         <v-list-item
           v-for="item in items"
