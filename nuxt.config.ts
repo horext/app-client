@@ -44,10 +44,7 @@ const config = defineNuxtConfig({
       },
     },
     baseURL: process.env.BASE_URL,
-  },
-
-  routeRules: {
-    '/api/**': { proxy: `${process.env.NUXT_ENV_API_URL}/**` },
+    apiUrl: process.env.NUXT_ENV_API_URL,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
