@@ -1,31 +1,18 @@
-<template lang="html">
+<template>
   <v-sheet>
-    <v-calendar
+    <h-calendar
       id="calendar"
       first-interval="7"
       interval-count="16"
-      type="month"
       interval-width="40"
+      :events="internalEvents"
       :weekdays="[0, 1, 2, 3, 4, 5, 6]"
       @click:event="showEvent"
     >
-      <template #day-label-header>
-        <div />
+      <template #event="{ event }">
+        <schedule-event-info :key="event.id" :event="event" />
       </template>
-      <template #event="{ event, attrs, on }">
-        <v-hover>
-          <template #default="{ hover }">
-            <schedule-event-info
-              :key="event.id"
-              v-bind="attrs"
-              :event="event"
-              :hover="hover"
-              v-on="on"
-            />
-          </template>
-        </v-hover>
-      </template>
-    </v-calendar>
+    </h-calendar>
     <v-menu
       v-model="selectedOpen"
       :close-on-content-click="false"
@@ -38,14 +25,11 @@
         :selected-event="selectedEvent"
       />
     </v-menu>
-    {{ internalEvents }}
   </v-sheet>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue'
-import { VCalendar } from 'vuetify/labs/VCalendar'
-import { useDate } from 'vuetify'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import { weekdayToDate } from '~/utils/core'
@@ -54,7 +38,6 @@ export default {
   components: {
     ScheduleEventInfo,
     EventInfoCard,
-    VCalendar,
   },
   props: {
     schedule: {
@@ -111,16 +94,14 @@ export default {
       nativeEvent.stopPropagation()
     }
 
-    const dateAdapter = useDate()
-
     const internalEvents = computed(
       () =>
         props.schedule?.events?.map((event) => {
-          console.log('event', event)
           return {
             ...event,
-            start: dateAdapter.startOfDay(event.start),
-            end: dateAdapter.startOfDay(event.end),
+            start: event.startTime,
+            end: event.endTime,
+            weekDay: event.day,
           }
         }),
     )
