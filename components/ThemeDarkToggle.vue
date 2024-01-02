@@ -4,7 +4,6 @@
   </v-sheet>
 </template>
 <script lang="ts">
-import { useTheme } from 'vuetify'
 import { computed, onMounted, ref, watch, defineComponent } from 'vue'
 import Lottie, { type AnimationItem } from 'lottie-web'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
