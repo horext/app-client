@@ -1,3 +1,4 @@
+import importMap from 'vuetify/dist/json/importMap.json' assert { type: 'json' }
 import {
   defineNuxtModule,
   addComponent,
@@ -5,7 +6,6 @@ import {
   createResolver,
   addImports,
 } from 'nuxt/kit'
-import importMap from 'vuetify/dist/json/importMap.json' assert { type: 'json' }
 
 export default defineNuxtModule({
   meta: {
