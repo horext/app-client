@@ -27,15 +27,16 @@ const config = defineNuxtConfig({
         ssrHandlers: true,
       },
     ],
+    '@nuxt/test-utils/module'
   ],
   runtimeConfig: {
     public: {
       googleApi: {
         clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
         apiKey: process.env.NUXT_PUBLIC_GOOGLE_API_KEY,
-        discoveryDocs: (process.env.NUXT_PUBLIC_GOOGLE_DISCOVERY_DOCS || '').split(
-          ',',
-        ),
+        discoveryDocs: (
+          process.env.NUXT_PUBLIC_GOOGLE_DISCOVERY_DOCS || ''
+        ).split(','),
         scopes: process.env.NUXT_PUBLIC_GOOGLE_SCOPES,
       },
       googleAnalytics: {
