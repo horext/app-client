@@ -9,4 +9,3 @@ describe('NuxtLogo', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 })
-

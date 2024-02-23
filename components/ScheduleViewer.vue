@@ -94,16 +94,15 @@ export default {
       nativeEvent.stopPropagation()
     }
 
-    const internalEvents = computed(
-      () =>
-        props.schedule?.events?.map((event) => {
-          return {
-            ...event,
-            start: event.startTime,
-            end: event.endTime,
-            weekDay: event.day,
-          }
-        }),
+    const internalEvents = computed(() =>
+      props.schedule?.events?.map((event) => {
+        return {
+          ...event,
+          start: event.startTime,
+          end: event.endTime,
+          weekDay: event.day,
+        }
+      }),
     )
 
     return {
