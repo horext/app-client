@@ -29,8 +29,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     initOnMounted: true,
     writeDefaults: false,
   })
-  const myFaculty = useStorage<any>('myFaculty', {})
-  const mySpeciality = useStorage<any>('mySpeciality', {})
+  const myFaculty = useStorage<IOrganization | null>('myFaculty', null)
+  const mySpeciality = useStorage<IOrganization | null>('mySpeciality', null)
   const myFirstEntry = useStorage<any>('myFirstEntry', true)
   const myHourlyLoad = useStorage<any>('myHourlyLoad', {})
 
@@ -163,12 +163,16 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function fetchFaculty() {
     const data = myFaculty.value
-    faculty.value = data
+    if (data) {
+      faculty.value = data
+    }
   }
 
   function fetchSpeciality() {
     const data = mySpeciality.value
-    speciality.value = data
+    if (data) {
+      speciality.value = data
+    }
   }
 
   function fetchFirstEntry() {
