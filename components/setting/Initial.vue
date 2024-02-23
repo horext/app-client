@@ -56,8 +56,8 @@ export default defineComponent({
     const showErrorMessage = ref(false)
     const loading = ref(false)
 
-    const faculty = ref<IOrganization | undefined>()
-    const speciality = ref<IOrganization | undefined>()
+    const faculty = ref<IOrganization>()
+    const speciality = ref<IOrganization>()
     const hourlyLoad = ref<IHourlyLoad>()
 
     const initSpecialities = async (selectedFaculty: IOrganization) => {
@@ -73,8 +73,9 @@ export default defineComponent({
 
     const onChangeSpeciality = async (_speciality: IOrganization) => {
       hourlyLoad.value = undefined
+      if(!faculty.value) return
       try {
-        const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value!.id)
+        const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
         hourlyLoad.value = data
       } catch (e: any) {
         const data = e.response
