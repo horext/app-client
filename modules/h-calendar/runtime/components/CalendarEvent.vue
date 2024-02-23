@@ -9,7 +9,7 @@
     @mousemove="$emit('mousemove', $event)"
   >
     <slot>
-      <div class="p-2 h-calendar-event">
+      <div class="h-calendar-event">
         <div class="event-name">{{ event.name }}</div>
         <div class="event-time">
           <span>{{ event.start }} </span><span> - </span>
@@ -44,6 +44,7 @@ defineEmits<{
   background: #fff;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
   color: #222038;
+  border: 1px solid #e0e0e0;
 }
 
 .event-name {
