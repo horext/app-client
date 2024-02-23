@@ -1,11 +1,12 @@
 <template>
-  <v-card>
+  <v-card :loading="loadingHourlyLoad">
     <v-card-title> Configuración </v-card-title>
     <v-card-text>
       <v-form>
         <v-autocomplete
           v-model="faculty"
           :items="faculties"
+          :loading="loadingFaculties"
           return-object
           item-title="name"
           label="Facultades"
@@ -14,6 +15,7 @@
           v-model="speciality"
           :disabled="!faculty"
           return-object
+          :loading="loadingSpecialities"
           item-title="name"
           :items="specialities"
           label="Especialidades"
@@ -60,27 +62,35 @@ export default defineComponent({
     const speciality = ref<IOrganization>()
     const hourlyLoad = ref<IHourlyLoad>()
 
+    const loadingSpecialities = ref(false)
     const initSpecialities = async (selectedFaculty: IOrganization) => {
       speciality.value = undefined
+      loadingSpecialities.value = true
       const data = await $api.speciality.getAllByFaculty(selectedFaculty.id)
       specialities.value = data
+      loadingSpecialities.value = false
     }
+
     watch(faculty, async (newValue) => {
       if (newValue) {
         await initSpecialities(newValue)
       }
     })
 
+    const loadingHourlyLoad = ref(false)
     const onChangeSpeciality = async (_speciality: IOrganization) => {
       hourlyLoad.value = undefined
-      if(!faculty.value) return
+      if (!faculty.value) return
       try {
+        loadingHourlyLoad.value = true
         const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
         hourlyLoad.value = data
       } catch (e: any) {
         const data = e.response
         errorMessage.value = data.message
         showErrorMessage.value = true
+      } finally {
+        loadingHourlyLoad.value = false
       }
     }
     watch(speciality, async (newValue) => {
@@ -90,9 +100,12 @@ export default defineComponent({
       }
     })
 
+    const loadingFaculties = ref(false)
     const init = async () => {
+      loadingFaculties.value = true
       const data = await $api.faculty.getAll()
       faculties.value = data
+      loadingFaculties.value = false
       faculty.value = store.faculty
       hourlyLoad.value = store.hourlyLoad
       speciality.value = store.speciality
@@ -122,6 +135,9 @@ export default defineComponent({
       initSpecialities,
       onChangeSpeciality,
       ending,
+      loadingHourlyLoad,
+      loadingFaculties,
+      loadingSpecialities,
     }
   },
 })
