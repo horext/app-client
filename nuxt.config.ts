@@ -27,7 +27,7 @@ const config = defineNuxtConfig({
         ssrHandlers: true,
       },
     ],
-    '@nuxt/test-utils/module'
+    '@nuxt/test-utils/module',
   ],
   runtimeConfig: {
     public: {
@@ -49,6 +49,23 @@ const config = defineNuxtConfig({
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   build: {
     transpile: ['vuetify'],
+  },
+  routeRules: {
+    '/generator/**': {
+      ssr: false,
+    },
+    '/': {
+      prerender: true,
+    },
+    '/privacy': {
+      prerender: true,
+    },
+    '/terms': {
+      prerender: true,
+    },
+    '/about': {
+      prerender: true,
+    },
   },
 })
 
