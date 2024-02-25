@@ -7,9 +7,12 @@ import localStorageDriver from "unstorage/drivers/localstorage";
 import type { IEvent } from '~/interfaces/event';
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const storage = createStorage<IEvent[]>({
-    driver: localStorageDriver({}),
-  });
+  const storage = createStorage<IEvent[]>()
+  onMounted(() => {
+    storage.mount("",
+      localStorageDriver({}),
+    )
+  })
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {
