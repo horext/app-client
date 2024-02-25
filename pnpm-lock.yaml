@@ -35,6 +35,9 @@ dependencies:
   pinia:
     specifier: 2.1.7
     version: 2.1.7(typescript@5.3.3)(vue@3.4.19)
+  unstorage:
+    specifier: ^1.10.1
+    version: 1.10.1
   uuid:
     specifier: ^8.3.2
     version: 8.3.2
