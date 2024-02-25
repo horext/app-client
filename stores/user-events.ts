@@ -1,14 +1,15 @@
-import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { v4 } from 'uuid'
 import { ref } from 'vue'
 import Event from '~/model/Event'
+import { createStorage } from "unstorage";
+import localStorageDriver from "unstorage/drivers/localstorage";
+import type { IEvent } from '~/interfaces/event';
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const storageEvent = useLocalStorage<any[]>('myEvents', [], {
-    initOnMounted: true,
-    writeDefaults: false,
-  })
+  const storage = createStorage<IEvent[]>({
+    driver: localStorageDriver({}),
+  });
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {
@@ -31,13 +32,13 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function saveNewItem(item: Event) {
     addItem(item)
-    storageEvent.value = items.value
+    storage.setItem('events', items.value)
   }
 
   function deleteItemById(id: string) {
     const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
-    storageEvent.value = items.value
+    storage.setItem('events', items.value)
   }
 
   function updateItem(item: Event) {
@@ -47,7 +48,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
         index,
         item,
       })
-      storageEvent.value = items.value
+      storage.setItem('events', items.value)
     } else {
       console.error(index)
     }
@@ -55,12 +56,12 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function updateItems(items: any[]) {
     setItems(items)
-    storageEvent.value = items
+    storage.setItem('events', items)
   }
 
-  const fetchItems = () => {
-    const myEvents = storageEvent.value
-    const events = myEvents.map((e: { id: any }) =>
+  const fetchItems = async () => {
+    const myEvents = await storage.getItem('events') || []
+    const events = myEvents.map((e) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
         type: 'MY_EVENT',
