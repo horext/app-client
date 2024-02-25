@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue'
-import { useLocalStorage, useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
@@ -7,32 +6,31 @@ import Event from '~/model/Event'
 import type { ISchedule } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
+import { createStorage } from 'unstorage'
+import localStorageDriver from 'unstorage/drivers/localstorage'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const mySubjects = useLocalStorage<any[]>('mySubjects', [], {
-    initOnMounted: true,
-    writeDefaults: false,
+  const storage = createStorage()
+  onMounted(() => {
+    storage.mount('', localStorageDriver({}))
   })
-  const mySchedules = useLocalStorage<any[]>('mySchedules', [], {
-    initOnMounted: true,
-    writeDefaults: false,
+  const myFaculty = useCookie<IOrganization | null>('myFaculty', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
   })
-  const myFavoritesSchedules = useLocalStorage<any[]>(
-    'myFavoritesSchedules',
-    [],
-    {
-      initOnMounted: true,
-      writeDefaults: false,
-    },
-  )
-  const myCrossings = useLocalStorage<number>('myCrossings', 0, {
-    initOnMounted: true,
-    writeDefaults: false,
+  const mySpeciality = useCookie<IOrganization | null>('mySpeciality', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+   
   })
-  const myFaculty = useStorage<IOrganization | null>('myFaculty', null)
-  const mySpeciality = useStorage<IOrganization | null>('mySpeciality', null)
-  const myFirstEntry = useStorage<any>('myFirstEntry', true)
-  const myHourlyLoad = useStorage<any>('myHourlyLoad', {})
+  const myFirstEntry = useCookie<boolean>('myFirstEntry', {
+    default: () => true,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const myHourlyLoad = useCookie<IHourlyLoad | null>('myHourlyLoad', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
 
   const $api = useApi()
   const faculty = ref<IOrganization>()
@@ -119,46 +117,46 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   function updateCrossings(_crossings: number) {
-    myCrossings.value = _crossings
+    storage.setItem('myCrossings', _crossings)
     crossings.value = _crossings
   }
 
   function saveNewSubject(_subject: ISelectedSubject) {
     ADD_SUBJECT(_subject)
-    mySubjects.value = subjects.value
+    storage.setItem('mySubjects', subjects.value)
   }
 
   function deleteSubjectById(id: number) {
     const index = subjects.value.findIndex((s) => s.id === id)
     DELETE_SUBJECT_BY_INDEX(index)
-    mySubjects.value = subjects.value
+    storage.setItem('mySubjects', subjects.value)
   }
 
   function updateSubject(_subject: ISelectedSubject) {
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
-    mySubjects.value = subjects.value
+    storage.setItem('mySubjects', subjects.value)
   }
 
   function updateSchedules(_schedules: ISchedule[]) {
     schedules.value = _schedules
-    mySchedules.value = schedules.value
+    storage.setItem('mySchedules', schedules.value)
   }
 
   function saveNewFavoriteSchedule(_favoritesSchedule: ISchedule) {
     ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
-    myFavoritesSchedules.value = favoritesSchedules.value
+    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
   function deleteFavoriteScheduleById(id: number) {
     const index = subjects.value.findIndex((s) => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
-    myFavoritesSchedules.value = favoritesSchedules.value
+    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
   function updateFavoritesSchedules(_favoritesSchedules: ISchedule[]) {
     favoritesSchedules.value = _favoritesSchedules
-    myFavoritesSchedules.value = favoritesSchedules.value
+    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
   function fetchFaculty() {
@@ -180,21 +178,21 @@ export const useUserConfigStore = defineStore('user-config', () => {
     firstEntry.value = data
   }
 
-  function fetchSubjects() {
-    const data: any[] | null = mySubjects.value
-    const _subjets =
-      data?.filter((subject) => subject?.schedules?.length > 0) || []
+  async function fetchSubjects() {
+    const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
+    const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
     subjects.value = _subjets
   }
 
-  function fetchCrossings() {
-    const data: number | undefined = myCrossings.value
+  async function fetchCrossings() {
+    const data: number | undefined =
+      (await storage.getItem<number>('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
   }
 
-  function fetchSchedules() {
-    const data: any[] | undefined = mySchedules.value
+  async function fetchSchedules() {
+    const data = (await storage.getItem<ISchedule[]>('mySchedules')) || []
     const _schedules: ISchedule[] =
       data?.map?.((s) => ({
         ...s,
@@ -205,8 +203,9 @@ export const useUserConfigStore = defineStore('user-config', () => {
     schedules.value = _schedules
   }
 
-  function fetchFavoritesSchedules() {
-    const data: any[] | undefined = myFavoritesSchedules.value
+  async function fetchFavoritesSchedules() {
+    const data =
+      (await storage.getItem<ISchedule[]>('myFavoritesSchedules')) || []
     const _schedules: ISchedule[] =
       data?.map?.((s) => ({
         ...s,

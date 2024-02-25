@@ -67,8 +67,9 @@
 </template>
 
 <script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
-import { ref } from 'vue'
+import { ref, computed, toRefs } from 'vue'
 import { HOUR_IN_MINUTES } from '../constants/time'
+import { WIDTH_FULL } from '../constants/event'
 import type { ICalendarEvent, IEventEmitData } from '../types'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
@@ -119,7 +120,7 @@ const calculatePosition = (event: ICalendarEvent) => {
     height,
     left,
     bottom,
-    width: 100,
+    width: WIDTH_FULL,
   }
 }
 
@@ -149,7 +150,7 @@ const internalEvents = computed(() => {
       const collisionsLength = collisions.length
       if (collisionsLength > 1) {
         const index = collisions.indexOf(event)
-        const width = 100 / collisionsLength
+        const width = WIDTH_FULL / collisionsLength
         return {
           ...event,
           position: {
@@ -176,16 +177,5 @@ const internalWidthRem = computed(() => props.internalWidth + 'rem')
   border-left: 1px solid #f5f5f5;
   border-right: 1px solid #f5f5f5;
   flex: 1 1 auto;
-}
-
-.event-timed-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-right: 10px;
-  pointer-events: none;
-  width: 100%;
 }
 </style>
