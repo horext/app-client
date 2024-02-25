@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue'
-import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
@@ -13,14 +12,25 @@ import localStorageDriver from 'unstorage/drivers/localstorage'
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = createStorage()
   onMounted(() => {
-    storage.mount("",
-      localStorageDriver({}),
-    )
+    storage.mount('', localStorageDriver({}))
   })
-  const myFaculty = useStorage<IOrganization | null>('myFaculty', null)
-  const mySpeciality = useStorage<IOrganization | null>('mySpeciality', null)
-  const myFirstEntry = useStorage<any>('myFirstEntry', true)
-  const myHourlyLoad = useStorage<any>('myHourlyLoad', {})
+  const myFaculty = useCookie<IOrganization | null>('myFaculty', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const mySpeciality = useCookie<IOrganization | null>('mySpeciality', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+   
+  })
+  const myFirstEntry = useCookie<boolean>('myFirstEntry', {
+    default: () => true,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const myHourlyLoad = useCookie<IHourlyLoad | null>('myHourlyLoad', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
 
   const $api = useApi()
   const faculty = ref<IOrganization>()
