@@ -2,8 +2,10 @@ import type { $Fetch } from 'nitropack'
 import type { IOrganization } from '~/interfaces/organization'
 
 const PATH_SUBJECTS = 'faculties'
-export default ($axios: $Fetch) => ({
+export class FacultyRepository {
+  constructor(private $fetch: $Fetch) {}
+
   getAll() {
-    return $axios<IOrganization[]>(PATH_SUBJECTS)
-  },
-})
+    return this.$fetch<IOrganization[]>(PATH_SUBJECTS)
+  }
+}
