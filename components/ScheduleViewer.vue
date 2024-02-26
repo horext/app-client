@@ -57,7 +57,7 @@ export default {
     const start = weekdayToDate(0)
 
     const selectedEvent = ref(null)
-    const selectedElement = ref(null)
+    const selectedElement = ref<HTMLElement | null>(null)
     const selectedOpen = ref(false)
     const events = ref([])
 
