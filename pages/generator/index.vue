@@ -48,12 +48,11 @@
       <v-snackbar v-model="succces" color="success" timeout="3000">
         <v-icon> mdi-check </v-icon>
         Horarios generados correctamente!
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
             variant="text"
             size="small"
             icon
-            v-bind="attrs"
             @click="succces = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -86,7 +85,8 @@ import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   components: {
@@ -97,7 +97,7 @@ export default defineComponent({
   setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
-    const occurrences = ref<any[]>([])
+    const occurrences = ref<IOccurrence[]>([])
     const openMySchedules = ref(false)
     const succces = ref(false)
 
@@ -113,11 +113,11 @@ export default defineComponent({
       configStore.updateCrossings(crossings)
     }
 
-    const updateFavoritesSchedules = (favoritesSchedules: ISchedule[]) => {
+    const updateFavoritesSchedules = (favoritesSchedules: IScheduleGenerate[]) => {
       configStore.updateFavoritesSchedules(favoritesSchedules)
     }
 
-    const updateSchedules = (schedules: ISchedule[]) => {
+    const updateSchedules = (schedules: IScheduleGenerate[]) => {
       configStore.updateSchedules(schedules)
     }
 

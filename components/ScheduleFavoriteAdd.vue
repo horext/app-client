@@ -15,17 +15,17 @@
 import { computed, defineComponent, type PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { useSnackbar } from '~/composables/snackbar'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',
   props: {
     schedule: {
-      type: Object as PropType<ISchedule>,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
     favoritesSchedules: {
-      type: Array as PropType<Array<ISchedule>>,
+      type: Array as PropType<Array<IScheduleGenerate>>,
       default: () => [],
     },
   },

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import Event from '~/model/Event'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
 import { createStorage } from 'unstorage'
@@ -37,8 +37,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
-  const schedules = ref<Array<ISchedule>>([])
-  const favoritesSchedules = ref<Array<ISchedule>>([])
+  const schedules = ref<Array<IScheduleGenerate>>([])
+  const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
@@ -69,7 +69,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
-  function ADD_SCHEDULE(subject: ISchedule) {
+  function ADD_SCHEDULE(subject: IScheduleGenerate) {
     schedules.value.push(Object.assign({}, subject))
   }
 
@@ -77,13 +77,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
     schedules.value.splice(index, 1)
   }
 
-  function UPDATE_SCHEDULE_BY_INDEX(index: number, schedule: ISchedule) {
+  function UPDATE_SCHEDULE_BY_INDEX(index: number, schedule: IScheduleGenerate) {
     schedules.value = schedules.value.map((c, i) =>
       i === index ? schedule : c,
     )
   }
 
-  function ADD_FAVORITE_SCHEDULE(subject: ISchedule) {
+  function ADD_FAVORITE_SCHEDULE(subject: IScheduleGenerate) {
     favoritesSchedules.value.push(Object.assign({}, subject))
   }
 
@@ -93,7 +93,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function UPDATE_FAVORITE_SCHEDULE_BY_INDEX(
     index: number,
-    subject: ISchedule,
+    subject: IScheduleGenerate,
   ) {
     favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
       i === index ? subject : c,
@@ -138,23 +138,23 @@ export const useUserConfigStore = defineStore('user-config', () => {
     storage.setItem('mySubjects', subjects.value)
   }
 
-  function updateSchedules(_schedules: ISchedule[]) {
+  function updateSchedules(_schedules: IScheduleGenerate[]) {
     schedules.value = _schedules
     storage.setItem('mySchedules', schedules.value)
   }
 
-  function saveNewFavoriteSchedule(_favoritesSchedule: ISchedule) {
+  function saveNewFavoriteSchedule(_favoritesSchedule: IScheduleGenerate) {
     ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
     storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function deleteFavoriteScheduleById(id: number) {
-    const index = subjects.value.findIndex((s) => s.id === id)
+  function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
+    const index = favoritesSchedules.value.findIndex((s) => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
     storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateFavoritesSchedules(_favoritesSchedules: ISchedule[]) {
+  function updateFavoritesSchedules(_favoritesSchedules: IScheduleGenerate[]) {
     favoritesSchedules.value = _favoritesSchedules
     storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
@@ -192,8 +192,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function fetchSchedules() {
-    const data = (await storage.getItem<ISchedule[]>('mySchedules')) || []
-    const _schedules: ISchedule[] =
+    const data = (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
+    const _schedules: IScheduleGenerate[] =
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
@@ -205,8 +205,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   async function fetchFavoritesSchedules() {
     const data =
-      (await storage.getItem<ISchedule[]>('myFavoritesSchedules')) || []
-    const _schedules: ISchedule[] =
+      (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
+    const _schedules: IScheduleGenerate[] =
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>

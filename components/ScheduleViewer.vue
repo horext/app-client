@@ -14,6 +14,7 @@
       </template>
     </h-calendar>
     <v-menu
+      v-if="selectedElement"
       v-model="selectedOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
@@ -32,6 +33,7 @@
 import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { weekdayToDate } from '~/utils/core'
 
 export default {
@@ -41,7 +43,7 @@ export default {
   },
   props: {
     schedule: {
-      type: Object,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
     weekDays: {
@@ -53,15 +55,10 @@ export default {
     const hover = ref(false)
     const focus = ref()
     const type = ref('week')
-
-    const intervalFormat = (interval: any) => {
-      return interval.time
-    }
-
     const start = weekdayToDate(0)
 
     const selectedEvent = ref(null)
-    const selectedElement = ref(null)
+    const selectedElement = ref<HTMLElement | null>(null)
     const selectedOpen = ref(false)
     const events = ref([])
 
@@ -94,15 +91,18 @@ export default {
       nativeEvent.stopPropagation()
     }
 
-    const internalEvents = computed(() =>
-      props.schedule?.events?.map((event) => {
-        return {
-          ...event,
-          start: event.startTime,
-          end: event.endTime,
-          weekDay: event.day,
-        }
-      }),
+    const internalEvents = computed(
+      () =>
+        props.schedule?.events?.map((event) => {
+          return {
+            ...event,
+            start: event.startTime,
+            end: event.endTime,
+            weekDay: event.day,
+            id: event.id!,
+            name: event.title,
+          }
+        }) ?? [],
     )
 
     return {
@@ -113,7 +113,6 @@ export default {
       selectedElement,
       selectedOpen,
       events,
-      intervalFormat,
       start,
       getEventColor,
       showEvent,

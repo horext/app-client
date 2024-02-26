@@ -19,7 +19,7 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { weekdays } from '~/utils/core'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   props: {
@@ -30,7 +30,7 @@ export default defineComponent({
   },
   setup(props) {
     const dayWeek = computed(() =>
-      weekdays[props.session?.day]?.substring(0, 2).toUpperCase(),
+      WEEK_DAYS[props.session?.day]?.substring(0, 2).toUpperCase(),
     )
 
     const type = computed(() => props.session?.type?.code)

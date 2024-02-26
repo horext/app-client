@@ -18,12 +18,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { weekDays } from '@/utils/core'
+import { WEEK_DAYS } from '~/constants/weekdays'
+import type { IOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   props: {
     items: {
-      type: Array,
+      type: Array as PropType<IOccurrence[]>,
       required: true,
     },
   },
@@ -32,54 +33,54 @@ export default defineComponent({
     const itemsSync = useVModel(props, 'items', emit)
     const headers = [
       {
-        text: 'Tipo de Incidencia',
+        title: 'Tipo de Incidencia',
         align: 'start',
         value: 'type',
       },
       {
-        text: 'Evento A',
+        title: 'Evento A',
         value: 'elementA.code',
         groupable: false,
       },
       {
-        text: 'Dia A',
+        title: 'Dia A',
         value: 'elementA.day',
         groupable: false,
       },
       {
-        text: 'Inicio A',
+        title: 'Inicio A',
         value: 'elementA.startTime',
         groupable: false,
       },
 
       {
-        text: 'Fin A',
+        title: 'Fin A',
         value: 'elementA.endTime',
         groupable: false,
       },
       {
-        text: 'Evento B',
+        title: 'Evento B',
         value: 'elementB.code',
         groupable: false,
       },
       {
-        text: 'Dia',
+        title: 'Dia',
         value: 'elementB.day',
         groupable: false,
       },
       {
-        text: 'Inicio B',
+        title: 'Inicio B',
         value: 'elementB.startTime',
         groupable: false,
       },
       {
-        text: 'Fin B',
+        title: 'Fin B',
         value: 'elementB.endTime',
         groupable: false,
       },
-    ]
+    ] as const
     return {
-      weekDays,
+      weekDays: WEEK_DAYS,
       headers,
       itemsSync,
     }

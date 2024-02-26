@@ -30,13 +30,14 @@
 import { defineComponent } from 'vue'
 import ScheduleSection from './ViewListSubjectSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
+import type { IScheduleGenerate } from '~/interfaces/schedule';
 
 export default defineComponent({
   name: 'ScheduleViewList',
   components: { ScheduleSection, ClassSessionItem },
   props: {
     schedule: {
-      type: Object,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
   },

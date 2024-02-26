@@ -1,5 +1,8 @@
 import type { $Fetch } from 'nitropack'
-import type { IScheduleSubject } from '~/interfaces/schedule-subject'
+import type {
+  IScheduleSubject,
+  IScheduleSubjectSessionDetail,
+} from '~/interfaces/schedule-subject'
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
 export default ($axios: $Fetch) => ({
@@ -12,7 +15,7 @@ export default ($axios: $Fetch) => ({
     })
   },
   getAllByIds(ids: Array<number>) {
-    return $axios(PATH_SCHEDULE_SUBJECTS, {
+    return $axios<IScheduleSubjectSessionDetail[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {
         ids: ids.join(','),
       },

@@ -7,7 +7,7 @@
           variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
-          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : null">
+          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : undefined">
             mdi-star
           </v-icon>
           <span v-if="isFavorite(schedules[0]) >= 0">
@@ -31,16 +31,25 @@ import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
+
+definePageMeta({
+  layout: 'app',
+})
 
 export default defineComponent({
   components: {
     ScheduleViewer,
   },
-  layout: 'app',
   setup() {
+    useSeoMeta({
+      title: 'Horario compartido',
+      description: 'Comparte tu horario a tus amigos! ',
+    })
+
     const $api = useApi()
     const query = ref('')
-    const schedules = ref<any[]>([])
+    const schedules = ref<IScheduleGenerate[]>([])
     const loading = ref(false)
     const courses = ref([])
 
@@ -51,26 +60,27 @@ export default defineComponent({
 
     const { data } = useAsyncData(async () => {
       const query: any = route.query
-      const result = Buffer.from(query.q, 'base64').toString()
+      const result = decodeBase64(query.q)
       const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
         result.split(',').map(Number),
       )
-      const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
+      const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
       const sessions = await $api.classSessions.findScheduleIds(schedulesId)
       return { scheduleSubjects, sessions }
     })
 
-    const scheduleSubjects = computed(() => data.value?.scheduleSubjects)
-    const sessions = computed(() => data.value?.sessions)
+    const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
+    const sessions = computed(() => data.value?.sessions || [])
 
-    const deleteFavoriteScheduleById = (favorites: any) =>
-      store.deleteFavoriteScheduleById(favorites)
+    const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
+      store.deleteFavoriteScheduleById(favorites.id)
 
-    const saveNewFavoriteSchedule = (favorites: any) =>
+    const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
       store.saveNewFavoriteSchedule(favorites)
 
     const subjects = computed(() => {
-      return scheduleSubjects.value.map((sb: any) => ({
+      const _sessions = sessions.value
+      return scheduleSubjects.value.map((sb) => ({
         ...sb.subject,
         schedules: [
           {
@@ -78,9 +88,8 @@ export default defineComponent({
             scheduleSubject: {
               id: sb.id,
             },
-            sessions: sessions.value.filter(
-              (s: any) => s.schedule.id === sb.schedule.id,
-            ),
+            sessions: _sessions.filter((s) => s.schedule.id === sb.schedule.id),
+            subject: sb.subject,
           },
         ],
       }))
@@ -108,7 +117,7 @@ export default defineComponent({
       }
     }
 
-    const isFavorite = (schedule: any) => {
+    const isFavorite = (schedule: IScheduleGenerate) => {
       return myFavoritesSchedules.value.findIndex(
         (x: { id: any }) => x.id === schedule.id,
       )
@@ -124,18 +133,6 @@ export default defineComponent({
       addFavoriteCurrentSchedule,
       isFavorite,
       myFavoritesSchedules,
-    }
-  },
-  head() {
-    return {
-      title: 'Horario compartido',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'Comparte tu horario a tus amigos! ',
-        },
-      ],
     }
   },
 })

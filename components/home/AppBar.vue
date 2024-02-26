@@ -51,11 +51,11 @@ export default defineComponent({
         theme.global.name.value = val ? 'dark' : 'light'
       },
     })
+    const drawer = ref(false)
 
-    return { darkMode }
+    return { darkMode, drawer }
   },
   data: () => ({
-    drawer: null,
     items: [
       { name: 'Inicio', route: '/' },
       { name: 'Generador', route: '/generator' },

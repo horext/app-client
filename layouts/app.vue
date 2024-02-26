@@ -73,6 +73,15 @@ export default defineComponent({
     TheSnackbar,
   },
   setup() {
+    const store = useUserConfigStore()
+
+    useAsyncData('initData', async () => {
+      store.fetchFirstEntry()
+      store.fetchFaculty()
+      store.fetchSpeciality()
+      store.fetchHourlyLoad()
+    })
+
     const theme = useTheme()
     onMounted(() => {
       theme.global.name.value = JSON.parse(

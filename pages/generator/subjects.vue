@@ -136,12 +136,11 @@
     <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
       <v-icon> mdi-check </v-icon>
       Curso Agregado correctamente!
-      <template #action="{ attrs }">
+      <template #actions>
         <v-btn
           variant="text"
           size="small"
           icon
-          v-bind="attrs"
           @click="succcesAddCourse = false"
         >
           <v-icon> mdi-close </v-icon>
@@ -156,7 +155,11 @@ import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type { ISelectedSubject, ISubject } from '~/interfaces/subject'
+import type {
+  ISelectedSubject,
+  ISubject,
+  ISubjectSchedule,
+} from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
 import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
@@ -204,7 +207,7 @@ export default defineComponent({
     const loading = ref(false)
     const dialogDelete = ref(false)
 
-    const editedItem = ref<any>(undefined)
+    const editedItem = ref<ISelectedSubject>()
     const editedIndex = ref(-1)
 
     const editItem = (item: ISelectedSubject) => {
@@ -223,7 +226,7 @@ export default defineComponent({
     }
 
     const deleteItemConfirm = async () => {
-      await configStore.deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value?.id!)
       closeDelete()
     }
 
@@ -239,17 +242,17 @@ export default defineComponent({
       editedIndex.value = -1
     }
 
-    const save = async (schedules: ISubject[]) => {
+    const save = async (schedules: ISubjectSchedule[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await configStore.updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value!, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await configStore.saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value!, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await configStore.deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value?.id!)
       } else {
         close()
       }
@@ -277,29 +280,29 @@ export default defineComponent({
 
     const headers = ref([
       {
-        text: 'Código',
+        title: 'Código',
         value: 'course.id',
       },
       {
-        text: 'Nombre de curso',
+        title: 'Nombre de curso',
         align: 'start',
         sortable: false,
         value: 'course.name',
       },
       {
-        text: 'Secciones',
+        title: 'Secciones',
         value: 'sections',
       },
       {
-        text: 'Creditos',
+        title: 'Creditos',
         value: 'credits',
       },
       {
-        text: 'Acciones',
+        title: 'Acciones',
         value: 'actions',
         sortable: false,
       },
-    ])
+    ] as const)
 
     const formTitle = computed(() => {
       return editedIndex.value === -1 ? 'New Item' : 'Edit Item'

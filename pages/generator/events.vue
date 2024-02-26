@@ -76,12 +76,11 @@
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
             variant="text"
             size="small"
             icon
-            v-bind="attrs"
             @click="succcesAddEvent = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -96,12 +95,11 @@
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad actualizada correctamente </span>
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
             variant="text"
             size="small"
             icon
-            v-bind="attrs"
             @click="succcesUpdateEvent = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -115,10 +113,10 @@
 import { defineComponent, ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
-import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   components: { EventsCreator },
@@ -131,11 +129,11 @@ export default defineComponent({
     const dialog = ref(false)
 
     const headers = [
-      { text: 'Color', value: 'color' },
-      { text: 'titulo', align: 'start', sortable: false, value: 'title' },
-      { text: 'Horario', value: 'schedule' },
-      { text: 'Acciones', value: 'actions', sortable: false },
-    ]
+      { title: 'Color', value: 'color' },
+      { title: 'titulo', align: 'start', sortable: false, value: 'title' },
+      { title: 'Horario', value: 'schedule' },
+      { title: 'Acciones', value: 'actions', sortable: false },
+    ] as const
 
     const defaultItem = ref<IEvent>({
       id: undefined,
@@ -225,7 +223,7 @@ export default defineComponent({
     }
 
     return {
-      weekdays,
+      weekdays: WEEK_DAYS,
       dialog,
       headers,
       defaultItem,

@@ -1,4 +1,6 @@
 import type { $Fetch } from 'nitropack'
+import type { ISession } from '~/interfaces/subject'
+
 const PATH_SUBJECTS = 'classSessions'
 export default ($axios: $Fetch) => ({
   findScheduleId(schedule: number) {
@@ -10,7 +12,7 @@ export default ($axios: $Fetch) => ({
     })
   },
   findScheduleIds(schedulesIds: Array<number>) {
-    return $axios(PATH_SUBJECTS, {
+    return $axios<ISession[]>(PATH_SUBJECTS, {
       method: 'GET',
       params: {
         schedules: schedulesIds.join(','),
