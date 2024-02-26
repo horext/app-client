@@ -33,22 +33,22 @@ export default defineComponent({
     const itemsSync = useVModel(props, 'items', emit)
     const headers = [
       {
-        text: 'Tipo de Incidencia',
+        title: 'Tipo de Incidencia',
         align: 'start',
         value: 'type',
       },
       {
-        text: 'Evento A',
+        title: 'Evento A',
         value: 'elementA.code',
         groupable: false,
       },
       {
-        text: 'Dia A',
+        title: 'Dia A',
         value: 'elementA.day',
         groupable: false,
       },
       {
-        text: 'Inicio A',
+        title: 'Inicio A',
         value: 'elementA.startTime',
         groupable: false,
       },
@@ -78,7 +78,7 @@ export default defineComponent({
         value: 'elementB.endTime',
         groupable: false,
       },
-    ]
+    ] as const
     return {
       weekDays: WEEK_DAYS,
       headers,

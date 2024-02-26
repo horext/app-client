@@ -129,11 +129,11 @@ export default defineComponent({
     const dialog = ref(false)
 
     const headers = [
-      { text: 'Color', value: 'color' },
-      { text: 'titulo', align: 'start', sortable: false, value: 'title' },
-      { text: 'Horario', value: 'schedule' },
-      { text: 'Acciones', value: 'actions', sortable: false },
-    ]
+      { title: 'Color', value: 'color' },
+      { title: 'titulo', align: 'start', sortable: false, value: 'title' },
+      { title: 'Horario', value: 'schedule' },
+      { title: 'Acciones', value: 'actions', sortable: false },
+    ] as const
 
     const defaultItem = ref<IEvent>({
       id: undefined,

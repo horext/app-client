@@ -280,29 +280,29 @@ export default defineComponent({
 
     const headers = ref([
       {
-        text: 'Código',
+        title: 'Código',
         value: 'course.id',
       },
       {
-        text: 'Nombre de curso',
+        title: 'Nombre de curso',
         align: 'start',
         sortable: false,
         value: 'course.name',
       },
       {
-        text: 'Secciones',
+        title: 'Secciones',
         value: 'sections',
       },
       {
-        text: 'Creditos',
+        title: 'Creditos',
         value: 'credits',
       },
       {
-        text: 'Acciones',
+        title: 'Acciones',
         value: 'actions',
         sortable: false,
       },
-    ])
+    ] as const)
 
     const formTitle = computed(() => {
       return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
