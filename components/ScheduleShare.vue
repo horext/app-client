@@ -1,10 +1,14 @@
 <template>
   <v-card>
-    <v-card-title>
+    <v-card-title class="d-flex">
       <span class="text-h6 font-weight-bold">Compartir</span>
       <v-spacer />
-      <v-btn class="mx-0" icon @click="close">
-        <v-icon>mdi-close-circle-outline</v-icon>
+      <v-btn
+        class="mx-0"
+        variant="text"
+        icon="mdi-close-circle-outline"
+        @click="close"
+      >
       </v-btn>
     </v-card-title>
     <v-list>
@@ -62,15 +66,22 @@
     />
   </v-card>
 </template>
-<script lang="js">
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
+
+export default defineComponent({
   name: 'ScheduleShare',
   props: {
-    schedule: { type: Object },
+    schedule: {
+      type: Object as PropType<IScheduleGenerate>,
+      required: true,
+    },
     path: { type: String, default: '/subject' },
     dialog: { type: Boolean },
     postId: { type: Number, default: 1 },
   },
+  emits: ['update:dialog'],
   data: () => ({
     copied: false,
     dialogSync: true,
@@ -111,5 +122,5 @@ export default {
       }
     },
   },
-}
+})
 </script>
