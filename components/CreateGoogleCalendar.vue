@@ -37,7 +37,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:calendar', 'update:result'],
+  emits: ['update:calendar', 'update:result' , 'close'],
   setup(props, { emit }) {
     const resultSync = useVModel(props, 'result', emit)
 
