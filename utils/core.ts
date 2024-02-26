@@ -228,12 +228,3 @@ export const colors = [
   'blue lighten-3',
 ]
 
-export const weekdays = [
-  'Domingo',
-  'Lunes',
-  'Martes',
-  'Miercoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-]

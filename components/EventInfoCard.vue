@@ -61,6 +61,7 @@
 import { useVModel } from '@vueuse/core'
 import { defineComponent, type PropType, computed, type Ref } from 'vue'
 import Event from '~/model/Event'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   props: {
@@ -77,18 +78,8 @@ export default defineComponent({
   setup(props, { emit }) {
     const dialogSync = useVModel(props, 'dialog', emit)
 
-    const weekdays = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ]
-
     const selectedDay: Ref<string> = computed(
-      () => weekdays[props.selectedEvent.day],
+      () => WEEK_DAYS[props.selectedEvent.day],
     )
 
     const moreInfo = () => {
@@ -97,7 +88,6 @@ export default defineComponent({
 
     return {
       selectedDay,
-      weekdays,
       moreInfo,
       dialogSync,
     }

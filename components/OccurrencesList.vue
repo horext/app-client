@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { weekDays } from '@/utils/core'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   props: {
@@ -79,7 +79,7 @@ export default defineComponent({
       },
     ]
     return {
-      weekDays,
+      weekDays: WEEK_DAYS,
       headers,
       itemsSync,
     }
