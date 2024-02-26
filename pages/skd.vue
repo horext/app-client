@@ -7,7 +7,7 @@
           variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
-          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : null">
+          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : undefined">
             mdi-star
           </v-icon>
           <span v-if="isFavorite(schedules[0]) >= 0">
@@ -31,6 +31,7 @@ import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -51,26 +52,27 @@ export default defineComponent({
 
     const { data } = useAsyncData(async () => {
       const query: any = route.query
-      const result = Buffer.from(query.q, 'base64').toString()
+      const result = decodeBase64(query.q)
       const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
         result.split(',').map(Number),
       )
-      const schedulesId = scheduleSubjects.map((ss: any) => ss.schedule.id)
+      const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
       const sessions = await $api.classSessions.findScheduleIds(schedulesId)
       return { scheduleSubjects, sessions }
     })
 
-    const scheduleSubjects = computed(() => data.value?.scheduleSubjects)
-    const sessions = computed(() => data.value?.sessions)
+    const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
+    const sessions = computed(() => data.value?.sessions || [])
 
-    const deleteFavoriteScheduleById = (favorites: any) =>
+    const deleteFavoriteScheduleById = (favorites: number) =>
       store.deleteFavoriteScheduleById(favorites)
 
-    const saveNewFavoriteSchedule = (favorites: any) =>
+    const saveNewFavoriteSchedule = (favorites: ISchedule) =>
       store.saveNewFavoriteSchedule(favorites)
 
     const subjects = computed(() => {
-      return scheduleSubjects.value.map((sb: any) => ({
+      const _sessions = sessions.value
+      return scheduleSubjects.value.map((sb) => ({
         ...sb.subject,
         schedules: [
           {
@@ -78,9 +80,8 @@ export default defineComponent({
             scheduleSubject: {
               id: sb.id,
             },
-            sessions: sessions.value.filter(
-              (s: any) => s.schedule.id === sb.schedule.id,
-            ),
+            sessions: _sessions.filter((s) => s.schedule.id === sb.schedule.id),
+            subject: sb.subject,
           },
         ],
       }))
@@ -108,7 +109,7 @@ export default defineComponent({
       }
     }
 
-    const isFavorite = (schedule: any) => {
+    const isFavorite = (schedule: ISchedule) => {
       return myFavoritesSchedules.value.findIndex(
         (x: { id: any }) => x.id === schedule.id,
       )
