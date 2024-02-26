@@ -115,10 +115,10 @@
 import { defineComponent, ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
-import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   components: { EventsCreator },
@@ -225,7 +225,7 @@ export default defineComponent({
     }
 
     return {
-      weekdays,
+      weekdays: WEEK_DAYS,
       dialog,
       headers,
       defaultItem,
