@@ -41,7 +41,7 @@ export default defineComponent({
   setup() {
     const $api = useApi()
     const query = ref('')
-    const schedules = ref<any[]>([])
+    const schedules = ref<ISchedule[]>([])
     const loading = ref(false)
     const courses = ref([])
 
@@ -64,8 +64,8 @@ export default defineComponent({
     const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
     const sessions = computed(() => data.value?.sessions || [])
 
-    const deleteFavoriteScheduleById = (favorites: number) =>
-      store.deleteFavoriteScheduleById(favorites)
+    const deleteFavoriteScheduleById = (favorites: ISchedule) =>
+      store.deleteFavoriteScheduleById(favorites.id)
 
     const saveNewFavoriteSchedule = (favorites: ISchedule) =>
       store.saveNewFavoriteSchedule(favorites)
