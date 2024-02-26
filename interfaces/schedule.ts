@@ -2,7 +2,7 @@ import type { ISubjectSchedule } from './subject'
 import Event from '~/model/Event'
 
 export interface ISchedule {
-  id: string
+  id: number
   scheduleSubjectIds: number[]
   schedule: ISubjectSchedule[]
   crossings: number
