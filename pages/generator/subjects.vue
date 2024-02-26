@@ -152,15 +152,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, computed } from 'vue'
+import { defineComponent, onMounted, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type {
-  ISelectedSubject,
-  ISubject,
-  ISubjectSchedule,
-} from '~/interfaces/subject'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
 import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
