@@ -2,21 +2,24 @@ import type { $Fetch } from 'nitropack'
 import type { ISession } from '~/interfaces/subject'
 
 const PATH_SUBJECTS = 'classSessions'
-export default ($axios: $Fetch) => ({
+export class ClassSessionRepository {
+  constructor(private $fetch: $Fetch) {}
+
   findScheduleId(schedule: number) {
-    return $axios(PATH_SUBJECTS, {
+    return this.$fetch(PATH_SUBJECTS, {
       method: 'GET',
       params: {
         schedule,
       },
     })
-  },
+  }
+
   findScheduleIds(schedulesIds: Array<number>) {
-    return $axios<ISession[]>(PATH_SUBJECTS, {
+    return this.$fetch<ISession[]>(PATH_SUBJECTS, {
       method: 'GET',
       params: {
         schedules: schedulesIds.join(','),
       },
     })
-  },
-})
+  }
+}

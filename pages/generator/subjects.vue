@@ -15,6 +15,7 @@
             hide-details
             item-title="course.name"
             item-value="id"
+            :loading="loadingSubjects"
             @update:model-value="editItem"
           >
             <template #selection="{ item }">
@@ -151,15 +152,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, computed } from 'vue'
+import { defineComponent, onMounted, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type {
-  ISelectedSubject,
-  ISubject,
-  ISubjectSchedule,
-} from '~/interfaces/subject'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
 import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
@@ -167,7 +164,7 @@ export default defineComponent({
   components: {
     SubjectScheduleList,
   },
-  setup() {
+  async setup() {
     const $api = useApi()
     onMounted(() => {
       Lottie.loadAnimation({
@@ -202,7 +199,6 @@ export default defineComponent({
       }, 0)
     })
 
-    const subjects = ref<ISubject[]>([])
     const dialog = ref(false)
     const loading = ref(false)
     const dialogDelete = ref(false)
@@ -262,40 +258,49 @@ export default defineComponent({
 
     const search = ref('')
 
-    const onChangeSearch = async (search: string) => {
-      if (configStore.specialityId && configStore.hourlyLoadId) {
-        try {
-          const response = await $api.course.findBySearch(
-            search || '',
-            configStore.specialityId,
-            configStore.hourlyLoadId,
-          )
-          subjects.value = response.content
-        } catch (e) {
-          console.error(e)
+    const { data: subjects, pending: loadingSubjects } = await useAsyncData(
+      'search',
+      async () => {
+        if (configStore.specialityId && configStore.hourlyLoadId) {
+          try {
+            const response = await $api.course.findBySearch(
+              search.value || ' ',
+              configStore.specialityId,
+              configStore.hourlyLoadId,
+            )
+            return response.content
+          } catch (e) {
+            console.error(e)
+          }
         }
-      }
-    }
-    watch(search, onChangeSearch)
+      },
+      {
+        watch: [search],
+        default: () => [],
+      },
+    )
 
     const headers = ref([
       {
         title: 'Código',
         value: 'course.id',
+        sortable: true,
       },
       {
         title: 'Nombre de curso',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'course.name',
       },
       {
         title: 'Secciones',
         value: 'sections',
+        sortable: true,
       },
       {
         title: 'Creditos',
         value: 'credits',
+        sortable: true,
       },
       {
         title: 'Acciones',
@@ -330,11 +335,11 @@ export default defineComponent({
       close,
       deleteItemConfirm,
       save,
-      onChangeSearch,
       availableCourses,
       totalCredits,
       formTitle,
       myHourlyLoad,
+      loadingSubjects,
     }
   },
 })

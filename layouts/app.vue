@@ -59,102 +59,78 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
-export default defineComponent({
-  name: 'AppLayout',
-  components: {
-    ThemeDarkToggle,
-    AppHourlyLoadInfo,
-    TheSnackbar,
-  },
-  setup() {
-    const store = useUserConfigStore()
+const store = useUserConfigStore()
 
-    useAsyncData('initData', async () => {
-      store.fetchFirstEntry()
-      store.fetchFaculty()
-      store.fetchSpeciality()
-      store.fetchHourlyLoad()
-    })
+await useAsyncData('initData', async () => {
+  await Promise.all([
+    store.fetchFirstEntry(),
+    store.fetchFaculty(),
+    store.fetchSpeciality(),
+  ])
 
-    const theme = useTheme()
-    onMounted(() => {
-      theme.global.name.value = JSON.parse(
-        localStorage.getItem('darkMode') || 'false',
-      )
-        ? 'dark'
-        : 'light'
-    })
-
-    const drawer = ref(true)
-    const dialog = ref(true)
-    const items = [
-      {
-        title: 'Inicio',
-        icon: 'mdi-calendar',
-        to: '/',
-      },
-      {
-        title: 'Generador de Horarios',
-        icon: 'mdi-calendar',
-        to: '/generator',
-      },
-      {
-        title: 'Horarios Favoritos',
-        icon: 'mdi-calendar-star',
-        to: '/generator/favorites',
-      },
-      {
-        title: 'Mis cursos y secciones',
-        icon: 'mdi-book',
-        to: '/generator/subjects',
-      },
-      {
-        title: 'Mis actividades',
-        icon: 'mdi-calendar-plus',
-        to: '/generator/events',
-      },
-      {
-        title: 'Avanzado',
-        icon: 'mdi-cog',
-        to: '/generator/settings',
-      },
-    ]
-
-    const denseItems = [
-      {
-        title: 'Generador',
-        icon: 'mdi-calendar',
-        to: '/generator',
-      },
-      {
-        title: 'Favoritos',
-        icon: 'mdi-calendar-star',
-        to: '/generator/favorites',
-      },
-      {
-        title: 'Mis cursos',
-        icon: 'mdi-book',
-        to: '/generator/subjects',
-      },
-      {
-        title: 'Mis actividades',
-        icon: 'mdi-calendar-plus',
-        to: '/generator/events',
-      },
-    ]
-
-    return {
-      items,
-      drawer,
-      dialog,
-      denseItems,
-    }
-  },
+  await store.fetchHourlyLoad()
 })
+
+const drawer = ref(true)
+const items = [
+  {
+    title: 'Inicio',
+    icon: 'mdi-calendar',
+    to: '/',
+  },
+  {
+    title: 'Generador de Horarios',
+    icon: 'mdi-calendar',
+    to: '/generator',
+  },
+  {
+    title: 'Horarios Favoritos',
+    icon: 'mdi-calendar-star',
+    to: '/generator/favorites',
+  },
+  {
+    title: 'Mis cursos y secciones',
+    icon: 'mdi-book',
+    to: '/generator/subjects',
+  },
+  {
+    title: 'Mis actividades',
+    icon: 'mdi-calendar-plus',
+    to: '/generator/events',
+  },
+  {
+    title: 'Avanzado',
+    icon: 'mdi-cog',
+    to: '/generator/settings',
+  },
+]
+
+const denseItems = [
+  {
+    title: 'Generador',
+    icon: 'mdi-calendar',
+    to: '/generator',
+  },
+  {
+    title: 'Favoritos',
+    icon: 'mdi-calendar-star',
+    to: '/generator/favorites',
+  },
+  {
+    title: 'Mis cursos',
+    icon: 'mdi-book',
+    to: '/generator/subjects',
+  },
+  {
+    title: 'Mis actividades',
+    icon: 'mdi-calendar-plus',
+    to: '/generator/events',
+  },
+]
 </script>

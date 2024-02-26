@@ -6,14 +6,9 @@ import Event from '~/model/Event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
-import { createStorage } from 'unstorage'
-import localStorageDriver from 'unstorage/drivers/localstorage'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const storage = createStorage()
-  onMounted(() => {
-    storage.mount('', localStorageDriver({}))
-  })
+  const storage = useLocalStorage()
   const myFaculty = useCookie<IOrganization | null>('myFaculty', {
     default: () => null,
     maxAge: 60 * 60 * 24 * 365,
@@ -21,7 +16,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const mySpeciality = useCookie<IOrganization | null>('mySpeciality', {
     default: () => null,
     maxAge: 60 * 60 * 24 * 365,
-   
   })
   const myFirstEntry = useCookie<boolean>('myFirstEntry', {
     default: () => true,
@@ -77,7 +71,10 @@ export const useUserConfigStore = defineStore('user-config', () => {
     schedules.value.splice(index, 1)
   }
 
-  function UPDATE_SCHEDULE_BY_INDEX(index: number, schedule: IScheduleGenerate) {
+  function UPDATE_SCHEDULE_BY_INDEX(
+    index: number,
+    schedule: IScheduleGenerate,
+  ) {
     schedules.value = schedules.value.map((c, i) =>
       i === index ? schedule : c,
     )
@@ -116,47 +113,51 @@ export const useUserConfigStore = defineStore('user-config', () => {
     firstEntry.value = _myFirstEntry
   }
 
-  function updateCrossings(_crossings: number) {
-    storage.setItem('myCrossings', _crossings)
+  async function updateCrossings(_crossings: number) {
+    await storage.setItem('myCrossings', _crossings)
     crossings.value = _crossings
   }
 
-  function saveNewSubject(_subject: ISelectedSubject) {
+  async function saveNewSubject(_subject: ISelectedSubject) {
     ADD_SUBJECT(_subject)
-    storage.setItem('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function deleteSubjectById(id: number) {
+  async function deleteSubjectById(id: number) {
     const index = subjects.value.findIndex((s) => s.id === id)
     DELETE_SUBJECT_BY_INDEX(index)
-    storage.setItem('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function updateSubject(_subject: ISelectedSubject) {
+  async function updateSubject(_subject: ISelectedSubject) {
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
-    storage.setItem('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function updateSchedules(_schedules: IScheduleGenerate[]) {
+  async function updateSchedules(_schedules: IScheduleGenerate[]) {
     schedules.value = _schedules
-    storage.setItem('mySchedules', schedules.value)
+    await storage.setItem('mySchedules', schedules.value)
   }
 
-  function saveNewFavoriteSchedule(_favoritesSchedule: IScheduleGenerate) {
+  async function saveNewFavoriteSchedule(
+    _favoritesSchedule: IScheduleGenerate,
+  ) {
     ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
-    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
+  async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
     const index = favoritesSchedules.value.findIndex((s) => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
-    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateFavoritesSchedules(_favoritesSchedules: IScheduleGenerate[]) {
+  async function updateFavoritesSchedules(
+    _favoritesSchedules: IScheduleGenerate[],
+  ) {
     favoritesSchedules.value = _favoritesSchedules
-    storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
   function fetchFaculty() {
@@ -192,7 +193,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function fetchSchedules() {
-    const data = (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
+    const data =
+      (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
     const _schedules: IScheduleGenerate[] =
       data?.map?.((s) => ({
         ...s,
