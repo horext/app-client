@@ -60,19 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
 const store = useUserConfigStore()
-onMounted(() => {
-  theme.global.name.value = JSON.parse(
-    localStorage.getItem('darkMode') || 'false',
-  )
-    ? 'dark'
-    : 'light'
-})
 
 await useAsyncData('initData', async () => {
   await Promise.all([
@@ -83,8 +76,6 @@ await useAsyncData('initData', async () => {
 
   await store.fetchHourlyLoad()
 })
-
-const theme = useTheme()
 
 const drawer = ref(true)
 const items = [

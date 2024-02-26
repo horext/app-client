@@ -1,59 +1,57 @@
 <template>
-  <v-sheet color="transparent">
+  <v-sheet color="transparent" class="d-flex align-center justify-center">
     <div ref="darkModeEl" class="dark-toggle" @click="toggleDark" />
   </v-sheet>
 </template>
 <script lang="ts">
-import { computed, onMounted, ref, watch, defineComponent } from 'vue'
+import { onMounted, ref, watch, defineComponent } from 'vue'
 import Lottie, { type AnimationItem } from 'lottie-web'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
 export default defineComponent({
   setup() {
-    const darkMode = ref<AnimationItem>()
+    const settingsStore = useSettingsStore()
+    const darkModeAnimation = ref<AnimationItem>()
     const darkModeEl = ref<HTMLElement>()
     onMounted(() => {
-      darkMode.value = Lottie.loadAnimation({
+      darkModeAnimation.value = Lottie.loadAnimation({
         container: darkModeEl.value!,
         renderer: 'svg',
         loop: false,
         autoplay: false,
         animationData: Animation,
       })
-      darkMode.value.setSpeed(2)
+      darkModeAnimation.value.setSpeed(2)
+      setAnimationDirection(settingsStore.darkMode)
     })
 
-    const theme = useTheme()
-
-    const dark = computed({
-      get() {
-        return theme.global.current.value.dark
-      },
-
-      set(val: boolean) {
-        theme.global.name.value = val ? 'dark' : 'light'
-      },
+    onUnmounted(() => {
+      darkModeAnimation.value?.destroy()
     })
+
+    const { darkMode } = storeToRefs(settingsStore)
 
     const toggleDark = () => {
-      dark.value = !dark.value
+      darkMode.value = !darkMode.value
     }
 
-    watch(dark, (newVal) => {
-      if (!newVal) {
-        darkMode.value!.setDirection(1)
-        darkMode.value!.play()
-      } else {
-        darkMode.value!.setDirection(-1)
-        darkMode.value!.play()
-      }
-      localStorage.setItem('darkMode', JSON.stringify(newVal))
-    })
+    const setAnimationDirection = (darkMode:boolean) => {
+      console.log('darkMode', darkMode)
+      if (darkMode) {
+        darkModeAnimation.value!.setDirection(1)
 
+      } else {
+        darkModeAnimation.value!.setDirection(-1)
+      }
+      darkModeAnimation.value!.play()
+    }
+
+    watch(darkMode, setAnimationDirection)
     return {
-      dark,
       toggleDark,
       darkModeEl,
+      darkModeAnimation,
+      darkMode,
     }
   },
 })

@@ -40,17 +40,9 @@ export default defineComponent({
     HomeDrawer,
   },
   setup() {
-    const theme = useTheme()
+    const settingsStore = useSettingsStore()
+    const { darkMode } = storeToRefs(settingsStore)
 
-    const darkMode = computed({
-      get() {
-        return theme.global.current.value.dark
-      },
-
-      set(val: boolean) {
-        theme.global.name.value = val ? 'dark' : 'light'
-      },
-    })
     const drawer = ref(false)
 
     return { darkMode, drawer }
@@ -62,14 +54,6 @@ export default defineComponent({
       { name: 'Acerca de ', route: '/about' },
     ],
   }),
-  watch: {
-    darkMode(newVal) {
-      localStorage.setItem('darkMode', JSON.stringify(newVal))
-    },
-  },
-  mounted() {
-    this.darkMode = JSON.parse(localStorage.getItem('darkMode') || 'false')
-  },
   methods: {
     invertMode() {
       this.darkMode = !this.darkMode
