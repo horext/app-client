@@ -33,6 +33,12 @@ import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
 import type { ISchedule } from '~/interfaces/schedule'
 
+
+useSeoMeta({
+  title: 'Horario compartido',
+  description: 'Comparte tu horario a tus amigos! ',
+})
+
 export default defineComponent({
   components: {
     ScheduleViewer,
@@ -125,18 +131,6 @@ export default defineComponent({
       addFavoriteCurrentSchedule,
       isFavorite,
       myFavoritesSchedules,
-    }
-  },
-  head() {
-    return {
-      title: 'Horario compartido',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'Comparte tu horario a tus amigos! ',
-        },
-      ],
     }
   },
 })
