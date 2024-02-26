@@ -148,7 +148,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function deleteFavoriteScheduleById(id: number) {
+  function deleteFavoriteScheduleById(id: ISchedule['id']) {
     const index = subjects.value.findIndex((s) => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
     storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
