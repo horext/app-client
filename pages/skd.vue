@@ -37,16 +37,16 @@ definePageMeta({
   layout: 'app',
 })
 
-useSeoMeta({
-  title: 'Horario compartido',
-  description: 'Comparte tu horario a tus amigos! ',
-})
-
 export default defineComponent({
   components: {
     ScheduleViewer,
   },
   setup() {
+    useSeoMeta({
+      title: 'Horario compartido',
+      description: 'Comparte tu horario a tus amigos! ',
+    })
+
     const $api = useApi()
     const query = ref('')
     const schedules = ref<ISchedule[]>([])
