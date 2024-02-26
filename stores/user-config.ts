@@ -6,14 +6,9 @@ import Event from '~/model/Event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
-import { createStorage } from 'unstorage'
-import localStorageDriver from 'unstorage/drivers/localstorage'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const storage = createStorage()
-  onMounted(() => {
-    storage.mount('', localStorageDriver({}))
-  })
+  const storage = useLocalStorage()
   const myFaculty = useCookie<IOrganization | null>('myFaculty', {
     default: () => null,
     maxAge: 60 * 60 * 24 * 365,

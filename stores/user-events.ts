@@ -2,17 +2,10 @@ import { defineStore } from 'pinia'
 import { v4 } from 'uuid'
 import { ref } from 'vue'
 import Event from '~/model/Event'
-import { createStorage } from "unstorage";
-import localStorageDriver from "unstorage/drivers/localstorage";
-import type { IEvent } from '~/interfaces/event';
+import type { IEvent } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const storage = createStorage<IEvent[]>()
-  onMounted(() => {
-    storage.mount("",
-      localStorageDriver({}),
-    )
-  })
+  const storage = useLocalStorage<IEvent[]>()
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {
@@ -63,7 +56,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
   }
 
   const fetchItems = async () => {
-    const myEvents = await storage.getItem('events') || []
+    const myEvents = (await storage.getItem('events')) || []
     const events = myEvents.map((e) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
