@@ -445,6 +445,14 @@ export default defineComponent({
       dayNames,
       day,
       signInStatus,
+      progress,
+      defaultNotification,
+      dialog,
+      loading,
+      selected,
+      calendarList,
+      search,
+      calendarItem,
     }
   },
   head() {
