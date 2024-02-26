@@ -288,20 +288,23 @@ export default defineComponent({
       {
         title: 'Código',
         value: 'course.id',
+        sortable: true,
       },
       {
         title: 'Nombre de curso',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'course.name',
       },
       {
         title: 'Secciones',
         value: 'sections',
+        sortable: true,
       },
       {
         title: 'Creditos',
         value: 'credits',
+        sortable: true,
       },
       {
         title: 'Acciones',
