@@ -33,6 +33,9 @@ import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
 import type { ISchedule } from '~/interfaces/schedule'
 
+definePageMeta({
+  layout: 'app',
+})
 
 useSeoMeta({
   title: 'Horario compartido',
@@ -43,7 +46,6 @@ export default defineComponent({
   components: {
     ScheduleViewer,
   },
-  layout: 'app',
   setup() {
     const $api = useApi()
     const query = ref('')
