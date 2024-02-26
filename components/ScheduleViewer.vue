@@ -14,6 +14,7 @@
       </template>
     </h-calendar>
     <v-menu
+      v-if="selectedElement"
       v-model="selectedOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
