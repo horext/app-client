@@ -59,6 +59,7 @@ import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 
+
 export default defineComponent({
   name: 'Generator',
   components: {
@@ -67,6 +68,11 @@ export default defineComponent({
   setup() {
     definePageMeta({
       layout: 'app',
+    })
+
+    useSeoMeta({
+      title: 'Generador de Horarios',
+      description: 'Genera tu horario de clases de manera sencilla',
     })
 
     const configStore = useUserConfigStore()
