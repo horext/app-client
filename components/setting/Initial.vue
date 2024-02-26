@@ -45,6 +45,7 @@ import { useUserConfigStore } from '~/stores/user-config'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IOrganization } from '~/interfaces/organization'
 import { useApi } from '~/composables/api'
+import type { FetchError } from 'nitropack'
 
 export default defineComponent({
   name: 'SettingInitial',
@@ -85,9 +86,8 @@ export default defineComponent({
         loadingHourlyLoad.value = true
         const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
         hourlyLoad.value = data
-      } catch (e: any) {
-        const data = e.response
-        errorMessage.value = data.message
+      } catch (e: FetchError) {
+        errorMessage.value = 'No se pudo obtener la carga horaria.'
         showErrorMessage.value = true
       } finally {
         loadingHourlyLoad.value = false
