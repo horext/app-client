@@ -156,7 +156,11 @@ import { defineComponent, onMounted, watch, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type { ISelectedSubject, ISubject } from '~/interfaces/subject'
+import type {
+  ISelectedSubject,
+  ISubject,
+  ISubjectSchedule,
+} from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
 import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
@@ -204,7 +208,7 @@ export default defineComponent({
     const loading = ref(false)
     const dialogDelete = ref(false)
 
-    const editedItem = ref<any>(undefined)
+    const editedItem = ref<ISelectedSubject>()
     const editedIndex = ref(-1)
 
     const editItem = (item: ISelectedSubject) => {
@@ -223,7 +227,7 @@ export default defineComponent({
     }
 
     const deleteItemConfirm = async () => {
-      await configStore.deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value?.id!)
       closeDelete()
     }
 
@@ -239,17 +243,17 @@ export default defineComponent({
       editedIndex.value = -1
     }
 
-    const save = async (schedules: ISubject[]) => {
+    const save = async (schedules: ISubjectSchedule[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await configStore.updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value!, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await configStore.saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value!, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await configStore.deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value?.id!)
       } else {
         close()
       }
