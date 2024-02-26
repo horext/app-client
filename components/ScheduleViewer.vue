@@ -32,7 +32,7 @@
 import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { weekdayToDate } from '~/utils/core'
 
 export default {
@@ -42,7 +42,7 @@ export default {
   },
   props: {
     schedule: {
-      type: Object as PropType<ISchedule>,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
     weekDays: {

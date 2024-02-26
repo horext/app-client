@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import type { IOccurrence } from '~/interfaces/ocurrences'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
 
@@ -41,11 +41,11 @@ export function getSchedules(
     crossEvent: true,
     crossPractices: false,
   },
-): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: ISchedule[] } {
+): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
   const occurrences:IOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules = Array(maxQuantity).fill(0)
-  const schedules: Array<ISchedule> = []
+  const schedules: Array<IScheduleGenerate> = []
 
   const increment = (i: number) => {
     if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {

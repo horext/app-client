@@ -108,7 +108,7 @@ import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/model/ViewMode'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: {
@@ -119,7 +119,7 @@ export default defineComponent({
   },
   props: {
     schedules: {
-      type: Array as PropType<ISchedule[]>,
+      type: Array as PropType<IScheduleGenerate[]>,
       default: () => [],
     },
     path: {
@@ -156,7 +156,7 @@ export default defineComponent({
 
     const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 
-    const currentSchedule = ref<ISchedule>()
+    const currentSchedule = ref<IScheduleGenerate>()
 
     const dialogShare = ref(false)
     const dialogExport = ref(false)

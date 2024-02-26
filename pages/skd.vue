@@ -31,7 +31,7 @@ import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 definePageMeta({
   layout: 'app',
@@ -49,7 +49,7 @@ export default defineComponent({
 
     const $api = useApi()
     const query = ref('')
-    const schedules = ref<ISchedule[]>([])
+    const schedules = ref<IScheduleGenerate[]>([])
     const loading = ref(false)
     const courses = ref([])
 
@@ -72,10 +72,10 @@ export default defineComponent({
     const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
     const sessions = computed(() => data.value?.sessions || [])
 
-    const deleteFavoriteScheduleById = (favorites: ISchedule) =>
+    const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
       store.deleteFavoriteScheduleById(favorites.id)
 
-    const saveNewFavoriteSchedule = (favorites: ISchedule) =>
+    const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
       store.saveNewFavoriteSchedule(favorites)
 
     const subjects = computed(() => {
@@ -117,7 +117,7 @@ export default defineComponent({
       }
     }
 
-    const isFavorite = (schedule: ISchedule) => {
+    const isFavorite = (schedule: IScheduleGenerate) => {
       return myFavoritesSchedules.value.findIndex(
         (x: { id: any }) => x.id === schedule.id,
       )

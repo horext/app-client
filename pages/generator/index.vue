@@ -53,7 +53,6 @@
             variant="text"
             size="small"
             icon
-            v-bind="attrs"
             @click="succces = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -86,7 +85,7 @@ import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
-import type { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
@@ -114,11 +113,11 @@ export default defineComponent({
       configStore.updateCrossings(crossings)
     }
 
-    const updateFavoritesSchedules = (favoritesSchedules: ISchedule[]) => {
+    const updateFavoritesSchedules = (favoritesSchedules: IScheduleGenerate[]) => {
       configStore.updateFavoritesSchedules(favoritesSchedules)
     }
 
-    const updateSchedules = (schedules: ISchedule[]) => {
+    const updateSchedules = (schedules: IScheduleGenerate[]) => {
       configStore.updateSchedules(schedules)
     }
 
