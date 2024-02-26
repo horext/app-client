@@ -81,13 +81,7 @@ export default defineComponent({
         await router.push('/generator/subjects')
       }
     })
-    const store = useUserConfigStore()
-    const { refresh } = useAsyncData(() => {
-      store.fetchFirstEntry()
-      store.fetchFaculty()
-      store.fetchSpeciality()
-      store.fetchHourlyLoad()
-    })
+
 
     onMounted(async () => {
       await configStore.fetchSubjects()
@@ -101,7 +95,6 @@ export default defineComponent({
       firstEntry,
       isNewHourlyLoad,
       isUpdateHourlyLoad,
-      refresh,
     }
   },
   head: {
