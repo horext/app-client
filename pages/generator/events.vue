@@ -76,12 +76,11 @@
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
             variant="text"
             size="small"
             icon
-            v-bind="attrs"
             @click="succcesAddEvent = false"
           >
             <v-icon> mdi-close </v-icon>

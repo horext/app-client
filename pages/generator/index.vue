@@ -48,7 +48,7 @@
       <v-snackbar v-model="succces" color="success" timeout="3000">
         <v-icon> mdi-check </v-icon>
         Horarios generados correctamente!
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
             variant="text"
             size="small"

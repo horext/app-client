@@ -136,12 +136,11 @@
     <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
       <v-icon> mdi-check </v-icon>
       Curso Agregado correctamente!
-      <template #action="{ attrs }">
+      <template #actions>
         <v-btn
           variant="text"
           size="small"
           icon
-          v-bind="attrs"
           @click="succcesAddCourse = false"
         >
           <v-icon> mdi-close </v-icon>
