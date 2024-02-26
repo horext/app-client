@@ -1,4 +1,4 @@
-import { ISubjectSchedule } from './subject'
+import type { ISubjectSchedule } from './subject'
 import Event from '~/model/Event'
 
 export interface ISchedule {
