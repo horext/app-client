@@ -15,6 +15,7 @@
             hide-details
             item-title="course.name"
             item-value="id"
+            :loading="loadingSubjects"
             @update:model-value="editItem"
           >
             <template #selection="{ item }">
@@ -261,10 +262,9 @@ export default defineComponent({
 
     const search = ref('')
 
-    const { data: subjects } = await useAsyncData(
+    const { data: subjects, pending: loadingSubjects } = await useAsyncData(
       'search',
       async () => {
-        console.info('search', search.value)
         if (configStore.specialityId && configStore.hourlyLoadId) {
           try {
             const response = await $api.course.findBySearch(
@@ -340,6 +340,7 @@ export default defineComponent({
       totalCredits,
       formTitle,
       myHourlyLoad,
+      loadingSubjects,
     }
   },
 })
