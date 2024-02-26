@@ -54,27 +54,27 @@ export default defineComponent({
       },
 
       {
-        text: 'Fin A',
+        title: 'Fin A',
         value: 'elementA.endTime',
         groupable: false,
       },
       {
-        text: 'Evento B',
+        title: 'Evento B',
         value: 'elementB.code',
         groupable: false,
       },
       {
-        text: 'Dia',
+        title: 'Dia',
         value: 'elementB.day',
         groupable: false,
       },
       {
-        text: 'Inicio B',
+        title: 'Inicio B',
         value: 'elementB.startTime',
         groupable: false,
       },
       {
-        text: 'Fin B',
+        title: 'Fin B',
         value: 'elementB.endTime',
         groupable: false,
       },
