@@ -167,7 +167,7 @@ export default defineComponent({
   components: {
     SubjectScheduleList,
   },
-  setup() {
+  async setup() {
     const $api = useApi()
     onMounted(() => {
       Lottie.loadAnimation({
@@ -202,7 +202,6 @@ export default defineComponent({
       }, 0)
     })
 
-    const subjects = ref<ISubject[]>([])
     const dialog = ref(false)
     const loading = ref(false)
     const dialogDelete = ref(false)
@@ -262,21 +261,28 @@ export default defineComponent({
 
     const search = ref('')
 
-    const onChangeSearch = async (search: string) => {
-      if (configStore.specialityId && configStore.hourlyLoadId) {
-        try {
-          const response = await $api.course.findBySearch(
-            search || '',
-            configStore.specialityId,
-            configStore.hourlyLoadId,
-          )
-          subjects.value = response.content
-        } catch (e) {
-          console.error(e)
+    const { data: subjects } = await useAsyncData(
+      'search',
+      async () => {
+        console.info('search', search.value)
+        if (configStore.specialityId && configStore.hourlyLoadId) {
+          try {
+            const response = await $api.course.findBySearch(
+              search.value || ' ',
+              configStore.specialityId,
+              configStore.hourlyLoadId,
+            )
+            return response.content
+          } catch (e) {
+            console.error(e)
+          }
         }
-      }
-    }
-    watch(search, onChangeSearch)
+      },
+      {
+        watch: [search],
+        default: () => [],
+      },
+    )
 
     const headers = ref([
       {
@@ -330,7 +336,6 @@ export default defineComponent({
       close,
       deleteItemConfirm,
       save,
-      onChangeSearch,
       availableCourses,
       totalCredits,
       formTitle,
