@@ -33,7 +33,7 @@
           </v-row>
         </v-col>
         <v-col class="text-center" cols="12">
-          Copyright &copy; 2021 Octatec
+          Copyright &copy; {{ new Date().getFullYear() }} Octatec
         </v-col>
       </v-row>
     </v-container>
