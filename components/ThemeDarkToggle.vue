@@ -1,6 +1,6 @@
 <template>
   <v-sheet color="transparent">
-    <div id="darkMode" class="dark-toggle" @click="toggleDark" />
+    <div ref="darkModeEl" class="dark-toggle" @click="toggleDark" />
   </v-sheet>
 </template>
 <script lang="ts">
@@ -11,11 +11,10 @@ import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 export default defineComponent({
   setup() {
     const darkMode = ref<AnimationItem>()
-
+    const darkModeEl = ref<HTMLElement>()
     onMounted(() => {
-      const darkModeEl = document.getElementById('darkMode')
       darkMode.value = Lottie.loadAnimation({
-        container: darkModeEl!,
+        container: darkModeEl.value!,
         renderer: 'svg',
         loop: false,
         autoplay: false,
@@ -54,6 +53,7 @@ export default defineComponent({
     return {
       dark,
       toggleDark,
+      darkModeEl,
     }
   },
 })
