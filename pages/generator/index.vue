@@ -87,6 +87,7 @@ import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { ISchedule } from '~/interfaces/schedule'
+import type { IOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   components: {
@@ -97,7 +98,7 @@ export default defineComponent({
   setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
-    const occurrences = ref<any[]>([])
+    const occurrences = ref<IOccurrence[]>([])
     const openMySchedules = ref(false)
     const succces = ref(false)
 

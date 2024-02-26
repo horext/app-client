@@ -32,6 +32,7 @@
 import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import type { ISchedule } from '~/interfaces/schedule'
 import { weekdayToDate } from '~/utils/core'
 
 export default {
@@ -41,7 +42,7 @@ export default {
   },
   props: {
     schedule: {
-      type: Object,
+      type: Object as PropType<ISchedule>,
       required: true,
     },
     weekDays: {
@@ -53,11 +54,6 @@ export default {
     const hover = ref(false)
     const focus = ref()
     const type = ref('week')
-
-    const intervalFormat = (interval: any) => {
-      return interval.time
-    }
-
     const start = weekdayToDate(0)
 
     const selectedEvent = ref(null)
@@ -94,15 +90,18 @@ export default {
       nativeEvent.stopPropagation()
     }
 
-    const internalEvents = computed(() =>
-      props.schedule?.events?.map((event) => {
-        return {
-          ...event,
-          start: event.startTime,
-          end: event.endTime,
-          weekDay: event.day,
-        }
-      }),
+    const internalEvents = computed(
+      () =>
+        props.schedule?.events?.map((event) => {
+          return {
+            ...event,
+            start: event.startTime,
+            end: event.endTime,
+            weekDay: event.day,
+            id: event.id!,
+            name: event.title,
+          }
+        }) ?? [],
     )
 
     return {
@@ -113,7 +112,6 @@ export default {
       selectedElement,
       selectedOpen,
       events,
-      intervalFormat,
       start,
       getEventColor,
       showEvent,

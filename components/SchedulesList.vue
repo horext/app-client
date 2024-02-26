@@ -28,6 +28,7 @@ import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { ViewMode } from '~/model/ViewMode'
+import type { ISchedule } from '~/interfaces/schedule'
 
 export default defineComponent({
   name: 'SchedulesList',
@@ -39,7 +40,7 @@ export default defineComponent({
 
   props: {
     schedules: {
-      type: Array,
+      type: Array as PropType<ISchedule[]>,
       default: () => [],
     },
     weekDays: {
@@ -47,7 +48,8 @@ export default defineComponent({
       default: () => [1, 2, 3, 4, 5, 6],
     },
     currentSchedule: {
-      type: Object,
+      type: Object as PropType<ISchedule | undefined>,
+      default: () => undefined,
     },
     mode: {
       type: String,
