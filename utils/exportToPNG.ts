@@ -1,13 +1,6 @@
-let JsPDF: any = null
-if (process.client) {
-  const { jsPDF } = require('jspdf')
-  JsPDF = jsPDF
-}
+import html2canvas from 'html2canvas'
+import JsPDF from 'jspdf'
 
-let html2canvas: any = null
-if (process.client) {
-  html2canvas = require('html2canvas')
-}
 export const exportToCanvas = async function (element: any) {
   let options: any = {
     logging: true,
@@ -36,7 +29,7 @@ export const exportToPDF = async function (element: HTMLElement | null) {
     unit: 'px',
     format: [canvas.width * 0.71, canvas.height * 0.71],
   })
-  await doc.addImage(imgData, 'PNG', 0, 0)
+  doc.addImage(imgData, 'PNG', 0, 0, canvas.width * 0.71, canvas.height * 0.71)
 
   doc.save('Horario ' + Date.now() + ' - Octatec .pdf')
 }

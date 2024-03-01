@@ -1,6 +1,6 @@
 import { storeToRefs } from 'pinia'
 import {
-  SnackbarOptions,
+  type SnackbarOptions,
   useGlobalSnackbarStore,
 } from '~/stores/global-snackbar'
 

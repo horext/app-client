@@ -1,31 +1,38 @@
 <template>
-  <v-card>
+  <v-card :loading="loadingHourlyLoad">
     <v-card-title> Configuración </v-card-title>
     <v-card-text>
       <v-form>
         <v-autocomplete
           v-model="faculty"
           :items="faculties"
+          :loading="loadingFaculties"
           return-object
-          item-text="name"
+          item-title="name"
           label="Facultades"
         />
         <v-autocomplete
           v-model="speciality"
           :disabled="!faculty"
           return-object
-          item-text="name"
+          :loading="loadingSpecialities"
+          item-title="name"
           :items="specialities"
           label="Especialidades"
         />
       </v-form>
-      <v-alert v-model="showErrorMessage" dismissible type="error">
+      <v-alert v-model="showErrorMessage" closable type="error">
         {{ errorMessage }}
       </v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn :loading="loading" :disabled="!hourlyLoad" text @click="ending">
+      <v-btn
+        :loading="loading"
+        :disabled="!hourlyLoad"
+        variant="text"
+        @click="ending"
+      >
         Guardar
       </v-btn>
     </v-card-actions>
@@ -35,8 +42,8 @@
 <script lang="ts">
 import { ref, watch, onMounted, defineComponent } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { IOrganization } from '~/interfaces/organization'
-import { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IOrganization } from '~/interfaces/organization'
 import { useApi } from '~/composables/api'
 
 export default defineComponent({
@@ -51,32 +58,39 @@ export default defineComponent({
     const showErrorMessage = ref(false)
     const loading = ref(false)
 
-    const faculty = ref<IOrganization | undefined>()
-    const speciality = ref<IOrganization | undefined>()
+    const faculty = ref<IOrganization>()
+    const speciality = ref<IOrganization>()
     const hourlyLoad = ref<IHourlyLoad>()
 
+    const loadingSpecialities = ref(false)
     const initSpecialities = async (selectedFaculty: IOrganization) => {
       speciality.value = undefined
-      const { data } = await $api.speciality.getAllByFaculty(selectedFaculty.id)
+      loadingSpecialities.value = true
+      const data = await $api.speciality.getAllByFaculty(selectedFaculty.id)
       specialities.value = data
+      loadingSpecialities.value = false
     }
+
     watch(faculty, async (newValue) => {
       if (newValue) {
         await initSpecialities(newValue)
       }
     })
 
+    const loadingHourlyLoad = ref(false)
     const onChangeSpeciality = async (_speciality: IOrganization) => {
       hourlyLoad.value = undefined
+      if (!faculty.value) return
       try {
-        const { data } = await $api.hourlyLoad.getLatestByFaculty(
-          faculty.value!.id
-        )
+        loadingHourlyLoad.value = true
+        const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
         hourlyLoad.value = data
       } catch (e: any) {
-        const { data } = e.response
+        const data = e.response
         errorMessage.value = data.message
         showErrorMessage.value = true
+      } finally {
+        loadingHourlyLoad.value = false
       }
     }
     watch(speciality, async (newValue) => {
@@ -86,19 +100,22 @@ export default defineComponent({
       }
     })
 
+    const loadingFaculties = ref(false)
     const init = async () => {
-      const { data } = await $api.faculty.getAll()
+      loadingFaculties.value = true
+      const data = await $api.faculty.getAll()
       faculties.value = data
+      loadingFaculties.value = false
       faculty.value = store.faculty
       hourlyLoad.value = store.hourlyLoad
       speciality.value = store.speciality
     }
 
-    const ending = async () => {
+    const ending = () => {
       loading.value = true
-      await store.updateFaculty(faculty.value!)
-      await store.updateSpeciality(speciality.value!)
-      await store.updateFirstEntry(false)
+      store.updateFaculty(faculty.value!)
+      store.updateSpeciality(speciality.value!)
+      store.updateFirstEntry(false)
       loading.value = false
     }
 
@@ -118,6 +135,9 @@ export default defineComponent({
       initSpecialities,
       onChangeSpeciality,
       ending,
+      loadingHourlyLoad,
+      loadingFaculties,
+      loadingSpecialities,
     }
   },
 })

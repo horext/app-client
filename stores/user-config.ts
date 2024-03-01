@@ -1,22 +1,38 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { IOrganization } from '~/interfaces/organization'
-import { ISelectedSubject } from '~/interfaces/subject'
+import type { IOrganization } from '~/interfaces/organization'
+import type { ISelectedSubject } from '~/interfaces/subject'
 import Event from '~/model/Event'
-import { ISchedule } from '~/interfaces/schedule'
-import { IHourlyLoad } from '~/interfaces/houly-load'
-import { useStorage } from '~/composables/storage'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const $storage = useStorage()
+  const storage = useLocalStorage()
+  const myFaculty = useCookie<IOrganization | null>('myFaculty', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const mySpeciality = useCookie<IOrganization | null>('mySpeciality', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const myFirstEntry = useCookie<boolean>('myFirstEntry', {
+    default: () => true,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  const myHourlyLoad = useCookie<IHourlyLoad | null>('myHourlyLoad', {
+    default: () => null,
+    maxAge: 60 * 60 * 24 * 365,
+  })
+
   const $api = useApi()
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
-  const schedules = ref<Array<ISchedule>>([])
-  const favoritesSchedules = ref<Array<ISchedule>>([])
+  const schedules = ref<Array<IScheduleGenerate>>([])
+  const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
@@ -47,7 +63,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
-  function ADD_SCHEDULE(subject: ISchedule) {
+  function ADD_SCHEDULE(subject: IScheduleGenerate) {
     schedules.value.push(Object.assign({}, subject))
   }
 
@@ -55,13 +71,16 @@ export const useUserConfigStore = defineStore('user-config', () => {
     schedules.value.splice(index, 1)
   }
 
-  function UPDATE_SCHEDULE_BY_INDEX(index: number, schedule: ISchedule) {
+  function UPDATE_SCHEDULE_BY_INDEX(
+    index: number,
+    schedule: IScheduleGenerate,
+  ) {
     schedules.value = schedules.value.map((c, i) =>
-      i === index ? schedule : c
+      i === index ? schedule : c,
     )
   }
 
-  function ADD_FAVORITE_SCHEDULE(subject: ISchedule) {
+  function ADD_FAVORITE_SCHEDULE(subject: IScheduleGenerate) {
     favoritesSchedules.value.push(Object.assign({}, subject))
   }
 
@@ -71,121 +90,129 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function UPDATE_FAVORITE_SCHEDULE_BY_INDEX(
     index: number,
-    subject: ISchedule
+    subject: IScheduleGenerate,
   ) {
     favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
-      i === index ? subject : c
+      i === index ? subject : c,
     )
   }
 
-  async function updateFaculty(_faculty: IOrganization) {
-    await $storage.setUniversal('myFaculty', _faculty)
+  function updateFaculty(_faculty: IOrganization) {
+    myFaculty.value = _faculty
     faculty.value = _faculty
   }
 
   async function updateSpeciality(_speciality: IOrganization) {
-    $storage.setUniversal('mySpeciality', _speciality)
+    mySpeciality.value = _speciality
     speciality.value = _speciality
     await fetchHourlyLoad()
   }
 
-  async function updateFirstEntry(_myFirstEntry: boolean) {
-    await $storage.setUniversal('myFirstEntry', _myFirstEntry)
+  function updateFirstEntry(_myFirstEntry: boolean) {
+    myFirstEntry.value = _myFirstEntry
     firstEntry.value = _myFirstEntry
   }
 
-  function updateCrossings(_crossings: number) {
-    $storage.setUniversal('myCrossings', _crossings)
+  async function updateCrossings(_crossings: number) {
+    await storage.setItem('myCrossings', _crossings)
     crossings.value = _crossings
   }
 
-  function saveNewSubject(_subject: ISelectedSubject) {
+  async function saveNewSubject(_subject: ISelectedSubject) {
     ADD_SUBJECT(_subject)
-    $storage.setLocalStorage('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function deleteSubjectById(id: number) {
+  async function deleteSubjectById(id: number) {
     const index = subjects.value.findIndex((s) => s.id === id)
     DELETE_SUBJECT_BY_INDEX(index)
-    $storage.setLocalStorage('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function updateSubject(_subject: ISelectedSubject) {
+  async function updateSubject(_subject: ISelectedSubject) {
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
     UPDATE_SUBJECT_BY_INDEX(index, _subject)
-    $storage.setLocalStorage('mySubjects', subjects.value)
+    await storage.setItem('mySubjects', subjects.value)
   }
 
-  function updateSchedules(_schedules: ISchedule[]) {
+  async function updateSchedules(_schedules: IScheduleGenerate[]) {
     schedules.value = _schedules
-    $storage.setLocalStorage('mySchedules', schedules.value)
+    await storage.setItem('mySchedules', schedules.value)
   }
 
-  function saveNewFavoriteSchedule(_favoritesSchedule: ISchedule) {
+  async function saveNewFavoriteSchedule(
+    _favoritesSchedule: IScheduleGenerate,
+  ) {
     ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
-    $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function deleteFavoriteScheduleById(id: number) {
-    const index = subjects.value.findIndex((s) => s.id === id)
+  async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
+    const index = favoritesSchedules.value.findIndex((s) => s.id === id)
     DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
-    $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  function updateFavoritesSchedules(_favoritesSchedules: ISchedule[]) {
+  async function updateFavoritesSchedules(
+    _favoritesSchedules: IScheduleGenerate[],
+  ) {
     favoritesSchedules.value = _favoritesSchedules
-    $storage.setLocalStorage('myFavoritesSchedules', favoritesSchedules.value)
+    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
-  async function fetchFaculty() {
-    const data = await $storage.getUniversal('myFaculty')
-    faculty.value = data
+  function fetchFaculty() {
+    const data = myFaculty.value
+    if (data) {
+      faculty.value = data
+    }
   }
 
   function fetchSpeciality() {
-    const data = $storage.getUniversal('mySpeciality')
-    speciality.value = data
+    const data = mySpeciality.value
+    if (data) {
+      speciality.value = data
+    }
   }
 
   function fetchFirstEntry() {
-    const data = $storage.getUniversal('myFirstEntry')
+    const data = myFirstEntry.value
     firstEntry.value = data
   }
 
-  function fetchSubjects() {
-    const data: any[] | null = $storage.getLocalStorage('mySubjects')
-    const _subjets =
-      data?.filter((subject) => subject?.schedules?.length > 0) || []
+  async function fetchSubjects() {
+    const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
+    const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
     subjects.value = _subjets
   }
 
-  function fetchCrossings() {
-    const data: number | undefined = $storage.getLocalStorage('myCrossings')
+  async function fetchCrossings() {
+    const data: number | undefined =
+      (await storage.getItem<number>('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
   }
 
-  function fetchSchedules() {
-    const data: any[] | undefined = $storage.getLocalStorage('mySchedules')
-    const _schedules: ISchedule[] =
+  async function fetchSchedules() {
+    const data =
+      (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
+    const _schedules: IScheduleGenerate[] =
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
         ),
       })) || []
     schedules.value = _schedules
   }
 
-  function fetchFavoritesSchedules() {
-    const data: any[] | undefined = $storage.getLocalStorage(
-      'myFavoritesSchedules'
-    )
-    const _schedules: ISchedule[] =
+  async function fetchFavoritesSchedules() {
+    const data =
+      (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
+    const _schedules: IScheduleGenerate[] =
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e)
+          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
         ),
       })) || []
     favoritesSchedules.value = _schedules
@@ -193,9 +220,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
     hourlyLoad.value = newHourlyLoad
-    const currentHourlyLoad: IHourlyLoad | null | undefined =
-      $storage.getUniversal('myHourlyLoad')
-    if (currentHourlyLoad) {
+    const currentHourlyLoad: IHourlyLoad | null | undefined = myHourlyLoad.value
+    if (currentHourlyLoad?.id) {
       if (currentHourlyLoad.id !== newHourlyLoad.id) {
         isNewHourlyLoad.value = true
       } else if (
@@ -205,15 +231,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
         isUpdateHourlyLoad.value = true
       }
     }
-    $storage.setUniversal('myHourlyLoad', newHourlyLoad)
+    myHourlyLoad.value = newHourlyLoad
   }
 
   async function fetchHourlyLoad() {
     if (facultyId.value) {
       try {
-        const { data } = await $api.hourlyLoad.getLatestByFaculty(
-          facultyId.value
-        )
+        const data = await $api.hourlyLoad.getLatestByFaculty(facultyId.value)
         updateHourlyLoad(data)
       } catch (e) {
         console.error(e)

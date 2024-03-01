@@ -14,7 +14,7 @@
         v-if="item"
         :favorites-schedules="schedules"
         :schedule="item"
-        @update:favoritesSchedules="updateFavoritesSchedules"
+        @update:favorites-schedules="updateFavoritesSchedules"
       />
     </template>
     <template #emptyBody>
@@ -29,14 +29,14 @@ import FavoriteBanner from '~/components/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
   components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },
   setup() {
     const store = useUserConfigStore()
     const schedules = computed(() => store.favoritesSchedules)
-    const updateFavoritesSchedules = (schedules: ISchedule[]) =>
+    const updateFavoritesSchedules = (schedules: IScheduleGenerate[]) =>
       store.updateFavoritesSchedules(schedules)
     return { schedules, updateFavoritesSchedules }
   },

@@ -1,11 +1,11 @@
 <template>
-  <v-window id="window" class="px-6 mx-4" show-arrows continuous>
+  <v-window id="window" show-arrows continuous>
     <template #next>
-      <v-icon large @click="next"> mdi-arrow-right-bold-circle </v-icon>
+      <v-icon size="large" @click="next"> mdi-arrow-right-bold-circle </v-icon>
     </template>
 
     <template #prev>
-      <v-icon large @click="prev"> mdi-arrow-left-bold-circle </v-icon>
+      <v-icon size="large" @click="prev"> mdi-arrow-left-bold-circle </v-icon>
     </template>
     <v-window-item v-if="schedule">
       <schedule-viewer
@@ -23,12 +23,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from 'vue'
-import { WatchCallback } from '@nuxtjs/composition-api'
+import { defineComponent, computed, ref, watch, type WatchCallback } from 'vue'
 import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { ViewMode } from '~/model/ViewMode'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
   name: 'SchedulesList',
@@ -40,7 +40,7 @@ export default defineComponent({
 
   props: {
     schedules: {
-      type: Array,
+      type: Array as PropType<IScheduleGenerate[]>,
       default: () => [],
     },
     weekDays: {
@@ -48,7 +48,8 @@ export default defineComponent({
       default: () => [1, 2, 3, 4, 5, 6],
     },
     currentSchedule: {
-      type: Object,
+      type: Object as PropType<IScheduleGenerate | undefined>,
+      default: () => undefined,
     },
     mode: {
       type: String,

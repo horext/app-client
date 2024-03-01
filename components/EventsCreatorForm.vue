@@ -9,7 +9,7 @@
       v-model="eventSync.day"
       :items="weekdays"
       item-value="index"
-      item-text="value"
+      item-title="value"
       label="Dia"
       :rules="[rules.requiredDay]"
     />
@@ -25,21 +25,14 @@
       type="time"
       :rules="endRules"
     />
-    <v-color-picker
-      v-model="color"
-      class="ma-2"
-      hide-canvas
-      hide-mode-switch
-      hide-inputs
-    />
+    <v-color-picker v-model="color" class="ma-2" hide-canvas hide-inputs />
   </v-form>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from 'vue'
+import { computed, defineComponent, type PropType, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { VForm } from '~/types'
-import { IEvent } from '~/interfaces/event'
+import type { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   name: 'EventsCreator',
@@ -65,17 +58,17 @@ export default defineComponent({
       required: (value: any) => !!value || 'Requerido.',
       requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
       max: (value: any) =>
-        value < props.event?.endTime! || 'Tiene que ser menor que el fin',
+        value < props.event?.endTime || 'Tiene que ser menor que el fin',
       min: (value: any) =>
-        value > props.event?.startTime! || 'Tiene que ser mayor que el inicio',
+        value > props.event?.startTime || 'Tiene que ser mayor que el inicio',
     }))
 
     const startRules = computed(() => {
       const rules: any[] = [(value: any) => !!value || 'Requerido.']
-      if (props.event?.endTime! < props.event?.startTime!) {
+      if (props.event?.endTime < props.event?.startTime) {
         rules.push(
           (value: any) =>
-            value < props.event?.endTime! || 'Tiene que ser menor que el fin'
+            value < props.event?.endTime || 'Tiene que ser menor que el fin',
         )
       }
       return rules
@@ -83,17 +76,17 @@ export default defineComponent({
 
     const endRules = computed(() => {
       const rules: any[] = [(value: any) => !!value || 'Requerido.']
-      if (props.event?.startTime! > props.event?.endTime!) {
+      if (props.event?.startTime > props.event?.endTime) {
         rules.push(
           (value: any) =>
-            value > props.event?.startTime! ||
-            'Tiene que ser mayor que el inicio'
+            value > props.event?.startTime ||
+            'Tiene que ser mayor que el inicio',
         )
       }
       return rules
     })
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const validated = () => {
       const validate = form.value?.validate()

@@ -1,10 +1,10 @@
 <template>
-  <v-card :loading="$fetchState.pending">
+  <v-card :loading="pending">
     <v-card-title>
-      <span class="headline">{{ title }}</span>
+      <span class="text-h5">{{ title }}</span>
     </v-card-title>
     <v-card-text>
-      <v-simple-table dense>
+      <v-table dense>
         <template #default>
           <thead>
             <tr>
@@ -18,25 +18,28 @@
           </thead>
           <ScheduleSubjectList v-model="selected" :schedules="schedules" />
         </template>
-      </v-simple-table>
+      </v-table>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn color="primary" text @click="$emit('cancel')"> Cancelar </v-btn>
-      <v-btn color="primary" text @click="saveSections"> Guardar </v-btn>
+      <v-btn color="primary" variant="text" @click="$emit('cancel')">
+        Cancelar
+      </v-btn>
+      <v-btn color="primary" variant="text" @click="saveSections">
+        Guardar
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
-import { useFetch } from '@nuxtjs/composition-api'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import { useApi } from '~/composables/api'
-import { IHourlyLoad } from '~/interfaces/houly-load'
-import { IScheduleSubject } from '~/interfaces/schedule-subject'
-import {
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IScheduleSubject } from '~/interfaces/schedule-subject'
+import type {
   ISelectedSubject,
   ISession,
   ISubjectSchedule,
@@ -62,20 +65,18 @@ export default defineComponent({
 
     const fetchSchedules = async () => {
       if (props.subject?.id && props.hourlyLoad?.id) {
-        const { data: schedulesSubjectData } =
+        const schedulesSubjectData =
           await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
             props.subject.id,
-            props.hourlyLoad.id
+            props.hourlyLoad.id,
           )
         const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
-        const { data: sessionsData } = await $api.classSessions.findScheduleIds(
-          ids
-        )
+        const sessionsData = await $api.classSessions.findScheduleIds(ids)
         sessions.value = sessionsData
         schedulesSubject.value = schedulesSubjectData
       }
     }
-    const { fetch } = useFetch(fetchSchedules)
+    const { refresh, pending } = useAsyncData(fetchSchedules)
 
     const schedules = computed<ISubjectSchedule[]>(() => {
       return schedulesSubject.value.map((sb) => ({
@@ -84,7 +85,7 @@ export default defineComponent({
           id: sb.id,
         },
         sessions: sessions.value.filter(
-          (s) => s.schedule.id === sb.schedule.id
+          (s) => s.schedule.id === sb.schedule.id,
         ),
         subject: props.subject,
       }))
@@ -93,15 +94,15 @@ export default defineComponent({
     watch(
       () => props.subject,
       () => {
-        fetch()
-      }
+        refresh()
+      },
     )
 
     watch(schedules, () => {
       if (props.subject.schedules) {
         selected.value = schedules.value.filter((s1) => {
           const schedule = props.subject.schedules.find(
-            (s2) => s2.section.id === s1.section.id
+            (s2) => s2.section.id === s1.section.id,
           )
           return schedule?.id === s1?.id
         })
@@ -127,18 +128,8 @@ export default defineComponent({
       schedules,
       saveSections,
       title,
+      pending,
     }
   },
 })
 </script>
-
-<style lang="sass">
-@import '~vuetify/src/styles/styles.sass'
-@media #{map-get($display-breakpoints, 'sm-and-down')}
-  .v-data-table
-    td, th
-      padding: 0 10px
-
-    td
-      font-size: 0.75rem
-</style>

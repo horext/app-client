@@ -1,18 +1,25 @@
-import { AxiosInstance } from 'axios'
+import type { $Fetch } from 'nitropack'
+import type { ISession } from '~/interfaces/subject'
+
 const PATH_SUBJECTS = 'classSessions'
-export default ($axios: AxiosInstance) => ({
+export class ClassSessionRepository {
+  constructor(private $fetch: $Fetch) {}
+
   findScheduleId(schedule: number) {
-    return $axios.get(PATH_SUBJECTS, {
+    return this.$fetch(PATH_SUBJECTS, {
+      method: 'GET',
       params: {
         schedule,
       },
     })
-  },
+  }
+
   findScheduleIds(schedulesIds: Array<number>) {
-    return $axios.get(PATH_SUBJECTS, {
+    return this.$fetch<ISession[]>(PATH_SUBJECTS, {
+      method: 'GET',
       params: {
         schedules: schedulesIds.join(','),
       },
     })
-  },
-})
+  }
+}

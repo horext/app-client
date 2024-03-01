@@ -1,47 +1,29 @@
-<template lang="html">
+<template>
   <v-sheet>
-    <v-calendar
+    <h-calendar
       id="calendar"
-      v-model="focus"
-      :start="start"
-      :events="schedule.events"
       first-interval="7"
       interval-count="16"
-      :event-color="getEventColor"
-      :type="type"
       interval-width="40"
-      :short-intervals="false"
-      :interval-format="intervalFormat"
+      :events="internalEvents"
       :weekdays="[0, 1, 2, 3, 4, 5, 6]"
       @click:event="showEvent"
     >
-      <template #day-label-header>
-        <div />
+      <template #event="{ event }">
+        <schedule-event-info :key="event.id" :event="event" />
       </template>
-      <template #event="{ event, attrs, on }">
-        <v-hover>
-          <template #default="{ hover }">
-            <schedule-event-info
-              :key="event.id"
-              v-bind="attrs"
-              :event="event"
-              :hover="hover"
-              v-on="on"
-            />
-          </template>
-        </v-hover>
-      </template>
-    </v-calendar>
+    </h-calendar>
     <v-menu
+      v-if="selectedElement"
       v-model="selectedOpen"
       :close-on-content-click="false"
       :activator="selectedElement"
-      offset-x
+      location="bottom left"
     >
       <EventInfoCard
         v-if="selectedEvent"
+        v-model:dialog="selectedOpen"
         :selected-event="selectedEvent"
-        :dialog.sync="selectedOpen"
       />
     </v-menu>
   </v-sheet>
@@ -51,6 +33,7 @@
 import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { weekdayToDate } from '~/utils/core'
 
 export default {
@@ -60,7 +43,7 @@ export default {
   },
   props: {
     schedule: {
-      type: Object,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
     weekDays: {
@@ -68,19 +51,14 @@ export default {
       default: () => [1, 2, 3, 4, 5, 6],
     },
   },
-  setup() {
+  setup(props) {
     const hover = ref(false)
-    const focus = ref('')
+    const focus = ref()
     const type = ref('week')
-
-    const intervalFormat = (interval: any) => {
-      return interval.time
-    }
-
     const start = weekdayToDate(0)
 
     const selectedEvent = ref(null)
-    const selectedElement = ref(null)
+    const selectedElement = ref<HTMLElement | null>(null)
     const selectedOpen = ref(false)
     const events = ref([])
 
@@ -113,6 +91,20 @@ export default {
       nativeEvent.stopPropagation()
     }
 
+    const internalEvents = computed(
+      () =>
+        props.schedule?.events?.map((event) => {
+          return {
+            ...event,
+            start: event.startTime,
+            end: event.endTime,
+            weekDay: event.day,
+            id: event.id!,
+            name: event.title,
+          }
+        }) ?? [],
+    )
+
     return {
       hover,
       focus,
@@ -121,10 +113,10 @@ export default {
       selectedElement,
       selectedOpen,
       events,
-      intervalFormat,
       start,
       getEventColor,
       showEvent,
+      internalEvents,
     }
   },
 }

@@ -9,13 +9,14 @@
   </tr>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, type PropType, computed } from 'vue'
+import type { ISubjectSchedule } from '~/interfaces/subject'
 
 export default defineComponent({
   props: {
     schedule: {
-      type: Object as PropType<any>,
-      default: () => ({}),
+      type: Object as PropType<ISubjectSchedule>,
+      required: true,
     },
   },
   setup(props) {

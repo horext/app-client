@@ -3,7 +3,7 @@
     class="abcRioButton"
     width="240"
     height="50"
-    :color="$vuetify.theme.dark ? '#4285F4' : '#FFFFFF'"
+    :color="$vuetify.theme.name === 'dark' ? 'white' : 'grey lighten-2'"
     @click="$emit('click')"
   >
     <v-row
@@ -49,17 +49,18 @@
           </div>
         </div>
       </v-col>
-      <v-col class="body-2 text--primary font-weight-bold">
+      <v-col class="text-body-2 text--primary font-weight-bold">
         <slot />
       </v-col>
     </v-row>
   </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
   name: 'GoogleSignIn',
-}
+})
 </script>
 
 <style scoped>
@@ -68,9 +69,14 @@ export default {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-transition: background-color 0.218s, border-color 0.218s,
+  -webkit-transition:
+    background-color 0.218s,
+    border-color 0.218s,
     box-shadow 0.218s;
-  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  transition:
+    background-color 0.218s,
+    border-color 0.218s,
+    box-shadow 0.218s;
   -webkit-user-select: none;
   -webkit-appearance: none;
   background-color: #fff;

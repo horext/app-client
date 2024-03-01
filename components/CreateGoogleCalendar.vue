@@ -1,6 +1,6 @@
 <template>
   <v-card :loading="loading" :disabled="loading">
-    <v-card-title class="headline"> Crea un nuevo calendario </v-card-title>
+    <v-card-title class="text-h5"> Crea un nuevo calendario </v-card-title>
 
     <v-card-text>
       <v-form ref="form">
@@ -14,18 +14,17 @@
     <v-card-actions>
       <v-spacer />
 
-      <v-btn color="green darken-1" text @click="$emit('close')">
+      <v-btn color="green-darken-1" variant="text" @click="$emit('close')">
         Cancelar
       </v-btn>
 
-      <v-btn color="green darken-1" text @click="save"> Crear </v-btn>
+      <v-btn color="green-darken-1" variant="text" @click="save"> Crear </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script lang="ts">
 import { useVModel } from '@vueuse/core'
-import { defineComponent, PropType, ref, watch } from 'vue'
-import { VForm } from '~/types'
+import { defineComponent, type PropType, ref, watch } from 'vue'
 
 export default defineComponent({
   props: {
@@ -38,7 +37,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:calendar', 'update:result'],
+  emits: ['update:calendar', 'update:result' , 'close'],
   setup(props, { emit }) {
     const resultSync = useVModel(props, 'result', emit)
 
@@ -51,10 +50,10 @@ export default defineComponent({
       () => props.calendar,
       (calendar) => {
         calendarCurrent.value = calendar
-      }
+      },
     )
 
-    const form = ref<VForm>()
+    const form = ref<any>()
 
     const save = () => {
       if (form.value?.validate()) {

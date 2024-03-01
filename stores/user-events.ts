@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { v4 } from 'uuid'
 import { ref } from 'vue'
-import { useStorage } from '~/composables/storage'
 import Event from '~/model/Event'
+import type { IEvent } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const $storage = useStorage()
+  const storage = useLocalStorage<IEvent[]>()
   const items = ref<Event[]>([])
 
   function setItems(newItems: Event[]) {
@@ -14,7 +14,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function addItem(item: Event) {
     items.value.push(
-      Object.assign(new Event(0, '', '', '', '', '', '', '', ''), item)
+      Object.assign(new Event(0, '', '', '', '', '', '', '', ''), item),
     )
   }
 
@@ -28,13 +28,13 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function saveNewItem(item: Event) {
     addItem(item)
-    $storage.setLocalStorage('myEvents', items.value)
+    storage.setItem('events', items.value)
   }
 
   function deleteItemById(id: string) {
     const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
-    $storage.setLocalStorage('myEvents', items.value)
+    storage.setItem('events', items.value)
   }
 
   function updateItem(item: Event) {
@@ -44,7 +44,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
         index,
         item,
       })
-      $storage.setLocalStorage('myEvents', items.value)
+      storage.setItem('events', items.value)
     } else {
       console.error(index)
     }
@@ -52,16 +52,16 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function updateItems(items: any[]) {
     setItems(items)
-    $storage.setLocalStorage('myEvents', items)
+    storage.setItem('events', items)
   }
 
-  const fetchItems = () => {
-    const myEvents = $storage.getLocalStorage('myEvents') || []
-    const events = myEvents.map((e: { id: any }) =>
+  const fetchItems = async () => {
+    const myEvents = (await storage.getItem('events')) || []
+    const events = myEvents.map((e) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
         type: 'MY_EVENT',
-      })
+      }),
     )
     setItems(events)
   }

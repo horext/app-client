@@ -1,11 +1,12 @@
 import { DateTime } from 'luxon'
-import { ISchedule } from '~/interfaces/schedule'
-import { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
 
 const isIntersects = (
   eventTarget: Event,
-  eventSource: { start: string; end: string }
+  eventSource: { start: string; end: string },
 ): boolean =>
   !(
     eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
@@ -39,12 +40,12 @@ export function getSchedules(
     crossingSubjects: 0,
     crossEvent: true,
     crossPractices: false,
-  }
-): { occurrences: any[]; schedules: any[]; combinations: ISchedule[] } {
-  const occurrences = []
+  },
+): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
+  const occurrences:IOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules = Array(maxQuantity).fill(0)
-  const schedules: Array<ISchedule> = []
+  const schedules: Array<IScheduleGenerate> = []
 
   const increment = (i: number) => {
     if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
@@ -60,7 +61,7 @@ export function getSchedules(
   }, 1)
   const crossings = Array(combinations).fill(0)
   for (let i = combinations; i--; ) {
-    const combination: Array<any> = []
+    const combination: Array<ISubjectSchedule> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
       const schedule = subjects[j].schedules[indexSchedules[j]]
@@ -80,16 +81,17 @@ export function getSchedules(
       const schedule = currentSchedule.splice(0, 1)
       const events = schedule[0].events
       for (const event of events) {
-        const otherEvents = currentSchedule.map((c: any) => c.events).flat()
+        const otherEvents = currentSchedule.map((c) => c.events).flat()
         otherEvents.push(...myEvents)
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            occurrences.push({
+            const occurrence:IOccurrence = {
               type: 'Cruce de ' + event.title + ' - ' + item.title,
               elementA: event,
               elementB: item,
-            })
+            }
+            occurrences.push(occurrence)
             // if have available crossings
             if (
               crossingCombination + intersections <=
@@ -145,9 +147,8 @@ export function getSchedules(
 
 function scheduleToEvent(
   schedule: ISubjectSchedule,
-  color: string = 'primary'
+  color = 'primary',
 ): Array<Event> {
-  console.log(schedule)
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
   for (let i = 0; i < sessions.length; i++) {
@@ -162,7 +163,7 @@ function scheduleToEvent(
       sessions[i]?.classroom?.code,
       color,
       'COURSE',
-      sessions[i].type.code
+      sessions[i].type.code,
     )
     events.push(event)
   }
@@ -229,12 +230,3 @@ export const colors = [
   'blue lighten-3',
 ]
 
-export const weekdays = [
-  'Domingo',
-  'Lunes',
-  'Martes',
-  'Miercoles',
-  'Jueves',
-  'Viernes',
-  'Sábado',
-]

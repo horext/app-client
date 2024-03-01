@@ -1,0 +1,37 @@
+<template>
+  <div class="h-calendar-time px-1">
+    <div v-for="hour in hours" :key="hour" class="h-calendar-time-slot">
+      {{ hour }}
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed } from 'vue'
+
+const props = defineProps<{
+  hours: string[]
+  intervalHeight: number
+}>()
+
+const intervalHeightPx = computed(() => `${props.intervalHeight}rem`)
+</script>
+
+<style scoped>
+.h-calendar-time {
+  display: flex;
+  flex-direction: column;
+  width: 3rem;
+}
+
+.h-calendar-time-slot {
+  min-height: v-bind(intervalHeightPx);
+  max-height: v-bind(intervalHeightPx);
+  height: v-bind(intervalHeightPx);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  color: #a8a8a8;
+  padding-right: 0.5rem;
+}
+</style>

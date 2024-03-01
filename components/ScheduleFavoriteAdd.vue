@@ -1,32 +1,31 @@
 <template>
   <div>
     <v-btn
-      fab
-      outlined
+      variant="outlined"
       icon
-      :color="isFavorite ? 'yellow' : null"
+      :color="isFavorite ? 'yellow' : undefined"
       @click="changeFavoriteState"
     >
-      <v-icon :color="isFavorite ? 'yellow' : null"> mdi-star </v-icon>
+      <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
     </v-btn>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from 'vue'
+import { computed, defineComponent, type PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { useSnackbar } from '~/composables/snackbar'
-import { ISchedule } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',
   props: {
     schedule: {
-      type: Object as PropType<ISchedule>,
+      type: Object as PropType<IScheduleGenerate>,
       required: true,
     },
     favoritesSchedules: {
-      type: Array as PropType<Array<ISchedule>>,
+      type: Array as PropType<Array<IScheduleGenerate>>,
       default: () => [],
     },
   },
@@ -66,7 +65,7 @@ export default defineComponent({
     const indexSchedule = computed(() => {
       if (currentSchedule.value) {
         return favoritesSchedulesSync.value.findIndex(
-          (e) => e && e.id === currentSchedule.value.id
+          (e) => e && e.id === currentSchedule.value.id,
         )
       } else {
         return -1

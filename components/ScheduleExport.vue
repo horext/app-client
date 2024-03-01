@@ -4,7 +4,7 @@
       <v-btn
         :loading="loadingPdf"
         color="success"
-        dark
+        theme="dark"
         class="ma-1"
         @click="downloadPdf"
       >
@@ -17,7 +17,7 @@
       <v-btn
         :loading="loadingImage"
         color="success"
-        dark
+        theme="dark"
         class="ma-1"
         @click="downloadImage"
       >
@@ -32,12 +32,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { exportToPNG, exportToPDF } from '~/utils/exportToPNG'
-import { useVuetify } from '~/composables/vuetify'
 
 export default defineComponent({
   setup() {
-    const vuetify = useVuetify()
-
     const loading = ref(false)
     const loadingPdf = ref(false)
     const loadingImage = ref(false)
@@ -48,14 +45,12 @@ export default defineComponent({
 
     async function downloadImage() {
       loadingImage.value = true
-      await vuetify.goTo(0)
       await exportToPNG(getCalendar())
       loadingImage.value = false
     }
 
     async function downloadPdf() {
       loadingPdf.value = true
-      await vuetify.goTo(0)
       await exportToPDF(getCalendar())
       loadingPdf.value = false
     }

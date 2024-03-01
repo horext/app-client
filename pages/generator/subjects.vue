@@ -1,51 +1,36 @@
 <template>
-  <v-card tile flat>
+  <v-card rounded="0" flat>
     <v-card-text>
       <v-row no-gutters>
         <v-col cols="12">
           <v-autocomplete
             v-model="editedItem"
-            shaped
-            filled
-            :search-input.sync="search"
+            v-model:search="search"
+            variant="outlined"
             :items="availableCourses"
             append-icon="mdi-magnify"
             label="Busca cursos para agregar"
             return-object
             no-filter
-            :cache-items="false"
             hide-details
-            @input="editItem"
+            item-title="course.name"
+            item-value="id"
+            :loading="loadingSubjects"
+            @update:model-value="editItem"
           >
-            <template #selection="{ item, on, attrs }">
-              <v-list-item dense v-bind="attrs" v-on="on">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.course.id }} - {{ item.course.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Ciclo {{ item.cycle }} |
-                    <span v-if="item.type">
-                      {{ item.type.name }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <template #selection="{ item }">
+              <v-list-item
+                v-if="item.raw"
+                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+              ></v-list-item>
             </template>
-            <template #item="{ item, on, attrs }">
-              <v-list-item dense v-bind="attrs" v-on="on">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.course.id }} - {{ item.course.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Ciclo {{ item.cycle }} |
-                    <span v-if="item.type">
-                      {{ item.type.name }}
-                    </span>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <template #item="{ props, item }">
+              <v-list-item
+                v-bind="props"
+                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+              ></v-list-item>
             </template>
           </v-autocomplete>
         </v-col>
@@ -73,6 +58,7 @@
         @keydown.esc="close"
       >
         <SubjectScheduleList
+          v-if="editedItem"
           :subject="editedItem"
           :hourly-load="myHourlyLoad"
           @save="save"
@@ -80,12 +66,7 @@
         />
       </v-dialog>
 
-      <v-data-table
-        :headers="headers"
-        :items="mySubjects"
-        sort-by="calories"
-        class="elevation-1"
-      >
+      <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
         <template #no-data>
           <v-row align="center">
             <v-col cols="12" md="6">
@@ -105,24 +86,24 @@
           <v-chip
             v-for="schedule in item.schedules"
             :key="schedule.id"
-            dark
+            theme="dark"
             :color="getColor(schedule.section.id)"
           >
             {{ schedule.section.id }}
           </v-chip>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-tooltip bottom>
-            <template #activator="{ on }">
-              <v-icon color="blue" v-on="on" @click="editItem(item)">
+          <v-tooltip location="bottom">
+            <template #activator="{ props }">
+              <v-icon color="blue" v-bind="props" @click="editItem(item)">
                 mdi-pencil
               </v-icon>
             </template>
             <span>Editar</span>
           </v-tooltip>
-          <v-tooltip bottom>
-            <template #activator="{ on }">
-              <v-icon color="red" v-on="on" @click="deleteItem(item)">
+          <v-tooltip location="bottom">
+            <template #activator="{ props }">
+              <v-icon color="red" v-bind="props" @click="deleteItem(item)">
                 mdi-delete
               </v-icon>
             </template>
@@ -134,26 +115,35 @@
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
-        <v-card-title class="headline">
+        <v-card-title class="text-h5">
           ¿Estás segura de que quieres eliminar este curso?
         </v-card-title>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="closeDelete">
+          <v-btn color="blue-darken-1" variant="text" @click="closeDelete">
             Cancelar
           </v-btn>
-          <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="deleteItemConfirm"
+          >
             Aceptar
           </v-btn>
           <v-spacer />
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="succcesAddCourse" color="blue" app timeout="3000">
+    <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
       <v-icon> mdi-check </v-icon>
       Curso Agregado correctamente!
-      <template #action="{ attrs }">
-        <v-btn text small icon v-bind="attrs" @click="succcesAddCourse = false">
+      <template #actions>
+        <v-btn
+          variant="text"
+          size="small"
+          icon
+          @click="succcesAddCourse = false"
+        >
           <v-icon> mdi-close </v-icon>
         </v-btn>
       </template>
@@ -162,19 +152,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, computed } from 'vue'
+import { defineComponent, onMounted, ref, computed } from 'vue'
 import Lottie from 'lottie-web'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { ISelectedSubject, ISubject } from '~/interfaces/subject'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
-
+import Animation from '~/assets/lottie/15538-cat-woow.json'
 export default defineComponent({
   name: 'MySubjects',
   components: {
     SubjectScheduleList,
   },
-  setup() {
+  async setup() {
     const $api = useApi()
     onMounted(() => {
       Lottie.loadAnimation({
@@ -182,7 +172,7 @@ export default defineComponent({
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: require('~/assets/lottie/15538-cat-woow.json'),
+        animationData: Animation,
       })
     })
 
@@ -192,7 +182,7 @@ export default defineComponent({
 
     const availableCourses = computed(() => {
       return subjects.value?.filter(
-        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id)
+        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
       )
     })
 
@@ -209,13 +199,11 @@ export default defineComponent({
       }, 0)
     })
 
-    const subjects = ref<ISubject[]>([])
     const dialog = ref(false)
     const loading = ref(false)
     const dialogDelete = ref(false)
 
-    const defaultItem = ref<any>(null)
-    const editedItem = ref<any>({})
+    const editedItem = ref<ISelectedSubject>()
     const editedIndex = ref(-1)
 
     const editItem = (item: ISelectedSubject) => {
@@ -234,33 +222,33 @@ export default defineComponent({
     }
 
     const deleteItemConfirm = async () => {
-      await configStore.deleteSubjectById(editedItem.value.id)
+      await configStore.deleteSubjectById(editedItem.value?.id!)
       closeDelete()
     }
 
     const close = () => {
       dialog.value = false
-      editedItem.value = Object.assign({}, defaultItem.value)
+      editedItem.value = undefined
       editedIndex.value = -1
     }
 
     const closeDelete = () => {
       dialogDelete.value = false
-      editedItem.value = Object.assign({}, defaultItem.value)
+      editedItem.value = undefined
       editedIndex.value = -1
     }
 
-    const save = async (schedules: ISubject[]) => {
+    const save = async (schedules: ISubjectSchedule[]) => {
       succcesAddCourse.value = false
 
       if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await configStore.updateSubject({ ...editedItem.value, schedules })
+        await configStore.updateSubject({ ...editedItem.value!, schedules })
         close()
       } else if (schedules && schedules.length > 0) {
-        await configStore.saveNewSubject({ ...editedItem.value, schedules })
+        await configStore.saveNewSubject({ ...editedItem.value!, schedules })
         close()
       } else if (editedIndex.value > -1) {
-        await configStore.deleteSubjectById(editedItem.value.id)
+        await configStore.deleteSubjectById(editedItem.value?.id!)
       } else {
         close()
       }
@@ -270,47 +258,56 @@ export default defineComponent({
 
     const search = ref('')
 
-    const onChangeSearch = async (search: string) => {
-      if (configStore.specialityId && configStore.hourlyLoadId) {
-        try {
-          const response = await $api.course.findBySearch(
-            search || '',
-            configStore.specialityId,
-            configStore.hourlyLoadId
-          )
-          subjects.value = response.data.content
-        } catch (e) {
-          console.error(e)
+    const { data: subjects, pending: loadingSubjects } = await useAsyncData(
+      'search',
+      async () => {
+        if (configStore.specialityId && configStore.hourlyLoadId) {
+          try {
+            const response = await $api.course.findBySearch(
+              search.value || ' ',
+              configStore.specialityId,
+              configStore.hourlyLoadId,
+            )
+            return response.content
+          } catch (e) {
+            console.error(e)
+          }
         }
-      }
-    }
-    watch(search, onChangeSearch)
+      },
+      {
+        watch: [search],
+        default: () => [],
+      },
+    )
 
     const headers = ref([
       {
-        text: 'Código',
+        title: 'Código',
         value: 'course.id',
+        sortable: true,
       },
       {
-        text: 'Nombre de curso',
+        title: 'Nombre de curso',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'course.name',
       },
       {
-        text: 'Secciones',
+        title: 'Secciones',
         value: 'sections',
+        sortable: true,
       },
       {
-        text: 'Creditos',
+        title: 'Creditos',
         value: 'credits',
+        sortable: true,
       },
       {
-        text: 'Acciones',
+        title: 'Acciones',
         value: 'actions',
         sortable: false,
       },
-    ])
+    ] as const)
 
     const formTitle = computed(() => {
       return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
@@ -328,7 +325,6 @@ export default defineComponent({
       loading,
       editedIndex,
       editedItem,
-      defaultItem,
       headers,
       search,
       succcesAddCourse,
@@ -339,11 +335,11 @@ export default defineComponent({
       close,
       deleteItemConfirm,
       save,
-      onChangeSearch,
       availableCourses,
       totalCredits,
       formTitle,
       myHourlyLoad,
+      loadingSubjects,
     }
   },
 })

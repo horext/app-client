@@ -8,40 +8,42 @@
             <v-divider class="mx-4" inset vertical />
             <v-spacer />
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  dark
-                  class="mb-2"
-                  v-bind="attrs"
-                  v-on="on"
-                >
+              <template #activator="{ props }">
+                <v-btn color="primary" theme="dark" class="mb-2" v-bind="props">
                   Nueva Actividad
                 </v-btn>
               </template>
               <v-card>
                 <v-card-title> Crear tu Actividad </v-card-title>
                 <v-card-text>
-                  <events-creator ref="form" :event.sync="editedItem" />
+                  <events-creator ref="form" v-model:event="editedItem" />
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn text @click="close"> Cancelar </v-btn>
-                  <v-btn text @click="save"> Guardar </v-btn>
+                  <v-btn variant="text" @click="close"> Cancelar </v-btn>
+                  <v-btn variant="text" @click="save"> Guardar </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
-                <v-card-title class="headline">
+                <v-card-title class="text-h5">
                   ¿Está seguro de eliminar esta actividad?
                 </v-card-title>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="blue darken-1" text @click="closeDelete">
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="closeDelete"
+                  >
                     Cancelar
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+                  <v-btn
+                    color="blue-darken-1"
+                    variant="text"
+                    @click="deleteItemConfirm"
+                  >
                     Aceptar
                   </v-btn>
                   <v-spacer />
@@ -69,18 +71,16 @@
       <v-snackbar
         v-model="succcesAddEvent"
         color="blue"
-        app
         timeout="3000"
-        bottom
+        location="bottom"
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
-            text
-            small
+            variant="text"
+            size="small"
             icon
-            v-bind="attrs"
             @click="succcesAddEvent = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -90,18 +90,16 @@
       <v-snackbar
         v-model="succcesUpdateEvent"
         color="blue"
-        app
         timeout="3000"
-        bottom
+        location="bottom"
       >
         <v-icon> mdi-check </v-icon>
         <span class="mr-4"> Actividad actualizada correctamente </span>
-        <template #action="{ attrs }">
+        <template #actions>
           <v-btn
-            text
-            small
+            variant="text"
+            size="small"
             icon
-            v-bind="attrs"
             @click="succcesUpdateEvent = false"
           >
             <v-icon> mdi-close </v-icon>
@@ -115,10 +113,10 @@
 import { defineComponent, ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
-import { weekdays } from '~/utils/core'
 import Event from '~/model/Event'
 import { useUserEventsStore } from '~/stores/user-events'
-import { IEvent } from '~/interfaces/event'
+import type { IEvent } from '~/interfaces/event'
+import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   components: { EventsCreator },
@@ -131,11 +129,11 @@ export default defineComponent({
     const dialog = ref(false)
 
     const headers = [
-      { text: 'Color', value: 'color' },
-      { text: 'titulo', align: 'start', sortable: false, value: 'title' },
-      { text: 'Horario', value: 'schedule' },
-      { text: 'Acciones', value: 'actions', sortable: false },
-    ]
+      { title: 'Color', value: 'color' },
+      { title: 'titulo', align: 'start', sortable: false, value: 'title' },
+      { title: 'Horario', value: 'schedule' },
+      { title: 'Acciones', value: 'actions', sortable: false },
+    ] as const
 
     const defaultItem = ref<IEvent>({
       id: undefined,
@@ -211,7 +209,7 @@ export default defineComponent({
         item.title!,
         item.color,
         'MY_EVENT',
-        'MY_EVENT'
+        'MY_EVENT',
       )
       event.id = item.id || v4()
       if (editedIndex.value > -1) {
@@ -225,7 +223,7 @@ export default defineComponent({
     }
 
     return {
-      weekdays,
+      weekdays: WEEK_DAYS,
       dialog,
       headers,
       defaultItem,

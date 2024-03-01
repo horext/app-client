@@ -1,22 +1,16 @@
 <template>
-  <v-footer id="home-footer" min-height="48">
+  <v-footer id="home-footer" app>
     <v-container>
       <v-row dense>
         <v-col cols="12" md="6">
           <div
             class="d-flex flex-wrap justify-md-start justify-center justify-md-none"
           >
-            <template v-for="(s, i) in social">
-              <a
-                :key="s.name"
-                class="pa-1 pa-md-0"
-                :href="s.link"
-                v-text="s.name"
-              />
+            <template v-for="(s, i) in social" :key="s.name">
+              <a class="pa-1 pa-md-0" :href="s.link" v-text="s.name" />
 
               <v-responsive
                 v-if="i < social.length - 1"
-                :key="`divider-${s}`"
                 class="mx-4 shrink hidden-sm-and-down"
                 max-height="16"
               >
@@ -39,7 +33,7 @@
           </v-row>
         </v-col>
         <v-col class="text-center" cols="12">
-          Copyright &copy; 2021 Octatec
+          Copyright &copy; {{ new Date().getFullYear() }} Octatec
         </v-col>
       </v-row>
     </v-container>
@@ -47,9 +41,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 
-export default Vue.extend({
+export default defineComponent({
   name: 'HomeFooter',
   data: () => ({
     social: [
@@ -66,7 +60,8 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="sass">
-#home-footer a
-  text-decoration: none
+<style>
+#home-footer a {
+  text-decoration: none;
+}
 </style>

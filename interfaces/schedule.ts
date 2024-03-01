@@ -1,7 +1,7 @@
-import { ISubjectSchedule } from './subject'
+import type { ISubjectSchedule } from './subject'
 import Event from '~/model/Event'
 
-export interface ISchedule {
+export interface IScheduleGenerate {
   id: string
   scheduleSubjectIds: number[]
   schedule: ISubjectSchedule[]
