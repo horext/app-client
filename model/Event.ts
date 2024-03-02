@@ -24,6 +24,7 @@ export default class Event {
     color: string,
     category: string,
     type: string,
+    id?: string
   ) {
     this.day = day
     this.startTime = startTime
@@ -34,6 +35,7 @@ export default class Event {
     this.color = color
     this.category = category
     this.type = type
+    this.id = id
   }
 
   get start() {
