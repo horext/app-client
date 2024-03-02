@@ -44,7 +44,7 @@ export function getSchedules(
 ): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
   const occurrences:IOccurrence[] = []
   const maxQuantity = subjects.length
-  const indexSchedules = Array(maxQuantity).fill(0)
+  const indexSchedules:number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
 
   const increment = (i: number) => {
