@@ -6,19 +6,21 @@ import Lottie, {
 } from 'lottie-web'
 
 export const useLottie = <T extends RendererType = 'svg'>(
-  el: Ref<ComponentPublicInstance | null>,
+  reference: Ref<ComponentPublicInstance | Element | null>,
   options:
     | Omit<AnimationConfigWithData<T>, 'container'>
     | Omit<AnimationConfigWithPath<T>, 'container'>,
 ) => {
   const lottie = ref<AnimationItem | null>(null)
   onMounted(() => {
-    if (!el.value?.$el) return
+    const _reference = reference.value
+    if (!_reference) return
+    const el = '$el' in _reference ? _reference.$el : _reference
     lottie.value = Lottie.loadAnimation<T>({
       ...options,
-      container: el.value?.$el,
+      container: el,
     })
   })
 
-  return { lottie }
+  return lottie
 }
