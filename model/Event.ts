@@ -1,4 +1,4 @@
-import { convertToDate } from '~/utils/core'
+import { convertToDate } from '~/utils/weekday'
 
 export default class Event {
   id?: string
