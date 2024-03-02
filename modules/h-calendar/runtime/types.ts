@@ -10,3 +10,14 @@ export interface IEventEmitData<T extends ICalendarEvent> {
   event: T
   nativeEvent: MouseEvent
 }
+
+export type MouseEventTypes =
+  | 'click'
+  | 'dblclick'
+  | 'mouseenter'
+  | 'mouseleave'
+  | 'mousemove'
+  | 'mouseover'
+  | 'mouseout'
+  | 'mouseup'
+  | 'mousedown'
