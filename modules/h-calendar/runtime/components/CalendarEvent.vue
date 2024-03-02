@@ -21,18 +21,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { ICalendarEvent } from '../types'
+import type { ICalendarEvent, MouseEventTypes } from '../types'
 
 defineProps<{
   event: ICalendarEvent
 }>()
 defineEmits<{
-  (key: 'dblclick', value: MouseEvent): void
-  (key: 'click', value: MouseEvent): void
-  (key: 'mousedown', value: MouseEvent): void
-  (key: 'mouseenter', value: MouseEvent): void
-  (key: 'mouseleave', value: MouseEvent): void
-  (key: 'mousemove', value: MouseEvent): void
+  (key: MouseEventTypes, value: MouseEvent): void
 }>()
 </script>
 
