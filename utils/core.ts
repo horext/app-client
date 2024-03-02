@@ -3,14 +3,8 @@ import type { IOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
+import { isIntersects } from './event'
 
-const isIntersects = (
-  eventTarget: Event,
-  eventSource: { start: string; end: string },
-): boolean =>
-  !(
-    eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
-  )
 
 export const weekdayToDatetime = (weekday: number, time: string) => {
   const date = DateTime.fromISO(time).set({ weekday })
