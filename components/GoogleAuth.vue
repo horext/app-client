@@ -149,10 +149,10 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import { v4 } from 'uuid'
-import { colors } from '~/utils/core'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 import Event from '~/model/Event'
+import { EVENT_COLORS } from '~/constants/event'
 
 export default defineComponent({
   name: 'GoogleAuth',
@@ -347,7 +347,7 @@ export default defineComponent({
           event.startTime.length > 5
             ? 'yyyy-MM-dd hh:mm:ss'
             : 'yyyy-MM-dd hh:mm'
-        let color = colors.findIndex((color) => event.color === color)
+        let color = EVENT_COLORS.findIndex((color) => event.color === color)
         if (color === -1) {
           color = 10
         }
