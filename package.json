@@ -13,7 +13,7 @@
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore \"**/*.{js,ts,vue}\"",
     "lint": "yarn lint:js && yarn lint:prettier",
-    "lint:fix": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,vue}\" && yarn lint:js --fix",
+    "lint:fix": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,vue}\" && pnpm lint:js --fix",
     "test:unit": "vitest",
     "test:types": "nuxi prepare && vue-tsc --noEmit"
   },
