@@ -9,6 +9,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "type-check": "nuxt typecheck",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check --ignore-path .gitignore \"**/*.{js,ts,vue}\"",
     "lint": "yarn lint:js && yarn lint:prettier",
@@ -30,7 +31,7 @@
     "unstorage": "^1.10.1",
     "uuid": "^8.3.2",
     "vite": "^5.0.10",
-    "vue": "^3.4.3",
+    "vue": "^3.4.20",
     "vuetify": "^3.4.9"
   },
   "devDependencies": {
@@ -44,7 +45,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-nuxt": "^4.0.0",
-    "eslint-plugin-vue": "^9.19.2",
+    "eslint-plugin-vue": "^9.22.0",
     "nitropack": "^2.8.1",
     "nuxt": "^3.10.2",
     "prettier": "^3.1.1",
