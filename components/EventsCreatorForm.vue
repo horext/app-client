@@ -25,7 +25,12 @@
       type="time"
       :rules="endRules"
     />
-    <v-color-picker v-model="color" class="ma-2" hide-canvas hide-inputs />
+    <v-color-picker
+      v-model="color"
+      class="ma-2"
+      hide-canvas
+      hide-inputs
+    />
   </v-form>
 </template>
 
@@ -45,12 +50,12 @@ export default defineComponent({
   emits: ['update:event'],
   setup(props, { emit }) {
     const eventSync = useVModel(props, 'event', emit)
-    const color = ref(null)
+    const color = ref<string>(props.event.color)
 
-    const onChangeColor = (newVal: any) => {
+    const onChangeColor = (newVal: string) => {
       emit('update:event', {
         ...props.event,
-        color: newVal.hex,
+        color: newVal,
       })
     }
 
