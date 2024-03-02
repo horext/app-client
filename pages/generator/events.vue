@@ -135,25 +135,19 @@ export default defineComponent({
       { title: 'Acciones', value: 'actions', sortable: false },
     ] as const
 
-    const defaultItem = ref<IEvent>({
-      id: undefined,
-      title: '',
-      day: undefined,
-      color: 'primary',
-      type: 'myEvent',
-      startTime: undefined,
-      endTime: undefined,
-    })
-
-    const editedItem = ref<IEvent>({
-      id: undefined,
-      title: '',
-      day: undefined,
-      color: 'primary',
-      type: 'myEvent',
-      startTime: undefined,
-      endTime: undefined,
-    })
+    const editedItem = ref<IEvent>(
+      new Event(
+        1,
+        '08:00',
+        '10:00',
+        '',
+        '',
+        '',
+        'primary',
+        'MY_EVENT',
+        'myEvent',
+      ),
+    )
 
     const editedIndex = ref(-1)
 
@@ -179,7 +173,17 @@ export default defineComponent({
     const close = () => {
       dialog.value = false
       nextTick(() => {
-        editedItem.value = Object.assign({}, defaultItem.value)
+        editedItem.value = new Event(
+          1,
+          '08:00',
+          '10:00',
+          '',
+          '',
+          '',
+          '#1976d2',
+          'MY_EVENT',
+          'myEvent',
+        )
         editedIndex.value = -1
       })
     }
@@ -187,7 +191,17 @@ export default defineComponent({
     const closeDelete = () => {
       dialogDelete.value = false
       nextTick(() => {
-        editedItem.value = Object.assign({}, defaultItem.value)
+        editedItem.value = new Event(
+          1,
+          '08:00',
+          '10:00',
+          '',
+          '',
+          '',
+          '#1976d2',
+          'MY_EVENT',
+          'myEvent',
+        )
         editedIndex.value = -1
       })
     }
@@ -226,7 +240,6 @@ export default defineComponent({
       weekdays: WEEK_DAYS,
       dialog,
       headers,
-      defaultItem,
       editedItem,
       editedIndex,
       dialogDelete,
