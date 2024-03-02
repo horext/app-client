@@ -1,7 +1,7 @@
 <template>
   <div class="h-calendar">
     <div class="h-calendar-header">
-      <div class="empty-slot"></div>
+      <div class="h-calendar-empty-slot"></div>
       <div
         v-for="day in internalDays"
         :key="day.id"
@@ -146,7 +146,7 @@ const internalDays = computed(() => {
 const internalWidthRem = computed(() => props.internalWidth + 'rem')
 </script>
 
-<style scoped>
+<style lang="css">
 .h-calendar {
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@ const internalWidthRem = computed(() => props.internalWidth + 'rem')
   width: v-bind(internalWidthRem);
 }
 
-.empty-slot {
+.h-calendar-empty-slot {
   width: 3rem;
 }
 </style>
