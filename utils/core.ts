@@ -15,8 +15,8 @@ export const weekdayToDate = (weekday: number) => {
   const date = DateTime.local().set({ weekday })
   return date.toFormat('yyyy-MM-dd')
 }
-export const convertToDate = (day: string | number, startTime: string) => {
-  return weekdayToDatetime(<number>day, startTime)
+export const convertToDate = (weekday: string | number, startTime: string) => {
+  return weekdayToDatetime(<number>weekday, startTime)
 }
 
 export type ScheduleOptions = {
