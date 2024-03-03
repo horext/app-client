@@ -1,5 +1,5 @@
+import type { EventCategories, IEvent } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
-
 export default class Event {
   id?: string
   day: number
@@ -11,7 +11,7 @@ export default class Event {
   location?: string
   color: string
 
-  category?: string
+  category?: EventCategories
   type: string
 
   constructor(
@@ -19,10 +19,10 @@ export default class Event {
     startTime: string,
     endTime: string,
     title: string,
-    description: string,
+    description: string = '',
     location: string = '',
     color: string,
-    category: string,
+    category: EventCategories,
     type: string,
     id?: string
   ) {

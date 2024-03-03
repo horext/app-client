@@ -1,3 +1,4 @@
+export type EventCategories = 'COURSE' | 'MY_EVENT'
 export interface IEvent {
   id?: string
   title: string
@@ -5,7 +6,7 @@ export interface IEvent {
   description?: string
   location?: string
   color: string
-  category?: string
+  category?: EventCategories
   type: string
   startTime: string
   endTime: string
