@@ -3,6 +3,7 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import Event from '~/model/Event'
 import { isIntersects } from './event'
+import { EVENT_COLORS } from '~/constants/event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -20,10 +21,14 @@ export function getSchedules(
     crossEvent: true,
     crossPractices: false,
   },
-): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
-  const occurrences:IOccurrence[] = []
+): {
+  occurrences: IOccurrence[]
+  schedules: ISubjectSchedule[]
+  combinations: IScheduleGenerate[]
+} {
+  const occurrences: IOccurrence[] = []
   const maxQuantity = subjects.length
-  const indexSchedules:number[] = Array(maxQuantity).fill(0)
+  const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
 
   const increment = (i: number) => {
@@ -51,7 +56,7 @@ export function getSchedules(
     }
     const currentSchedule = combination.map((c, index) => ({
       ...c,
-      events: scheduleToEvent(c, colors[index]),
+      events: scheduleToEvent(c, EVENT_COLORS[index]),
     }))
     // calculating crossing
     let crossingCombination = 0
@@ -65,7 +70,7 @@ export function getSchedules(
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            const occurrence:IOccurrence = {
+            const occurrence: IOccurrence = {
               type: 'Cruce de ' + event.title + ' - ' + item.title,
               elementA: event,
               elementB: item,
@@ -108,7 +113,7 @@ export function getSchedules(
         schedule: combination,
         crossings: crossingCombination,
         events: combination
-          .map((c, index) => scheduleToEvent(c, colors[index]))
+          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
           .concat(myEvents),
       })
