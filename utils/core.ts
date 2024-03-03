@@ -146,8 +146,8 @@ function scheduleToEvent(
       ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
       sessions[i]?.classroom?.code,
       color,
-      'COURSE',
       sessions[i].type.code,
+      'COURSE',
     )
     events.push(event)
   }

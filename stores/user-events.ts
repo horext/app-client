@@ -14,7 +14,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function addItem(item: Event) {
     items.value.push(
-      Object.assign(new Event(0, '', '', '', '', '', '', '', ''), item),
+      Object.assign(new Event(0, '', '', '', '', '', '', ''), item),
     )
   }
 
@@ -58,7 +58,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
   const fetchItems = async () => {
     const myEvents = (await storage.getItem('myEvents')) || []
     const events = myEvents.map((e) =>
-      Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
+      Object.assign(new Event(0, '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
         type: 'MY_EVENT',
       }),

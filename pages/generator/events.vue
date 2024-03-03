@@ -144,7 +144,6 @@ export default defineComponent({
         '',
         '',
         'primary',
-        'MY_EVENT',
         'myEvent',
       ),
     )
@@ -181,7 +180,6 @@ export default defineComponent({
           '',
           '',
           '#1976d2',
-          'MY_EVENT',
           'myEvent',
         )
         editedIndex.value = -1
@@ -199,7 +197,6 @@ export default defineComponent({
           '',
           '',
           '#1976d2',
-          'MY_EVENT',
           'myEvent',
         )
         editedIndex.value = -1

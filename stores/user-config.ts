@@ -199,7 +199,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
+          Object.assign(new Event(0, '', '', '', '', '', '', ''), e),
         ),
       })) || []
     schedules.value = _schedules
@@ -212,7 +212,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       data?.map?.((s) => ({
         ...s,
         events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
+          Object.assign(new Event(0, '', '', '', '', '', '', ''), e),
         ),
       })) || []
     favoritesSchedules.value = _schedules

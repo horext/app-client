@@ -22,8 +22,8 @@ export default class Event {
     description: string = '',
     location: string = '',
     color: string,
-    category: EventCategories,
     type: string,
+    category?: EventCategories,
     id?: string
   ) {
     this.day = day
