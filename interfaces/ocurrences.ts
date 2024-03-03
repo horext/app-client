@@ -1,7 +1,7 @@
-import type Event from "~/model/Event"
+import type { IEvent } from './event'
 
 export interface IOccurrence {
   type: string
-  elementA: Event
-  elementB: Event
+  elementA: IEvent
+  elementB: IEvent
 }

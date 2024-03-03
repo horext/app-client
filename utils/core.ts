@@ -1,9 +1,10 @@
 import type { IOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import Event from '~/model/Event'
+import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
+import Event from '~/model/Event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -14,7 +15,7 @@ export type ScheduleOptions = {
 
 export function getSchedules(
   subjects: Array<ISelectedSubject>,
-  myEvents: Array<Event>,
+  myEvents: Array<IEvent>,
   options: ScheduleOptions = {
     credits: 100,
     crossingSubjects: 0,
@@ -63,10 +64,11 @@ export function getSchedules(
     let useCombination = true
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
-      const events = schedule[0].events
+      const events = schedule[0].events.map(Event.buildFrom)
+
       for (const event of events) {
-        const otherEvents = currentSchedule.map((c) => c.events).flat()
-        otherEvents.push(...myEvents)
+        const otherEvents = currentSchedule.map((c) => c.events).flat().map(Event.buildFrom)
+        otherEvents.push(...myEvents.map(Event.buildFrom))
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
@@ -115,7 +117,7 @@ export function getSchedules(
         events: combination
           .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
-          .concat(myEvents),
+          .concat(myEvents.map(Event.buildFrom)),
       })
     }
 
