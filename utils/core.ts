@@ -133,7 +133,7 @@ export function getSchedules(
 
 function scheduleToEvent(
   schedule: ISubjectSchedule,
-  color = 'primary',
+  color: string,
 ): Array<Event> {
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
