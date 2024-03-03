@@ -136,29 +136,20 @@ export default defineComponent({
     ] as const
 
     const editedItem = ref<IEvent>(
-      new Event(
-        1,
-        '08:00',
-        '10:00',
-        '',
-        '',
-        '',
-        'primary',
-        'myEvent',
-      ),
+      new Event(1, '08:00', '10:00', '', '', '', 'primary', 'myEvent'),
     )
 
     const editedIndex = ref(-1)
 
     const dialogDelete = ref(false)
 
-    const editItem = (item: Event) => {
+    const editItem = (item: IEvent) => {
       editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialog.value = true
     }
 
-    const deleteItem = (item: Event) => {
+    const deleteItem = (item: IEvent) => {
       editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
       editedItem.value = Object.assign({}, item)
       dialogDelete.value = true
@@ -180,7 +171,7 @@ export default defineComponent({
           '',
           '',
           '#1976d2',
-          'myEvent',
+          'MY_EVENT',
         )
         editedIndex.value = -1
       })
@@ -197,7 +188,7 @@ export default defineComponent({
           '',
           '',
           '#1976d2',
-          'myEvent',
+          'MY_EVENT',
         )
         editedIndex.value = -1
       })
@@ -212,12 +203,12 @@ export default defineComponent({
 
       const item = editedItem.value
       const event = new Event(
-        item.day || 0,
-        item.startTime!,
-        item.endTime!,
-        item.title!,
-        item.title!,
-        item.title!,
+        item.day,
+        item.startTime,
+        item.endTime,
+        item.title,
+        item.title,
+        item.title,
         item.color,
         'MY_EVENT',
         'MY_EVENT',
