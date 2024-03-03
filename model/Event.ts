@@ -45,4 +45,19 @@ export default class Event {
   get end() {
     return convertToDate(this.day, this.endTime)
   }
+
+  static buildFrom(event: IEvent) {
+    return new Event(
+      event.day,
+      event.startTime,
+      event.endTime,
+      event.title,
+      event.description,
+      event.location,
+      event.color,
+      event.type,
+      event.category,
+      event.id
+    )
+  }
 }
