@@ -1,21 +1,17 @@
 import { defineStore } from 'pinia'
-import { v4 } from 'uuid'
 import { ref } from 'vue'
-import Event from '~/model/Event'
 import type { IEvent } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
   const storage = useLocalStorage<IEvent[]>()
-  const items = ref<Event[]>([])
+  const items = ref<IEvent[]>([])
 
-  function setItems(newItems: Event[]) {
+  function setItems(newItems: IEvent[]) {
     items.value = newItems
   }
 
-  function addItem(item: Event) {
-    items.value.push(
-      Object.assign(new Event(0, '', '', '', '', '', '', ''), item),
-    )
+  function addItem(item: IEvent) {
+    items.value.push(item)
   }
 
   function deleteItemByIndex(index: number) {
@@ -26,7 +22,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
-  function saveNewItem(item: Event) {
+  function saveNewItem(item: IEvent) {
     addItem(item)
     storage.setItem('events', items.value)
   }
@@ -37,7 +33,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     storage.setItem('myEvents', items.value)
   }
 
-  function updateItem(item: Event) {
+  function updateItem(item: IEvent) {
     const index = items.value.findIndex((s) => s.id === item.id)
     if (index >= 0) {
       updateItemByIndex({
@@ -56,14 +52,8 @@ export const useUserEventsStore = defineStore('user/events', () => {
   }
 
   const fetchItems = async () => {
-    const myEvents = (await storage.getItem('myEvents')) || []
-    const events = myEvents.map((e) =>
-      Object.assign(new Event(0, '', '', '', '', '', '', ''), e, {
-        id: e?.id || v4(),
-        type: 'MY_EVENT',
-      }),
-    )
-    setItems(events)
+    const data = (await storage.getItem('myEvents')) || []
+    setItems(data)
   }
 
   return {
