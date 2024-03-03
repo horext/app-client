@@ -1,7 +1,8 @@
+import { v4 } from 'uuid'
 import type { EventCategories, IEvent } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
 export default class Event {
-  id?: string
+  id: string
   day: number
   startTime: string
   endTime: string
@@ -24,7 +25,7 @@ export default class Event {
     color: string,
     type: string,
     category?: EventCategories,
-    id?: string
+    id: string = v4()
   ) {
     this.day = day
     this.startTime = startTime
