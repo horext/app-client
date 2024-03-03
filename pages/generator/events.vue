@@ -136,7 +136,7 @@ export default defineComponent({
     ] as const
 
     const editedItem = ref<IEvent>(
-      new Event(1, '08:00', '10:00', '', '', '', 'primary', 'myEvent'),
+      new Event(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT'),
     )
 
     const editedIndex = ref(-1)
