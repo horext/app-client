@@ -151,8 +151,8 @@ import { DateTime } from 'luxon'
 import { v4 } from 'uuid'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
-import Event from '~/model/Event'
 import { EVENT_COLORS } from '~/constants/event'
+import type { IEvent } from '~/interfaces/event'
 
 export default defineComponent({
   name: 'GoogleAuth',
@@ -160,7 +160,7 @@ export default defineComponent({
 
   props: {
     events: {
-      type: Array as PropType<Event[]>,
+      type: Array as PropType<IEvent[]>,
       default: () => [],
     },
     startDate: {
@@ -341,7 +341,7 @@ export default defineComponent({
       progress.value = 0
     }
 
-    function eventRequest(event: Event): Promise<any> {
+    function eventRequest(event: IEvent): Promise<any> {
       return new Promise((resolve, reject) => {
         const format =
           event.startTime.length > 5
