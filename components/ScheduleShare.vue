@@ -107,7 +107,7 @@ export default defineComponent({
       this.dialogSync = false
     },
     copy() {
-      const copyText = document.querySelector('#link')
+      const copyText = document.querySelector<HTMLInputElement>('#link')
       if (copyText) {
         copyText.select()
         navigator.clipboard.writeText(this.link).then(
