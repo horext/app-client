@@ -75,6 +75,7 @@ import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
 
 const props = defineProps<{
+  weekDay: number
   day: string
   hours: string[]
   events: T[]
@@ -100,7 +101,8 @@ const emit = defineEmits<{
   (key: 'mouseleave:event', event: IEventEmitData<T>): void
   (key: 'mousemove:event', event: IEventEmitData<T>): void
 }>()
-const { events, intervalHeight, hours, intervalMinutes } = toRefs(props)
+const { events, intervalHeight, hours, intervalMinutes, weekDay } =
+  toRefs(props)
 
 const calculatePosition = (event: ICalendarEvent) => {
   const [startHour, startMinute] = event.start.split(':').map(Number)
@@ -126,6 +128,7 @@ const calculatePosition = (event: ICalendarEvent) => {
 
 const internalEvents = computed(() => {
   return events.value
+    .filter((event) => event.weekDay === weekDay.value)
     .map((event) => {
       return {
         data: event,
