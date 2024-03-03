@@ -4,7 +4,7 @@ import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
-import Event from '~/model/Event'
+import Event from '~/models/Event'
 
 export type ScheduleOptions = {
   credits?: number

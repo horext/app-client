@@ -113,7 +113,7 @@
 import { defineComponent, ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
-import Event from '~/model/Event'
+import Event from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'

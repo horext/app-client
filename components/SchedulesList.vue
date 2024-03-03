@@ -27,7 +27,7 @@ import { defineComponent, computed, ref, watch, type WatchCallback } from 'vue'
 import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
-import { ViewMode } from '~/model/ViewMode'
+import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
