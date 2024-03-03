@@ -34,7 +34,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
   function deleteItemById(id: string) {
     const index = items.value.findIndex((s) => s.id === id)
     deleteItemByIndex(index)
-    storage.setItem('events', items.value)
+    storage.setItem('myEvents', items.value)
   }
 
   function updateItem(item: Event) {
@@ -44,7 +44,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
         index,
         item,
       })
-      storage.setItem('events', items.value)
+      storage.setItem('myEvents', items.value)
     } else {
       console.error(index)
     }
@@ -56,7 +56,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
   }
 
   const fetchItems = async () => {
-    const myEvents = (await storage.getItem('events')) || []
+    const myEvents = (await storage.getItem('myEvents')) || []
     const events = myEvents.map((e) =>
       Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e, {
         id: e?.id || v4(),
