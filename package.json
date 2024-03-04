@@ -31,8 +31,8 @@
     "unstorage": "^1.10.1",
     "uuid": "^8.3.2",
     "vite": "^5.0.10",
-    "vue": "^3.4.20",
-    "vuetify": "^3.4.9"
+    "vue": "^3.4.21",
+    "vuetify": "^3.5.7"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
@@ -47,7 +47,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^9.22.0",
     "nitropack": "^2.8.1",
-    "nuxt": "^3.10.2",
+    "nuxt": "^3.10.3",
     "prettier": "^3.1.1",
     "sass": "^1.69.6",
     "typescript": "^5.1.6",
