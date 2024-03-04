@@ -18,58 +18,55 @@
       @mouseup="emit('mouseup:hour', hour)"
       @mousemove="emit('mousemove:hour', hour)"
     />
-    <Event
-      v-for="(event, index) in internalEvents"
-      :key="event.data.id || index"
-      :event="event.data"
-      :style="{
-        top: event.position.top + 'px',
-        height: event.position.height + 'px',
-        left: event.position.left + '%',
-        width: event.position.width + '%',
-      }"
-      @dblclick="
-        $emit('dblclick:event', { event: event.data, nativeEvent: $event })
-      "
-      @click="
-        $emit('click:event', {
-          event: event.data,
-          nativeEvent: $event,
-        })
-      "
-      @mousedown="
-        $emit('mousedown:event', { event: event.data, nativeEvent: $event })
-      "
-      @mouseenter="
-        $emit('mouseenter:event', {
-          event: event.data,
-          nativeEvent: $event,
-        })
-      "
-      @mouseleave="
-        $emit('mouseleave:event', {
-          event: event.data,
-          nativeEvent: $event,
-        })
-      "
-      @mousemove="
-        $emit('mousemove:event', {
-          event: event.data,
-          nativeEvent: $event,
-        })
-      "
-    >
-      <template #default>
-        <slot name="event" :event="event.data"> </slot>
-      </template>
-    </Event>
+    <template v-for="group in groupEvents">
+      <Event
+        v-for="event in group"
+        :key="event.id"
+        :event="event"
+        :events="group"
+        :interval-minute-height="intervalMinuteHeight"
+        :start-interval-hour="startIntervalHour"
+        @dblclick="
+          $emit('dblclick:event', { event: event, nativeEvent: $event })
+        "
+        @click="
+          $emit('click:event', {
+            event: event,
+            nativeEvent: $event,
+          })
+        "
+        @mousedown="
+          $emit('mousedown:event', { event: event, nativeEvent: $event })
+        "
+        @mouseenter="
+          $emit('mouseenter:event', {
+            event: event,
+            nativeEvent: $event,
+          })
+        "
+        @mouseleave="
+          $emit('mouseleave:event', {
+            event: event,
+            nativeEvent: $event,
+          })
+        "
+        @mousemove="
+          $emit('mousemove:event', {
+            event: event,
+            nativeEvent: $event,
+          })
+        "
+      >
+        <template #default>
+          <slot name="event" :event="event"> </slot>
+        </template>
+      </Event>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
 import { ref, computed, toRefs } from 'vue'
-import { HOUR_IN_MINUTES } from '../constants/time'
-import { WIDTH_FULL } from '../constants/event'
 import type { ICalendarEvent, IEventEmitData } from '../types'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
@@ -104,67 +101,35 @@ const emit = defineEmits<{
 const { events, intervalHeight, hours, intervalMinutes, weekDay } =
   toRefs(props)
 
-const calculatePosition = (event: ICalendarEvent) => {
-  const [startHour, startMinute] = event.start.split(':').map(Number)
-  const [endHour, endMinute] = event.end.split(':').map(Number)
-  const firstHour = parseInt(props.hours[0])
+const startIntervalHour = computed(() => parseInt(hours.value[0]))
+
+const intervalMinuteHeight = computed(() => {
   const totalHeight = dayContainer.value?.offsetHeight ?? 0
   const intervalHeight = totalHeight / hours.value.length
   const minuteHeight = intervalHeight / intervalMinutes.value
-  const startMinutes = (startHour - firstHour) * HOUR_IN_MINUTES + startMinute
-  const endMinutes = (endHour - firstHour) * HOUR_IN_MINUTES + endMinute
-  const top = startMinutes * minuteHeight
-  const bottom = endMinutes * minuteHeight
-  const height = bottom - top
-  const left = 0
-  return {
-    top,
-    height,
-    left,
-    bottom,
-    width: WIDTH_FULL,
-  }
-}
+  return minuteHeight
+})
 
-const internalEvents = computed(() => {
-  return events.value
-    .filter((event) => event.weekDay === weekDay.value)
-    .map((event) => {
-      return {
-        data: event,
-        position: calculatePosition(event),
+const weekDayEvents = computed(() => {
+  return events.value.filter((event) => event.weekDay === weekDay.value)
+})
+
+const groupEvents = computed(() => {
+  const groups: T[][] = []
+  const events = weekDayEvents.value
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i]
+    const group: T[] = [event]
+    for (let j = i + 1; j < events.length; j++) {
+      const nextEvent = events[j]
+      if (event.start < nextEvent.end && event.end > nextEvent.start) {
+        group.push(nextEvent)
+        i++
       }
-    })
-    .sort((a, b) => {
-      if (a.position.top < b.position.top) {
-        return -1
-      }
-      if (a.position.top > b.position.top) {
-        return 1
-      }
-      return 0
-    })
-    .map((event, _index, array) => {
-      const collisions = array.filter(
-        (otherEvent) =>
-          event.position.top < otherEvent.position.bottom &&
-          event.position.bottom > otherEvent.position.top,
-      )
-      const collisionsLength = collisions.length
-      if (collisionsLength > 1) {
-        const index = collisions.indexOf(event)
-        const width = WIDTH_FULL / collisionsLength
-        return {
-          ...event,
-          position: {
-            ...event.position,
-            left: width * index,
-            width: width + (collisionsLength - index - 1) * 15,
-          },
-        }
-      }
-      return event
-    })
+    }
+    groups.push(group)
+  }
+  return groups
 })
 
 const dayContainer = ref<null | HTMLDivElement>(null)

@@ -1,6 +1,7 @@
 <template>
   <div
     class="h-calendar-event-timed"
+    :style="position"
     @dblclick="$emit('dblclick', $event)"
     @click.stop.prevent="$emit('click', $event)"
     @mousedown="$emit('mousedown', $event)"
@@ -21,14 +22,55 @@
 </template>
 
 <script lang="ts" setup>
+import { WIDTH_FULL } from '../constants/event'
+import { HOUR_IN_MINUTES } from '../constants/time'
 import type { ICalendarEvent, MouseEventTypes } from '../types'
 
-defineProps<{
+const props = defineProps<{
   event: ICalendarEvent
+  startIntervalHour: number
+  intervalMinuteHeight: number
+  events: ICalendarEvent[]
 }>()
 defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
+const { event, startIntervalHour, intervalMinuteHeight, events } = toRefs(props)
+
+const collisionIndex = computed(() => {
+  const _collisions = events.value
+  return _collisions.indexOf(event.value)
+})
+
+const width = computed(() => {
+  const _collisions = events.value
+  return WIDTH_FULL / _collisions.length
+})
+
+const right = computed(() => {
+  const index = collisionIndex.value
+  return WIDTH_FULL - (index + 1) * width.value
+})
+
+const position = computed(() => {
+  const _event = event.value
+  const [startHour, startMinute] = _event.start.split(':').map(Number)
+  const [endHour, endMinute] = _event.end.split(':').map(Number)
+  const firstHour = startIntervalHour.value
+  const minuteHeight = intervalMinuteHeight.value
+  const startMinutes = (startHour - firstHour) * HOUR_IN_MINUTES + startMinute
+  const endMinutes = (endHour - firstHour) * HOUR_IN_MINUTES + endMinute
+  const top = startMinutes * minuteHeight
+  const bottom = endMinutes * minuteHeight
+  const height = bottom - top
+  return {
+    top: top + 'px',
+    height: height + 'px',
+    right: right.value + '%',
+    bottom: bottom + 'px',
+    width: width.value + '%',
+  }
+})
 </script>
 
 <style scoped>
