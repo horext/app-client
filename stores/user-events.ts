@@ -24,7 +24,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function saveNewItem(item: IEvent) {
     addItem(item)
-    storage.setItem('events', items.value)
+    storage.setItem('myEvents', items.value)
   }
 
   function deleteItemById(id: string) {
@@ -48,7 +48,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
 
   function updateItems(items: any[]) {
     setItems(items)
-    storage.setItem('events', items)
+    storage.setItem('myEvents', items)
   }
 
   const fetchItems = async () => {
