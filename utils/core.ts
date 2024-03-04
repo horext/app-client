@@ -1,29 +1,10 @@
-import { DateTime } from 'luxon'
 import type { IOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import Event from '~/model/Event'
-
-const isIntersects = (
-  eventTarget: Event,
-  eventSource: { start: string; end: string },
-): boolean =>
-  !(
-    eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
-  )
-
-export const weekdayToDatetime = (weekday: number, time: string) => {
-  const date = DateTime.fromISO(time).set({ weekday })
-  return date.toFormat('yyyy-MM-dd HH:mm')
-}
-
-export const weekdayToDate = (weekday: number) => {
-  const date = DateTime.local().set({ weekday })
-  return date.toFormat('yyyy-MM-dd')
-}
-export const convertToDate = (day: string | number, startTime: string) => {
-  return weekdayToDatetime(<number>day, startTime)
-}
+import type { IEvent } from '~/interfaces/event'
+import { isIntersects } from './event'
+import { EVENT_COLORS } from '~/constants/event'
+import Event from '~/models/Event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -34,17 +15,21 @@ export type ScheduleOptions = {
 
 export function getSchedules(
   subjects: Array<ISelectedSubject>,
-  myEvents: Array<Event>,
+  myEvents: Array<IEvent>,
   options: ScheduleOptions = {
     credits: 100,
     crossingSubjects: 0,
     crossEvent: true,
     crossPractices: false,
   },
-): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
-  const occurrences:IOccurrence[] = []
+): {
+  occurrences: IOccurrence[]
+  schedules: ISubjectSchedule[]
+  combinations: IScheduleGenerate[]
+} {
+  const occurrences: IOccurrence[] = []
   const maxQuantity = subjects.length
-  const indexSchedules = Array(maxQuantity).fill(0)
+  const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
 
   const increment = (i: number) => {
@@ -72,21 +57,22 @@ export function getSchedules(
     }
     const currentSchedule = combination.map((c, index) => ({
       ...c,
-      events: scheduleToEvent(c, colors[index]),
+      events: scheduleToEvent(c, EVENT_COLORS[index]),
     }))
     // calculating crossing
     let crossingCombination = 0
     let useCombination = true
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
-      const events = schedule[0].events
+      const events = schedule[0].events.map(Event.buildFrom)
+
       for (const event of events) {
-        const otherEvents = currentSchedule.map((c) => c.events).flat()
-        otherEvents.push(...myEvents)
+        const otherEvents = currentSchedule.map((c) => c.events).flat().map(Event.buildFrom)
+        otherEvents.push(...myEvents.map(Event.buildFrom))
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            const occurrence:IOccurrence = {
+            const occurrence: IOccurrence = {
               type: 'Cruce de ' + event.title + ' - ' + item.title,
               elementA: event,
               elementB: item,
@@ -129,9 +115,9 @@ export function getSchedules(
         schedule: combination,
         crossings: crossingCombination,
         events: combination
-          .map((c, index) => scheduleToEvent(c, colors[index]))
+          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
-          .concat(myEvents),
+          .concat(myEvents.map(Event.buildFrom)),
       })
     }
 
@@ -147,7 +133,7 @@ export function getSchedules(
 
 function scheduleToEvent(
   schedule: ISubjectSchedule,
-  color = 'primary',
+  color: string,
 ): Array<Event> {
   const events: Array<Event> = []
   const sessions = schedule?.sessions || []
@@ -162,8 +148,8 @@ function scheduleToEvent(
       ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
       sessions[i]?.classroom?.code,
       color,
-      'COURSE',
       sessions[i].type.code,
+      'COURSE',
     )
     events.push(event)
   }
@@ -208,25 +194,3 @@ const weekDays = [
   },
 ]
 export { weekDays }
-
-export const colors = [
-  'indigo',
-  'deep-purple',
-  'indigo darken-3',
-  'deep-purple darken-3',
-  'cyan darken-3',
-  'cyan',
-  'green',
-  'orange',
-  'blue ',
-  'indigo lighten-3',
-  'deep-purple lighten-3',
-  'cyan lighten-3',
-  ' green darken-3',
-  'orange darken-3',
-  'blue darken-3',
-  'green lighten-3',
-  'orange lighten-3',
-  'blue lighten-3',
-]
-

@@ -7,10 +7,16 @@
     show-group-by
   >
     <template #[`item.elementA.day`]="{ item }">
-      <div>{{ item.elementA.start }} - {{ item.elementA.end }}</div>
+      <div>
+        {{ weekDays[item.elementA.day] }}
+        {{ item.elementA.startTime }} - {{ item.elementA.endTime }}
+      </div>
     </template>
     <template #[`item.elementB.day`]="{ item }">
-      <div>{{ item.elementB.start }} - {{ item.elementB.end }}</div>
+      <div>
+        {{ weekDays[item.elementB.day] }}
+        {{ item.elementB.startTime }} - {{ item.elementB.endTime }}
+      </div>
     </template>
   </v-data-table>
 </template>

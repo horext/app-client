@@ -15,8 +15,9 @@
       <CalendarDay
         v-for="day in internalDays"
         :key="day.id"
+        :week-day="day.id"
         :day="day.name"
-        :events="day.events"
+        :events="events"
         :hours="hours"
         :interval-minutes="internalIntervalMinutes"
         :interval-height="internalIntervalHeight"
@@ -135,11 +136,9 @@ const hours = computed(() => {
 
 const internalDays = computed(() => {
   const _weekdays = weekdays.value
-  const _events = events.value
   return _weekdays.map((day) => ({
     id: day,
     name: WEEKDAY_NAMES[day % 7],
-    events: _events.filter((e) => e.weekDay === day),
   }))
 })
 

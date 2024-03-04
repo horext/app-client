@@ -2,7 +2,6 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
-import Event from '~/model/Event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
@@ -195,26 +194,14 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function fetchSchedules() {
     const data =
       (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
-    const _schedules: IScheduleGenerate[] =
-      data?.map?.((s) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
-        ),
-      })) || []
+    const _schedules: IScheduleGenerate[] = data || []
     schedules.value = _schedules
   }
 
   async function fetchFavoritesSchedules() {
     const data =
       (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
-    const _schedules: IScheduleGenerate[] =
-      data?.map?.((s) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
-        ),
-      })) || []
+    const _schedules: IScheduleGenerate[] = data || []
     favoritesSchedules.value = _schedules
   }
 

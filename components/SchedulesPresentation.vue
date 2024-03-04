@@ -107,7 +107,7 @@ import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
-import { ViewMode } from '~/model/ViewMode'
+import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({

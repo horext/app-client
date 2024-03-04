@@ -1,13 +1,11 @@
-import type { $Fetch } from 'nitropack'
 import type {
   IScheduleSubject,
   IScheduleSubjectSessionDetail,
 } from '~/interfaces/schedule-subject'
+import { BaseRepository } from './BaseRepository'
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
-export class ScheduleSubjectRepository {
-  constructor(private $fetch: $Fetch) {}
-
+export class ScheduleSubjectRepository extends BaseRepository {
   findBySubjectIdAndHourlyLoadId(subject: number, hourlyLoad: number) {
     return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {

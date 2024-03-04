@@ -60,13 +60,13 @@
 <script lang="ts">
 import { useVModel } from '@vueuse/core'
 import { defineComponent, type PropType, computed, type Ref } from 'vue'
-import Event from '~/model/Event'
+import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   props: {
     selectedEvent: {
-      type: Object as PropType<Event>,
+      type: Object as PropType<IEvent>,
       required: true,
     },
     dialog: {

@@ -1,6 +1,6 @@
 # Horext SSR Client
 
-> Horext app built using [Nuxt 3](https://github.com/nuxt/nuxt), [Vue 3](https://github.com/vuejs/core), [Vuetify 3](https://github.com/vuetifyjs/vuetify), and [TypeScript](https://github.com/microsoft/TypeScript).
+> Horext App client built using [Nuxt 3](https://github.com/nuxt/nuxt), [Vue 3](https://github.com/vuejs/core), [Vuetify 3](https://github.com/vuetifyjs/vuetify), and [TypeScript](https://github.com/microsoft/TypeScript).
 
 ## Development Setup
 
