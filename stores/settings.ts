@@ -19,7 +19,6 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.setItem('darkMode', val)
   })
 
-
   return {
     darkMode,
   }

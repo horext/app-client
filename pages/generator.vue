@@ -59,7 +59,6 @@ import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 
-
 export default defineComponent({
   name: 'Generator',
   components: {
@@ -87,7 +86,6 @@ export default defineComponent({
         await router.push('/generator/subjects')
       }
     })
-
 
     onMounted(async () => {
       await configStore.fetchSubjects()
