@@ -67,7 +67,10 @@ export function getSchedules(
       const events = schedule[0].events.map(Event.buildFrom)
 
       for (const event of events) {
-        const otherEvents = currentSchedule.map((c) => c.events).flat().map(Event.buildFrom)
+        const otherEvents = currentSchedule
+          .map((c) => c.events)
+          .flat()
+          .map(Event.buildFrom)
         otherEvents.push(...myEvents.map(Event.buildFrom))
         let intersections = 0
         for (const item of otherEvents) {
@@ -155,42 +158,3 @@ function scheduleToEvent(
   }
   return events
 }
-
-const weekDays = [
-  {
-    index: 0,
-    value: 'Domingo',
-    startDate: '2020-11-15',
-  },
-  {
-    index: 1,
-    value: 'Lunes',
-    startDate: '2020-11-09',
-  },
-  {
-    index: 2,
-    value: 'Martes',
-    startDate: '2020-11-10',
-  },
-  {
-    index: 3,
-    value: 'Miercoles',
-    startDate: '2020-11-11',
-  },
-  {
-    index: 4,
-    value: 'Jueves',
-    startDate: '2020-11-12',
-  },
-  {
-    index: 5,
-    value: 'Viernes',
-    startDate: '2020-11-13',
-  },
-  {
-    index: 6,
-    value: 'Sábado',
-    startDate: '2020-11-14',
-  },
-]
-export { weekDays }
