@@ -68,10 +68,8 @@ export function getSchedules(
       const events = schedule[0].events.map(Event.buildFrom)
 
       for (const event of events) {
-        const otherEvents = currentSchedule
-          .map((c) => c.events)
-          .flat()
-          .map(Event.buildFrom)
+        const otherEvents = currentSchedule.map((c) => c.events).flat()
+
         otherEvents.push(...baseEvents)
         let intersections = 0
         for (const item of otherEvents) {
