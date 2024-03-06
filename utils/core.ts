@@ -1,4 +1,4 @@
-import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
@@ -23,11 +23,11 @@ export function getSchedules(
     crossPractices: false,
   },
 ): {
-  occurrences: IOccurrence[]
+  occurrences: IIntersectionOccurrence[]
   schedules: ISubjectSchedule[]
   combinations: IScheduleGenerate[]
 } {
-  const occurrences: IOccurrence[] = []
+  const occurrences: IIntersectionOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
@@ -74,7 +74,7 @@ export function getSchedules(
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            const occurrence: IOccurrence = {
+            const occurrence: IIntersectionOccurrence = {
               type: 'Cruce de ' + event.title + ' - ' + item.title,
               elementA: event,
               elementB: item,

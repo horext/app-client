@@ -1,6 +1,6 @@
 import type { IEvent } from './event'
 
-export interface IOccurrence {
+export interface IIntersectionOccurrence {
   type: string
   elementA: IEvent
   elementB: IEvent

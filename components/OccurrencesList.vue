@@ -25,12 +25,12 @@
 import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { WEEK_DAYS } from '~/constants/weekdays'
-import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   props: {
     items: {
-      type: Array as PropType<IOccurrence[]>,
+      type: Array as PropType<IIntersectionOccurrence[]>,
       required: true,
     },
   },
