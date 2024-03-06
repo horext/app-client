@@ -69,7 +69,7 @@ export function getSchedules(
     let useCombination = true
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
-      const events = schedule[0].events.map(Event.buildFrom)
+      const events = schedule[0].events
 
       for (const event of events) {
         const otherEvents = currentSchedule.map((c) => c.events).flat()
