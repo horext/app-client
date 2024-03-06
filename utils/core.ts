@@ -31,6 +31,7 @@ export function getSchedules(
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
+  const baseEvents = myEvents.map(Event.buildFrom)
 
   const increment = (i: number) => {
     if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
@@ -71,7 +72,7 @@ export function getSchedules(
           .map((c) => c.events)
           .flat()
           .map(Event.buildFrom)
-        otherEvents.push(...myEvents.map(Event.buildFrom))
+        otherEvents.push(...baseEvents)
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
@@ -120,7 +121,7 @@ export function getSchedules(
         events: combination
           .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
-          .concat(myEvents.map(Event.buildFrom)),
+          .concat(baseEvents),
       })
     }
 
