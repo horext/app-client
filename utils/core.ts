@@ -42,9 +42,13 @@ export function getSchedules(
     }
   }
 
-  const combinations = subjects.reduce((previousValue, currentValue) => {
-    return previousValue * currentValue.schedules.length
-  }, 1)
+  const combinations = subjects.reduce(
+    (previousValue, currentValue) => {
+      return previousValue * currentValue.schedules.length
+    },
+    subjects.length > 0 ? 1 : 0,
+  )
+
   const crossings = Array(combinations).fill(0)
   for (let i = combinations; i--; ) {
     const combination: Array<ISubjectSchedule> = []
