@@ -54,7 +54,7 @@ export function getSchedules(
     const combination: Array<ISubjectSchedule> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
-      const schedule = subjects[j].schedules[indexSchedules[j]]
+      const schedule = subject.schedules[indexSchedules[j]]
       combination.push({
         ...schedule,
         subject,
