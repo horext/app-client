@@ -78,12 +78,21 @@ export function getSchedules(
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            const occurrence: IIntersectionOccurrence = {
-              type: 'Cruce de ' + event.title + ' - ' + item.title,
-              elementA: event,
-              elementB: item,
+            const addEventToIntersection = (type: string) => {
+              const occurrence: IIntersectionOccurrence = {
+                id: [event.id, item.id].sort().join('-'),
+                name: `${event.title} - ${item.title}`,
+                eventTarget: event,
+                eventSource: item,
+                type,
+              }
+              if (
+                !occurrences.find(
+                  (o) => o.id === occurrence.id && o.type === type,
+                )
+              )
+                occurrences.push(occurrence)
             }
-            occurrences.push(occurrence)
             // if have available crossings
             if (
               crossingCombination + intersections <=
@@ -91,6 +100,18 @@ export function getSchedules(
             ) {
               intersections++
             } else {
+              if (
+                (item.type?.includes('P', 0) &&
+                  event.type?.includes('P', 0) &&
+                  !options.crossPractices) ||
+                (item.type?.includes('MY_EVENT', 0) &&
+                  event.type?.includes('MY_EVENT', 0) &&
+                  !options.crossEvent)
+              ) {
+                addEventToIntersection('CROSSING_NOT_AVAILABLE')
+              } else {
+                addEventToIntersection('CROSSING_EXCEEDED')
+              }
               break
             }
 
@@ -102,7 +123,10 @@ export function getSchedules(
                 event.type?.includes('MY_EVENT', 0) &&
                 !options.crossEvent)
             ) {
+              addEventToIntersection('CROSSING_NOT_AVAILABLE')
               useCombination = false
+            } else {
+              addEventToIntersection('CROSSING_BASIS')
             }
           }
         }
