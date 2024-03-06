@@ -91,17 +91,14 @@ export function getSchedules(
             } else {
               break
             }
-            // if is cross practice to practice
+
             if (
-              item.type?.includes('P', 0) &&
-              event.type?.includes('P', 0) &&
-              !options.crossPractices
-            ) {
-              useCombination = false
-            } else if (
-              item.type?.includes('MY_EVENT', 0) &&
-              event.type?.includes('MY_EVENT', 0) &&
-              !options.crossEvent
+              (item.type?.includes('P', 0) &&
+                event.type?.includes('P', 0) &&
+                !options.crossPractices) ||
+              (item.type?.includes('MY_EVENT', 0) &&
+                event.type?.includes('MY_EVENT', 0) &&
+                !options.crossEvent)
             ) {
               useCombination = false
             }
