@@ -29,6 +29,7 @@ export function scheduleToEvent(
       color,
       sessions[i].type.code,
       'COURSE',
+      String(sessions[i].id),
     )
     events.push(event)
   }
