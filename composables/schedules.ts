@@ -5,8 +5,7 @@ import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import CoreWorker from '@/assets/workers/core?worker'
 
 export const useSchedules = () => {
-    
-    const worker = ref<Worker | null>(null)
+  const worker = ref<Worker | null>(null)
   onMounted(() => {
     worker.value = new CoreWorker()
   })
@@ -27,11 +26,17 @@ export const useSchedules = () => {
     }>((resolve, reject) => {
       worker.value?.addEventListener(
         'message',
-        (e: MessageEvent<string>) => {
+        (
+          e: MessageEvent<{
+            occurrences: IIntersectionOccurrence[]
+            schedules: ISubjectSchedule[]
+            combinations: IScheduleGenerate[]
+          }>,
+        ) => {
           if (!e.data) reject('Error al generar horarios')
           if (!worker.value) reject('Error al generar horarios')
           worker.value?.removeEventListener('message', () => {})
-          resolve(JSON.parse(e.data))
+          resolve(e.data)
         },
         false,
       )
