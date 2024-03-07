@@ -1,5 +1,7 @@
 import type { IEvent } from "~/interfaces/event"
 import type { ISelectedSubject } from "~/interfaces/subject"
+import type { ScheduleOptions } from "~/utils/core"
+import { getSchedules } from "~/utils/core"
 
 self.addEventListener(
   'message',
