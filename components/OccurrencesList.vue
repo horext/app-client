@@ -2,20 +2,22 @@
   <v-data-table
     :headers="headers"
     :items="itemsSync"
-    :group-by="[{ key: 'type' }]"
+    :group-by="[{ key: 'name' }]"
     class="elevation-1"
     show-group-by
   >
-    <template #[`item.elementA.day`]="{ item }">
+    <template #[`item.eventTarget.day`]="{ item }">
       <div>
-        {{ weekDays[item.elementA.day] }}
-        {{ item.elementA.startTime }} - {{ item.elementA.endTime }}
+        {{ item.eventTarget.type }}
+        {{ weekDays[item.eventTarget.day] }}
+        {{ item.eventTarget.startTime }} - {{ item.eventTarget.endTime }}
       </div>
     </template>
-    <template #[`item.elementB.day`]="{ item }">
+    <template #[`item.eventSource.day`]="{ item }">
       <div>
-        {{ weekDays[item.elementB.day] }}
-        {{ item.elementB.startTime }} - {{ item.elementB.endTime }}
+        {{ item.eventSource.type }}
+        {{ weekDays[item.eventSource.day] }}
+        {{ item.eventSource.startTime }} - {{ item.eventSource.endTime }}
       </div>
     </template>
   </v-data-table>
@@ -25,12 +27,12 @@
 import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { WEEK_DAYS } from '~/constants/weekdays'
-import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   props: {
     items: {
-      type: Array as PropType<IOccurrence[]>,
+      type: Array as PropType<IIntersectionOccurrence[]>,
       required: true,
     },
   },
@@ -45,43 +47,22 @@ export default defineComponent({
       },
       {
         title: 'Evento A',
-        value: 'elementA.code',
+        value: 'eventTarget.title',
         groupable: false,
       },
       {
         title: 'Dia A',
-        value: 'elementA.day',
-        groupable: false,
-      },
-      {
-        title: 'Inicio A',
-        value: 'elementA.startTime',
-        groupable: false,
-      },
-
-      {
-        title: 'Fin A',
-        value: 'elementA.endTime',
+        value: 'eventTarget.day',
         groupable: false,
       },
       {
         title: 'Evento B',
-        value: 'elementB.code',
+        value: 'eventSource.title',
         groupable: false,
       },
       {
         title: 'Dia',
-        value: 'elementB.day',
-        groupable: false,
-      },
-      {
-        title: 'Inicio B',
-        value: 'elementB.startTime',
-        groupable: false,
-      },
-      {
-        title: 'Fin B',
-        value: 'elementB.endTime',
+        value: 'eventSource.day',
         groupable: false,
       },
     ] as const

@@ -66,6 +66,10 @@ const config = defineNuxtConfig({
     '/about': {
       prerender: true,
     },
+    '/plans': {
+      prerender: true,
+    },
+    
   },
 })
 
