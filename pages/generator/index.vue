@@ -40,6 +40,7 @@
         rounded
         variant="outlined"
         class="ma-1"
+        :loading="loadingGenerate"
         @click="generateAllUserSchedules"
       >
         <v-icon>mdi-update</v-icon>
@@ -49,12 +50,7 @@
         <v-icon> mdi-check </v-icon>
         Horarios generados correctamente!
         <template #actions>
-          <v-btn
-            variant="text"
-            size="small"
-            icon
-            @click="succces = false"
-          >
+          <v-btn variant="text" size="small" icon @click="succces = false">
             <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
@@ -79,14 +75,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { getSchedules } from '~/utils/core'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   components: {
@@ -97,7 +92,7 @@ export default defineComponent({
   setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
-    const occurrences = ref<IOccurrence[]>([])
+    const occurrences = ref<IIntersectionOccurrence[]>([])
     const openMySchedules = ref(false)
     const succces = ref(false)
 
@@ -113,7 +108,9 @@ export default defineComponent({
       configStore.updateCrossings(crossings)
     }
 
-    const updateFavoritesSchedules = (favoritesSchedules: IScheduleGenerate[]) => {
+    const updateFavoritesSchedules = (
+      favoritesSchedules: IScheduleGenerate[],
+    ) => {
       configStore.updateFavoritesSchedules(favoritesSchedules)
     }
 
@@ -121,15 +118,17 @@ export default defineComponent({
       configStore.updateSchedules(schedules)
     }
 
-    const generateAllUserSchedules = () => {
+    const { loadSchedules } = useSchedules()
+
+    const loadingGenerate = ref(false)
+    const generateAllUserSchedules = async () => {
       succces.value = false
-      const { occurrences: occurrencesData, combinations } = getSchedules(
-        mySubjects.value,
-        myEvents.value,
-        {
+      loadingGenerate.value = true
+      const { occurrences: occurrencesData, combinations } =
+        await loadSchedules(mySubjects.value, myEvents.value, {
           crossingSubjects: crossingSubjects.value,
-        },
-      )
+        })
+      loadingGenerate.value = false
       updateSchedules(combinations)
       occurrences.value = occurrencesData
       succces.value = true
@@ -148,6 +147,7 @@ export default defineComponent({
       updateFavoritesSchedules,
       updateSchedules,
       generateAllUserSchedules,
+      loadingGenerate,
     }
   },
 })
