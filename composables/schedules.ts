@@ -2,7 +2,7 @@ import type { IEvent } from '~/interfaces/event'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import CoreWorker from '/assets/core.worker?worker'
+import CoreWorker from '@/assets/workers/core?worker'
 
 export const useSchedules = () => {
     
