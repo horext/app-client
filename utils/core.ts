@@ -5,6 +5,7 @@ import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
 import Event from '~/models/Event'
+import { scheduleToEvent } from '~/utils/event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -157,3 +158,4 @@ export function getSchedules(
     occurrences,
   }
 }
+
