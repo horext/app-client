@@ -13,7 +13,7 @@ self.addEventListener(
     ] = JSON.parse(e.data)
     const output = getSchedules(...input)
 
-    self.postMessage(JSON.stringify(output))
+    self.postMessage(output)
   },
   false,
 )
