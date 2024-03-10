@@ -57,6 +57,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['save', 'cancel'],
   setup(props, { emit }) {
     const $api = useApi()
     const selected = ref<ISubjectSchedule[]>([])
