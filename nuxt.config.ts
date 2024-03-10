@@ -60,7 +60,6 @@ const config = defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/', '/privacy', '/terms', '/about', '/plans'],
-      crawlLinks: false,
     },
   },
 })
