@@ -16,7 +16,8 @@
               <th class="text-left">Aula</th>
             </tr>
           </thead>
-          <ScheduleSubjectList v-model="selected" :schedules="schedules" />
+          <ScheduleSubjectList v-model="selected" :schedules="schedules" 
+          />
         </template>
       </v-table>
     </v-card-text>
@@ -33,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import { useApi } from '~/composables/api'
@@ -62,25 +63,40 @@ export default defineComponent({
     const { subject, hourlyLoad } = toRefs(props)
     const $api = useApi()
     const selected = ref<ISubjectSchedule[]>([])
-    const schedulesSubject = ref<IScheduleSubject[]>([])
-    const sessions = ref<ISession[]>([])
+    const { data: schedulesSubject, pending: pendingSchedulesSubject } =
+      useAsyncData<IScheduleSubject[]>(
+        async () => {
+          const hourlyLoadId = hourlyLoad.value?.id
+          const subjectId = subject.value?.id
+          if (!hourlyLoadId || !subjectId) return []
 
-    const fetchSchedules = async () => {
-      const hourlyLoadId = hourlyLoad.value?.id
-      const subjectId = subject.value?.id
-      if (subjectId && hourlyLoadId) {
-        const schedulesSubjectData =
-          await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
+          return $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
             subjectId,
             hourlyLoadId,
           )
-        const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
+        },
+        {
+          default: () => [],
+          watch: [subject, hourlyLoad],
+        },
+      )
+    const scheduleIds = computed(() => {
+      return schedulesSubject.value.map((sb) => sb.schedule.id)
+    })
+
+    const { data: sessions, pending: pendingSessions } = useAsyncData<
+      ISession[]
+    >(
+      async () => {
+        const ids = scheduleIds.value
         const sessionsData = await $api.classSessions.findScheduleIds(ids)
-        sessions.value = sessionsData
-        schedulesSubject.value = schedulesSubjectData
-      }
-    }
-    const { refresh, pending } = useAsyncData(fetchSchedules)
+        return sessionsData
+      },
+      {
+        default: () => [],
+        watch: [scheduleIds],
+      },
+    )
 
     const schedules = computed<ISubjectSchedule[]>(() => {
       return schedulesSubject.value.map((sb) => ({
@@ -93,10 +109,6 @@ export default defineComponent({
         ),
         subject: subject.value,
       }))
-    })
-
-    watch(subject, () => {
-      refresh()
     })
 
     watch(schedules, () => {
@@ -121,8 +133,8 @@ export default defineComponent({
       return `${course?.id} - ${course?.name}`
     })
 
-    onMounted(() => {
-      fetchSchedules()
+    const pending = computed(() => {
+      return pendingSchedulesSubject.value || pendingSessions.value
     })
 
     return {
