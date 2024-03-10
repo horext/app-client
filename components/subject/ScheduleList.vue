@@ -59,17 +59,20 @@ export default defineComponent({
   },
   emits: ['save', 'cancel'],
   setup(props, { emit }) {
+    const { subject, hourlyLoad } = toRefs(props)
     const $api = useApi()
     const selected = ref<ISubjectSchedule[]>([])
     const schedulesSubject = ref<IScheduleSubject[]>([])
     const sessions = ref<ISession[]>([])
 
     const fetchSchedules = async () => {
-      if (props.subject?.id && props.hourlyLoad?.id) {
+      const hourlyLoadId = hourlyLoad.value?.id
+      const subjectId = subject.value?.id
+      if (subjectId && hourlyLoadId) {
         const schedulesSubjectData =
           await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
-            props.subject.id,
-            props.hourlyLoad.id,
+            subjectId,
+            hourlyLoadId,
           )
         const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
         const sessionsData = await $api.classSessions.findScheduleIds(ids)
@@ -88,16 +91,13 @@ export default defineComponent({
         sessions: sessions.value.filter(
           (s) => s.schedule.id === sb.schedule.id,
         ),
-        subject: props.subject,
+        subject: subject.value,
       }))
     })
 
-    watch(
-      () => props.subject,
-      () => {
-        refresh()
-      },
-    )
+    watch(subject, () => {
+      refresh()
+    })
 
     watch(schedules, () => {
       if (props.subject.schedules) {
@@ -117,7 +117,8 @@ export default defineComponent({
     }
 
     const title = computed(() => {
-      return `${props.subject?.course?.id} - ${props.subject?.course?.name}`
+      const course = subject.value?.course
+      return `${course?.id} - ${course?.name}`
     })
 
     onMounted(() => {
