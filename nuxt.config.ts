@@ -50,26 +50,18 @@ const config = defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+
   routeRules: {
     '/generator/**': {
       ssr: false,
     },
-    '/': {
-      prerender: true,
+  },
+
+  nitro: {
+    prerender: {
+      routes: ['/', '/privacy', '/terms', '/about', '/plans'],
+      crawlLinks: false,
     },
-    '/privacy': {
-      prerender: true,
-    },
-    '/terms': {
-      prerender: true,
-    },
-    '/about': {
-      prerender: true,
-    },
-    '/plans': {
-      prerender: true,
-    },
-    
   },
 })
 
