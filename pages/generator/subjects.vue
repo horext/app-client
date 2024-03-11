@@ -309,10 +309,6 @@ export default defineComponent({
       },
     ] as const)
 
-    const formTitle = computed(() => {
-      return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
-    })
-
     const myHourlyLoad = computed(() => {
       return configStore.hourlyLoad!
     })
@@ -337,7 +333,7 @@ export default defineComponent({
       save,
       availableCourses,
       totalCredits,
-      formTitle,
+
       myHourlyLoad,
       loadingSubjects,
     }
