@@ -4,25 +4,11 @@
       <span class="text-h5">{{ title }}</span>
     </v-card-title>
     <v-card-text>
-      <v-table dense>
-        <template #default>
-          <thead>
-            <tr>
-              <th class="text-left">Sección</th>
-              <th class="text-left">Día</th>
-              <th class="text-left">Horas</th>
-              <th class="text-left">Docente</th>
-              <th class="text-left">Tipo</th>
-              <th class="text-left">Aula</th>
-            </tr>
-          </thead>
-          <ScheduleSubjectList
-            v-model="selected"
-            :schedules="schedules"
-            :loading="pending"
-          />
-        </template>
-      </v-table>
+      <ScheduleSubjectList
+        v-model="selected"
+        :schedules="schedules"
+        :loading="pending"
+      />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
