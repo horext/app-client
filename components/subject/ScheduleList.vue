@@ -16,7 +16,10 @@
               <th class="text-left">Aula</th>
             </tr>
           </thead>
-          <ScheduleSubjectList v-model="selected" :schedules="schedules" 
+          <ScheduleSubjectList
+            v-model="selected"
+            :schedules="schedules"
+            :loading="pending"
           />
         </template>
       </v-table>
