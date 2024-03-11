@@ -29,19 +29,15 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const valueSync = computed({
-      get: () => props.modelValue,
-      set: (newValue) => {
-        emit('update:modelValue', newValue)
-      },
-    })
+    const valueSync = useVModel(props, 'modelValue', emit)
+    const { schedule } = toRefs(props)
 
     const sessionsCount = computed(() => {
-      return props.schedule?.sessions?.length
+      return schedule.value?.sessions?.length
     })
 
     const section = computed(() => {
-      return props.schedule?.section?.id
+      return schedule.value?.section?.id
     })
 
     return { valueSync, sessionsCount, section }

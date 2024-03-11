@@ -1,14 +1,33 @@
 <template>
-  <tbody>
-    <template v-for="schedule in schedules" :key="schedule.id">
-      <ScheduleSection v-model="valueSync" :schedule="schedule" />
-      <ClassSessionItem
-        v-for="session in schedule.sessions"
-        :key="session.id"
-        :session="session"
-      />
-    </template>
-  </tbody>
+  <v-table dense>
+    <thead>
+      <tr>
+        <th class="text-left">Sección</th>
+        <th class="text-left">Día</th>
+        <th class="text-left">Horas</th>
+        <th class="text-left">Docente</th>
+        <th class="text-left">Tipo</th>
+        <th class="text-left">Aula</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-if="loading">
+        <td colspan="6">
+          <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+        </td>
+      </tr>
+      <template v-else>
+        <template v-for="schedule in schedules" :key="schedule.id">
+          <ScheduleSection v-model="valueSync" :schedule="schedule" />
+          <ClassSessionItem
+            v-for="session in schedule.sessions"
+            :key="session.id"
+            :session="session"
+          />
+        </template>
+      </template>
+    </tbody>
+  </v-table>
 </template>
 
 <script lang="ts">
@@ -29,6 +48,10 @@ export default defineComponent({
     modelValue: {
       type: Array as PropType<ISubjectSchedule[]>,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],
