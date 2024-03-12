@@ -93,6 +93,7 @@ export default defineComponent({
       await configStore.fetchCrossings()
       await configStore.fetchFavoritesSchedules()
       await eventsStore.fetchItems()
+      await configStore.fetchMyOcurrences()
     })
 
     return {
@@ -100,9 +101,6 @@ export default defineComponent({
       isNewHourlyLoad,
       isUpdateHourlyLoad,
     }
-  },
-  head: {
-    title: 'Generador de Horarios',
   },
 })
 </script>
