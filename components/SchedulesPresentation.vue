@@ -23,7 +23,7 @@
     </v-toolbar>
 
     <div
-      class="row col align-self-center align-items-center justify-center align-content-center ma-1"
+      class="d-flex align-self-center align-items-center justify-center align-content-center ma-1"
     >
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
