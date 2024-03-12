@@ -3,21 +3,21 @@
     <v-toolbar flat theme="dark" :color="color">
       <slot name="top-items-right" />
       <v-spacer />
-      <v-radio-group v-model="mode" hide-details density="compact" inline>
-        <template #label>
-          <div>Modo:</div>
-        </template>
-        <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
-          <template #label>
-            <v-icon size="small" start> mdi-calendar </v-icon>Calendario
-          </template>
-        </v-radio>
-        <v-radio :value="MODES.LIST" color="primary-darken-2">
-          <template #label>
-            <v-icon size="small" start> mdi-table </v-icon> Lista
-          </template>
-        </v-radio>
-      </v-radio-group>
+      <div class="d-flex align-self-center ga-3">
+        <div class="d-flex align-self-center">Modo:</div>
+        <v-radio-group v-model="mode" hide-details density="compact" inline>
+          <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
+            <template #label>
+              <v-icon size="small" start> mdi-calendar </v-icon>Calendario
+            </template>
+          </v-radio>
+          <v-radio :value="MODES.LIST" color="primary-darken-2">
+            <template #label>
+              <v-icon size="small" start> mdi-table </v-icon> Lista
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </div>
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
