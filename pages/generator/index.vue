@@ -8,11 +8,12 @@
     path="/skd"
   >
     <template #top-items-right>
-      <v-toolbar-title> Generados </v-toolbar-title>
-
-      <v-btn class="ml-2" variant="outlined" size="small">
-        {{ schedules.length }}
-      </v-btn>
+      <div class="d-flex align-self-center ga-2">
+        <v-toolbar-title>
+          Generados
+          <v-badge color="white" :content="schedules.length" inline></v-badge>
+        </v-toolbar-title>
+      </div>
     </template>
     <template #top-items-left="{ item }">
       <schedule-favorite-add
@@ -24,13 +25,13 @@
     <template #subtitle-items>
       <v-text-field
         v-model.number="crossingSubjects"
+        class="flex-1-1"
         label="Cantidad de cruces"
         hide-details
         variant="outlined"
         density="compact"
         max="5"
         min="0"
-        class="shrink"
         type="number"
       />
 
@@ -58,16 +59,14 @@
     </template>
 
     <template #emptyBody>
-      <v-container>
-        <v-alert prominent type="error">
-          <v-row align="center">
-            <v-col class="grow">
-              Lo sentimos, no hemos encontrados horarios para usted.
-            </v-col>
-          </v-row>
-        </v-alert>
-        <occurrences-list :items="occurrences" />
-      </v-container>
+      <v-alert prominent type="error">
+        <v-row align="center">
+          <v-col class="grow">
+            Lo sentimos, no hemos encontrados horarios para usted.
+          </v-col>
+        </v-row>
+      </v-alert>
+      <occurrences-list :items="occurrences" />
     </template>
   </schedules-presentation>
 </template>

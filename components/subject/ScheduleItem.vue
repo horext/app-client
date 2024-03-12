@@ -1,5 +1,5 @@
 <template>
-  <v-table dense>
+  <v-table class="schedule-table" dense>
     <thead>
       <tr>
         <th class="text-left">Sección</th>
@@ -64,3 +64,14 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td,
+.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > th,
+.schedule-table.v-table > .v-table__wrapper > table > thead > tr > td,
+.schedule-table.v-table > .v-table__wrapper > table > thead > tr > th,
+.schedule-table.v-table > .v-table__wrapper > table > tfoot > tr > td,
+.schedule-table.v-table > .v-table__wrapper > table > tfoot > tr > th {
+  padding: 0 6px;
+}
+</style>

@@ -99,7 +99,7 @@
                 mdi-pencil
               </v-icon>
             </template>
-            <span>Editar</span>
+            <span>Modificar secciones</span>
           </v-tooltip>
           <v-tooltip location="bottom">
             <template #activator="{ props }">
