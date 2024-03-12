@@ -58,16 +58,14 @@
     </template>
 
     <template #emptyBody>
-      <v-container>
-        <v-alert prominent type="error">
-          <v-row align="center">
-            <v-col class="grow">
-              Lo sentimos, no hemos encontrados horarios para usted.
-            </v-col>
-          </v-row>
-        </v-alert>
-        <occurrences-list :items="occurrences" />
-      </v-container>
+      <v-alert prominent type="error">
+        <v-row align="center">
+          <v-col class="grow">
+            Lo sentimos, no hemos encontrados horarios para usted.
+          </v-col>
+        </v-row>
+      </v-alert>
+      <occurrences-list :items="occurrences" />
     </template>
   </schedules-presentation>
 </template>
