@@ -1,14 +1,18 @@
 <template>
-  <div>
-    <v-btn
-      variant="outlined"
-      icon
-      :color="isFavorite ? 'yellow' : undefined"
-      @click="changeFavoriteState"
-    >
-      <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
-    </v-btn>
-  </div>
+  <v-tooltip location="bottom">
+    <template #activator="{ props }">
+      <v-btn
+        variant="outlined"
+        icon
+        :color="isFavorite ? 'yellow' : undefined"
+        v-bind="props"
+        @click="changeFavoriteState"
+      >
+        <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
+      </v-btn>
+    </template>
+    <span>{{ isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos' }}</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
