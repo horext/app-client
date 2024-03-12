@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-toolbar flat theme="dark" :color="color">
+    <v-toolbar flat theme="dark" :color="color" class="px-2">
       <slot name="top-items-right" />
       <v-spacer />
       <div class="d-flex align-self-center ga-3">
