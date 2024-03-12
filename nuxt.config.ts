@@ -28,6 +28,7 @@ const config = defineNuxtConfig({
       },
     ],
     '@nuxt/test-utils/module',
+    'nuxt-gtag'
   ],
   runtimeConfig: {
     public: {
@@ -38,9 +39,6 @@ const config = defineNuxtConfig({
           process.env.NUXT_PUBLIC_GOOGLE_DISCOVERY_DOCS || ''
         ).split(','),
         scopes: process.env.NUXT_PUBLIC_GOOGLE_SCOPES,
-      },
-      googleAnalytics: {
-        id: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
       },
     },
     apiUrl: process.env.NUXT_API_URL,
