@@ -30,7 +30,11 @@
           exact
         >
           <template #prepend>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-badge v-if="item.badge" color="blue" :content="item.badge">
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-badge>
+
+            <v-icon v-else>{{ item.icon }}</v-icon>
           </template>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
@@ -44,12 +48,14 @@
         exact
         tag="div"
         :to="item.to"
+        stacked
       >
-        <div>
+        <v-badge color="blue" :content="item.badge" overlap>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-badge>
+        <span>
           {{ item.title }}
-        </div>
-
-        <v-icon>{{ item.icon }}</v-icon>
+        </span>
       </v-btn>
     </v-bottom-navigation>
     <the-snackbar />
@@ -66,6 +72,7 @@ import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
 const store = useUserConfigStore()
+const userEventsStore = useUserEventsStore()
 
 await useAsyncData('initData', async () => {
   await Promise.all([
@@ -76,9 +83,11 @@ await useAsyncData('initData', async () => {
 
   await store.fetchHourlyLoad()
 })
+const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { items: events } = storeToRefs(userEventsStore)
 
 const drawer = ref(true)
-const items = [
+const items = computed(() => [
   {
     title: 'Inicio',
     icon: 'mdi-calendar',
@@ -88,49 +97,57 @@ const items = [
     title: 'Generador de Horarios',
     icon: 'mdi-calendar',
     to: '/generator',
+    badge: schedules.value.length,
   },
   {
     title: 'Horarios Favoritos',
     icon: 'mdi-calendar-star',
     to: '/generator/favorites',
+    badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos y secciones',
     icon: 'mdi-book',
     to: '/generator/subjects',
+    badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
     icon: 'mdi-calendar-plus',
     to: '/generator/events',
+    badge: events.value.length,
   },
   {
     title: 'Avanzado',
     icon: 'mdi-cog',
     to: '/generator/settings',
   },
-]
+])
 
-const denseItems = [
+const denseItems = computed(() => [
   {
     title: 'Generador',
     icon: 'mdi-calendar',
     to: '/generator',
+    badge: schedules.value.length,
   },
   {
     title: 'Favoritos',
     icon: 'mdi-calendar-star',
     to: '/generator/favorites',
+    badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos',
     icon: 'mdi-book',
     to: '/generator/subjects',
+    badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
     icon: 'mdi-calendar-plus',
     to: '/generator/events',
+    badge: events.value.length,
   },
-]
+])
 </script>
