@@ -124,7 +124,7 @@ const items = computed(() => [
   },
 ])
 
-const denseItems = [
+const denseItems = computed(() => [
   {
     title: 'Generador',
     icon: 'mdi-calendar',
@@ -149,5 +149,5 @@ const denseItems = [
     to: '/generator/events',
     badge: events.value.length,
   },
-]
+])
 </script>
