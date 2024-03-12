@@ -167,6 +167,8 @@ export default defineComponent({
 
     const MODES = ref(ViewMode)
 
+    const calendar = ref<ComponentPublicInstance | null>(null)
+
     return {
       weekDays,
       dialogShare,
@@ -177,6 +179,7 @@ export default defineComponent({
       endDate,
       MODES,
       currentSchedule,
+      calendar,
     }
   },
 })
