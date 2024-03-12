@@ -8,12 +8,11 @@
     path="/skd"
   >
     <template #top-items-right>
-      <div class="d-flex align-self-center ga-1">
-        <v-toolbar-title> Generados </v-toolbar-title>
-
-        <v-btn class="ml-2" variant="outlined" size="small">
-          {{ schedules.length }}
-        </v-btn>
+      <div class="d-flex align-self-center ga-2">
+        <v-toolbar-title>
+          Generados
+          <v-badge color="white" :content="schedules.length" inline></v-badge>
+        </v-toolbar-title>
       </div>
     </template>
     <template #top-items-left="{ item }">
