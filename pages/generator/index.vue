@@ -8,11 +8,13 @@
     path="/skd"
   >
     <template #top-items-right>
-      <v-toolbar-title> Generados </v-toolbar-title>
+      <div class="d-flex align-self-center ga-1">
+        <v-toolbar-title> Generados </v-toolbar-title>
 
-      <v-btn class="ml-2" variant="outlined" size="small">
-        {{ schedules.length }}
-      </v-btn>
+        <v-btn class="ml-2" variant="outlined" size="small">
+          {{ schedules.length }}
+        </v-btn>
+      </div>
     </template>
     <template #top-items-left="{ item }">
       <schedule-favorite-add
