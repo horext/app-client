@@ -25,7 +25,7 @@
     <template #subtitle-items>
       <v-text-field
         v-model.number="crossingSubjects"
-        class="flex-1-1"
+        class="flex-sm-1-1 flex-1-1-100"
         label="Cantidad de cruces"
         hide-details
         variant="outlined"
