@@ -25,7 +25,7 @@
     <template #subtitle-items>
       <v-text-field
         v-model.number="crossingSubjects"
-        class="flex-1-1"
+        class="flex-sm-1-1 flex-1-1-100"
         label="Cantidad de cruces"
         hide-details
         variant="outlined"
@@ -91,7 +91,6 @@ export default defineComponent({
   setup() {
     const configStore = useUserConfigStore()
     const eventsStore = useUserEventsStore()
-    const occurrences = ref<IIntersectionOccurrence[]>([])
     const openMySchedules = ref(false)
     const succces = ref(false)
 
@@ -100,6 +99,7 @@ export default defineComponent({
       subjects: mySubjects,
       favoritesSchedules: myFavoritesSchedules,
       schedules,
+      occurrences,
     } = storeToRefs(configStore)
     const { items: myEvents } = storeToRefs(eventsStore)
 
@@ -113,10 +113,6 @@ export default defineComponent({
       configStore.updateFavoritesSchedules(favoritesSchedules)
     }
 
-    const updateSchedules = (schedules: IScheduleGenerate[]) => {
-      configStore.updateSchedules(schedules)
-    }
-
     const { loadSchedules } = useSchedules()
 
     const loadingGenerate = ref(false)
@@ -128,7 +124,8 @@ export default defineComponent({
           crossingSubjects: crossingSubjects.value,
         })
       loadingGenerate.value = false
-      updateSchedules(combinations)
+      configStore.updateSchedules(combinations)
+      configStore.updateOccurrences(occurrencesData)
       occurrences.value = occurrencesData
       succces.value = true
     }
@@ -144,7 +141,6 @@ export default defineComponent({
       schedules,
       updateCrossings,
       updateFavoritesSchedules,
-      updateSchedules,
       generateAllUserSchedules,
       loadingGenerate,
     }

@@ -23,7 +23,7 @@
     </v-toolbar>
 
     <div
-      class="d-flex align-self-center align-items-center justify-center align-content-center ma-1"
+      class="d-flex align-self-center align-items-center justify-center flex-wrap ma-1"
     >
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
@@ -43,8 +43,10 @@
               </v-btn>
             </template>
             <ScheduleExport
-              v-model:dialog="dialogExport"
-              :schedule="currentSchedule"
+              :loading-pdf="loadingPdf"
+              :loading-image="loadingImage"
+              @download:pdf="downloadPdf"
+              @download:image="downloadImage"
             />
           </v-menu>
 
@@ -67,8 +69,10 @@
           />
           <v-dialog v-model="dialogExport" max-width="600">
             <ScheduleExport
-              v-model:dialog="dialogExport"
-              :schedule="currentSchedule"
+              :loading-pdf="loadingPdf"
+              :loading-image="loadingImage"
+              @download:pdf="downloadPdf"
+              @download:image="downloadImage"
             />
           </v-dialog>
           <v-dialog v-model="dialogShare" max-width="600">
@@ -169,6 +173,24 @@ export default defineComponent({
 
     const calendar = ref<ComponentPublicInstance | null>(null)
 
+    function getCalendar(): HTMLElement | null {
+      return document.getElementById('calendar')
+    }
+
+    const loadingImage = ref(false)
+    async function downloadImage() {
+      loadingImage.value = true
+      await exportToPNG(getCalendar())
+      loadingImage.value = false
+    }
+
+    const loadingPdf = ref(false)
+    async function downloadPdf() {
+      loadingPdf.value = true
+      await exportToPDF(getCalendar())
+      loadingPdf.value = false
+    }
+
     return {
       weekDays,
       dialogShare,
@@ -180,6 +202,10 @@ export default defineComponent({
       MODES,
       currentSchedule,
       calendar,
+      downloadImage,
+      downloadPdf,
+      loadingImage,
+      loadingPdf,
     }
   },
 })

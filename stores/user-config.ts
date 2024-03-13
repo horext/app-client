@@ -5,6 +5,7 @@ import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage()
@@ -32,6 +33,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const subjects = ref<Array<ISelectedSubject>>([])
   const schedules = ref<Array<IScheduleGenerate>>([])
   const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
+  const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
@@ -232,6 +234,17 @@ export const useUserConfigStore = defineStore('user-config', () => {
     }
   }
 
+  const fetchMyOcurrences = async () => {
+    const data =
+      await storage.getItem<IIntersectionOccurrence[]>('myOcurrences')
+    occurrences.value = data || []
+  }
+
+  const updateOccurrences = async (data: IIntersectionOccurrence[]) => {
+    occurrences.value = data
+    await storage.setItem<IIntersectionOccurrence[]>('myOcurrences', data)
+  }
+
   return {
     fetchHourlyLoad,
     crossings,
@@ -276,5 +289,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     fetchCrossings,
     fetchSchedules,
     fetchFavoritesSchedules,
+    fetchMyOcurrences,
+    updateOccurrences,
+    occurrences,
   }
 })
