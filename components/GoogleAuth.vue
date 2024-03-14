@@ -8,6 +8,7 @@
       rounded
       class="ma-1"
       variant="outlined"
+      density="compact"
       @click="dialogCalendarSync = true"
     >
       Agregar a mi Calendario

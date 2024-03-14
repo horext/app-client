@@ -22,18 +22,31 @@
         @update:favorites-schedules="updateFavoritesSchedules"
       />
     </template>
-    <template #subtitle-items>
+    <template #subtitle-items="">
       <v-text-field
         v-model.number="crossingSubjects"
-        class="flex-sm-1-1 flex-1-1-100"
+        class="flex-sm-1-1 flex-1-1-100 cross-input"
         label="Cantidad de cruces"
         hide-details
-        variant="outlined"
         density="compact"
         max="5"
         min="0"
         type="number"
-      />
+      >
+        <template #append-inner>
+          <v-menu bottom>
+            <template #activator="{ props }">
+              <v-icon v-bind="props">mdi-help-circle</v-icon>
+            </template>
+            <v-card max-width="300" density="compact">
+              <v-card-text>
+                Solo se contabiliza los cruces entre cursos y los horarios con
+                cruces entre Práctica y Práctica no se muestran.
+              </v-card-text>
+            </v-card>
+          </v-menu>
+        </template>
+      </v-text-field>
 
       <v-btn
         color="success"
@@ -41,6 +54,7 @@
         rounded
         variant="outlined"
         class="ma-1"
+        density="compact"
         :loading="loadingGenerate"
         @click="generateAllUserSchedules"
       >
@@ -147,3 +161,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.cross-input {
+  max-width: 10rem;
+}
+</style>
