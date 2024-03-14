@@ -6,16 +6,23 @@
           <v-autocomplete
             v-model="editedItem"
             v-model:search="search"
+            v-model:menu="openSearchMenu"
             variant="outlined"
             :items="availableCourses"
-            append-icon="mdi-magnify"
-            label="Busca cursos para agregar"
+            label="Buscar cursos"
             return-object
             no-filter
             hide-details
             item-title="course.name"
             item-value="id"
             :loading="loadingSubjects"
+            :no-data-text="
+              errorSubjects
+                ? 'Error al buscar cursos'
+                : search
+                  ? 'No se encontraron cursos'
+                  : 'Escribe el nombre del curso'
+            "
             @update:model-value="editItem"
           >
             <template #selection="{ item }">
@@ -31,6 +38,11 @@
                 :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
                 :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
               ></v-list-item>
+            </template>
+            <template #append>
+              <v-btn icon variant="text" :loading="loadingSubjects">
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
             </template>
           </v-autocomplete>
         </v-col>
@@ -206,13 +218,17 @@ export default defineComponent({
     const editedItem = ref<ISelectedSubject>()
     const editedIndex = ref(-1)
 
-    const editItem = (item: ISelectedSubject) => {
+    const openSearchMenu = ref(false)
+    const editItem = async (item: ISelectedSubject) => {
       if (!item) {
         return
       }
       editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
       editedItem.value = Object.assign({}, item)
-      dialog.value = true
+      openSearchMenu.value = false
+      await nextTick(() => {
+        dialog.value = true
+      })
     }
 
     const deleteItem = (item: ISelectedSubject) => {
@@ -258,20 +274,21 @@ export default defineComponent({
 
     const search = ref('')
 
-    const { data: subjects, pending: loadingSubjects } = await useAsyncData(
+    const {
+      data: subjects,
+      pending: loadingSubjects,
+      error: errorSubjects,
+    } = await useAsyncData(
       'search',
       async () => {
+        if (!search.value) return []
         if (configStore.specialityId && configStore.hourlyLoadId) {
-          try {
-            const response = await $api.course.findBySearch(
-              search.value || ' ',
-              configStore.specialityId,
-              configStore.hourlyLoadId,
-            )
-            return response.content
-          } catch (e) {
-            console.error(e)
-          }
+          const response = await $api.course.findBySearch(
+            search.value,
+            configStore.specialityId,
+            configStore.hourlyLoadId,
+          )
+          return response.content
         }
       },
       {
@@ -333,9 +350,10 @@ export default defineComponent({
       save,
       availableCourses,
       totalCredits,
-
+      openSearchMenu,
       myHourlyLoad,
       loadingSubjects,
+      errorSubjects,
     }
   },
 })
