@@ -37,6 +37,15 @@
             <v-icon start>mdi-chevron-double-right</v-icon>
             Generar mis horarios
           </v-btn>
+          <v-btn
+            class="align-self-end"
+            variant="outlined"
+            theme="dark"
+            to="/login"
+          >
+            <v-icon start>mdi-chevron-double-right</v-icon>
+            Iniciar sesión (próximamente)
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
