@@ -36,16 +36,16 @@ const config = defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      googleApi: {
-        clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
-        apiKey: process.env.NUXT_PUBLIC_GOOGLE_API_KEY,
-        discoveryDocs: (
-          process.env.NUXT_PUBLIC_GOOGLE_DISCOVERY_DOCS || ''
-        ).split(','),
-        scopes: process.env.NUXT_PUBLIC_GOOGLE_SCOPES,
+      gsi: {
+        clientId: '',
+        discoveryDocs: '',
+        scopes: '',
       },
     },
     apiUrl: process.env.NUXT_API_URL,
+    gsi: {
+      apiKey: '',
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
