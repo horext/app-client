@@ -2,18 +2,18 @@
   <v-container class="text-center">
     <h2 class="text-h3 font-weight-bold mb-3">ACERCA DE</h2>
 
-    <v-responsive class="mx-auto mb-8" width="56">
-      <v-divider class="mb-1" />
-
-      <v-divider />
-    </v-responsive>
+    <v-divider />
 
     <v-responsive
-      class="mx-auto text-h6 font-weight-light mb-8"
+      class="mx-auto text-h6 font-weight-light my-8"
       max-width="720"
     >
-      Horext es una aplicación web que se encarga de gestionar los horarios de
-      tus curso, para asi generar todos los posibles horarios.
+      <p>
+        Horext es un proyecto Open Source , consiste en una aplicación web donde
+        puedes gestionar los horarios de tus cursos, lo cual te permite generar
+        todos los horarios posibles de tus cursos, y así poder elegir el que más
+        te convenga.
+      </p>
     </v-responsive>
     <v-row align="center" align-content="center" justify="center">
       <v-col align-self="center">
@@ -31,19 +31,35 @@
         <p class="text-subtitle-1 text-center">Email: fbendezui@uni.pe</p>
       </v-col>
     </v-row>
-
-    <div />
-
-    <v-btn
-      color="grey"
-      href="https://vuetifyjs.com"
-      variant="outlined"
-      size="large"
-    >
-      <span class="text-grey-darken-1 font-weight-bold">
-        Vuetify Documentation
-      </span>
-    </v-btn>
+    <v-row>
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="12">
+            Eres libre de contribuir al proyecto, puedes ver el código fuente
+            en:</v-col
+          >
+          <v-col cols="12">
+            <v-btn
+              color="orange"
+              href="https://gitlab.com/horext-app"
+              variant="outlined"
+              size="large"
+            >
+              <v-icon start>mdi-gitlab</v-icon>
+              <span class="text-grey-darken-1 font-weight-bold">
+                GitLab
+              </span>
+            </v-btn></v-col
+          >
+        </v-row>
+      </v-col>
+      <v-col cols="12">
+        <p class="text-h7 font-weight-light">
+          Próximamente se publicará la documentación del proyecto y se migrará a
+          GitHub.
+        </p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
