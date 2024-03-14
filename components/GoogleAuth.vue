@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="accessToken">
     <GoogleSignIn v-if="!isSignedIn" @click="getToken()">
       Sincronizar con Google
     </GoogleSignIn>
