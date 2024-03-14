@@ -94,6 +94,9 @@ export default defineComponent({
       }))
     })
 
+
+    const { loadSchedules } = useSchedules()
+    
     async function fetchSchedules() {
       loading.value = true
       const { combinations } = await loadSchedules(subjects.value, [], {
@@ -106,8 +109,6 @@ export default defineComponent({
     onMounted(async () => {
       await fetchSchedules()
     })
-
-    const { loadSchedules } = useSchedules()
 
     const addFavoriteCurrentSchedule = () => {
       const index = isFavorite(schedules.value[0])
