@@ -29,7 +29,7 @@
         </v-col>
         <v-col class="text-center" cols="12">
           <v-btn
-            class="align-self-end"
+            class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/generator"
@@ -37,8 +37,11 @@
             <v-icon start>mdi-chevron-double-right</v-icon>
             Generar mis horarios
           </v-btn>
+        </v-col>
+        <v-col class="text-center" cols="12">
+          
           <v-btn
-            class="align-self-end"
+            class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/login"
@@ -46,6 +49,7 @@
             <v-icon start>mdi-chevron-double-right</v-icon>
             Iniciar sesión (próximamente)
           </v-btn>
+
         </v-col>
       </v-row>
     </v-container>
