@@ -18,19 +18,6 @@
           <v-card-actions class="d-flex justify-center">
             <div ref="googleButton"></div>
           </v-card-actions>
-          <v-card-actions class="d-flex justify-center">
-            <v-btn color="primary" @click="getToken">Obtener token</v-btn>
-            <v-btn
-              v-if="accessToken"
-              color="primary"
-              @click="revokeToken(accessToken)"
-              >Revocar token</v-btn
-            >
-
-            <v-btn v-if="accessToken" color="primary" @click="getCalendarList()"
-              >Obtener datos</v-btn
-            >
-          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -76,14 +63,6 @@ async function handleCredentialResponse(
       'Content-Type': 'application/json',
     },
     body: response,
-  })
-}
-
-const { accessToken, getToken, revokeToken, googleApis } = useGoogleOAuth2()
-
-const getCalendarList = async () => {
-  await googleApis('calendar/v3/users/me/calendarList', {
-    method: 'GET',
   })
 }
 </script>
