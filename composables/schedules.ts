@@ -24,6 +24,7 @@ export const useSchedules = () => {
       schedules: ISubjectSchedule[]
       combinations: IScheduleGenerate[]
     }>((resolve, reject) => {
+      if (!worker.value) reject('Not loaded worker')
       worker.value?.addEventListener(
         'message',
         (
@@ -33,8 +34,8 @@ export const useSchedules = () => {
             combinations: IScheduleGenerate[]
           }>,
         ) => {
-          if (!e.data) reject('Error al generar horarios')
-          if (!worker.value) reject('Error al generar horarios')
+          if (!e.data) reject('No data')
+          if (!worker.value) reject('Not found worker')
           worker.value?.removeEventListener('message', () => {})
           resolve(e.data)
         },
@@ -52,6 +53,7 @@ export const useSchedules = () => {
     try {
       return loadSchedulesViaWorker(subjects, myEvents, options)
     } catch (error) {
+      console.error(error)
       return getSchedules(subjects, myEvents, options)
     }
   }

@@ -28,8 +28,12 @@ const config = defineNuxtConfig({
       },
     ],
     '@nuxt/test-utils/module',
-    'nuxt-gtag'
+    'nuxt-gtag',
+    '@nuxt/image',
   ],
+  image: {
+    dir: 'assets/images',
+  },
   runtimeConfig: {
     public: {
       googleApi: {
