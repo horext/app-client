@@ -38,7 +38,7 @@
                 class="ma-1"
                 v-bind="props"
               >
-                <v-icon>mdi-export</v-icon>
+                <v-icon start>mdi-export</v-icon>
                 Exportar
               </v-btn>
             </template>
@@ -58,7 +58,7 @@
             class="ma-1"
             @click="dialogShare = !dialogShare"
           >
-            <v-icon>mdi-share-variant</v-icon>
+            <v-icon start>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
           <GoogleAuth
