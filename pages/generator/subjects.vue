@@ -20,7 +20,9 @@
               errorSubjects
                 ? 'Error al buscar cursos'
                 : search
-                  ? 'No se encontraron cursos'
+                  ? loadingSubjects
+                    ? 'Buscando cursos...'
+                    : 'No se encontraron cursos'
                   : 'Escribe el nombre del curso'
             "
             @update:model-value="editItem"
