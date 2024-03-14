@@ -1,6 +1,9 @@
 <template>
   <v-img
-    :src="Material"
+    :lazy-src="img('/material2.jpg', { width: 10, quality: 70 })"
+    :src="img('/material2.jpg', { quality: 70 })"
+    :srcset="material.srcset"
+    :sizes="material.sizes"
     class="fill-height"
     cover
     gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
@@ -41,5 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import Material from '~/assets/material2.jpg'
+const img = useImage()
+
+const material = computed(() =>
+  img.getSizes('/material2.jpg', {
+    sizes: [1920, 1280, 960, 600],
+    modifiers: {
+      format: 'webp',
+      quality: 100,
+    },
+  }),
+)
 </script>
