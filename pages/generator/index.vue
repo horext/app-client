@@ -94,7 +94,6 @@ import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
   components: {
