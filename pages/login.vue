@@ -29,7 +29,7 @@ defineOptions({
   name: 'LoginPage',
 })
 
-useGoogleAccounts()
+const { $script } = useGoogleAccounts()
 
 const {
   public: { gsi },
@@ -37,7 +37,7 @@ const {
 
 const googleButton = ref<HTMLElement | null>(null)
 
-onMounted(async () => {
+const initGoogle = async () => {
   try {
     google.accounts.id.initialize({
       client_id: gsi.clientId,
@@ -52,8 +52,11 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error loading Google script', error)
   }
-})
-
+}
+$script?.waitForLoad().then(initGoogle)
+if (!$script) {
+  onMounted(initGoogle)
+}
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
 ) {
