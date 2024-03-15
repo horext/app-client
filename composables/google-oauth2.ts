@@ -1,23 +1,26 @@
-
 export const useGoogleOAuth2 = () => {
-  useGoogleAccounts()
-
+  const { $script } = useGoogleAccounts()
   const {
     public: { gsi },
   } = useRuntimeConfig()
 
+
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
-  onMounted(async () => {
+  
+  $script.waitForLoad().then(() => {
     try {
-      tokenClient.value = google.accounts.oauth2.initTokenClient({
+      const client = google.accounts.oauth2.initTokenClient({
         client_id: gsi.clientId,
         scope: gsi.scopes,
         callback: handleTokenResponse,
       })
+      tokenClient.value = client
+      console.log('Google script loaded', client)
     } catch (error) {
       console.error('Error loading Google script', error)
     }
   })
+
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
   )
@@ -74,5 +77,6 @@ export const useGoogleOAuth2 = () => {
     googleApis,
     isSignedIn,
     signOut,
+    tokenClient,
   }
 }

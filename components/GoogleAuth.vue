@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="tokenClient">
     <GoogleSignIn v-if="!isSignedIn" @click="getToken()">
       Sincronizar con Google
     </GoogleSignIn>
@@ -134,8 +134,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref, defineComponent, type PropType, toRefs, watch } from 'vue'
+<script setup lang="ts">
+import { ref, type PropType, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
 import { v4 } from 'uuid'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
@@ -147,265 +147,224 @@ import type {
   IGoogleCalendarItem,
 } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
-
-export default defineComponent({
-  name: 'GoogleAuth',
-  components: { CreateGoogleCalendar, GoogleSignIn },
-
-  props: {
-    events: {
-      type: Array as PropType<IEvent[]>,
-      default: () => [],
-    },
-    startDate: {
-      type: String,
-      required: true,
-    },
-    endDate: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  events: {
+    type: Array as PropType<IEvent[]>,
+    default: () => [],
   },
-
-  setup(props) {
-    const { events } = toRefs(props)
-    const { googleApis, accessToken, getToken, isSignedIn, signOut } =
-      useGoogleOAuth2()
-
-    const search = ref('')
-    const calendarItem = ref({ summary: '' })
-    const monthNames = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre',
-    ]
-
-    const dialogCalendarSync = ref(false)
-    const dialog = ref(false)
-    const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
-    const dateStart = ref(
-      DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'),
-    )
-    const dateEnd = ref(DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
-
-    const progress = ref(0)
-    const day = [
-      '2021-04-11 ',
-      '2021-04-05 ',
-      '2021-04-06 ',
-      '2021-04-07 ',
-      '2021-04-08 ',
-      '2021-04-09 ',
-      '2021-04-10 ',
-    ]
-
-    const notifications = ref([
-      {
-        method: 'popup',
-        minutes: 15,
-      },
-    ])
-
-    let defaultNotification = {
-      method: 'popup',
-      minutes: 15,
-    }
-
-    const calendarList = ref<IGoogleCalendarItem[]>([])
-    const summary = ref('')
-    const selected = ref<any>(null)
-    const loading = ref(false)
-    const selectedError = ref(false)
-
-    /**
-     *  Sign out the user upon button click.
-     */
-    const handleSignOutClick = () => {
-      signOut()
-    }
-
-    function deleteNotification(index: { method: string; minutes: number }) {
-      console.log(index)
-      notifications.value = notifications.value.filter(
-        (notification: { method: string; minutes: number }) =>
-          notification !== index,
-      )
-      defaultNotification = {
-        method: 'popup',
-        minutes: 15,
-      }
-    }
-
-    function addNotification(this: any) {
-      const notification: any = {}
-      Object.assign(notification, defaultNotification)
-      notifications.value.push(notification)
-    }
-
-    function addCalendar(this: any) {
-      dialog.value = true
-      if (search.value) {
-        calendarItem.value.summary = search.value
-      }
-    }
-
-    async function createCalendar(this: any, { summary }: any) {
-      try {
-        const response = await window.gapi.client.calendar.calendars.insert({
-          resource: {
-            summary,
-            etag: 'Created by Octatec',
-          },
-        })
-        // Handle the results here (response.result has the parsed body).
-        console.log('Response', response)
-        await getCalendarList()
-        return response.result
-      } catch (e) {
-        console.error('Execute error', e)
-      } finally {
-        this.dialog = false
-      }
-    }
-
-    const form = ref<typeof VForm | null>(null)
-
-    const exportEventToGCalendar = async () => {
-      console.log('Exporting to Google Calendar', form.value)
-      const { valid } = await form.value?.validate()
-      if (!valid) {
-        return
-      }
-      progress.value = 0
-      for (const event of events.value) {
-        try {
-          await eventRequest(event)
-          progress.value++
-        } catch (e) {
-          console.error(e)
-        }
-      }
-      progress.value = 0
-    }
-
-    async function eventRequest(event: IEvent): Promise<any> {
-      const format =
-        event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
-      let color = EVENT_COLORS.findIndex((color) => event.color === color)
-      if (color === -1) {
-        color = 10
-      }
-      const eventData = {
-        iCalUID: 'Horext-' + v4(),
-        summary: event.title,
-        description: event.description,
-        location: event?.location,
-        start: {
-          dateTime: DateTime.fromFormat(
-            dateStart.value + ' ' + event.startTime,
-            format,
-          )
-            .set({ weekday: event.day })
-            .toISO(),
-          timeZone: 'America/Lima',
-        },
-        end: {
-          dateTime: DateTime.fromFormat(
-            dateStart.value + ' ' + event.endTime,
-            format,
-          )
-            .set({ weekday: event.day })
-            .toISO(),
-          timeZone: 'America/Lima',
-        },
-        recurrence: [
-          'RRULE:FREQ=WEEKLY;UNTIL=' +
-            new Date(dateEnd.value)
-              .toISOString()
-              .substring(0, 10)
-              .split('-')
-              .join('') +
-            'T000000Z',
-        ],
-        colorId: color,
-        source: {
-          title: 'Horext',
-          url: 'https://horext.octatec.io',
-        },
-        reminders: {
-          useDefault: !1,
-          overrides: [...notifications.value],
-        },
-      }
-      // create the request
-      const request = await googleApis(
-        'calendar/v3/calendars/' + selected.value.id + '/events',
-        {
-          method: 'POST',
-          body: eventData,
-        },
-      )
-      return request
-    }
-
-    async function getCalendarList() {
-      try {
-        const response = await googleApis<IGoogleCalendarListPayload>(
-          'calendar/v3/users/me/calendarList',
-        )
-        calendarList.value = response.items
-      } catch (e) {
-        console.error('Execute error', e)
-      }
-    }
-
-    function onChangeSignInStatus(value: boolean) {
-      console.log(value)
-      if (value) {
-        getCalendarList()
-      }
-    }
-
-    watch(isSignedIn, onChangeSignInStatus)
-
-    return {
-      exportEventToGCalendar,
-      addCalendar,
-      addNotification,
-      deleteNotification,
-      monthNames,
-      notifications,
-      summary,
-      dateStart,
-      dateEnd,
-      createCalendar,
-      handleSignOutClick,
-      selectedError,
-      dialogCalendarSync,
-      dayNames,
-      day,
-      progress,
-      defaultNotification,
-      dialog,
-      loading,
-      selected,
-      calendarList,
-      search,
-      calendarItem,
-      getToken,
-      accessToken,
-      form,
-      isSignedIn,
-    }
+  startDate: {
+    type: String,
+    required: true,
+  },
+  endDate: {
+    type: String,
+    required: true,
   },
 })
+const { googleApis, tokenClient, getToken, isSignedIn, signOut } =
+  useGoogleOAuth2()
+const { events } = toRefs(props)
+
+const search = ref('')
+const calendarItem = ref({ summary: '' })
+const monthNames = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre',
+]
+
+const dialogCalendarSync = ref(false)
+const dialog = ref(false)
+const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
+const dateStart = ref(DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
+const dateEnd = ref(DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
+
+const progress = ref(0)
+const day = [
+  '2021-04-11 ',
+  '2021-04-05 ',
+  '2021-04-06 ',
+  '2021-04-07 ',
+  '2021-04-08 ',
+  '2021-04-09 ',
+  '2021-04-10 ',
+]
+
+const notifications = ref([
+  {
+    method: 'popup',
+    minutes: 15,
+  },
+])
+
+let defaultNotification = {
+  method: 'popup',
+  minutes: 15,
+}
+
+const calendarList = ref<IGoogleCalendarItem[]>([])
+const summary = ref('')
+const selected = ref<any>(null)
+const loading = ref(false)
+const selectedError = ref(false)
+
+/**
+ *  Sign out the user upon button click.
+ */
+const handleSignOutClick = () => {
+  signOut()
+}
+
+function deleteNotification(index: { method: string; minutes: number }) {
+  console.log(index)
+  notifications.value = notifications.value.filter(
+    (notification: { method: string; minutes: number }) =>
+      notification !== index,
+  )
+  defaultNotification = {
+    method: 'popup',
+    minutes: 15,
+  }
+}
+
+function addNotification(this: any) {
+  const notification: any = {}
+  Object.assign(notification, defaultNotification)
+  notifications.value.push(notification)
+}
+
+function addCalendar(this: any) {
+  dialog.value = true
+  if (search.value) {
+    calendarItem.value.summary = search.value
+  }
+}
+
+async function createCalendar(this: any, { summary }: any) {
+  try {
+    const response = await window.gapi.client.calendar.calendars.insert({
+      resource: {
+        summary,
+        etag: 'Created by Octatec',
+      },
+    })
+    // Handle the results here (response.result has the parsed body).
+    console.log('Response', response)
+    await getCalendarList()
+    return response.result
+  } catch (e) {
+    console.error('Execute error', e)
+  } finally {
+    this.dialog = false
+  }
+}
+
+const form = ref<typeof VForm | null>(null)
+
+const exportEventToGCalendar = async () => {
+  console.log('Exporting to Google Calendar', form.value)
+  const { valid } = await form.value?.validate()
+  if (!valid) {
+    return
+  }
+  progress.value = 0
+  for (const event of events.value) {
+    try {
+      await eventRequest(event)
+      progress.value++
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  progress.value = 0
+}
+
+async function eventRequest(event: IEvent): Promise<any> {
+  const format =
+    event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
+  let color = EVENT_COLORS.findIndex((color) => event.color === color)
+  if (color === -1) {
+    color = 10
+  }
+  const eventData = {
+    iCalUID: 'Horext-' + v4(),
+    summary: event.title,
+    description: event.description,
+    location: event?.location,
+    start: {
+      dateTime: DateTime.fromFormat(
+        dateStart.value + ' ' + event.startTime,
+        format,
+      )
+        .set({ weekday: event.day })
+        .toISO(),
+      timeZone: 'America/Lima',
+    },
+    end: {
+      dateTime: DateTime.fromFormat(
+        dateStart.value + ' ' + event.endTime,
+        format,
+      )
+        .set({ weekday: event.day })
+        .toISO(),
+      timeZone: 'America/Lima',
+    },
+    recurrence: [
+      'RRULE:FREQ=WEEKLY;UNTIL=' +
+        new Date(dateEnd.value)
+          .toISOString()
+          .substring(0, 10)
+          .split('-')
+          .join('') +
+        'T000000Z',
+    ],
+    colorId: color,
+    source: {
+      title: 'Horext',
+      url: 'https://horext.octatec.io',
+    },
+    reminders: {
+      useDefault: !1,
+      overrides: [...notifications.value],
+    },
+  }
+  // create the request
+  const request = await googleApis(
+    'calendar/v3/calendars/' + selected.value.id + '/events',
+    {
+      method: 'POST',
+      body: eventData,
+    },
+  )
+  return request
+}
+
+async function getCalendarList() {
+  try {
+    const response = await googleApis<IGoogleCalendarListPayload>(
+      'calendar/v3/users/me/calendarList',
+    )
+    calendarList.value = response.items
+  } catch (e) {
+    console.error('Execute error', e)
+  }
+}
+
+function onChangeSignInStatus(value: boolean) {
+  console.log(value)
+  if (value) {
+    getCalendarList()
+  }
+}
+
+watch(isSignedIn, onChangeSignInStatus)
 </script>
