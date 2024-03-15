@@ -86,6 +86,14 @@ await useAsyncData('initData', async () => {
 const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
 
+onMounted(async () => {
+  await store.fetchSubjects()
+  await store.fetchSchedules()
+  await store.fetchCrossings()
+  await store.fetchFavoritesSchedules()
+  await userEventsStore.fetchItems()
+  await store.fetchMyOcurrences()
+})
 const drawer = ref(true)
 const items = computed(() => [
   {

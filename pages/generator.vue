@@ -75,7 +75,6 @@ export default defineComponent({
     })
 
     const configStore = useUserConfigStore()
-    const eventsStore = useUserEventsStore()
     const router = useRouter()
 
     const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
@@ -85,15 +84,6 @@ export default defineComponent({
       if (oldValue && !newValue) {
         await router.push('/generator/subjects')
       }
-    })
-
-    onMounted(async () => {
-      await configStore.fetchSubjects()
-      await configStore.fetchSchedules()
-      await configStore.fetchCrossings()
-      await configStore.fetchFavoritesSchedules()
-      await eventsStore.fetchItems()
-      await configStore.fetchMyOcurrences()
     })
 
     return {
