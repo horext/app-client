@@ -70,6 +70,7 @@ import { ref, computed, toRefs } from 'vue'
 import type { ICalendarEvent, IEventEmitData } from '../types'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
+import { extractBlocks } from '../utils/block'
 
 const props = defineProps<{
   weekDay: number
@@ -115,27 +116,8 @@ const weekDayEvents = computed(() => {
 })
 
 const groupEvents = computed(() => {
-  const groups: T[][] = [];
-  const events = [...weekDayEvents.value];
-  const visited = new Set(); // Para rastrear eventos ya visitados
-  for (let i = 0; i < events.length; i++) {
-    if (visited.has(i)) continue; // Saltar eventos ya agrupados
-    const event = events[i];
-    const group: T[] = [event];
-    for (let j = i + 1; j < events.length; j++) {
-      const nextEvent = events[j];
-      if (
-        event.start < nextEvent.end &&
-        event.end > nextEvent.start &&
-        !visited.has(j) // Asegurarse de que el evento no esté en otro grupo
-      ) {
-        group.push(nextEvent);
-        visited.add(j);
-      }
-    }
-    groups.push(group);
-  }
-  return groups;
+  const events = weekDayEvents.value
+  return extractBlocks(events)
 });
 const dayContainer = ref<null | HTMLDivElement>(null)
 const internalWidthRem = computed(() => props.internalWidth + 'rem')
