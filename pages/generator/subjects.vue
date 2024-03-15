@@ -1,86 +1,87 @@
 <template>
-  <v-card rounded="0" flat>
-    <v-card-text>
-      <v-row no-gutters>
-        <v-col cols="12">
-          <v-autocomplete
-            v-model="editedItem"
-            v-model:search="search"
-            v-model:menu="openSearchMenu"
-            variant="outlined"
-            :items="availableCourses"
-            label="Buscar cursos"
-            return-object
-            no-filter
-            hide-details
-            item-title="course.name"
-            item-value="id"
-            :loading="loadingSubjects"
-            :no-data-text="
-              errorSubjects
-                ? 'Error al buscar cursos'
-                : search
-                  ? loadingSubjects
-                    ? 'Buscando cursos...'
-                    : 'No se encontraron cursos'
-                  : 'Escribe el nombre del curso'
-            "
-            @update:model-value="editItem"
-          >
-            <template #selection="{ item }">
-              <v-list-item
-                v-if="item.raw"
-                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-              ></v-list-item>
-            </template>
-            <template #item="{ props, item }">
-              <v-list-item
-                v-bind="props"
-                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-              ></v-list-item>
-            </template>
-            <template #append>
-              <v-btn icon variant="text" :loading="loadingSubjects">
-                <v-icon>mdi-magnify</v-icon>
-              </v-btn>
-            </template>
-          </v-autocomplete>
-        </v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-spacer />
-        <v-col cols="auto">
-          <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col col="auto">
-          <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
-        </v-col>
-        <v-spacer />
-        <v-col cols="auto">
-          <div>Créditos Necesarios : {{ totalCredits }}</div>
-        </v-col>
-      </v-row>
-      <v-dialog
-        v-model="dialog"
-        dense
-        max-width="800"
-        @click:outside="close"
-        @keydown.esc="close"
-      >
-        <SubjectScheduleList
-          v-if="editedItem"
-          :subject="editedItem"
-          :hourly-load="myHourlyLoad"
-          @save="save"
-          @cancel="close"
-        />
-      </v-dialog>
-
+  <v-row dense>
+    <v-col cols="12">
       <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
+        <template #top>
+          <v-sheet flat class="pa-2">
+            <v-row dense>
+              <v-col cols="12">
+                <v-autocomplete
+                  v-model="editedItem"
+                  v-model:search="search"
+                  v-model:menu="openSearchMenu"
+                  variant="outlined"
+                  :items="availableCourses"
+                  label="Buscar cursos"
+                  return-object
+                  no-filter
+                  hide-details
+                  item-title="course.name"
+                  item-value="id"
+                  :loading="loadingSubjects"
+                  :no-data-text="
+                    errorSubjects
+                      ? 'Error al buscar cursos'
+                      : search
+                        ? loadingSubjects
+                          ? 'Buscando cursos...'
+                          : 'No se encontraron cursos'
+                        : 'Escribe el nombre del curso'
+                  "
+                  @update:model-value="editItem"
+                >
+                  <template #selection="{ item }">
+                    <v-list-item
+                      v-if="item.raw"
+                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+                    ></v-list-item>
+                  </template>
+                  <template #item="{ props, item }">
+                    <v-list-item
+                      v-bind="props"
+                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+                    ></v-list-item>
+                  </template>
+                  <template #append>
+                    <v-btn icon variant="text" :loading="loadingSubjects">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+
+              <v-col cols="12" class="d-flex justify-end">
+                <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col col="auto">
+                <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
+              </v-col>
+              <v-spacer />
+              <v-col cols="auto">
+                <div>Créditos Necesarios : {{ totalCredits }}</div>
+              </v-col>
+            </v-row>
+            <v-dialog
+              v-model="dialog"
+              dense
+              max-width="800"
+              @click:outside="close"
+              @keydown.esc="close"
+            >
+              <SubjectScheduleList
+                v-if="editedItem"
+                :subject="editedItem"
+                :hourly-load="myHourlyLoad"
+                @save="save"
+                @cancel="close"
+              />
+            </v-dialog>
+          </v-sheet>
+        </template>
         <template #no-data>
           <v-row align="center">
             <v-col cols="12" md="6">
@@ -125,7 +126,7 @@
           </v-tooltip>
         </template>
       </v-data-table>
-    </v-card-text>
+    </v-col>
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
@@ -162,7 +163,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </v-card>
+  </v-row>
 </template>
 
 <script lang="ts">
