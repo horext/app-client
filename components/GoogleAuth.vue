@@ -1,5 +1,5 @@
 <template>
-  <div v-if="accessToken">
+  <div v-if="tokenClient">
     <GoogleSignIn v-if="!isSignedIn" @click="getToken()">
       Sincronizar con Google
     </GoogleSignIn>
@@ -161,7 +161,7 @@ const props = defineProps({
     required: true,
   },
 })
-const { googleApis, accessToken, getToken, isSignedIn, signOut } =
+const { googleApis, tokenClient, getToken, isSignedIn, signOut } =
   useGoogleOAuth2()
 const { events } = toRefs(props)
 
