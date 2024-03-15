@@ -61,7 +61,7 @@ const config = defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: ['/', '/privacy', '/terms', '/about', '/plans'],
+      routes: ['/', '/privacy', '/terms', '/about', '/plans', '/login' ,'security'],
     },
   },
 })

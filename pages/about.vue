@@ -46,9 +46,7 @@
               size="large"
             >
               <v-icon start>mdi-gitlab</v-icon>
-              <span class="text-grey-darken-1 font-weight-bold">
-                GitLab
-              </span>
+              <span class="text-grey-darken-1 font-weight-bold"> GitLab </span>
             </v-btn></v-col
           >
         </v-row>
@@ -63,6 +61,8 @@
   </v-container>
 </template>
 
-<script>
-export default {}
+<script lang="ts" setup>
+useSeoMeta({
+  title: 'Acerca de',
+})
 </script>

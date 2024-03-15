@@ -7,16 +7,14 @@
           @click.stop="drawer = !drawer"
         />
       </template>
-
       <v-row justify="center" align="center" no-gutters>
-        <v-col cols="9" sm="8">
-          <AppHourlyLoadInfo class="mx-0" />
-        </v-col>
-        <v-spacer />
-        <v-col cols="3" sm="4">
-          <ThemeDarkToggle />
+        <v-col cols="12">
+          <AppHourlyLoadInfo class="pa-0 " />
         </v-col>
       </v-row>
+      <template #append>
+        <ThemeDarkToggle />
+      </template>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" width="300">
       <v-card-title> Opciones </v-card-title>
@@ -86,6 +84,14 @@ await useAsyncData('initData', async () => {
 const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
 
+onMounted(async () => {
+  await store.fetchSubjects()
+  await store.fetchSchedules()
+  await store.fetchCrossings()
+  await store.fetchFavoritesSchedules()
+  await userEventsStore.fetchItems()
+  await store.fetchMyOcurrences()
+})
 const drawer = ref(true)
 const items = computed(() => [
   {

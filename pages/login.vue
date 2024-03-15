@@ -29,6 +29,10 @@ defineOptions({
   name: 'LoginPage',
 })
 
+useSeoMeta({
+  title: 'Inicio de Sesión'
+})
+
 const { $script } = useGoogleAccounts()
 
 const {
