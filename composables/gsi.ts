@@ -15,12 +15,12 @@ declare global {
 export function useGoogleAccounts() {
   return useScript<GoogleAccountsLoaderApi>(
     {
-      src: 'https://accounts.google.com/gsi/client',
-      defer: true,
       key: 'google-accounts',
+      src: 'https://accounts.google.com/gsi/client',
     },
     {
       use: () => ({ google: window.google }),
+      trigger: 'idle',
     },
   )
 }
