@@ -58,7 +58,9 @@
 
 <script setup lang="ts">
 const img = useImage()
-
+useSeoMeta({
+  title: 'Inicio'
+})
 const material = computed(() =>
   img.getSizes('/material2.jpg', {
     sizes: [1920, 1280, 960, 600],

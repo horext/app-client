@@ -25,6 +25,8 @@
   </v-container>
 </template>
 
-<script>
-export default {}
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Terminos de servicio'
+})
 </script>
