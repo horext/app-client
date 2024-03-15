@@ -21,7 +21,8 @@ const intervalHeightPx = computed(() => `${props.intervalHeight}rem`)
 .h-calendar-time {
   display: flex;
   flex-direction: column;
-  width: 3rem;
+  width: 2.5rem;
+  font-size: 0.8rem;
 }
 
 .h-calendar-time-slot {

@@ -174,6 +174,6 @@ const internalWidthRem = computed(() => props.internalWidth + 'rem')
 }
 
 .h-calendar-empty-slot {
-  width: 3rem;
+  width: 2.5rem;
 }
 </style>
