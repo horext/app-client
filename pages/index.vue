@@ -6,6 +6,7 @@
     :sizes="material.sizes"
     class="fill-height"
     cover
+    max-height="85vh"
     gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
   >
     <v-container class="fill-height">
@@ -58,7 +59,9 @@
 
 <script setup lang="ts">
 const img = useImage()
-
+useSeoMeta({
+  title: 'Inicio'
+})
 const material = computed(() =>
   img.getSizes('/material2.jpg', {
     sizes: [1920, 1280, 960, 600],

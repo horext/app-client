@@ -46,6 +46,8 @@
   </v-container>
 </template>
 
-<script>
-export default {}
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Política de Seguridad'
+})
 </script>
