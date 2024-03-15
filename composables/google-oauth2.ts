@@ -1,4 +1,3 @@
-
 export const useGoogleOAuth2 = () => {
   useGoogleAccounts()
 
@@ -9,11 +8,13 @@ export const useGoogleOAuth2 = () => {
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
   onMounted(async () => {
     try {
-      tokenClient.value = google.accounts.oauth2.initTokenClient({
+      const client = google.accounts.oauth2.initTokenClient({
         client_id: gsi.clientId,
         scope: gsi.scopes,
         callback: handleTokenResponse,
       })
+      tokenClient.value = client
+      console.log('Google script loaded', client)
     } catch (error) {
       console.error('Error loading Google script', error)
     }
@@ -74,5 +75,6 @@ export const useGoogleOAuth2 = () => {
     googleApis,
     isSignedIn,
     signOut,
+    tokenClient
   }
 }
