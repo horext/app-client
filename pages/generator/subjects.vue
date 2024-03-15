@@ -1,72 +1,87 @@
 <template>
-  <v-card rounded="0" flat>
-    <v-card-text>
-      <v-row no-gutters>
-        <v-col cols="12">
-          <v-autocomplete
-            v-model="editedItem"
-            v-model:search="search"
-            variant="outlined"
-            :items="availableCourses"
-            append-icon="mdi-magnify"
-            label="Busca cursos para agregar"
-            return-object
-            no-filter
-            hide-details
-            item-title="course.name"
-            item-value="id"
-            :loading="loadingSubjects"
-            @update:model-value="editItem"
-          >
-            <template #selection="{ item }">
-              <v-list-item
-                v-if="item.raw"
-                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-              ></v-list-item>
-            </template>
-            <template #item="{ props, item }">
-              <v-list-item
-                v-bind="props"
-                :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-              ></v-list-item>
-            </template>
-          </v-autocomplete>
-        </v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-spacer />
-        <v-col cols="auto">
-          <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col col="auto">
-          <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
-        </v-col>
-        <v-spacer />
-        <v-col cols="auto">
-          <div>Créditos Necesarios : {{ totalCredits }}</div>
-        </v-col>
-      </v-row>
-      <v-dialog
-        v-model="dialog"
-        dense
-        max-width="800"
-        @click:outside="close"
-        @keydown.esc="close"
-      >
-        <SubjectScheduleList
-          v-if="editedItem"
-          :subject="editedItem"
-          :hourly-load="myHourlyLoad"
-          @save="save"
-          @cancel="close"
-        />
-      </v-dialog>
-
+  <v-row dense>
+    <v-col cols="12">
       <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
+        <template #top>
+          <v-sheet flat class="pa-2">
+            <v-row dense>
+              <v-col cols="12">
+                <v-autocomplete
+                  v-model="editedItem"
+                  v-model:search="search"
+                  v-model:menu="openSearchMenu"
+                  variant="outlined"
+                  :items="availableCourses"
+                  label="Buscar cursos"
+                  return-object
+                  no-filter
+                  hide-details
+                  item-title="course.name"
+                  item-value="id"
+                  :loading="loadingSubjects"
+                  :no-data-text="
+                    errorSubjects
+                      ? 'Error al buscar cursos'
+                      : search
+                        ? loadingSubjects
+                          ? 'Buscando cursos...'
+                          : 'No se encontraron cursos'
+                        : 'Escribe el nombre del curso'
+                  "
+                  @update:model-value="editItem"
+                >
+                  <template #selection="{ item }">
+                    <v-list-item
+                      v-if="item.raw"
+                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+                    ></v-list-item>
+                  </template>
+                  <template #item="{ props, item }">
+                    <v-list-item
+                      v-bind="props"
+                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
+                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+                    ></v-list-item>
+                  </template>
+                  <template #append>
+                    <v-btn icon variant="text" :loading="loadingSubjects">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+
+              <v-col cols="12" class="d-flex justify-end">
+                <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col col="auto">
+                <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
+              </v-col>
+              <v-spacer />
+              <v-col cols="auto">
+                <div>Créditos Necesarios : {{ totalCredits }}</div>
+              </v-col>
+            </v-row>
+            <v-dialog
+              v-model="dialog"
+              dense
+              max-width="800"
+              @click:outside="close"
+              @keydown.esc="close"
+            >
+              <SubjectScheduleList
+                v-if="editedItem"
+                :subject="editedItem"
+                :hourly-load="myHourlyLoad"
+                @save="save"
+                @cancel="close"
+              />
+            </v-dialog>
+          </v-sheet>
+        </template>
         <template #no-data>
           <v-row align="center">
             <v-col cols="12" md="6">
@@ -99,7 +114,7 @@
                 mdi-pencil
               </v-icon>
             </template>
-            <span>Editar</span>
+            <span>Modificar secciones</span>
           </v-tooltip>
           <v-tooltip location="bottom">
             <template #activator="{ props }">
@@ -111,7 +126,7 @@
           </v-tooltip>
         </template>
       </v-data-table>
-    </v-card-text>
+    </v-col>
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
@@ -148,7 +163,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </v-card>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -206,13 +221,17 @@ export default defineComponent({
     const editedItem = ref<ISelectedSubject>()
     const editedIndex = ref(-1)
 
-    const editItem = (item: ISelectedSubject) => {
+    const openSearchMenu = ref(false)
+    const editItem = async (item: ISelectedSubject) => {
       if (!item) {
         return
       }
       editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
       editedItem.value = Object.assign({}, item)
-      dialog.value = true
+      openSearchMenu.value = false
+      await nextTick(() => {
+        dialog.value = true
+      })
     }
 
     const deleteItem = (item: ISelectedSubject) => {
@@ -258,20 +277,21 @@ export default defineComponent({
 
     const search = ref('')
 
-    const { data: subjects, pending: loadingSubjects } = await useAsyncData(
+    const {
+      data: subjects,
+      pending: loadingSubjects,
+      error: errorSubjects,
+    } = await useAsyncData(
       'search',
       async () => {
+        if (!search.value) return []
         if (configStore.specialityId && configStore.hourlyLoadId) {
-          try {
-            const response = await $api.course.findBySearch(
-              search.value || ' ',
-              configStore.specialityId,
-              configStore.hourlyLoadId,
-            )
-            return response.content
-          } catch (e) {
-            console.error(e)
-          }
+          const response = await $api.course.findBySearch(
+            search.value,
+            configStore.specialityId,
+            configStore.hourlyLoadId,
+          )
+          return response.content
         }
       },
       {
@@ -309,10 +329,6 @@ export default defineComponent({
       },
     ] as const)
 
-    const formTitle = computed(() => {
-      return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
-    })
-
     const myHourlyLoad = computed(() => {
       return configStore.hourlyLoad!
     })
@@ -337,9 +353,10 @@ export default defineComponent({
       save,
       availableCourses,
       totalCredits,
-      formTitle,
+      openSearchMenu,
       myHourlyLoad,
       loadingSubjects,
+      errorSubjects,
     }
   },
 })

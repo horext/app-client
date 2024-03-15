@@ -1,29 +1,11 @@
-import { DateTime } from 'luxon'
-import type { IOccurrence } from '~/interfaces/ocurrences'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import Event from '~/model/Event'
-
-const isIntersects = (
-  eventTarget: Event,
-  eventSource: { start: string; end: string },
-): boolean =>
-  !(
-    eventTarget.end <= eventSource.start || eventSource.end <= eventTarget.start
-  )
-
-export const weekdayToDatetime = (weekday: number, time: string) => {
-  const date = DateTime.fromISO(time).set({ weekday })
-  return date.toFormat('yyyy-MM-dd HH:mm')
-}
-
-export const weekdayToDate = (weekday: number) => {
-  const date = DateTime.local().set({ weekday })
-  return date.toFormat('yyyy-MM-dd')
-}
-export const convertToDate = (day: string | number, startTime: string) => {
-  return weekdayToDatetime(<number>day, startTime)
-}
+import type { IEvent } from '~/interfaces/event'
+import { isIntersects } from './event'
+import { EVENT_COLORS } from '~/constants/event'
+import Event from '~/models/Event'
+import { scheduleToEvent } from '~/utils/event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -34,18 +16,23 @@ export type ScheduleOptions = {
 
 export function getSchedules(
   subjects: Array<ISelectedSubject>,
-  myEvents: Array<Event>,
+  myEvents: Array<IEvent>,
   options: ScheduleOptions = {
     credits: 100,
     crossingSubjects: 0,
     crossEvent: true,
     crossPractices: false,
   },
-): { occurrences: IOccurrence[]; schedules: ISubjectSchedule[]; combinations: IScheduleGenerate[] } {
-  const occurrences:IOccurrence[] = []
+): {
+  occurrences: IIntersectionOccurrence[]
+  schedules: ISubjectSchedule[]
+  combinations: IScheduleGenerate[]
+} {
+  const occurrences: IIntersectionOccurrence[] = []
   const maxQuantity = subjects.length
-  const indexSchedules = Array(maxQuantity).fill(0)
+  const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
+  const baseEvents = myEvents.map(Event.buildFrom)
 
   const increment = (i: number) => {
     if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
@@ -56,15 +43,19 @@ export function getSchedules(
     }
   }
 
-  const combinations = subjects.reduce((previousValue, currentValue) => {
-    return previousValue * currentValue.schedules.length
-  }, 1)
+  const combinations = subjects.reduce(
+    (previousValue, currentValue) => {
+      return previousValue * currentValue.schedules.length
+    },
+    subjects.length > 0 ? 1 : 0,
+  )
+
   const crossings = Array(combinations).fill(0)
   for (let i = combinations; i--; ) {
     const combination: Array<ISubjectSchedule> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
-      const schedule = subjects[j].schedules[indexSchedules[j]]
+      const schedule = subject.schedules[indexSchedules[j]]
       combination.push({
         ...schedule,
         subject,
@@ -72,7 +63,7 @@ export function getSchedules(
     }
     const currentSchedule = combination.map((c, index) => ({
       ...c,
-      events: scheduleToEvent(c, colors[index]),
+      events: scheduleToEvent(c, EVENT_COLORS[index]),
     }))
     // calculating crossing
     let crossingCombination = 0
@@ -80,18 +71,29 @@ export function getSchedules(
     for (let j = 0; j < combination.length; j++) {
       const schedule = currentSchedule.splice(0, 1)
       const events = schedule[0].events
+
       for (const event of events) {
         const otherEvents = currentSchedule.map((c) => c.events).flat()
-        otherEvents.push(...myEvents)
+
+        otherEvents.push(...baseEvents)
         let intersections = 0
         for (const item of otherEvents) {
           if (isIntersects(event, item)) {
-            const occurrence:IOccurrence = {
-              type: 'Cruce de ' + event.title + ' - ' + item.title,
-              elementA: event,
-              elementB: item,
+            const addEventToIntersection = (type: string) => {
+              const occurrence: IIntersectionOccurrence = {
+                id: [event.id, item.id].sort().join('-'),
+                name: `${event.title} - ${item.title}`,
+                eventTarget: event,
+                eventSource: item,
+                type,
+              }
+              if (
+                !occurrences.find(
+                  (o) => o.id === occurrence.id && o.type === type,
+                )
+              )
+                occurrences.push(occurrence)
             }
-            occurrences.push(occurrence)
             // if have available crossings
             if (
               crossingCombination + intersections <=
@@ -99,21 +101,33 @@ export function getSchedules(
             ) {
               intersections++
             } else {
+              if (
+                (item.type?.includes('P', 0) &&
+                  event.type?.includes('P', 0) &&
+                  !options.crossPractices) ||
+                (item.type?.includes('MY_EVENT', 0) &&
+                  event.type?.includes('MY_EVENT', 0) &&
+                  !options.crossEvent)
+              ) {
+                addEventToIntersection('CROSSING_NOT_AVAILABLE')
+              } else {
+                addEventToIntersection('CROSSING_EXCEEDED')
+              }
               break
             }
-            // if is cross practice to practice
+
             if (
-              item.type?.includes('P', 0) &&
-              event.type?.includes('P', 0) &&
-              !options.crossPractices
+              (item.type?.includes('P', 0) &&
+                event.type?.includes('P', 0) &&
+                !options.crossPractices) ||
+              (item.type?.includes('MY_EVENT', 0) &&
+                event.type?.includes('MY_EVENT', 0) &&
+                !options.crossEvent)
             ) {
+              addEventToIntersection('CROSSING_NOT_AVAILABLE')
               useCombination = false
-            } else if (
-              item.type?.includes('MY_EVENT', 0) &&
-              event.type?.includes('MY_EVENT', 0) &&
-              !options.crossEvent
-            ) {
-              useCombination = false
+            } else {
+              addEventToIntersection('CROSSING_BASIS')
             }
           }
         }
@@ -129,9 +143,9 @@ export function getSchedules(
         schedule: combination,
         crossings: crossingCombination,
         events: combination
-          .map((c, index) => scheduleToEvent(c, colors[index]))
+          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
-          .concat(myEvents),
+          .concat(baseEvents),
       })
     }
 
@@ -144,89 +158,4 @@ export function getSchedules(
     occurrences,
   }
 }
-
-function scheduleToEvent(
-  schedule: ISubjectSchedule,
-  color = 'primary',
-): Array<Event> {
-  const events: Array<Event> = []
-  const sessions = schedule?.sessions || []
-  for (let i = 0; i < sessions.length; i++) {
-    const course = schedule.subject.course
-    const section = schedule.section.id
-    const event = new Event(
-      sessions[i].day,
-      sessions[i].startTime,
-      sessions[i].endTime,
-      course.id + ' ' + section + ' - ' + course.name,
-      ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
-      sessions[i]?.classroom?.code,
-      color,
-      'COURSE',
-      sessions[i].type.code,
-    )
-    events.push(event)
-  }
-  return events
-}
-
-const weekDays = [
-  {
-    index: 0,
-    value: 'Domingo',
-    startDate: '2020-11-15',
-  },
-  {
-    index: 1,
-    value: 'Lunes',
-    startDate: '2020-11-09',
-  },
-  {
-    index: 2,
-    value: 'Martes',
-    startDate: '2020-11-10',
-  },
-  {
-    index: 3,
-    value: 'Miercoles',
-    startDate: '2020-11-11',
-  },
-  {
-    index: 4,
-    value: 'Jueves',
-    startDate: '2020-11-12',
-  },
-  {
-    index: 5,
-    value: 'Viernes',
-    startDate: '2020-11-13',
-  },
-  {
-    index: 6,
-    value: 'Sábado',
-    startDate: '2020-11-14',
-  },
-]
-export { weekDays }
-
-export const colors = [
-  'indigo',
-  'deep-purple',
-  'indigo darken-3',
-  'deep-purple darken-3',
-  'cyan darken-3',
-  'cyan',
-  'green',
-  'orange',
-  'blue ',
-  'indigo lighten-3',
-  'deep-purple lighten-3',
-  'cyan lighten-3',
-  ' green darken-3',
-  'orange darken-3',
-  'blue darken-3',
-  'green lighten-3',
-  'orange lighten-3',
-  'blue lighten-3',
-]
 

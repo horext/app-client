@@ -1,7 +1,7 @@
 <template>
   <div class="h-calendar">
     <div class="h-calendar-header">
-      <div class="empty-slot"></div>
+      <div class="h-calendar-empty-slot"></div>
       <div
         v-for="day in internalDays"
         :key="day.id"
@@ -15,8 +15,9 @@
       <CalendarDay
         v-for="day in internalDays"
         :key="day.id"
+        :week-day="day.id"
         :day="day.name"
-        :events="day.events"
+        :events="events"
         :hours="hours"
         :interval-minutes="internalIntervalMinutes"
         :interval-height="internalIntervalHeight"
@@ -135,18 +136,16 @@ const hours = computed(() => {
 
 const internalDays = computed(() => {
   const _weekdays = weekdays.value
-  const _events = events.value
   return _weekdays.map((day) => ({
     id: day,
     name: WEEKDAY_NAMES[day % 7],
-    events: _events.filter((e) => e.weekDay === day),
   }))
 })
 
 const internalWidthRem = computed(() => props.internalWidth + 'rem')
 </script>
 
-<style scoped>
+<style lang="css">
 .h-calendar {
   display: flex;
   flex-direction: column;
@@ -174,7 +173,7 @@ const internalWidthRem = computed(() => props.internalWidth + 'rem')
   width: v-bind(internalWidthRem);
 }
 
-.empty-slot {
-  width: 3rem;
+.h-calendar-empty-slot {
+  width: 2.5rem;
 }
 </style>

@@ -7,16 +7,14 @@
           @click.stop="drawer = !drawer"
         />
       </template>
-
       <v-row justify="center" align="center" no-gutters>
-        <v-col cols="9" sm="8">
-          <AppHourlyLoadInfo class="mx-0" />
-        </v-col>
-        <v-spacer />
-        <v-col cols="3" sm="4">
-          <ThemeDarkToggle />
+        <v-col cols="12">
+          <AppHourlyLoadInfo class="pa-0 " />
         </v-col>
       </v-row>
+      <template #append>
+        <ThemeDarkToggle />
+      </template>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" width="300">
       <v-card-title> Opciones </v-card-title>
@@ -30,7 +28,11 @@
           exact
         >
           <template #prepend>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-badge v-if="item.badge" color="blue" :content="item.badge">
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-badge>
+
+            <v-icon v-else>{{ item.icon }}</v-icon>
           </template>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
@@ -44,12 +46,14 @@
         exact
         tag="div"
         :to="item.to"
+        stacked
       >
-        <div>
+        <v-badge color="blue" :content="item.badge" overlap>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-badge>
+        <span>
           {{ item.title }}
-        </div>
-
-        <v-icon>{{ item.icon }}</v-icon>
+        </span>
       </v-btn>
     </v-bottom-navigation>
     <the-snackbar />
@@ -66,6 +70,7 @@ import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 
 const store = useUserConfigStore()
+const userEventsStore = useUserEventsStore()
 
 await useAsyncData('initData', async () => {
   await Promise.all([
@@ -76,9 +81,19 @@ await useAsyncData('initData', async () => {
 
   await store.fetchHourlyLoad()
 })
+const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { items: events } = storeToRefs(userEventsStore)
 
+onMounted(async () => {
+  await store.fetchSubjects()
+  await store.fetchSchedules()
+  await store.fetchCrossings()
+  await store.fetchFavoritesSchedules()
+  await userEventsStore.fetchItems()
+  await store.fetchMyOcurrences()
+})
 const drawer = ref(true)
-const items = [
+const items = computed(() => [
   {
     title: 'Inicio',
     icon: 'mdi-calendar',
@@ -88,49 +103,57 @@ const items = [
     title: 'Generador de Horarios',
     icon: 'mdi-calendar',
     to: '/generator',
+    badge: schedules.value.length,
   },
   {
     title: 'Horarios Favoritos',
     icon: 'mdi-calendar-star',
     to: '/generator/favorites',
+    badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos y secciones',
     icon: 'mdi-book',
     to: '/generator/subjects',
+    badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
     icon: 'mdi-calendar-plus',
     to: '/generator/events',
+    badge: events.value.length,
   },
   {
     title: 'Avanzado',
     icon: 'mdi-cog',
     to: '/generator/settings',
   },
-]
+])
 
-const denseItems = [
+const denseItems = computed(() => [
   {
     title: 'Generador',
     icon: 'mdi-calendar',
     to: '/generator',
+    badge: schedules.value.length,
   },
   {
     title: 'Favoritos',
     icon: 'mdi-calendar-star',
     to: '/generator/favorites',
+    badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos',
     icon: 'mdi-book',
     to: '/generator/subjects',
+    badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
     icon: 'mdi-calendar-plus',
     to: '/generator/events',
+    badge: events.value.length,
   },
-]
+])
 </script>

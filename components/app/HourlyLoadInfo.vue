@@ -1,9 +1,9 @@
 <template>
   <v-list-item lines="three" density="compact">
     <template v-if="hourlyLoad">
-      {{ hourlyLoad.name }}
+        {{ hourlyLoad.name }}
       <v-list-item-subtitle>
-        Ult. Actual.: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
+        Actual.: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
       </v-list-item-subtitle>
     </template>
     <template v-else>

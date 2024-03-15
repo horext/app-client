@@ -1,6 +1,9 @@
 <template>
   <v-img
-    :src="Material"
+    :lazy-src="img('/material2.jpg', { width: 10, quality: 70 })"
+    :src="img('/material2.jpg', { quality: 70 })"
+    :srcset="material.srcset"
+    :sizes="material.sizes"
     class="fill-height"
     cover
     gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
@@ -26,7 +29,7 @@
         </v-col>
         <v-col class="text-center" cols="12">
           <v-btn
-            class="align-self-end"
+            class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/generator"
@@ -35,11 +38,34 @@
             Generar mis horarios
           </v-btn>
         </v-col>
+        <v-col class="text-center" cols="12">
+          
+          <v-btn
+            class="align-self-end font-weight-bold"
+            variant="outlined"
+            theme="dark"
+            to="/login"
+          >
+            <v-icon start>mdi-chevron-double-right</v-icon>
+            Iniciar sesión (próximamente)
+          </v-btn>
+
+        </v-col>
       </v-row>
     </v-container>
   </v-img>
 </template>
 
 <script setup lang="ts">
-import Material from '~/assets/material2.jpg'
+const img = useImage()
+
+const material = computed(() =>
+  img.getSizes('/material2.jpg', {
+    sizes: [1920, 1280, 960, 600],
+    modifiers: {
+      format: 'webp',
+      quality: 100,
+    },
+  }),
+)
 </script>

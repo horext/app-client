@@ -34,7 +34,7 @@ import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { weekdayToDate } from '~/utils/core'
+import { weekdayToDate } from '~/utils/weekday'
 
 export default {
   components: {

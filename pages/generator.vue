@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-dialog
       v-show="firstEntry"
       v-model="firstEntry"
@@ -59,7 +59,6 @@ import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 
-
 export default defineComponent({
   name: 'Generator',
   components: {
@@ -76,7 +75,6 @@ export default defineComponent({
     })
 
     const configStore = useUserConfigStore()
-    const eventsStore = useUserEventsStore()
     const router = useRouter()
 
     const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
@@ -88,23 +86,11 @@ export default defineComponent({
       }
     })
 
-
-    onMounted(async () => {
-      await configStore.fetchSubjects()
-      await configStore.fetchSchedules()
-      await configStore.fetchCrossings()
-      await configStore.fetchFavoritesSchedules()
-      await eventsStore.fetchItems()
-    })
-
     return {
       firstEntry,
       isNewHourlyLoad,
       isUpdateHourlyLoad,
     }
-  },
-  head: {
-    title: 'Generador de Horarios',
   },
 })
 </script>

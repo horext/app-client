@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import { getSchedules } from '~/utils/core'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
@@ -95,9 +94,12 @@ export default defineComponent({
       }))
     })
 
+
+    const { loadSchedules } = useSchedules()
+    
     async function fetchSchedules() {
       loading.value = true
-      const { combinations } = await getSchedules(subjects.value, [], {
+      const { combinations } = await loadSchedules(subjects.value, [], {
         crossingSubjects: 100,
       })
       schedules.value = combinations

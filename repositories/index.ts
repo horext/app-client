@@ -5,6 +5,7 @@ import { ClassSessionRepository } from '~/repositories/ClassSessionRepository'
 import { FacultyRepository } from '~/repositories/FacultyRepository'
 import { HourlyLoadRepository } from '~/repositories/HourlyLoadRepository'
 import { SpecialityRepository } from '~/repositories/SpecialityRepository'
+import { StudyPlanRepository } from './StudyPlanRepository '
 
 export default ($axios: $Fetch) => ({
   course: new CourseRepository($axios),
@@ -13,4 +14,5 @@ export default ($axios: $Fetch) => ({
   faculty: new FacultyRepository($axios),
   hourlyLoad: new HourlyLoadRepository($axios),
   scheduleSubject: new ScheduleSubjectRepository($axios),
+  studyPlan: new StudyPlanRepository($axios),
 })

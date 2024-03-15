@@ -4,21 +4,11 @@
       <span class="text-h5">{{ title }}</span>
     </v-card-title>
     <v-card-text>
-      <v-table dense>
-        <template #default>
-          <thead>
-            <tr>
-              <th class="text-left">Sección</th>
-              <th class="text-left">Día</th>
-              <th class="text-left">Horas</th>
-              <th class="text-left">Docente</th>
-              <th class="text-left">Tipo</th>
-              <th class="text-left">Aula</th>
-            </tr>
-          </thead>
-          <ScheduleSubjectList v-model="selected" :schedules="schedules" />
-        </template>
-      </v-table>
+      <ScheduleSubjectList
+        v-model="selected"
+        :schedules="schedules"
+        :loading="pending"
+      />
     </v-card-text>
     <v-card-actions>
       <v-spacer />
@@ -33,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import { useApi } from '~/composables/api'
@@ -57,26 +47,45 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['save', 'cancel'],
   setup(props, { emit }) {
+    const { subject, hourlyLoad } = toRefs(props)
     const $api = useApi()
     const selected = ref<ISubjectSchedule[]>([])
-    const schedulesSubject = ref<IScheduleSubject[]>([])
-    const sessions = ref<ISession[]>([])
+    const { data: schedulesSubject, pending: pendingSchedulesSubject } =
+      useAsyncData<IScheduleSubject[]>(
+        async () => {
+          const hourlyLoadId = hourlyLoad.value?.id
+          const subjectId = subject.value?.id
+          if (!hourlyLoadId || !subjectId) return []
 
-    const fetchSchedules = async () => {
-      if (props.subject?.id && props.hourlyLoad?.id) {
-        const schedulesSubjectData =
-          await $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
-            props.subject.id,
-            props.hourlyLoad.id,
+          return $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
+            subjectId,
+            hourlyLoadId,
           )
-        const ids = schedulesSubjectData.map((sb) => sb.schedule.id)
+        },
+        {
+          default: () => [],
+          watch: [subject, hourlyLoad],
+        },
+      )
+    const scheduleIds = computed(() => {
+      return schedulesSubject.value.map((sb) => sb.schedule.id)
+    })
+
+    const { data: sessions, pending: pendingSessions } = useAsyncData<
+      ISession[]
+    >(
+      async () => {
+        const ids = scheduleIds.value
         const sessionsData = await $api.classSessions.findScheduleIds(ids)
-        sessions.value = sessionsData
-        schedulesSubject.value = schedulesSubjectData
-      }
-    }
-    const { refresh, pending } = useAsyncData(fetchSchedules)
+        return sessionsData
+      },
+      {
+        default: () => [],
+        watch: [scheduleIds],
+      },
+    )
 
     const schedules = computed<ISubjectSchedule[]>(() => {
       return schedulesSubject.value.map((sb) => ({
@@ -87,16 +96,9 @@ export default defineComponent({
         sessions: sessions.value.filter(
           (s) => s.schedule.id === sb.schedule.id,
         ),
-        subject: props.subject,
+        subject: subject.value,
       }))
     })
-
-    watch(
-      () => props.subject,
-      () => {
-        refresh()
-      },
-    )
 
     watch(schedules, () => {
       if (props.subject.schedules) {
@@ -116,11 +118,12 @@ export default defineComponent({
     }
 
     const title = computed(() => {
-      return `${props.subject?.course?.id} - ${props.subject?.course?.name}`
+      const course = subject.value?.course
+      return `${course?.id} - ${course?.name}`
     })
 
-    onMounted(() => {
-      fetchSchedules()
+    const pending = computed(() => {
+      return pendingSchedulesSubject.value || pendingSessions.value
     })
 
     return {

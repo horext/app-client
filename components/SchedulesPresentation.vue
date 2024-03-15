@@ -1,30 +1,28 @@
 <template>
   <v-card>
-    <v-toolbar flat theme="dark" :color="color">
+    <v-toolbar flat theme="dark" :color="color" class="px-2">
       <slot name="top-items-right" />
       <v-spacer />
-      <v-radio-group v-model="mode" hide-details density="compact" inline>
-        <template #label>
-          <div>Modo:</div>
-        </template>
-        <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
-          <template #label>
-            <v-icon size="small" start> mdi-calendar </v-icon>Calendario
-          </template>
-        </v-radio>
-        <v-radio :value="MODES.LIST" color="primary-darken-2">
-          <template #label>
-            <v-icon size="small" start> mdi-table </v-icon> Lista
-          </template>
-        </v-radio>
-      </v-radio-group>
+      <div class="d-flex align-self-center ga-3">
+        <div class="d-flex align-self-center">Modo:</div>
+        <v-radio-group v-model="mode" hide-details density="compact" inline>
+          <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
+            <template #label>
+              <v-icon size="small" start> mdi-calendar </v-icon>Calendario
+            </template>
+          </v-radio>
+          <v-radio :value="MODES.LIST" color="primary-darken-2">
+            <template #label>
+              <v-icon size="small" start> mdi-table </v-icon> Lista
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </div>
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
 
-    <div
-      class="row col align-self-center align-items-center justify-center align-content-center ma-1"
-    >
+    <div class="d-flex align-center justify-center flex-wrap ma-1">
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0">
@@ -36,15 +34,18 @@
                 rounded
                 variant="outlined"
                 class="ma-1"
+                density="compact"
                 v-bind="props"
               >
-                <v-icon>mdi-export</v-icon>
+                <v-icon start>mdi-export</v-icon>
                 Exportar
               </v-btn>
             </template>
             <ScheduleExport
-              v-model:dialog="dialogExport"
-              :schedule="currentSchedule"
+              :loading-pdf="loadingPdf"
+              :loading-image="loadingImage"
+              @download:pdf="downloadPdf"
+              @download:image="downloadImage"
             />
           </v-menu>
 
@@ -54,9 +55,10 @@
             rounded
             variant="outlined"
             class="ma-1"
+            density="compact"
             @click="dialogShare = !dialogShare"
           >
-            <v-icon>mdi-share-variant</v-icon>
+            <v-icon start>mdi-share-variant</v-icon>
             Compartir
           </v-btn>
           <GoogleAuth
@@ -67,8 +69,10 @@
           />
           <v-dialog v-model="dialogExport" max-width="600">
             <ScheduleExport
-              v-model:dialog="dialogExport"
-              :schedule="currentSchedule"
+              :loading-pdf="loadingPdf"
+              :loading-image="loadingImage"
+              @download:pdf="downloadPdf"
+              @download:image="downloadImage"
             />
           </v-dialog>
           <v-dialog v-model="dialogShare" max-width="600">
@@ -107,7 +111,7 @@ import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
 import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
-import { ViewMode } from '~/model/ViewMode'
+import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
@@ -167,6 +171,26 @@ export default defineComponent({
 
     const MODES = ref(ViewMode)
 
+    const calendar = ref<ComponentPublicInstance | null>(null)
+
+    function getCalendar(): HTMLElement | null {
+      return document.getElementById('calendar')
+    }
+
+    const loadingImage = ref(false)
+    async function downloadImage() {
+      loadingImage.value = true
+      await exportToPNG(getCalendar())
+      loadingImage.value = false
+    }
+
+    const loadingPdf = ref(false)
+    async function downloadPdf() {
+      loadingPdf.value = true
+      await exportToPDF(getCalendar())
+      loadingPdf.value = false
+    }
+
     return {
       weekDays,
       dialogShare,
@@ -177,6 +201,11 @@ export default defineComponent({
       endDate,
       MODES,
       currentSchedule,
+      calendar,
+      downloadImage,
+      downloadPdf,
+      loadingImage,
+      loadingPdf,
     }
   },
 })

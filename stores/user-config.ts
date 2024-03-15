@@ -2,10 +2,10 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
-import Event from '~/model/Event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import { useApi } from '~/composables/api'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage()
@@ -33,6 +33,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const subjects = ref<Array<ISelectedSubject>>([])
   const schedules = ref<Array<IScheduleGenerate>>([])
   const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
+  const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
@@ -195,26 +196,14 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function fetchSchedules() {
     const data =
       (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
-    const _schedules: IScheduleGenerate[] =
-      data?.map?.((s) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
-        ),
-      })) || []
+    const _schedules: IScheduleGenerate[] = data || []
     schedules.value = _schedules
   }
 
   async function fetchFavoritesSchedules() {
     const data =
       (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
-    const _schedules: IScheduleGenerate[] =
-      data?.map?.((s) => ({
-        ...s,
-        events: s.events.map((e: any) =>
-          Object.assign(new Event(0, '', '', '', '', '', '', '', ''), e),
-        ),
-      })) || []
+    const _schedules: IScheduleGenerate[] = data || []
     favoritesSchedules.value = _schedules
   }
 
@@ -243,6 +232,17 @@ export const useUserConfigStore = defineStore('user-config', () => {
         console.error(e)
       }
     }
+  }
+
+  const fetchMyOcurrences = async () => {
+    const data =
+      await storage.getItem<IIntersectionOccurrence[]>('myOcurrences')
+    occurrences.value = data || []
+  }
+
+  const updateOccurrences = async (data: IIntersectionOccurrence[]) => {
+    occurrences.value = data
+    await storage.setItem<IIntersectionOccurrence[]>('myOcurrences', data)
   }
 
   return {
@@ -289,5 +289,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     fetchCrossings,
     fetchSchedules,
     fetchFavoritesSchedules,
+    fetchMyOcurrences,
+    updateOccurrences,
+    occurrences,
   }
 })

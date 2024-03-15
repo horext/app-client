@@ -1,7 +1,9 @@
-import type Event from "~/model/Event"
+import type { IEvent } from './event'
 
-export interface IOccurrence {
+export interface IIntersectionOccurrence {
+  id: string
+  name: string
   type: string
-  elementA: Event
-  elementB: Event
+  eventTarget: IEvent
+  eventSource: IEvent
 }

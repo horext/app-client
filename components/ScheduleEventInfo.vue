@@ -1,11 +1,13 @@
 <template>
   <v-sheet
     :color="event.color"
-    class="text-white text-wrap pl-2 pa-1 ma-0 border-1"
+    class="text-white text-wrap pl-1 pl-sm-2 pa-1 ma-0 border-1"
     width="100%"
   >
     <template v-if="!event.code">
-      <v-icon start size="small">mdi-information</v-icon>
+      <v-icon 
+      v-if="$vuetify.display.smAndUp"
+      start size="small">mdi-information</v-icon>
       <span class="font-weight-bold">
         {{ event.title }}
       </span>

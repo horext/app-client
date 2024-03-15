@@ -1,10 +1,8 @@
-import type { $Fetch } from 'nitropack'
 import type { ISession } from '~/interfaces/subject'
+import { BaseRepository } from './BaseRepository'
 
 const PATH_SUBJECTS = 'classSessions'
-export class ClassSessionRepository {
-  constructor(private $fetch: $Fetch) {}
-
+export class ClassSessionRepository extends BaseRepository {
   findScheduleId(schedule: number) {
     return this.$fetch(PATH_SUBJECTS, {
       method: 'GET',

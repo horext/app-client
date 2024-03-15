@@ -2,7 +2,7 @@
   <v-card
     class="abcRioButton"
     width="240"
-    height="50"
+    height="35"
     :color="$vuetify.theme.name === 'dark' ? 'white' : 'grey lighten-2'"
     @click="$emit('click')"
   >
@@ -14,7 +14,7 @@
       no-gutters
     >
       <v-col cols="auto">
-        <div class="abcRioButtonIcon" style="padding: 15px">
+        <div class="abcRioButtonIcon pa-2">
           <div
             style="width: 18px; height: 18px"
             class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18"

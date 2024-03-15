@@ -1,7 +1,8 @@
-import { convertToDate } from '~/utils/core'
-
+import { v4 } from 'uuid'
+import type { EventCategories, IEvent } from '~/interfaces/event'
+import { convertToDate } from '~/utils/weekday'
 export default class Event {
-  id?: string
+  id: string
   day: number
   startTime: string
   endTime: string
@@ -11,7 +12,7 @@ export default class Event {
   location?: string
   color: string
 
-  category?: string
+  category?: EventCategories
   type: string
 
   constructor(
@@ -19,11 +20,12 @@ export default class Event {
     startTime: string,
     endTime: string,
     title: string,
-    description: string,
+    description: string = '',
     location: string = '',
     color: string,
-    category: string,
     type: string,
+    category?: EventCategories,
+    id: string = v4()
   ) {
     this.day = day
     this.startTime = startTime
@@ -34,6 +36,7 @@ export default class Event {
     this.color = color
     this.category = category
     this.type = type
+    this.id = id
   }
 
   get start() {
@@ -42,5 +45,20 @@ export default class Event {
 
   get end() {
     return convertToDate(this.day, this.endTime)
+  }
+
+  static buildFrom(event: IEvent) {
+    return new Event(
+      event.day,
+      event.startTime,
+      event.endTime,
+      event.title,
+      event.description,
+      event.location,
+      event.color,
+      event.type,
+      event.category,
+      event.id
+    )
   }
 }

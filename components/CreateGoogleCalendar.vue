@@ -23,24 +23,17 @@
   </v-card>
 </template>
 <script lang="ts">
-import { useVModel } from '@vueuse/core'
 import { defineComponent, type PropType, ref, watch } from 'vue'
 
 export default defineComponent({
   props: {
-    result: {
-      type: Boolean,
-      required: true,
-    },
     calendar: {
       type: Object as PropType<any>,
       required: true,
     },
   },
-  emits: ['update:calendar', 'update:result' , 'close'],
+  emits: ['update:calendar', 'close'],
   setup(props, { emit }) {
-    const resultSync = useVModel(props, 'result', emit)
-
     const loading = ref(false)
     const calendarCurrent = ref({
       summary: '',
@@ -61,7 +54,7 @@ export default defineComponent({
       }
     }
 
-    return { resultSync, loading, calendarCurrent, form, save }
+    return { loading, calendarCurrent, form, save }
   },
 })
 </script>

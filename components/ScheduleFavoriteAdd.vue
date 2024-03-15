@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <v-btn
-      variant="outlined"
-      icon
-      :color="isFavorite ? 'yellow' : undefined"
-      @click="changeFavoriteState"
-    >
-      <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
-    </v-btn>
-  </div>
+  <v-tooltip location="bottom">
+    <template #activator="{ props }">
+      <v-btn
+        variant="outlined"
+        icon
+        :color="isFavorite ? 'yellow' : undefined"
+        v-bind="props"
+        @click="changeFavoriteState"
+      >
+        <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
+      </v-btn>
+    </template>
+    <span>{{
+      isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'
+    }}</span>
+  </v-tooltip>
+  <v-snackbar v-model="showMessage" :timeout="2000" color="success">
+    {{ isFavorite ? 'Agregado a favoritos' : 'Quitado de favoritos' }}
+    <template #actions>
+      <v-btn variant="text" size="small" icon @click="showMessage = false">
+        <v-icon> mdi-close </v-icon>
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, type PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { useSnackbar } from '~/composables/snackbar'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export default defineComponent({
@@ -35,9 +48,9 @@ export default defineComponent({
 
     const favoritesSchedulesSync = useVModel(props, 'favoritesSchedules', emit)
 
-    const showMessage = ref(false)
     const message = ref('')
-    const snackbar = useSnackbar()
+
+    const showMessage = ref(false)
     const changeFavoriteState = () => {
       if (currentSchedule.value) {
         if (isFavorite.value) {
@@ -50,13 +63,7 @@ export default defineComponent({
             props.schedule,
           ]
         }
-        snackbar.showMessage({
-          content: !isFavorite.value
-            ? 'Agregado a favoritos'
-            : 'Quitado de Favoritos',
-          timeout: 2000,
-          color: 'yellow darken-3',
-        })
+        showMessage.value = true
       }
     }
 

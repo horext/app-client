@@ -5,23 +5,20 @@
 </template>
 <script lang="ts">
 import { onMounted, ref, watch, defineComponent } from 'vue'
-import Lottie, { type AnimationItem } from 'lottie-web'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
 export default defineComponent({
   setup() {
     const settingsStore = useSettingsStore()
-    const darkModeAnimation = ref<AnimationItem>()
-    const darkModeEl = ref<HTMLElement>()
+    const darkModeEl = ref<HTMLElement | null>(null)
+    const darkModeAnimation = useLottie(darkModeEl, {
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: Animation,
+    })
     onMounted(() => {
-      darkModeAnimation.value = Lottie.loadAnimation({
-        container: darkModeEl.value!,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        animationData: Animation,
-      })
-      darkModeAnimation.value.setSpeed(2)
+      darkModeAnimation.value?.setSpeed(2)
       setAnimationDirection(settingsStore.darkMode)
     })
 
@@ -35,11 +32,9 @@ export default defineComponent({
       darkMode.value = !darkMode.value
     }
 
-    const setAnimationDirection = (darkMode:boolean) => {
-      console.log('darkMode', darkMode)
+    const setAnimationDirection = (darkMode: boolean) => {
       if (darkMode) {
         darkModeAnimation.value!.setDirection(1)
-
       } else {
         darkModeAnimation.value!.setDirection(-1)
       }

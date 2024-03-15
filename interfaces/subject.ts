@@ -68,3 +68,10 @@ export interface ISubjectSchedule {
 export interface ISelectedSubject extends ISubject {
   schedules: ISubjectSchedule[]
 }
+
+export interface ISubjectStudyPlan extends ISubject {
+  relationships: {
+    subjectId: number
+    relatedSubjectId: number
+  }[]
+}

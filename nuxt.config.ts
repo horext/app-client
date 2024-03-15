@@ -28,43 +28,40 @@ const config = defineNuxtConfig({
       },
     ],
     '@nuxt/test-utils/module',
+    'nuxt-gtag',
+    '@nuxt/image',
   ],
+  image: {
+    dir: 'assets/images',
+  },
   runtimeConfig: {
     public: {
-      googleApi: {
-        clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
-        apiKey: process.env.NUXT_PUBLIC_GOOGLE_API_KEY,
-        discoveryDocs: (
-          process.env.NUXT_PUBLIC_GOOGLE_DISCOVERY_DOCS || ''
-        ).split(','),
-        scopes: process.env.NUXT_PUBLIC_GOOGLE_SCOPES,
-      },
-      googleAnalytics: {
-        id: process.env.NUXT_PUBLIC_GOOGLE_ANALYTICS_ID,
+      gsi: {
+        clientId: '',
+        discoveryDocs: '',
+        scopes: '',
       },
     },
     apiUrl: process.env.NUXT_API_URL,
+    gsi: {
+      apiKey: '',
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   build: {
     transpile: ['vuetify'],
   },
+
   routeRules: {
     '/generator/**': {
       ssr: false,
     },
-    '/': {
-      prerender: true,
-    },
-    '/privacy': {
-      prerender: true,
-    },
-    '/terms': {
-      prerender: true,
-    },
-    '/about': {
-      prerender: true,
+  },
+
+  nitro: {
+    prerender: {
+      routes: ['/', '/privacy', '/terms', '/about', '/plans'],
     },
   },
 })

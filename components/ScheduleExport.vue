@@ -6,7 +6,7 @@
         color="success"
         theme="dark"
         class="ma-1"
-        @click="downloadPdf"
+        @click="$emit('download:pdf')"
       >
         <v-icon> mdi-download </v-icon>
         Descargar (.pdf )
@@ -19,7 +19,7 @@
         color="success"
         theme="dark"
         class="ma-1"
-        @click="downloadImage"
+        @click="$emit('download:image')"
       >
         <v-icon> mdi-download </v-icon>
         Descargar (.png )
@@ -29,43 +29,14 @@
   </v-list>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { exportToPNG, exportToPDF } from '~/utils/exportToPNG'
+<script setup lang="ts">
+defineProps<{
+  loadingPdf: boolean
+  loadingImage: boolean
+}>()
 
-export default defineComponent({
-  setup() {
-    const loading = ref(false)
-    const loadingPdf = ref(false)
-    const loadingImage = ref(false)
-
-    function getCalendar(): HTMLElement | null {
-      return document.getElementById('calendar')
-    }
-
-    async function downloadImage() {
-      loadingImage.value = true
-      await exportToPNG(getCalendar())
-      loadingImage.value = false
-    }
-
-    async function downloadPdf() {
-      loadingPdf.value = true
-      await exportToPDF(getCalendar())
-      loadingPdf.value = false
-    }
-
-    return {
-      close,
-      getCalendar,
-      loading,
-      loadingPdf,
-      loadingImage,
-      downloadImage,
-      downloadPdf,
-    }
-  },
-})
+defineEmits<{
+  (event: 'download:pdf'): void
+  (event: 'download:image'): void
+}>()
 </script>
-
-<style scoped></style>
