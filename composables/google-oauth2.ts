@@ -7,7 +7,7 @@ export const useGoogleOAuth2 = () => {
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
   
-  $script.waitForLoad().then(() => {
+  const loadClient = async () => {
     try {
       const client = google.accounts.oauth2.initTokenClient({
         client_id: gsi.clientId,
@@ -19,7 +19,12 @@ export const useGoogleOAuth2 = () => {
     } catch (error) {
       console.error('Error loading Google script', error)
     }
-  })
+  }
+  $script?.waitForLoad().then(loadClient)
+  if(!$script){
+    onMounted(loadClient)
+  }
+
 
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
