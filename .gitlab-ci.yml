@@ -18,7 +18,7 @@ before_script:
 publish:
   stage: publish
   script:
-    - docker build -t $TAG_COMMIT -t $TAG_LATEST --build-arg NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID --build-arg  NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES   .
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST --build-arg="NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID" --build-arg="NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES" .
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
