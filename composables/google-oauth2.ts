@@ -1,14 +1,12 @@
 export const useGoogleOAuth2 = () => {
   const { $script } = useGoogleAccounts()
-  const {
-    public: { gsi },
-  } = useRuntimeConfig()
-
+  const config = useRuntimeConfig()
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
-  
+
   const loadClient = async () => {
     try {
+      const gsi = config.public.gsi
       const client = google.accounts.oauth2.initTokenClient({
         client_id: gsi.clientId,
         scope: gsi.scopes,
