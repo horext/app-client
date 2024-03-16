@@ -1,6 +1,7 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
+//@ts-ignore
+import { createVuetify } from 'vuetify/framework'
 import { es, en } from 'vuetify/locale'
 import colors from 'vuetify/util/colors'
 
