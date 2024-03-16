@@ -37,12 +37,12 @@ const config = defineNuxtConfig({
   runtimeConfig: {
     public: {
       gsi: {
-        clientId: process.env.NUXT_PUBLIC_GSI_CLIENT_ID,
-        discoveryDocs: process.env.NUXT_PUBLIC_GSI_DISCOVERY_DOCS,
-        scopes: process.env.NUXT_PUBLIC_GSI_SCOPES,
+        clientId: '',
+        discoveryDocs: '',
+        scopes: '',
       },
     },
-    apiUrl: process.env.NUXT_API_URL,
+    apiUrl: '',
     gsi: {
       apiKey: '',
     },
@@ -61,15 +61,7 @@ const config = defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: [
-        '/',
-        '/privacy',
-        '/terms',
-        '/about',
-        '/plans',
-        '/login',
-        'security',
-      ],
+      routes: ['/', '/privacy', '/terms', '/about', '/plans', '/login' ,'security'],
     },
   },
 })
