@@ -20,7 +20,10 @@ COPY  package.json package.json
 RUN pnpm install --frozen-lockfile --production=false
 
 COPY  . .
-
+# print the environment variables
+RUN echo "NUXT_PUBLIC_API_URL: $NUXT_PUBLIC_API_URL"
+RUN echo "NUXT_PUBLIC_GSI_CLIENT_ID: $NUXT_PUBLIC_GSI_CLIENT_ID"
+RUN echo "NUXT_PUBLIC_GSI_SCOPES: $NUXT_PUBLIC_GSI_SCOPES"
 RUN pnpm build
 
 FROM node:20-alpine as production
