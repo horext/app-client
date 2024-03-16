@@ -1,3 +1,6 @@
+ARG NUXT_PUBLIC_GSI_CLIENT_ID
+ARG NUXT_PUBLIC_GSI_SCOPES
+
 FROM node:20-alpine as build
 
 WORKDIR /usr/src/app
