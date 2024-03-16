@@ -18,8 +18,8 @@ dependencies:
     specifier: ^0.0.14
     version: 0.0.14
   '@unhead/vue':
-    specifier: ^1.8.18
-    version: 1.8.18(vue@3.4.21)
+    specifier: ^1.8.19
+    version: 1.8.19(vue@3.4.21)
   '@vueuse/core':
     specifier: ^10.7.1
     version: 10.8.0(vue@3.4.21)
@@ -2344,11 +2344,11 @@ packages:
       '@unhead/schema': 1.8.10
       '@unhead/shared': 1.8.10
 
-  /@unhead/dom@1.8.18:
-    resolution: {integrity: sha512-F6ckuW+IAojGCSb++WFQlDeI3/80OALpD6yDcDrhAxZ8ogQatd5gXWjTmSiuV/0M2XIeDq3jwampvq6oomU6Gw==}
+  /@unhead/dom@1.8.19:
+    resolution: {integrity: sha512-xoYOXd0wohxjLwD1m+FNZufIWNukg57tuchlk0FqX5GzFCn/sT1BT4jZV1JeWDWPxaPfJdLHotc0x06yKEAfLA==}
     dependencies:
-      '@unhead/schema': 1.8.18
-      '@unhead/shared': 1.8.18
+      '@unhead/schema': 1.8.19
+      '@unhead/shared': 1.8.19
 
   /@unhead/schema@1.8.10:
     resolution: {integrity: sha512-cy8RGOPkwOVY5EmRoCgGV8AqLjy/226xBVTY54kBct02Om3hBdpB9FZa9frM910pPUXMI8PNmFgABO23O7IdJA==}
@@ -2356,8 +2356,8 @@ packages:
       hookable: 5.5.3
       zhead: 2.2.4
 
-  /@unhead/schema@1.8.18:
-    resolution: {integrity: sha512-E4oq4juwGJkXPOJlc4Qdp1iVTe79H4TSMWkOB8sSlU44vhvcuZduFYH9CCn29JvtV/640Uaf2QeX4o+wX96LRQ==}
+  /@unhead/schema@1.8.19:
+    resolution: {integrity: sha512-m7lwpjyzeVtiW7oRPyR0dfDLUr+YAj78CBoJOr2syeJ5/foOnsiaVbJETE6h/pFq4Ut6P7c/q5eqskoHcAjV/g==}
     dependencies:
       hookable: 5.5.3
       zhead: 2.2.4
@@ -2367,10 +2367,10 @@ packages:
     dependencies:
       '@unhead/schema': 1.8.10
 
-  /@unhead/shared@1.8.18:
-    resolution: {integrity: sha512-2Tw5oyTjMkPn11UoR9AB3kSk2nDVG+7nCS4dZUwdxTMqndUnYyWoGB0EcO2WbK6YpkpulLIlfmiXVzWW4PTrWg==}
+  /@unhead/shared@1.8.19:
+    resolution: {integrity: sha512-v/8GBkGf7+CmZhtNGbBjQnwZ+jJTJtupddmKxPpPh7qzwPaJcACE8Tp6MypADQafZbM3D7iqyxbFqvIXklJoIQ==}
     dependencies:
-      '@unhead/schema': 1.8.18
+      '@unhead/schema': 1.8.19
 
   /@unhead/ssr@1.8.10:
     resolution: {integrity: sha512-7wKRKDd8c2NFmMyPetj8Ah5u2hXunDBZT5Y2DH83O16PiMxx4/uobGamTV1EfcqjTvOKJvAqkrYZNYSWss99NQ==}
@@ -2378,15 +2378,15 @@ packages:
       '@unhead/schema': 1.8.10
       '@unhead/shared': 1.8.10
 
-  /@unhead/vue@1.8.18(vue@3.4.21):
-    resolution: {integrity: sha512-aKsDCYAiQ27Cjs8nyUHaYNYOQjdhhobMswrelNddekGpk63Y25bRO2NT3DheAOqAAcH4Qdt7JIe5Bu4N1HG5Gg==}
+  /@unhead/vue@1.8.19(vue@3.4.21):
+    resolution: {integrity: sha512-WxGDDDPMnSQQrk/0G40XNsiHACQc1FSe2daie4WfHDr6sqjO6X3qBUEj7oQUDODRcUrO6m6TgHvfznNmGGr6UA==}
     peerDependencies:
       vue: '>=2.7 || >=3'
     dependencies:
-      '@unhead/schema': 1.8.18
-      '@unhead/shared': 1.8.18
+      '@unhead/schema': 1.8.19
+      '@unhead/shared': 1.8.19
       hookable: 5.5.3
-      unhead: 1.8.18
+      unhead: 1.8.19
       vue: 3.4.21(typescript@5.3.3)
 
   /@vercel/nft@0.26.4:
@@ -6718,7 +6718,7 @@ packages:
       '@nuxt/vite-builder': 3.10.3(eslint@8.56.0)(sass@1.71.1)(typescript@5.3.3)(vue-tsc@2.0.4)(vue@3.4.21)
       '@unhead/dom': 1.8.10
       '@unhead/ssr': 1.8.10
-      '@unhead/vue': 1.8.18(vue@3.4.21)
+      '@unhead/vue': 1.8.19(vue@3.4.21)
       '@vue/shared': 3.4.20
       acorn: 8.11.3
       c12: 1.9.0
@@ -8500,12 +8500,12 @@ packages:
       node-fetch-native: 1.6.2
       pathe: 1.1.2
 
-  /unhead@1.8.18:
-    resolution: {integrity: sha512-XmCGVev0bwo+jy5qh6PW1vACnPoQvv3MEwqo4w0+49W2ZGPMZYPtIa8GAZiaWgkycrlie1WgZejjJEG9bYVgZw==}
+  /unhead@1.8.19:
+    resolution: {integrity: sha512-H+VfWu27MZi4ZjOnBcPsGudwWlZpljEt9Z740Alq7XpzhNloAf09x1NckoyE4ec0NlEi+WR4kduYWZH6xr2Otw==}
     dependencies:
-      '@unhead/dom': 1.8.18
-      '@unhead/schema': 1.8.18
-      '@unhead/shared': 1.8.18
+      '@unhead/dom': 1.8.19
+      '@unhead/schema': 1.8.19
+      '@unhead/shared': 1.8.19
       hookable: 5.5.3
 
   /unicorn-magic@0.1.0:
