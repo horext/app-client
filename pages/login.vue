@@ -30,7 +30,7 @@ defineOptions({
 })
 
 useSeoMeta({
-  title: 'Inicio de Sesión'
+  title: 'Inicio de Sesión',
 })
 
 const { $script } = useGoogleAccounts()
@@ -57,7 +57,10 @@ const initGoogle = async () => {
     console.error('Error loading Google script', error)
   }
 }
-$script.waitForLoad().then(initGoogle)
+
+onMounted(() => {
+  $script.waitForLoad().then(initGoogle)
+})
 
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
