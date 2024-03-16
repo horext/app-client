@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM node:20-alpine as build
 
 ARG NUXT_PUBLIC_API_URL
