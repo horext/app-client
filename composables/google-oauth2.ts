@@ -18,7 +18,9 @@ export const useGoogleOAuth2 = () => {
       console.error('Error loading Google script', error)
     }
   }
-  $script.waitForLoad().then(loadClient)
+  onMounted(() => {
+    $script.waitForLoad().then(loadClient)
+  })
 
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
