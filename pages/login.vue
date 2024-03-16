@@ -57,10 +57,8 @@ const initGoogle = async () => {
     console.error('Error loading Google script', error)
   }
 }
-$script?.waitForLoad().then(initGoogle)
-if (!$script) {
-  onMounted(initGoogle)
-}
+$script.waitForLoad().then(initGoogle)
+
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
 ) {
