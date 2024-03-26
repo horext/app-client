@@ -1,4 +1,10 @@
+# syntax=docker/dockerfile:1
+
 FROM node:20-alpine as build
+
+ARG NUXT_API_URL
+ARG NUXT_PUBLIC_GSI_CLIENT_ID
+ARG NUXT_PUBLIC_GSI_SCOPES
 
 WORKDIR /usr/src/app
 
@@ -11,7 +17,10 @@ RUN pnpm install --frozen-lockfile --production=false
 
 COPY  . .
 
-RUN pnpm build
+RUN NUXT_API_URL=$NUXT_API_URL \
+    NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID \
+    NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES \
+    pnpm run build
 
 FROM node:20-alpine as production
 

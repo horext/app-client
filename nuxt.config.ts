@@ -42,7 +42,7 @@ const config = defineNuxtConfig({
         scopes: '',
       },
     },
-    apiUrl: process.env.NUXT_API_URL,
+    apiUrl: '',
     gsi: {
       apiKey: '',
     },
