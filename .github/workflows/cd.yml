@@ -86,7 +86,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          file: Dockerfile.native 
+          file: Dockerfile
           push: true
 
   deploy:
