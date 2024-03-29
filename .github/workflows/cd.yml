@@ -88,6 +88,10 @@ jobs:
           cache-to: type=gha,mode=max
           file: Dockerfile
           push: true
+          build-args: |
+            NUXT_API_URL=$NUXT_API_URL
+            NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID
+            NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES
 
   deploy:
     name: Deploy
