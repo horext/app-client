@@ -19,7 +19,7 @@ export const useGoogleOAuth2 = () => {
     }
   }
   onMounted(() => {
-    $script.waitForLoad().then(loadClient)
+    $script.then(loadClient)
   })
 
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
