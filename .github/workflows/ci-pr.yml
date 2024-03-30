@@ -3,7 +3,6 @@ name: CI Pull Request
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-
   pull_request:
     branches: [main, next, develop]
 
@@ -13,5 +12,5 @@ jobs:
     name: CI
     uses: ./.github/workflows/ci.yml
     with:
-      environment: ${{ github.ref_name  == 'main' && 'prod' || 'dev' }}
+      environment: ${{ github.event.pull_request.base.ref == 'main' && 'local-prod' || 'local-dev' }}
 
