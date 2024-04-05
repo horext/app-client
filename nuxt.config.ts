@@ -30,6 +30,7 @@ const config = defineNuxtConfig({
     '@nuxt/test-utils/module',
     'nuxt-gtag',
     '@nuxt/image',
+    '@nuxtjs/google-fonts',
   ],
   image: {
     dir: 'assets/images',
