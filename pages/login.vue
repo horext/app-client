@@ -59,7 +59,7 @@ const initGoogle = async () => {
 }
 
 onMounted(() => {
-  $script.waitForLoad().then(initGoogle)
+  $script.then(initGoogle)
 })
 
 async function handleCredentialResponse(
