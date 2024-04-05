@@ -59,9 +59,6 @@ dependencies:
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
-  vite:
-    specifier: ^5.2.8
-    version: 5.2.8(sass@1.74.1)
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.4.4)
@@ -127,6 +124,9 @@ devDependencies:
   typescript:
     specifier: ^5.4.4
     version: 5.4.4
+  vite:
+    specifier: ^5.2.8
+    version: 5.2.8(sass@1.74.1)
   vitest:
     specifier: ^1.4.0
     version: 1.4.0(happy-dom@13.10.1)(sass@1.74.1)
