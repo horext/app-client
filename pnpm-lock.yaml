@@ -74,8 +74,8 @@ dependencies:
 
 devDependencies:
   '@nuxt/eslint-config':
-    specifier: ^0.3.1
-    version: 0.3.1(eslint@8.57.0)(typescript@5.4.4)
+    specifier: ^0.3.2
+    version: 0.3.2(eslint@8.57.0)(typescript@5.4.4)
   '@nuxt/test-utils':
     specifier: ^3.12.0
     version: 3.12.0(@vue/test-utils@2.4.5)(h3@1.11.1)(happy-dom@13.10.1)(vite@5.2.8)(vitest@1.4.0)(vue-router@4.3.0)(vue@3.4.21)
@@ -1244,13 +1244,13 @@ packages:
       - utf-8-validate
       - vue
 
-  /@nuxt/eslint-config@0.3.1(eslint@8.57.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-+dCRPXbq+/uB7cZn3HnhaVOyte1t21YHvtMj9MRa0ekAbY/G73DQztPVAnyh6yWaV1RtwvDBN6pf3o1SRRNbyg==}
+  /@nuxt/eslint-config@0.3.2(eslint@8.57.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-yjl/bMORzxNNYPuRPyEVSHMWV/5wJdd16gZ3KF/56JUJ1Y8kMg+PrwZx5GTcau98vv+Hvo21IYqiObRYHIoF/w==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
     dependencies:
       '@eslint/js': 9.0.0
-      '@nuxt/eslint-plugin': 0.3.1(eslint@8.57.0)(typescript@5.4.4)
+      '@nuxt/eslint-plugin': 0.3.2(eslint@8.57.0)(typescript@5.4.4)
       '@rushstack/eslint-patch': 1.10.1
       '@stylistic/eslint-plugin': 1.7.0(eslint@8.57.0)(typescript@5.4.4)
       '@typescript-eslint/eslint-plugin': 7.5.0(@typescript-eslint/parser@7.5.0)(eslint@8.57.0)(typescript@5.4.4)
@@ -1271,8 +1271,8 @@ packages:
       - typescript
     dev: true
 
-  /@nuxt/eslint-plugin@0.3.1(eslint@8.57.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-TflfVtPm2KNaa/jWCiffpiiiOJVDoS8oE2vAHdbu4BAPWmjonde4DCfrKbaEG4tUVnaOkGio3S1hkNmXllye4w==}
+  /@nuxt/eslint-plugin@0.3.2(eslint@8.57.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-SqPW84bcDMcEwEut0zibNrKte2kj9Idjy8xWX0PsW98zGNBG+6NHYzd0TniUWVZ2/viOJTJO0myHqMFOgfb4NA==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
     dependencies:
@@ -5017,6 +5017,25 @@ packages:
       regjsparser: 0.10.0
       semver: 7.6.0
       strip-indent: 3.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /eslint-plugin-vue@9.24.1(eslint@8.57.0):
+    resolution: {integrity: sha512-wk3SuwmS1pZdcuJlokGYEi/buDOwD6KltvhIZyOnpJ/378dcQ4zchu9PAMbbLAaydCz1iYc5AozszcOOgZIIOg==}
+    engines: {node: ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.2.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
+      eslint: 8.57.0
+      globals: 13.24.0
+      natural-compare: 1.4.0
+      nth-check: 2.1.1
+      postcss-selector-parser: 6.0.16
+      semver: 7.6.0
+      vue-eslint-parser: 9.4.2(eslint@8.57.0)
+      xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - supports-color
     dev: true
