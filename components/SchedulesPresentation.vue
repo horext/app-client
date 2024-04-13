@@ -75,7 +75,11 @@
               @download:image="downloadImage"
             />
           </v-dialog>
-          <v-dialog v-model="dialogShare" max-width="600">
+          <v-dialog
+            v-if="currentSchedule"
+            v-model="dialogShare"
+            max-width="600"
+          >
             <ScheduleShare
               v-model:dialog="dialogShare"
               :path="path"
