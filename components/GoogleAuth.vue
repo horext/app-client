@@ -150,7 +150,7 @@ import type { VForm } from 'vuetify/components/VForm'
 
 const props = defineProps<{
   startDate: string
-  endDate: string
+  endDate?: string | null
   events: IEvent[]
 }>()
 
