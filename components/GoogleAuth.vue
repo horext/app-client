@@ -213,7 +213,7 @@ function addCalendar(this: any) {
   }
 }
 
-async function createCalendar({ summary }: IGoogleCalendarItem) {
+async function createCalendar({ summary }:Pick<IGoogleCalendarItem, 'summary'>) {
   try {
     const response = await googleApis<IGoogleCalendarItem>(
       'calendar/v3/calendars',
@@ -270,7 +270,7 @@ async function eventRequest(event: IEvent): Promise<any> {
         dateStart.value + ' ' + event.startTime,
         format,
       )
-        .set({ weekday: event.day })
+        .set({ weekday: event.day === 0 ? 7 : event.day })
         .toISO(),
       timeZone: 'America/Lima',
     },
@@ -279,7 +279,7 @@ async function eventRequest(event: IEvent): Promise<any> {
         dateStart.value + ' ' + event.endTime,
         format,
       )
-        .set({ weekday: event.day })
+        .set({ weekday: event.day === 0 ? 7 : event.day })
         .toISO(),
       timeZone: 'America/Lima',
     },
