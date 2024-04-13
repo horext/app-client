@@ -147,20 +147,13 @@ import type {
   IGoogleCalendarItem,
 } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
-const props = defineProps({
-  events: {
-    type: Array as PropType<IEvent[]>,
-    default: () => [],
-  },
-  startDate: {
-    type: String,
-    required: true,
-  },
-  endDate: {
-    type: String,
-    required: true,
-  },
-})
+
+const props = defineProps<{
+  startDate: string
+  endDate: string
+  events: IEvent[]
+}>()
+
 const { googleApis, tokenClient, getToken, isSignedIn, signOut } =
   useGoogleOAuth2()
 const { events } = toRefs(props)
