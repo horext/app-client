@@ -182,10 +182,8 @@ let defaultNotification = {
 }
 
 const calendarList = ref<IGoogleCalendarItem[]>([])
-const summary = ref('')
 const selected = ref<any>(null)
 const loading = ref(false)
-const selectedError = ref(false)
 
 /**
  *  Sign out the user upon button click.
