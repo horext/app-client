@@ -74,7 +74,7 @@ dependencies:
 
 devDependencies:
   '@nuxt/eslint-config':
-    specifier: ^0.3.2
+    specifier: ^0.3.6
     version: 0.3.6(eslint@8.57.0)(typescript@5.4.4)
   '@nuxt/test-utils':
     specifier: ^3.12.0
