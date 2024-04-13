@@ -164,10 +164,13 @@ const calendarItem = ref({ summary: '' })
 const dialogCalendarSync = ref(false)
 const dialog = ref(false)
 const dateStart = ref(DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
-const dateEnd = ref(DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
+const dateEnd = ref(
+  props.endDate
+    ? DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd')
+    : null
+)
 
 const progress = ref(0)
-
 
 const notifications = ref([
   {
