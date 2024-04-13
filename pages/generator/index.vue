@@ -17,6 +17,7 @@
     </template>
     <template #top-items-left="{ item }">
       <schedule-favorite-add
+        v-if="item"
         :favorites-schedules="myFavoritesSchedules"
         :schedule="item"
         @update:favorites-schedules="updateFavoritesSchedules"
