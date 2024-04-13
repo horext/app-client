@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <v-dialog
-      v-show="firstEntry"
       v-model="firstEntry"
       max-width="600"
       persistent
