@@ -71,7 +71,7 @@
                 :items="Array.from({ length: 60 }, (x, i) => i)"
                 suffix="minutos"
               >
-                <template #append-outer>
+                <template #append>
                   <v-icon
                     :key="index + 'del'"
                     color="error"
@@ -92,7 +92,7 @@
                 variant="outlined"
                 density="compact"
               >
-                <template #append-outer>
+                <template #append>
                   <v-icon color="success" @click="addNotification()">
                     mdi-plus
                   </v-icon>
