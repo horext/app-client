@@ -67,7 +67,6 @@
                 :rules="[(a) => a > 0 || 'No permitido']"
                 variant="outlined"
                 density="compact"
-                :model-value="notification.minutes"
                 prepend-icon="mdi-bell"
                 :items="Array.from({ length: 60 }, (x, i) => i)"
                 suffix="minutos"
@@ -86,7 +85,6 @@
                 key="selected"
                 v-model="defaultNotification.minutes"
                 :rules="[(a) => a > 0 || 'No permitido']"
-                :model-value="defaultNotification.minutes"
                 prepend-icon="mdi-bell"
                 type="number"
                 :items="Array.from({ length: 60 }, (x, i) => i)"
@@ -165,24 +163,21 @@ const dialogCalendarSync = ref(false)
 const dialog = ref(false)
 const dateStart = ref(DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
 const dateEnd = ref(
-  props.endDate
-    ? DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd')
-    : null
+  props.endDate ? DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd') : null,
 )
 
 const progress = ref(0)
 
-const notifications = ref([
-  {
-    method: 'popup',
-    minutes: 15,
-  },
-])
-
-let defaultNotification = {
-  method: 'popup',
-  minutes: 15,
+class Notification {
+  method: 'popup' | 'email'
+  minutes: number
+  constructor(minutes: number = 15, method: 'popup' | 'email' = 'popup') {
+    this.method = method
+    this.minutes = minutes
+  }
 }
+const defaultNotification = ref(new Notification())
+const notifications = ref([new Notification()])
 
 const calendarList = ref<IGoogleCalendarItem[]>([])
 const selected = ref<any>(null)
@@ -195,22 +190,18 @@ const handleSignOutClick = () => {
   signOut()
 }
 
-function deleteNotification(index: { method: string; minutes: number }) {
-  console.log(index)
+function deleteNotification(index: Notification) {
   notifications.value = notifications.value.filter(
-    (notification: { method: string; minutes: number }) =>
-      notification !== index,
+    (notification) => notification !== index,
   )
-  defaultNotification = {
-    method: 'popup',
-    minutes: 15,
-  }
 }
 
-function addNotification(this: any) {
-  const notification: any = {}
-  Object.assign(notification, defaultNotification)
-  notifications.value.push(notification)
+function addNotification() {
+  notifications.value.push(new Notification(
+    defaultNotification.value.minutes,
+    defaultNotification.value.method,
+  ))
+  defaultNotification.value = new Notification()
 }
 
 function addCalendar(this: any) {
