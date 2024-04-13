@@ -1,9 +1,10 @@
 import { v4 } from 'uuid'
-import type { EventCategories, IEvent } from '~/interfaces/event'
+import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
+
 export default class Event {
   id: string
-  day: number
+  day: Weekdays
   startTime: string
   endTime: string
 
@@ -16,7 +17,7 @@ export default class Event {
   type: string
 
   constructor(
-    day: number,
+    day: Weekdays,
     startTime: string,
     endTime: string,
     title: string,

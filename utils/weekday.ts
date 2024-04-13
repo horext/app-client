@@ -1,15 +1,18 @@
-import { DateTime } from 'luxon';
+import { DateTime } from 'luxon'
+import type { Weekdays } from '~/interfaces/event'
 
-export const weekdayToDatetime = (weekday: number, time: string) => {
-  const date = DateTime.fromISO(time).set({ weekday });
-  return date.toFormat('yyyy-MM-dd HH:mm');
-};
+export const weekdayToDatetime = (weekday: Weekdays, time: string) => {
+  const date = DateTime.fromISO(time).set({
+    weekday: weekday === 0 ? 7 : weekday,
+  })
+  return date.toFormat('yyyy-MM-dd HH:mm')
+}
 
-export const weekdayToDate = (weekday: number) => {
-  const date = DateTime.local().set({ weekday });
-  return date.toFormat('yyyy-MM-dd');
-};
+export const weekdayToDate = (weekday: Weekdays) => {
+  const date = DateTime.local().set({ weekday: weekday === 0 ? 7 : weekday })
+  return date.toFormat('yyyy-MM-dd')
+}
 
-export const convertToDate = (weekday: string | number, startTime: string) => {
-  return weekdayToDatetime(<number>weekday, startTime);
-};
+export const convertToDate = (weekday: Weekdays, startTime: string) => {
+  return weekdayToDatetime(weekday, startTime)
+}

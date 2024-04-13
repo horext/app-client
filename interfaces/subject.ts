@@ -1,3 +1,4 @@
+import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
 
 export interface ICourse {
@@ -41,7 +42,7 @@ export interface ISession {
     id: number
     code: string
   }
-  day: number
+  day: Weekdays
   startTime: string
   endTime: string
 }
