@@ -133,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType, toRefs, watch } from 'vue'
+import { ref, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
 import { v4 } from 'uuid'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
@@ -157,7 +157,7 @@ const { googleApis, tokenClient, getToken, isSignedIn, signOut } =
 const { events } = toRefs(props)
 
 const search = ref('')
-const calendarItem = ref({ summary: '' })
+const calendarItem = ref<Pick<IGoogleCalendarItem, 'summary'>>({ summary: '' })
 
 const dialogCalendarSync = ref(false)
 const dialog = ref(false)
@@ -197,10 +197,12 @@ function deleteNotification(index: Notification) {
 }
 
 function addNotification() {
-  notifications.value.push(new Notification(
-    defaultNotification.value.minutes,
-    defaultNotification.value.method,
-  ))
+  notifications.value.push(
+    new Notification(
+      defaultNotification.value.minutes,
+      defaultNotification.value.method,
+    ),
+  )
   defaultNotification.value = new Notification()
 }
 
@@ -211,30 +213,31 @@ function addCalendar(this: any) {
   }
 }
 
-async function createCalendar(this: any, { summary }: any) {
+async function createCalendar({ summary }: IGoogleCalendarItem) {
   try {
-    const response = await window.gapi.client.calendar.calendars.insert({
-      resource: {
-        summary,
-        etag: 'Created by Octatec',
+    const response = await googleApis<IGoogleCalendarItem>(
+      'calendar/v3/calendars',
+      {
+        method: 'POST',
+        body: { summary },
       },
-    })
+    )
     // Handle the results here (response.result has the parsed body).
     console.log('Response', response)
     await getCalendarList()
-    return response.result
+    return response
   } catch (e) {
     console.error('Execute error', e)
   } finally {
-    this.dialog = false
+    dialog.value = false
   }
 }
 
 const form = ref<typeof VForm | null>(null)
 
 const exportEventToGCalendar = async () => {
-  console.log('Exporting to Google Calendar', form.value)
-  const { valid } = await form.value?.validate()
+  if (!form.value) return
+  const { valid } = await form.value.validate()
   if (!valid) {
     return
   }
