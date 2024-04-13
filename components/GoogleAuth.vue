@@ -254,6 +254,9 @@ const exportEventToGCalendar = async () => {
 }
 
 async function eventRequest(event: IEvent): Promise<any> {
+  if(!dateEnd.value) {
+    throw new Error('No se ha seleccionado una fecha de fin')
+  }
   const format =
     event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
   let color = EVENT_COLORS.findIndex((color) => event.color === color)
