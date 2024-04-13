@@ -160,37 +160,14 @@ const { events } = toRefs(props)
 
 const search = ref('')
 const calendarItem = ref({ summary: '' })
-const monthNames = [
-  'Enero',
-  'Febrero',
-  'Marzo',
-  'Abril',
-  'Mayo',
-  'Junio',
-  'Julio',
-  'Agosto',
-  'Septiembre',
-  'Octubre',
-  'Noviembre',
-  'Diciembre',
-]
 
 const dialogCalendarSync = ref(false)
 const dialog = ref(false)
-const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
 const dateStart = ref(DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
 const dateEnd = ref(DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd'))
 
 const progress = ref(0)
-const day = [
-  '2021-04-11 ',
-  '2021-04-05 ',
-  '2021-04-06 ',
-  '2021-04-07 ',
-  '2021-04-08 ',
-  '2021-04-09 ',
-  '2021-04-10 ',
-]
+
 
 const notifications = ref([
   {
