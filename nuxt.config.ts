@@ -51,11 +51,6 @@ const config = defineNuxtConfig({
     },
   },
 
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-  build: {
-    transpile: ['vuetify'],
-  },
-
   routeRules: {
     '/generator/**': {
       ssr: false,
