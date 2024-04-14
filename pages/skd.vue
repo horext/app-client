@@ -43,10 +43,8 @@ useSeoMeta({
 })
 
 const $api = useApi()
-const query = ref('')
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
-const courses = ref([])
 
 const store = useUserConfigStore()
 

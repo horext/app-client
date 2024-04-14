@@ -49,10 +49,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { defineComponent, watch, onMounted } from 'vue'
+import { watch } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { useUserEventsStore } from '~/stores/user-events'
 
 definePageMeta({
   layout: 'app',
