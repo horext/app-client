@@ -7,7 +7,10 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
-    ssr: true,
+    ssr: {
+      clientWidth: 1280,
+      clientHeight: 1024,
+    },
     locale: {
       locale: 'es',
       messages: {
