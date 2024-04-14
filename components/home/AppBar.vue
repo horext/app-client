@@ -24,21 +24,18 @@
     <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
   </v-app-bar>
 
-  <home-drawer v-model="drawer" :items="items" />
+  <lazy-home-drawer v-if="isMobile" v-model="drawer" :items="items" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import VuetifyLogo from '../VuetifyLogo.vue'
-import HomeDrawer from '@/components/home/Drawer.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
 export default defineComponent({
   name: 'HomeAppBar',
-
   components: {
     VuetifyLogo,
-    HomeDrawer,
   },
   setup() {
     const settingsStore = useSettingsStore()
@@ -46,7 +43,11 @@ export default defineComponent({
 
     const drawer = ref(false)
 
-    return { darkMode, drawer, mdiBrightness6 }
+    const display = useDisplay()
+
+    const isMobile = computed(() => display.mobile)
+
+    return { darkMode, drawer, mdiBrightness6, isMobile }
   },
   data: () => ({
     items: [
