@@ -4,6 +4,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify/framework'
 import { es, en } from 'vuetify/locale'
 import colors from 'vuetify/util/colors'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -41,6 +42,13 @@ export default defineNuxtPlugin((nuxtApp) => {
             success: colors.green.accent3,
           },
         },
+      },
+    },
+    icons: {
+      defaultSet: 'mdi',
+      aliases,
+      sets: {
+        mdi,
       },
     },
   })
