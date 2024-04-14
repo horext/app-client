@@ -16,6 +16,9 @@ const config = defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+      htmlAttrs: {
+        lang: 'es',
+      },
     },
   },
   // Modules: https://go.nuxtjs.dev/config-modules
