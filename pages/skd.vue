@@ -25,8 +25,8 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
@@ -37,109 +37,88 @@ definePageMeta({
   layout: 'app',
 })
 
-export default defineComponent({
-  components: {
-    ScheduleViewer,
-  },
-  setup() {
-    useSeoMeta({
-      title: 'Horario compartido',
-      description: 'Comparte tu horario a tus amigos! ',
-    })
-
-    const $api = useApi()
-    const query = ref('')
-    const schedules = ref<IScheduleGenerate[]>([])
-    const loading = ref(false)
-    const courses = ref([])
-
-    const store = useUserConfigStore()
-
-    const myFavoritesSchedules = computed(() => store.favoritesSchedules)
-    const route = useRoute()
-
-    const { data } = useAsyncData(async () => {
-      const query: any = route.query
-      const result = decodeBase64(query.q)
-      const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
-        result.split(',').map(Number),
-      )
-      const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
-      const sessions = await $api.classSessions.findScheduleIds(schedulesId)
-      return { scheduleSubjects, sessions }
-    })
-
-    const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
-    const sessions = computed(() => data.value?.sessions || [])
-
-    const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
-      store.deleteFavoriteScheduleById(favorites.id)
-
-    const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
-      store.saveNewFavoriteSchedule(favorites)
-
-    const subjects = computed(() => {
-      const _sessions = sessions.value
-      return scheduleSubjects.value.map((sb) => ({
-        ...sb.subject,
-        schedules: [
-          {
-            ...sb?.schedule,
-            scheduleSubject: {
-              id: sb.id,
-            },
-            sessions: _sessions.filter((s) => s.schedule.id === sb.schedule.id),
-            subject: sb.subject,
-          },
-        ],
-      }))
-    })
-
-
-    const { loadSchedules } = useSchedules()
-    
-    async function fetchSchedules() {
-      loading.value = true
-      const { combinations } = await loadSchedules(subjects.value, [], {
-        crossingSubjects: 100,
-      })
-      schedules.value = combinations
-      loading.value = false
-    }
-
-    onMounted(async () => {
-      await fetchSchedules()
-    })
-
-    const addFavoriteCurrentSchedule = () => {
-      const index = isFavorite(schedules.value[0])
-      if (index >= 0) {
-        deleteFavoriteScheduleById(schedules.value[0])
-      } else {
-        saveNewFavoriteSchedule(schedules.value[0])
-      }
-    }
-
-    const isFavorite = (schedule: IScheduleGenerate) => {
-      return myFavoritesSchedules.value.findIndex(
-        (x: { id: any }) => x.id === schedule.id,
-      )
-    }
-
-    return {
-      query,
-      sessions,
-      scheduleSubjects,
-      schedules,
-      loading,
-      courses,
-      addFavoriteCurrentSchedule,
-      isFavorite,
-      myFavoritesSchedules,
-      mdiStar,
-    }
-  },
+useSeoMeta({
+  title: 'Horario compartido',
+  description: 'Comparte tu horario a tus amigos! ',
 })
+
+const $api = useApi()
+const query = ref('')
+const schedules = ref<IScheduleGenerate[]>([])
+const loading = ref(false)
+const courses = ref([])
+
+const store = useUserConfigStore()
+
+const myFavoritesSchedules = computed(() => store.favoritesSchedules)
+const route = useRoute()
+
+const { data } = useAsyncData(async () => {
+  const query: any = route.query
+  const result = decodeBase64(query.q)
+  const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
+    result.split(',').map(Number),
+  )
+  const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
+  const sessions = await $api.classSessions.findScheduleIds(schedulesId)
+  return { scheduleSubjects, sessions }
+})
+
+const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
+const sessions = computed(() => data.value?.sessions || [])
+
+const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
+  store.deleteFavoriteScheduleById(favorites.id)
+
+const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
+  store.saveNewFavoriteSchedule(favorites)
+
+const subjects = computed(() => {
+  const _sessions = sessions.value
+  return scheduleSubjects.value.map((sb) => ({
+    ...sb.subject,
+    schedules: [
+      {
+        ...sb?.schedule,
+        scheduleSubject: {
+          id: sb.id,
+        },
+        sessions: _sessions.filter((s) => s.schedule.id === sb.schedule.id),
+        subject: sb.subject,
+      },
+    ],
+  }))
+})
+
+const { loadSchedules } = useSchedules()
+
+async function fetchSchedules() {
+  loading.value = true
+  const { combinations } = await loadSchedules(subjects.value, [], {
+    crossingSubjects: 100,
+  })
+  schedules.value = combinations
+  loading.value = false
+}
+
+onMounted(async () => {
+  await fetchSchedules()
+})
+
+const addFavoriteCurrentSchedule = () => {
+  const index = isFavorite(schedules.value[0])
+  if (index >= 0) {
+    deleteFavoriteScheduleById(schedules.value[0])
+  } else {
+    saveNewFavoriteSchedule(schedules.value[0])
+  }
+}
+
+const isFavorite = (schedule: IScheduleGenerate) => {
+  return myFavoritesSchedules.value.findIndex(
+    (x: { id: any }) => x.id === schedule.id,
+  )
+}
 </script>
 
 <style scoped></style>
