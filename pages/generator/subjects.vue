@@ -46,7 +46,7 @@
                   </template>
                   <template #append>
                     <v-btn icon variant="text" :loading="loadingSubjects">
-                      <v-icon>mdi-magnify</v-icon>
+                      <v-icon>{{ mdiMagnify }}</v-icon>
                     </v-btn>
                   </template>
                 </v-autocomplete>
@@ -111,7 +111,7 @@
           <v-tooltip location="bottom">
             <template #activator="{ props }">
               <v-icon color="blue" v-bind="props" @click="editItem(item)">
-                mdi-pencil
+                {{ mdiPencil }}
               </v-icon>
             </template>
             <span>Modificar secciones</span>
@@ -119,7 +119,7 @@
           <v-tooltip location="bottom">
             <template #activator="{ props }">
               <v-icon color="red" v-bind="props" @click="deleteItem(item)">
-                mdi-delete
+                {{ mdiDelete }}
               </v-icon>
             </template>
             <span>Eliminar</span>
@@ -150,7 +150,7 @@
       </v-card>
     </v-dialog>
     <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
-      <v-icon> mdi-check </v-icon>
+      <v-icon> {{ mdiCheckCircle }} </v-icon>
       Curso Agregado correctamente!
       <template #actions>
         <v-btn
@@ -159,7 +159,7 @@
           icon
           @click="succcesAddCourse = false"
         >
-          <v-icon> mdi-close </v-icon>
+          <v-icon> {{ mdiClose }} </v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -174,6 +174,14 @@ import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
 import Animation from '~/assets/lottie/15538-cat-woow.json'
+import {
+  mdiPencil,
+  mdiDelete,
+  mdiMagnify,
+  mdiCheckCircle,
+  mdiClose,
+} from '@mdi/js'
+
 export default defineComponent({
   name: 'MySubjects',
   components: {
@@ -357,6 +365,11 @@ export default defineComponent({
       myHourlyLoad,
       loadingSubjects,
       errorSubjects,
+      mdiPencil,
+      mdiDelete,
+      mdiMagnify,
+      mdiCheckCircle,
+      mdiClose,
     }
   },
 })

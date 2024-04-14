@@ -37,7 +37,7 @@
         <template #append-inner>
           <v-menu bottom>
             <template #activator="{ props }">
-              <v-icon v-bind="props">mdi-help-circle</v-icon>
+              <v-icon v-bind="props"> {{ mdiHelpCircle }} </v-icon>
             </template>
             <v-card max-width="300" density="compact">
               <v-card-text>
@@ -59,15 +59,15 @@
         :loading="loadingGenerate"
         @click="generateAllUserSchedules"
       >
-        <v-icon>mdi-update</v-icon>
+        <v-icon> {{ mdiUpdate }} </v-icon>
         Generar
       </v-btn>
       <v-snackbar v-model="succces" color="success" timeout="3000">
-        <v-icon> mdi-check </v-icon>
+        <v-icon> {{ mdiCheck }} </v-icon>
         Horarios generados correctamente!
         <template #actions>
           <v-btn variant="text" size="small" icon @click="succces = false">
-            <v-icon> mdi-close </v-icon>
+            <v-icon> {{ mdiClose }} </v-icon>
           </v-btn>
         </template>
       </v-snackbar>
@@ -95,6 +95,7 @@ import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { mdiHelpCircle, mdiUpdate, mdiCheck, mdiClose } from '@mdi/js'
 
 export default defineComponent({
   components: {
@@ -157,6 +158,10 @@ export default defineComponent({
       updateFavoritesSchedules,
       generateAllUserSchedules,
       loadingGenerate,
+      mdiHelpCircle,
+      mdiUpdate,
+      mdiCheck,
+      mdiClose,
     }
   },
 })

@@ -8,9 +8,9 @@
         class="ma-1"
         @click="$emit('download:pdf')"
       >
-        <v-icon> mdi-download </v-icon>
+        <v-icon> {{ mdiDownload }} </v-icon>
         Descargar (.pdf )
-        <v-icon>mdi-file-pdf</v-icon>
+        <v-icon> {{ mdiFilePdfBox }} </v-icon>
       </v-btn>
     </v-list-item>
     <v-list-item>
@@ -21,15 +21,17 @@
         class="ma-1"
         @click="$emit('download:image')"
       >
-        <v-icon> mdi-download </v-icon>
+        <v-icon> {{ mdiDownload }} </v-icon>
         Descargar (.png )
-        <v-icon>mdi-file-image</v-icon>
+        <v-icon>{{ mdiFileImage }} </v-icon>
       </v-btn>
     </v-list-item>
   </v-list>
 </template>
 
 <script setup lang="ts">
+import { mdiDownload, mdiFilePdfBox, mdiFileImage } from '@mdi/js'
+
 defineProps<{
   loadingPdf: boolean
   loadingImage: boolean

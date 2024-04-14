@@ -67,7 +67,7 @@
                 :rules="[(a) => a > 0 || 'No permitido']"
                 variant="outlined"
                 density="compact"
-                prepend-icon="mdi-bell"
+                :prepend-icon="mdiBell"
                 :items="Array.from({ length: 60 }, (x, i) => i)"
                 suffix="minutos"
               >
@@ -77,7 +77,7 @@
                     color="error"
                     @click="deleteNotification(notification)"
                   >
-                    mdi-delete
+                 {{ mdiDelete }}
                   </v-icon>
                 </template>
               </v-text-field>
@@ -85,7 +85,7 @@
                 key="selected"
                 v-model="defaultNotification.minutes"
                 :rules="[(a) => a > 0 || 'No permitido']"
-                prepend-icon="mdi-bell"
+               :prepend-icon="mdiBell"
                 type="number"
                 :items="Array.from({ length: 60 }, (x, i) => i)"
                 suffix="minutos"
@@ -94,7 +94,7 @@
               >
                 <template #append>
                   <v-icon color="success" @click="addNotification()">
-                    mdi-plus
+                    {{ mdiPlus }}
                   </v-icon>
                 </template>
               </v-text-field>
@@ -145,6 +145,7 @@ import type {
   IGoogleCalendarItem,
 } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
+import { mdiBell, mdiDelete, mdiPlus } from '@mdi/js'
 
 const props = defineProps<{
   startDate: string

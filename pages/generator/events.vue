@@ -62,9 +62,9 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <v-icon class="mr-2" color="primary" @click="editItem(item)">
-            mdi-pencil
+          {{ mdiPencil }}
           </v-icon>
-          <v-icon color="red" @click="deleteItem(item)"> mdi-delete </v-icon>
+          <v-icon color="red" @click="deleteItem(item)"> {{ mdiDelete }} </v-icon>
         </template>
       </v-data-table>
 
@@ -74,7 +74,7 @@
         timeout="3000"
         location="bottom"
       >
-        <v-icon> mdi-check </v-icon>
+        <v-icon>{{ mdiCheck }}</v-icon>
         <span class="mr-4"> Actividad creada correctamente </span>
         <template #actions>
           <v-btn
@@ -83,7 +83,7 @@
             icon
             @click="succcesAddEvent = false"
           >
-            <v-icon> mdi-close </v-icon>
+            <v-icon>{{ mdiClose }}</v-icon>
           </v-btn>
         </template>
       </v-snackbar>
@@ -93,7 +93,7 @@
         timeout="3000"
         location="bottom"
       >
-        <v-icon> mdi-check </v-icon>
+        <v-icon> {{ mdiCheck }} </v-icon>
         <span class="mr-4"> Actividad actualizada correctamente </span>
         <template #actions>
           <v-btn
@@ -102,7 +102,7 @@
             icon
             @click="succcesUpdateEvent = false"
           >
-            <v-icon> mdi-close </v-icon>
+            <v-icon> {{ mdiClose }} </v-icon>
           </v-btn>
         </template>
       </v-snackbar>
@@ -117,6 +117,7 @@ import Event from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
+import { mdiPencil, mdiDelete, mdiCheck, mdiClose } from '@mdi/js'
 
 export default defineComponent({
   components: { EventsCreator },
@@ -241,6 +242,10 @@ export default defineComponent({
       form,
       succcesAddEvent,
       succcesUpdateEvent,
+      mdiPencil,
+      mdiDelete,
+      mdiCheck,
+      mdiClose,
     }
   },
 })

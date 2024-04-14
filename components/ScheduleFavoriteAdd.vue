@@ -8,7 +8,9 @@
         v-bind="props"
         @click="changeFavoriteState"
       >
-        <v-icon :color="isFavorite ? 'yellow' : undefined"> mdi-star </v-icon>
+        <v-icon :color="isFavorite ? 'yellow' : undefined">
+          {{ mdiStar }}
+        </v-icon>
       </v-btn>
     </template>
     <span>{{
@@ -19,7 +21,7 @@
     {{ isFavorite ? 'Agregado a favoritos' : 'Quitado de favoritos' }}
     <template #actions>
       <v-btn variant="text" size="small" icon @click="showMessage = false">
-        <v-icon> mdi-close </v-icon>
+        <v-icon> {{ mdiClose }} </v-icon>
       </v-btn>
     </template>
   </v-snackbar>
@@ -29,6 +31,7 @@
 import { computed, defineComponent, type PropType, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { mdiStar, mdiClose } from '@mdi/js'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',
@@ -87,6 +90,8 @@ export default defineComponent({
       changeFavoriteState,
       isFavorite,
       indexSchedule,
+      mdiStar,
+      mdiClose,
     }
   },
 })

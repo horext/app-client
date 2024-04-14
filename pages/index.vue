@@ -35,22 +35,20 @@
             theme="dark"
             to="/generator"
           >
-            <v-icon start>mdi-chevron-double-right</v-icon>
+            <v-icon start>{{ mdiChevronDoubleRight }}</v-icon>
             Generar mis horarios
           </v-btn>
         </v-col>
         <v-col class="text-center" cols="12">
-          
           <v-btn
             class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/login"
           >
-            <v-icon start>mdi-chevron-double-right</v-icon>
+            <v-icon start>{{ mdiChevronDoubleRight }}</v-icon>
             Iniciar sesión (próximamente)
           </v-btn>
-
         </v-col>
       </v-row>
     </v-container>
@@ -58,9 +56,10 @@
 </template>
 
 <script setup lang="ts">
+import { mdiChevronDoubleRight } from '@mdi/js'
 const img = useImage()
 useSeoMeta({
-  title: 'Inicio'
+  title: 'Inicio',
 })
 const material = computed(() =>
   img.getSizes('/material2.jpg', {

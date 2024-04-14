@@ -4,7 +4,7 @@
     <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
     <v-spacer />
     <v-btn icon @click="invertMode">
-      <v-icon>mdi-brightness-6</v-icon>
+      <v-icon>{{ mdiBrightness6 }}</v-icon>
     </v-btn>
     <v-tabs class="hidden-sm-and-down" optional>
       <v-tab
@@ -31,6 +31,7 @@
 import { defineComponent } from 'vue'
 import VuetifyLogo from '../VuetifyLogo.vue'
 import HomeDrawer from '@/components/home/Drawer.vue'
+import { mdiBrightness6 } from '@mdi/js'
 
 export default defineComponent({
   name: 'HomeAppBar',
@@ -45,7 +46,7 @@ export default defineComponent({
 
     const drawer = ref(false)
 
-    return { darkMode, drawer }
+    return { darkMode, drawer, mdiBrightness6 }
   },
   data: () => ({
     items: [

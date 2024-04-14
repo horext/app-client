@@ -5,9 +5,9 @@
     width="100%"
   >
     <template v-if="!event.code">
-      <v-icon 
-      v-if="$vuetify.display.smAndUp"
-      start size="small">mdi-information</v-icon>
+      <v-icon v-if="$vuetify.display.smAndUp" start size="small">
+        {{ mdiInformation }}
+      </v-icon>
       <span class="font-weight-bold">
         {{ event.title }}
       </span>
@@ -25,6 +25,8 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mdiInformation } from '@mdi/js'
+
 export default defineComponent({
   name: 'ScheduleEventInfo',
   props: {
@@ -32,6 +34,11 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    return {
+      mdiInformation,
+    }
   },
 })
 </script>

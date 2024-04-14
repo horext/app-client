@@ -6,7 +6,7 @@
       <v-btn
         class="mx-0"
         variant="text"
-        icon="mdi-close-circle-outline"
+        :icon="mdiCloseCircleOutline"
         @click="close"
       >
       </v-btn>
@@ -17,7 +17,7 @@
         target="_blank"
       >
         <template #prepend>
-          <v-icon color="indigo"> mdi-facebook </v-icon>
+          <v-icon color="indigo"> {{ mdiFacebook }} </v-icon>
         </template>
         <v-card-title>Facebook</v-card-title>
       </v-list-item>
@@ -30,7 +30,7 @@
         target="_blank"
       >
         <template #prepend>
-          <v-icon color="cyan"> mdi-twitter </v-icon>
+          <v-icon color="cyan"> {{ mdiTwitter }} </v-icon>
         </template>
         <v-card-title>Twitter</v-card-title>
       </v-list-item>
@@ -40,7 +40,7 @@
         data-action="share/whatsapp/share"
       >
         <template #prepend>
-          <v-icon color="success"> mdi-whatsapp </v-icon>
+          <v-icon color="success"> {{ mdiWhatsapp }} </v-icon>
         </template>
         <v-card-title>Whatsapp</v-card-title>
       </v-list-item>
@@ -50,7 +50,7 @@
         data-action="share/telegram/share"
       >
         <template #prepend>
-          <v-icon color="#54a9eb"> mdi-telegram </v-icon>
+          <v-icon color="#54a9eb"> {{ mdiSendCheck }} </v-icon>
         </template>
         <v-card-title>Telegram</v-card-title>
       </v-list-item>
@@ -69,6 +69,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import {
+  mdiFacebook,
+  mdiTwitter,
+  mdiWhatsapp,
+  mdiSendCheck,
+  mdiCloseCircleOutline,
+} from '@mdi/js'
 
 export default defineComponent({
   name: 'ScheduleShare',
@@ -82,6 +89,15 @@ export default defineComponent({
     postId: { type: Number, default: 1 },
   },
   emits: ['update:dialog'],
+  setup() {
+    return {
+      mdiFacebook,
+      mdiTwitter,
+      mdiWhatsapp,
+      mdiSendCheck,
+      mdiCloseCircleOutline,
+    }
+  },
   data: () => ({
     copied: false,
     dialogSync: true,

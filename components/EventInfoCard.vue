@@ -2,19 +2,21 @@
   <v-card density="compact" class="text-caption" max-width="400">
     <v-toolbar dense :color="selectedEvent.color">
       <v-btn icon>
-        <v-icon>mdi-information</v-icon>
+        <v-icon>{{ mdiInformation }}</v-icon>
       </v-btn>
 
       <v-toolbar-title class="text-white"> Información </v-toolbar-title>
       <v-spacer />
       <v-btn icon @click="dialogSync = false">
-        <v-icon>mdi-close</v-icon>
+        <v-icon>{{ mdiClose }}</v-icon>
       </v-btn>
     </v-toolbar>
 
     <v-list-item>
       <template #prepend>
-        <v-icon :color="selectedEvent.color + ' lighten-2'"> mdi-book </v-icon>
+        <v-icon :color="selectedEvent.color + ' lighten-2'">
+          {{ mdiBook }}
+        </v-icon>
       </template>
       <v-list-item-title>
         {{ selectedEvent.title }}
@@ -23,7 +25,9 @@
     <v-divider inset />
     <v-list-item density="compact" lines="three">
       <template #prepend>
-        <v-icon :color="selectedEvent.color + ' lighten-2'"> mdi-text </v-icon>
+        <v-icon :color="selectedEvent.color + ' lighten-2'">
+          {{ mdiText }}
+        </v-icon>
       </template>
 
       <v-list-item-title style="white-space: pre-line">
@@ -34,7 +38,7 @@
     <v-list-item density="compact">
       <template #prepend>
         <v-icon :color="selectedEvent.color + ' lighten-2'">
-          mdi-calendar
+          {{ mdiCalendar }}
         </v-icon>
       </template>
 
@@ -50,7 +54,7 @@
     <v-list-item density="compact">
       <template #prepend>
         <v-icon :color="selectedEvent.color + ' lighten-2 '">
-          mdi-map-marker
+          {{ mdiMapMarker }}
         </v-icon>
       </template>
       <v-list-item-title>{{ selectedEvent.location }}</v-list-item-title>
@@ -62,6 +66,14 @@ import { useVModel } from '@vueuse/core'
 import { defineComponent, type PropType, computed, type Ref } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
+import {
+  mdiInformation,
+  mdiClose,
+  mdiBook,
+  mdiText,
+  mdiCalendar,
+  mdiMapMarker,
+} from '@mdi/js'
 
 export default defineComponent({
   props: {
@@ -90,6 +102,12 @@ export default defineComponent({
       selectedDay,
       moreInfo,
       dialogSync,
+      mdiInformation,
+      mdiClose,
+      mdiBook,
+      mdiText,
+      mdiCalendar,
+      mdiMapMarker,
     }
   },
 })

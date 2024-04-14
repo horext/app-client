@@ -68,6 +68,7 @@ import { ref } from 'vue'
 import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
+import {mdiCalendar, mdiCalendarStar, mdiBook, mdiCalendarPlus, mdiCog} from '@mdi/js'
 
 const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
@@ -96,36 +97,36 @@ const drawer = ref(true)
 const items = computed(() => [
   {
     title: 'Inicio',
-    icon: 'mdi-calendar',
+    icon: mdiCalendar,
     to: '/',
   },
   {
     title: 'Generador de Horarios',
-    icon: 'mdi-calendar',
+    icon: mdiCalendar,
     to: '/generator',
     badge: schedules.value.length,
   },
   {
     title: 'Horarios Favoritos',
-    icon: 'mdi-calendar-star',
+    icon: mdiCalendarStar,
     to: '/generator/favorites',
     badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos y secciones',
-    icon: 'mdi-book',
+    icon: mdiBook,
     to: '/generator/subjects',
     badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
-    icon: 'mdi-calendar-plus',
+    icon: mdiCalendarPlus,
     to: '/generator/events',
     badge: events.value.length,
   },
   {
     title: 'Avanzado',
-    icon: 'mdi-cog',
+    icon: mdiCog,
     to: '/generator/settings',
   },
 ])
@@ -133,25 +134,25 @@ const items = computed(() => [
 const denseItems = computed(() => [
   {
     title: 'Generador',
-    icon: 'mdi-calendar',
+    icon:  mdiCalendar,
     to: '/generator',
     badge: schedules.value.length,
   },
   {
     title: 'Favoritos',
-    icon: 'mdi-calendar-star',
+    icon: mdiCalendarStar,
     to: '/generator/favorites',
     badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos',
-    icon: 'mdi-book',
+    icon: mdiBook,
     to: '/generator/subjects',
     badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
-    icon: 'mdi-calendar-plus',
+    icon: mdiCalendarPlus,
     to: '/generator/events',
     badge: events.value.length,
   },

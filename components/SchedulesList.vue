@@ -1,11 +1,11 @@
 <template>
   <v-window id="window" show-arrows continuous>
     <template #next>
-      <v-icon size="large" @click="next"> mdi-arrow-right-bold-circle </v-icon>
+      <v-icon size="large" @click="next"> {{ mdiArrowRightBoldCircle }} </v-icon>
     </template>
 
     <template #prev>
-      <v-icon size="large" @click="prev"> mdi-arrow-left-bold-circle </v-icon>
+      <v-icon size="large" @click="prev"> {{ mdiArrowLeftBoldCircle }} </v-icon>
     </template>
     <v-window-item v-if="schedule">
       <schedule-viewer
@@ -29,6 +29,7 @@ import ViewList from './schedule/ViewList.vue'
 import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { mdiArrowRightBoldCircle, mdiArrowLeftBoldCircle } from '@mdi/js'
 
 export default defineComponent({
   name: 'SchedulesList',
@@ -115,6 +116,8 @@ export default defineComponent({
       prev,
       MODES,
       shareDialog,
+      mdiArrowRightBoldCircle,
+      mdiArrowLeftBoldCircle,
     }
   },
 })

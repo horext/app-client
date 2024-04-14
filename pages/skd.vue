@@ -8,7 +8,7 @@
           @click="addFavoriteCurrentSchedule"
         >
           <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : undefined">
-            mdi-star
+            {{ mdiStar }}
           </v-icon>
           <span v-if="isFavorite(schedules[0]) >= 0">
             Quitar de Favoritos
@@ -31,6 +31,7 @@ import ScheduleViewer from '~/components/ScheduleViewer.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { mdiStar } from '@mdi/js'
 
 definePageMeta({
   layout: 'app',
@@ -135,6 +136,7 @@ export default defineComponent({
       addFavoriteCurrentSchedule,
       isFavorite,
       myFavoritesSchedules,
+      mdiStar,
     }
   },
 })

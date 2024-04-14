@@ -8,12 +8,12 @@
         <v-radio-group v-model="mode" hide-details density="compact" inline>
           <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
             <template #label>
-              <v-icon size="small" start> mdi-calendar </v-icon>Calendario
+              <v-icon size="small" start> {{ mdiCalendar }} </v-icon>Calendario
             </template>
           </v-radio>
           <v-radio :value="MODES.LIST" color="primary-darken-2">
             <template #label>
-              <v-icon size="small" start> mdi-table </v-icon> Lista
+              <v-icon size="small" start> {{ mdiTable }} </v-icon> Lista
             </template>
           </v-radio>
         </v-radio-group>
@@ -37,7 +37,7 @@
                 density="compact"
                 v-bind="props"
               >
-                <v-icon start>mdi-export</v-icon>
+                <v-icon start> {{ mdiExport }} </v-icon>
                 Exportar
               </v-btn>
             </template>
@@ -58,7 +58,7 @@
             density="compact"
             @click="dialogShare = !dialogShare"
           >
-            <v-icon start>mdi-share-variant</v-icon>
+            <v-icon start> {{ mdiShareVariant }} </v-icon>
             Compartir
           </v-btn>
           <GoogleAuth
@@ -117,6 +117,13 @@ import ScheduleExport from '~/components/ScheduleExport.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import {
+  mdiCalendar,
+  mdiTable,
+  mdiExport,
+  mdiShareVariant,
+  mdiShare,
+} from '@mdi/js'
 
 export default defineComponent({
   components: {
@@ -210,6 +217,11 @@ export default defineComponent({
       downloadPdf,
       loadingImage,
       loadingPdf,
+      mdiCalendar,
+      mdiTable,
+      mdiExport,
+      mdiShareVariant,
+      mdiShare,
     }
   },
 })
