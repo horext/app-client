@@ -1,10 +1,6 @@
 <template>
   <v-container fluid>
-    <v-dialog
-      v-model="firstEntry"
-      max-width="600"
-      persistent
-    >
+    <v-dialog v-model="firstEntry" max-width="600" persistent>
       <InitialSettings />
     </v-dialog>
     <v-dialog v-model="isNewHourlyLoad" max-width="600">
@@ -51,46 +47,32 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { defineComponent, watch, onMounted } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 
-export default defineComponent({
-  name: 'Generator',
-  components: {
-    InitialSettings,
-  },
-  setup() {
-    definePageMeta({
-      layout: 'app',
-    })
+definePageMeta({
+  layout: 'app',
+})
 
-    useSeoMeta({
-      title: 'Generador de Horarios',
-      description: 'Genera tu horario de clases de manera sencilla',
-    })
+useSeoMeta({
+  title: 'Generador de Horarios',
+  description: 'Genera tu horario de clases de manera sencilla',
+})
 
-    const configStore = useUserConfigStore()
-    const router = useRouter()
+const configStore = useUserConfigStore()
+const router = useRouter()
 
-    const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
-      storeToRefs(configStore)
+const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
+  storeToRefs(configStore)
 
-    watch(firstEntry, async (newValue, oldValue) => {
-      if (oldValue && !newValue) {
-        await router.push('/generator/subjects')
-      }
-    })
-
-    return {
-      firstEntry,
-      isNewHourlyLoad,
-      isUpdateHourlyLoad,
-    }
-  },
+watch(firstEntry, async (newValue, oldValue) => {
+  if (oldValue && !newValue) {
+    await router.push('/generator/subjects')
+  }
 })
 </script>
 
