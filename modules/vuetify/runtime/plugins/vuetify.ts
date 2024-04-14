@@ -1,4 +1,3 @@
-import 'vuetify/styles'
 //@ts-ignore
 import { createVuetify } from 'vuetify/framework'
 import { es, en } from 'vuetify/locale'

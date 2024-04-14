@@ -7,11 +7,27 @@ import {
   addImports,
 } from 'nuxt/kit'
 
-export default defineNuxtModule({
+export interface ModuleOptions {
+  /**
+   * Disables the global css styles added by the module.
+   */
+  disableGlobalStyles?: boolean
+}
+
+export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'vuetify',
   },
-  setup() {
+  defaults: {
+    disableGlobalStyles: false,
+  },
+  async setup(options, nuxt) {
+    nuxt.options.build.transpile.push('vuetify')
+
+    if (!options.disableGlobalStyles) {
+      nuxt.options.css.push('vuetify/styles')
+    }
+
     const resolver = createResolver(import.meta.url)
     const componentsMap: Record<
       string,
