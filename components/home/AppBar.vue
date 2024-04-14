@@ -3,7 +3,7 @@
     <vuetify-logo style="max-width: 48px" />
     <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
     <v-spacer />
-    <v-btn icon @click="invertMode">
+    <v-btn icon aria-label="Cambiar modo" @click="invertMode">
       <v-icon>{{ mdiBrightness6 }}</v-icon>
     </v-btn>
     <v-tabs class="hidden-sm-and-down" optional>
