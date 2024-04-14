@@ -45,7 +45,7 @@ export default defineComponent({
 
     const display = useDisplay()
 
-    const isMobile = computed(() => display.mobile)
+    const isMobile = computed(() => display.mobile.value)
 
     return { darkMode, drawer, mdiBrightness6, isMobile }
   },
