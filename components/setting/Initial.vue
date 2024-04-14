@@ -45,7 +45,7 @@ import { useUserConfigStore } from '~/stores/user-config'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IOrganization } from '~/interfaces/organization'
 import { useApi } from '~/composables/api'
-import type { FetchError } from 'nitropack'
+import type { FetchError } from 'ofetch'
 
 export default defineComponent({
   name: 'SettingInitial',
