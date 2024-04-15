@@ -47,19 +47,17 @@ export default defineComponent({
 
     const isMobile = computed(() => display.mobile.value)
 
-    return { darkMode, drawer, mdiBrightness6, isMobile }
-  },
-  data: () => ({
-    items: [
+    const items = [
       { name: 'Inicio', route: '/' },
       { name: 'Generador', route: '/generator' },
       { name: 'Acerca de ', route: '/about' },
-    ],
-  }),
-  methods: {
-    invertMode() {
-      this.darkMode = !this.darkMode
-    },
+    ]
+
+    const invertMode = () => {
+      darkMode.value = !darkMode.value
+    }
+
+    return { darkMode, drawer, mdiBrightness6, isMobile, items, invertMode }
   },
 })
 </script>
