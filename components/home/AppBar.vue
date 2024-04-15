@@ -27,39 +27,28 @@
   <lazy-home-drawer v-if="isMobile" v-model="drawer" :items="items" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import VuetifyLogo from '../VuetifyLogo.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
-export default defineComponent({
-  name: 'HomeAppBar',
-  components: {
-    VuetifyLogo,
-  },
-  setup() {
-    const settingsStore = useSettingsStore()
-    const { darkMode } = storeToRefs(settingsStore)
+const settingsStore = useSettingsStore()
+const { darkMode } = storeToRefs(settingsStore)
 
-    const drawer = ref(false)
+const drawer = ref(false)
 
-    const display = useDisplay()
+const display = useDisplay()
 
-    const isMobile = computed(() => display.mobile.value)
+const isMobile = computed(() => display.mobile.value)
 
-    const items = [
-      { name: 'Inicio', route: '/' },
-      { name: 'Generador', route: '/generator' },
-      { name: 'Acerca de ', route: '/about' },
-    ]
+const items = [
+  { name: 'Inicio', route: '/' },
+  { name: 'Generador', route: '/generator' },
+  { name: 'Acerca de ', route: '/about' },
+]
 
-    const invertMode = () => {
-      darkMode.value = !darkMode.value
-    }
-
-    return { darkMode, drawer, mdiBrightness6, isMobile, items, invertMode }
-  },
-})
+const invertMode = () => {
+  darkMode.value = !darkMode.value
+}
 </script>
 
 <style scoped lang="sass">
