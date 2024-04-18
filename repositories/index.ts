@@ -7,12 +7,22 @@ import { HourlyLoadRepository } from '~/repositories/HourlyLoadRepository'
 import { SpecialityRepository } from '~/repositories/SpecialityRepository'
 import { StudyPlanRepository } from './StudyPlanRepository '
 
-export default ($axios: $Fetch) => ({
-  course: new CourseRepository($axios),
-  classSessions: new ClassSessionRepository($axios),
-  speciality: new SpecialityRepository($axios),
-  faculty: new FacultyRepository($axios),
-  hourlyLoad: new HourlyLoadRepository($axios),
-  scheduleSubject: new ScheduleSubjectRepository($axios),
-  studyPlan: new StudyPlanRepository($axios),
-})
+export default class Repositories {
+  course: CourseRepository;
+  classSessions: ClassSessionRepository;
+  speciality: SpecialityRepository;
+  faculty: FacultyRepository;
+  hourlyLoad: HourlyLoadRepository;
+  scheduleSubject: ScheduleSubjectRepository;
+  studyPlan: StudyPlanRepository;
+
+  constructor($axios: $Fetch) {
+    this.course = new CourseRepository($axios);
+    this.classSessions = new ClassSessionRepository($axios);
+    this.speciality = new SpecialityRepository($axios);
+    this.faculty = new FacultyRepository($axios);
+    this.hourlyLoad = new HourlyLoadRepository($axios);
+    this.scheduleSubject = new ScheduleSubjectRepository($axios);
+    this.studyPlan = new StudyPlanRepository($axios);
+  }
+}

@@ -1,25 +1,23 @@
-import repositories from '~/repositories'
+import Repositories from '~/repositories'
 
 declare module '#app' {
   interface NuxtApp {
-    $api: ReturnType<typeof repositories>
+    $api: Repositories
+
   }
 }
 
 declare module 'vue' {
   interface ComponentCustomProperties {
-    $api: ReturnType<typeof repositories>
+    $api: Repositories
   }
 }
 
 const api = defineNuxtPlugin((nuxtApp) => {
-  // Create a custom axios instance
-  // Create a custom axios instance
-  const api = $fetch.create({
+  const apiFetcher = $fetch.create({
     baseURL: '/api',
   })
-
-  nuxtApp.provide('api', repositories(api))
+  nuxtApp.provide('api', new Repositories(apiFetcher))
 })
 
 export default api
