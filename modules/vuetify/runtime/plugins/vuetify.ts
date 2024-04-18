@@ -1,6 +1,6 @@
 //@ts-ignore
 import { createVuetify } from 'vuetify/framework'
-import { es, en } from 'vuetify/locale'
+import { es } from 'vuetify/locale'
 import colors from 'vuetify/util/colors'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
@@ -14,7 +14,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       locale: 'es',
       messages: {
         es,
-        en,
       },
     },
     theme: {
