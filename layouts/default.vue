@@ -1,13 +1,10 @@
 <template>
-  <v-app>
     <!--    <home-system-bar />-->
     <home-app-bar />
     <home-view>
       <slot />
     </home-view>
     <home-footer />
-    <!--    <home-settings />-->
-  </v-app>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
