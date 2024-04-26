@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@mdi/js": "^7.4.47",
-    "@nuxt/eslint-config": "^0.3.9",
+    "@nuxt/eslint-config": "^0.3.10",
     "@nuxt/test-utils": "^3.12.1",
     "@types/luxon": "^3.4.2",
     "@types/uuid": "^9.0.8",
