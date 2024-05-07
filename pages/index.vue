@@ -4,15 +4,21 @@
     :src="img('/material2.jpg', { quality: 70 })"
     :srcset="material.srcset"
     :sizes="material.sizes"
-    class="fill-height"
+    class="fill-height responsive-img"
     cover
-    max-height="85vh"
     alt="Cover background"
     gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
   >
     <v-container class="fill-height">
-      <v-row align="center" class="text-white mx-auto" justify="center">
-        <v-col class="text-white text-center" cols="12">
+      <v-row
+        align="center"
+        class="text-white mx-auto"
+        justify="center"
+      >
+        <v-col
+          class="text-white text-center"
+          cols="12"
+        >
           <h1>
             <span
               :class="[$vuetify.display.smAndDown ? 'display-1' : 'display-2']"
@@ -20,7 +26,7 @@
             >
               Bienvenido a
             </span>
-            <br />
+            <br>
             <span
               :class="[$vuetify.display.smAndDown ? 'display-3' : 'display-4']"
               class="font-weight-black"
@@ -29,25 +35,35 @@
             </span>
           </h1>
         </v-col>
-        <v-col class="text-center" cols="12">
+        <v-col
+          class="text-center"
+          cols="12"
+        >
           <v-btn
             class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/generator"
           >
-            <v-icon start>{{ mdiChevronDoubleRight }}</v-icon>
+            <v-icon start>
+              {{ mdiChevronDoubleRight }}
+            </v-icon>
             Generar mis horarios
           </v-btn>
         </v-col>
-        <v-col class="text-center" cols="12">
+        <v-col
+          class="text-center"
+          cols="12"
+        >
           <v-btn
             class="align-self-end font-weight-bold"
             variant="outlined"
             theme="dark"
             to="/login"
           >
-            <v-icon start>{{ mdiChevronDoubleRight }}</v-icon>
+            <v-icon start>
+              {{ mdiChevronDoubleRight }}
+            </v-icon>
             Iniciar sesión (próximamente)
           </v-btn>
         </v-col>
@@ -64,7 +80,7 @@ useSeoMeta({
 })
 const material = computed(() =>
   img.getSizes('/material2.jpg', {
-    sizes: [1920, 1280, 960, 600],
+    sizes: 'xs:100vw sm:100vw md:100vw lg:100vw xl:100vw',
     modifiers: {
       format: 'webp',
       quality: 100,
@@ -72,3 +88,33 @@ const material = computed(() =>
   }),
 )
 </script>
+
+<style scoped>
+@media (max-width: 640px) {
+  .responsive-img {
+    height: 90vh !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-img {
+    height: 75vh !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .responsive-img {
+    height: 75vh !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .responsive-img {
+    height: 75vh !important;
+  }
+}
+
+.responsive-img {
+  height: 85vh !important;
+}
+</style>
