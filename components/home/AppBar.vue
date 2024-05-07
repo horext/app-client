@@ -6,7 +6,7 @@
     <v-btn icon aria-label="Cambiar modo" @click="invertMode">
       <v-icon>{{ mdiBrightness6 }}</v-icon>
     </v-btn>
-    <v-tabs class="hidden-sm-and-down" optional>
+    <v-tabs class="hidden-sm-and-down">
       <v-tab
         v-for="(item, i) in items"
         :key="i"
