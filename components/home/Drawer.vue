@@ -3,6 +3,7 @@
     location="bottom"
     scrim="secondary"
     temporary
+    role="menu"
   >
     <v-list
       :color="
