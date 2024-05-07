@@ -1,21 +1,18 @@
 <template>
   <v-container class="text-center">
-    <h2 class="text-h3 font-weight-bold mb-3">ACERCA DE</h2>
-
-    <v-divider />
-
-    <v-responsive
-      class="mx-auto text-h6 font-weight-light my-8"
-      max-width="720"
-    >
-      <p>
-        Horext es un proyecto Open Source , consiste en una aplicación web donde
-        puedes gestionar los horarios de tus cursos, lo cual te permite generar
-        todos los horarios posibles de tus cursos, y así poder elegir el que más
-        te convenga.
-      </p>
-    </v-responsive>
     <v-row align="center" align-content="center" justify="center">
+      <v-col cols="12">
+        <h1 class="display-1 font-weight-light">Acerca de</h1>
+      </v-col>
+    </v-row>
+    <v-row align="center" align-content="center" justify="center">
+      <v-col cols="12">
+        <p class="text-h6 font-weight-light">
+          Horext es una aplicación web que permite a los estudiantes de la
+          Universidad Nacional de Ingeniería (UNI) generar sus horarios de
+          clases de manera automática.
+        </p>
+      </v-col>
       <v-col align-self="center">
         <v-avatar class="elevation-2 mb-4" size="128">
           <v-img src="/octatec-logo.png" />
