@@ -2,33 +2,23 @@
   <v-footer>
     <v-container>
       <v-row dense>
-        <v-col cols="12" md="6">
-          <div
-            class="d-flex flex-wrap justify-md-start justify-center justify-md-none"
-          >
-            <template v-for="(s, i) in social" :key="s.name">
-              <a class="pa-1 pa-md-0" :href="s.link" v-text="s.name" />
-
-              <v-responsive
-                v-if="i < social.length - 1"
-                class="mx-4 shrink hidden-sm-and-down"
-                max-height="16"
-              >
-                <v-divider vertical />
-              </v-responsive>
-            </template>
-          </div>
+        <v-col cols="12" md="6"> 
+          <v-row justify-md="start" justify="center" dense>
+            <v-col cols="auto" v-for="(s, i) in social" :key="s.name">
+              <a class="px-4 py-3" :href="s.link" v-text="s.name" />
+            </v-col>  
+          </v-row>
         </v-col>
         <v-col class="text-center text-md-right" cols="12" md="6">
           <v-row justify-md="end" justify="center" dense>
             <v-col cols="auto">
-              <nuxt-link to="/security"> Seguridad </nuxt-link>
+              <nuxt-link class="px-4 py-3"  to="/security"> Seguridad </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link to="/terms"> Términos y Condiciones </nuxt-link>
+              <nuxt-link class="px-4 py-3" to="/terms"> Términos y Condiciones </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link to="/privacy"> Politica de Privacidad </nuxt-link>
+              <nuxt-link class="px-4 py-3" to="/privacy"> Politica de Privacidad </nuxt-link>
             </v-col>
           </v-row>
         </v-col>
