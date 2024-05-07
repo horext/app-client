@@ -33,6 +33,7 @@ const config = defineNuxtConfig({
     '@nuxt/test-utils/module',
     'nuxt-gtag',
     '@nuxt/image',
+    '@nuxt/scripts',
   ],
   image: {
     dir: 'assets/images',
