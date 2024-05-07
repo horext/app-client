@@ -1,5 +1,9 @@
 <template>
-  <v-navigation-drawer location="bottom" scrim="secondary" temporary>
+  <v-navigation-drawer
+    location="bottom"
+    scrim="secondary"
+    temporary
+  >
     <v-list
       :color="
         $vuetify.theme.name === 'dark' ? 'grey darken-4' : 'grey lighten-5'
@@ -11,6 +15,7 @@
         :key="item.route"
         :to="item.route"
         color="primary"
+        role="menuitem"
       >
         <v-list-item-title>
           {{ item.name }}
