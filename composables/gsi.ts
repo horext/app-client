@@ -1,7 +1,5 @@
 /// <reference types="google.accounts" />
 
-import { useScript } from '@unhead/vue'
-
 export interface GoogleAccountsLoaderApi {
   google: {
     accounts: typeof google.accounts
@@ -17,6 +15,9 @@ export function useGoogleAccounts() {
     {
       key: 'google-accounts',
       src: 'https://accounts.google.com/gsi/client',
+      async: true,
+      //@ts-ignore 
+      crossorigin: false
     },
     {
       use: () => ({ google: window.google }),
