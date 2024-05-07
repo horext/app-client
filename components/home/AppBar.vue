@@ -21,7 +21,11 @@
       </v-tab>
     </v-tabs>
 
-    <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
+    <v-app-bar-nav-icon
+      class="hidden-md-and-up"
+      aria-label="Menu Iziquierdo"
+      @click="drawer = !drawer"
+    />
   </v-app-bar>
 
   <lazy-home-drawer v-if="isMobile" v-model="drawer" :items="items" />
