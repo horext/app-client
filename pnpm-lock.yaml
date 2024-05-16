@@ -24,8 +24,8 @@ dependencies:
     specifier: ^10.9.0
     version: 10.9.0(nuxt@3.11.2)(vue@3.4.27)
   google-auth-library:
-    specifier: ^9.9.0
-    version: 9.9.0
+    specifier: ^9.10.0
+    version: 9.10.0
   happy-dom:
     specifier: ^14.10.2
     version: 14.10.2
@@ -5995,8 +5995,8 @@ packages:
       slash: 5.1.0
       unicorn-magic: 0.1.0
 
-  /google-auth-library@9.9.0:
-    resolution: {integrity: sha512-9l+zO07h1tDJdIHN74SpnWIlNR+OuOemXlWJlLP9pXy6vFtizgpEzMuwJa4lqY9UAdiAv5DVd5ql0Am916I+aA==}
+  /google-auth-library@9.10.0:
+    resolution: {integrity: sha512-ol+oSa5NbcGdDqA+gZ3G3mev59OHBZksBTxY/tYwjtcp1H/scAFwJfSQU9/1RALoyZ7FslNbke8j4i3ipwlyuQ==}
     engines: {node: '>=14'}
     dependencies:
       base64-js: 1.5.1
