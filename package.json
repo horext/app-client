@@ -24,7 +24,7 @@
     "@types/google.accounts": "^0.0.14",
     "@vueuse/core": "^10.9.0",
     "@vueuse/nuxt": "^10.9.0",
-    "google-auth-library": "^9.9.0",
+    "google-auth-library": "^9.10.0",
     "happy-dom": "^14.10.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
