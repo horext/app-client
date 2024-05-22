@@ -119,8 +119,8 @@ devDependencies:
     specifier: ^3.11.2
     version: 3.11.2(@opentelemetry/api@1.8.0)(@unocss/reset@0.60.2)(eslint@8.57.0)(floating-vue@5.2.2)(sass@1.77.0)(typescript@5.4.5)(unocss@0.60.2)(vite@5.2.11)(vue-tsc@2.0.19)
   nuxt-gtag:
-    specifier: ^2.0.5
-    version: 2.0.5
+    specifier: ^2.0.6
+    version: 2.0.6
   prettier:
     specifier: ^3.1.1
     version: 3.2.5
@@ -7712,8 +7712,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /nuxt-gtag@2.0.5:
-    resolution: {integrity: sha512-RX/52eXufjly/Y7PJKRLGLBQhI73SnmzcLoI4pjEJIVsEVpIXJLkAwHtKY3HvU8KiV0ai4UE3Cn1xB6ncoiFaA==}
+  /nuxt-gtag@2.0.6:
+    resolution: {integrity: sha512-KjHujiwX4mtmgtHLMQB25NP3vxAuzsEqmZDkUoq9ZUSRLXly6FaPT97BTM4slr72eSfaoPGDeFyFxVvJhN4LVg==}
     dependencies:
       '@nuxt/kit': 3.11.2
       defu: 6.1.4
