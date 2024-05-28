@@ -8,7 +8,7 @@
     </template>
     <v-row justify="center" align="center" no-gutters>
       <v-col cols="12">
-        <AppHourlyLoadInfo class="pa-0" />
+        <AppHourlyLoadInfo :hourly-load="hourlyLoad" class="pa-0" />
       </v-col>
     </v-row>
     <template #append>
@@ -78,7 +78,7 @@ import {
 
 const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
-
+const { hourlyLoad } = storeToRefs(store)
 await useAsyncData('initData', async () => {
   await Promise.all([
     store.fetchFirstEntry(),

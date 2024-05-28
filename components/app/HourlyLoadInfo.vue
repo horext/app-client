@@ -11,18 +11,7 @@
     </template>
   </v-list-item>
 </template>
-<script lang="ts">
-import { storeToRefs } from 'pinia'
-import { defineComponent } from 'vue'
-import { useUserConfigStore } from '~/stores/user-config'
-
-export default defineComponent({
-  setup() {
-    const store = useUserConfigStore()
-    const { hourlyLoad } = storeToRefs(store)
-    return {
-      hourlyLoad,
-    }
-  },
-})
+<script setup lang="ts">
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+defineProps<{ hourlyLoad?: IHourlyLoad }>()
 </script>
