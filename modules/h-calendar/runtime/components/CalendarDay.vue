@@ -58,7 +58,7 @@
         "
       >
         <template #default>
-          <slot name="event" :event="event"> </slot>
+          <slot name="event" :event="event" />
         </template>
       </Event>
     </template>
@@ -118,7 +118,7 @@ const weekDayEvents = computed(() => {
 const groupEvents = computed(() => {
   const events = weekDayEvents.value
   return extractBlocks(events)
-});
+})
 const dayContainer = ref<null | HTMLDivElement>(null)
 const internalWidthRem = computed(() => props.internalWidth + 'rem')
 </script>

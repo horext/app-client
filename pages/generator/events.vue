@@ -62,9 +62,11 @@
         </template>
         <template #[`item.actions`]="{ item }">
           <v-icon class="mr-2" color="primary" @click="editItem(item)">
-          {{ mdiPencil }}
+            {{ mdiPencil }}
           </v-icon>
-          <v-icon color="red" @click="deleteItem(item)"> {{ mdiDelete }} </v-icon>
+          <v-icon color="red" @click="deleteItem(item)">
+            {{ mdiDelete }}
+          </v-icon>
         </template>
       </v-data-table>
 

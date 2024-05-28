@@ -8,12 +8,17 @@
         <v-radio-group v-model="mode" hide-details density="compact" inline>
           <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
             <template #label>
-              <v-icon size="small" start> {{ mdiCalendar }} </v-icon>Calendario
+              <v-icon size="small" start>
+                {{ mdiCalendar }} </v-icon
+              >Calendario
             </template>
           </v-radio>
           <v-radio :value="MODES.LIST" color="primary-darken-2">
             <template #label>
-              <v-icon size="small" start> {{ mdiTable }} </v-icon> Lista
+              <v-icon size="small" start>
+                {{ mdiTable }}
+              </v-icon>
+              Lista
             </template>
           </v-radio>
         </v-radio-group>
@@ -37,7 +42,9 @@
                 density="compact"
                 v-bind="props"
               >
-                <v-icon start> {{ mdiExport }} </v-icon>
+                <v-icon start>
+                  {{ mdiExport }}
+                </v-icon>
                 Exportar
               </v-btn>
             </template>
@@ -58,7 +65,9 @@
             density="compact"
             @click="dialogShare = !dialogShare"
           >
-            <v-icon start> {{ mdiShareVariant }} </v-icon>
+            <v-icon start>
+              {{ mdiShareVariant }}
+            </v-icon>
             Compartir
           </v-btn>
           <GoogleAuth

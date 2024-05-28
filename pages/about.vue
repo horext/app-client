@@ -33,8 +33,8 @@
         <v-row>
           <v-col cols="12">
             Eres libre de contribuir al proyecto, puedes ver el código fuente
-            en:</v-col
-          >
+            en:
+          </v-col>
           <v-col cols="12">
             <v-btn
               color="orange"
@@ -42,10 +42,12 @@
               variant="outlined"
               size="large"
             >
-              <v-icon start>{{ mdiGitlab }} </v-icon>
+              <v-icon start>
+                {{ mdiGitlab }}
+              </v-icon>
               <span class="text-grey-darken-1 font-weight-bold"> GitLab </span>
-            </v-btn></v-col
-          >
+            </v-btn>
+          </v-col>
         </v-row>
       </v-col>
       <v-col cols="12">

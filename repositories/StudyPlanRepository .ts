@@ -10,6 +10,8 @@ export class StudyPlanRepository extends BaseRepository {
   }
 
   getSubjectsByStudyPlanId(id: number) {
-    return this.$fetch<ISubjectStudyPlan[]>(`${PATH_STUDY_PLANS}/${id}/subjects`)
+    return this.$fetch<ISubjectStudyPlan[]>(
+      `${PATH_STUDY_PLANS}/${id}/subjects`,
+    )
   }
 }

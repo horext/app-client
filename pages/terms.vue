@@ -27,6 +27,6 @@
 
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Terminos de servicio'
+  title: 'Terminos de servicio',
 })
 </script>

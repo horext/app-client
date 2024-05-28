@@ -8,8 +8,7 @@
         variant="text"
         :icon="mdiCloseCircleOutline"
         @click="close"
-      >
-      </v-btn>
+      />
     </v-card-title>
     <v-list>
       <v-list-item
@@ -17,7 +16,9 @@
         target="_blank"
       >
         <template #prepend>
-          <v-icon color="indigo"> {{ mdiFacebook }} </v-icon>
+          <v-icon color="indigo">
+            {{ mdiFacebook }}
+          </v-icon>
         </template>
         <v-card-title>Facebook</v-card-title>
       </v-list-item>
@@ -30,7 +31,9 @@
         target="_blank"
       >
         <template #prepend>
-          <v-icon color="cyan"> {{ mdiTwitter }} </v-icon>
+          <v-icon color="cyan">
+            {{ mdiTwitter }}
+          </v-icon>
         </template>
         <v-card-title>Twitter</v-card-title>
       </v-list-item>
@@ -40,7 +43,9 @@
         data-action="share/whatsapp/share"
       >
         <template #prepend>
-          <v-icon color="success"> {{ mdiWhatsapp }} </v-icon>
+          <v-icon color="success">
+            {{ mdiWhatsapp }}
+          </v-icon>
         </template>
         <v-card-title>Whatsapp</v-card-title>
       </v-list-item>
@@ -50,7 +55,9 @@
         data-action="share/telegram/share"
       >
         <template #prepend>
-          <v-icon color="#54a9eb"> {{ mdiSendCheck }} </v-icon>
+          <v-icon color="#54a9eb">
+            {{ mdiSendCheck }}
+          </v-icon>
         </template>
         <v-card-title>Telegram</v-card-title>
       </v-list-item>

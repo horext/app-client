@@ -13,7 +13,7 @@
     <tbody>
       <tr v-if="loading">
         <td colspan="6">
-          <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+          <v-skeleton-loader type="table-row@10" />
         </td>
       </tr>
       <template v-else>

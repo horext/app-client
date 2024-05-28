@@ -11,7 +11,7 @@
       <div class="d-flex align-self-center ga-2">
         <v-toolbar-title>
           Generados
-          <v-badge color="white" :content="schedules.length" inline></v-badge>
+          <v-badge color="white" :content="schedules.length" inline />
         </v-toolbar-title>
       </div>
     </template>
@@ -37,7 +37,9 @@
         <template #append-inner>
           <v-menu bottom>
             <template #activator="{ props }">
-              <v-icon v-bind="props"> {{ mdiHelpCircle }} </v-icon>
+              <v-icon v-bind="props">
+                {{ mdiHelpCircle }}
+              </v-icon>
             </template>
             <v-card max-width="300" density="compact">
               <v-card-text>

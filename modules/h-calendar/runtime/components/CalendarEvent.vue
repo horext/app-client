@@ -11,7 +11,9 @@
   >
     <slot>
       <div class="h-calendar-event">
-        <div class="event-name">{{ event.name }}</div>
+        <div class="event-name">
+          {{ event.name }}
+        </div>
         <div class="event-time">
           <span>{{ event.start }} </span><span> - </span>
           <span>{{ event.end }}</span>

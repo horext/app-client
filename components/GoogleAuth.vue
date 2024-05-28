@@ -77,7 +77,7 @@
                     color="error"
                     @click="deleteNotification(notification)"
                   >
-                 {{ mdiDelete }}
+                    {{ mdiDelete }}
                   </v-icon>
                 </template>
               </v-text-field>
@@ -85,7 +85,7 @@
                 key="selected"
                 v-model="defaultNotification.minutes"
                 :rules="[(a) => a > 0 || 'No permitido']"
-               :prepend-icon="mdiBell"
+                :prepend-icon="mdiBell"
                 type="number"
                 :items="Array.from({ length: 60 }, (x, i) => i)"
                 suffix="minutos"
@@ -214,7 +214,9 @@ function addCalendar(this: any) {
   }
 }
 
-async function createCalendar({ summary }:Pick<IGoogleCalendarItem, 'summary'>) {
+async function createCalendar({
+  summary,
+}: Pick<IGoogleCalendarItem, 'summary'>) {
   try {
     const response = await googleApis<IGoogleCalendarItem>(
       'calendar/v3/calendars',
@@ -255,7 +257,7 @@ const exportEventToGCalendar = async () => {
 }
 
 async function eventRequest(event: IEvent): Promise<any> {
-  if(!dateEnd.value) {
+  if (!dateEnd.value) {
     throw new Error('No se ha seleccionado una fecha de fin')
   }
   const format =

@@ -2,68 +2,33 @@
   <v-footer>
     <v-container>
       <v-row dense>
-        <v-col
-          cols="12"
-          md="6"
-        >
-          <v-row
-            justify-md="start"
-            justify="center"
-            dense
-          >
-            <v-col
-              v-for="(s, i) in social"
-              :key="s.name"
-              cols="auto"
-            >
-              <a
-                class="px-5 py-4"
-                :href="s.link"
-                v-text="s.name"
-              />
+        <v-col cols="12" md="6">
+          <v-row justify-md="start" justify="center" dense>
+            <v-col v-for="(s, i) in social" :key="s.name" cols="auto">
+              <a class="px-5 py-4" :href="s.link" v-text="s.name" />
             </v-col>
           </v-row>
         </v-col>
-        <v-col
-          class="text-center text-md-right"
-          cols="12"
-          md="6"
-        >
-          <v-row
-            justify-md="end"
-            justify="center"
-            dense
-          >
+        <v-col class="text-center text-md-right" cols="12" md="6">
+          <v-row justify-md="end" justify="center" dense>
             <v-col cols="auto">
-              <nuxt-link
-                class="px-5 py-4"
-                to="/security"
-              >
+              <nuxt-link class="px-5 py-4" to="/security">
                 Seguridad
               </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link
-                class="px-5 py-4"
-                to="/terms"
-              >
+              <nuxt-link class="px-5 py-4" to="/terms">
                 Términos y Condiciones
               </nuxt-link>
             </v-col>
             <v-col cols="auto">
-              <nuxt-link
-                class="px-5 py-4"
-                to="/privacy"
-              >
+              <nuxt-link class="px-5 py-4" to="/privacy">
                 Politica de Privacidad
               </nuxt-link>
             </v-col>
           </v-row>
         </v-col>
-        <v-col
-          class="text-center"
-          cols="12"
-        >
+        <v-col class="text-center" cols="12">
           Copyright &copy; {{ new Date().getFullYear() }} Octatec
         </v-col>
       </v-row>

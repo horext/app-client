@@ -53,8 +53,7 @@
 </template>
 
 <script setup lang="ts">
-
 useSeoMeta({
-  title: 'Política de Privacidad'
+  title: 'Política de Privacidad',
 })
 </script>

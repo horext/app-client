@@ -106,14 +106,14 @@ export const generateStudyPlanDiagramFlowChart = (
     .join('\n')}
 
 ${subjects
-.map((subject) =>
+  .map((subject) =>
     subject.relationships
-    .map(
+      .map(
         (relationship) => `${relationship.relatedSubjectId} -.-> ${subject.id}
 `,
-    )
-    .join(''),
-)
-.join('')}
+      )
+      .join(''),
+  )
+  .join('')}
 `
 }

@@ -25,12 +25,7 @@
       type="time"
       :rules="endRules"
     />
-    <v-color-picker
-      v-model="color"
-      class="ma-2"
-      hide-canvas
-      hide-inputs
-    />
+    <v-color-picker v-model="color" class="ma-2" hide-canvas hide-inputs />
   </v-form>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="h-calendar">
     <div class="h-calendar-header">
-      <div class="h-calendar-empty-slot"></div>
+      <div class="h-calendar-empty-slot" />
       <div
         v-for="day in internalDays"
         :key="day.id"
@@ -30,7 +30,7 @@
         @mousemove:event="$emit('mousemove:event', $event)"
       >
         <template #event="{ event }">
-          <slot name="event" :event="event"></slot>
+          <slot name="event" :event="event" />
         </template>
       </CalendarDay>
     </div>

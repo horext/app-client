@@ -35,14 +35,14 @@
                       v-if="item.raw"
                       :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
                       :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-                    ></v-list-item>
+                    />
                   </template>
                   <template #item="{ props, item }">
                     <v-list-item
                       v-bind="props"
                       :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
                       :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-                    ></v-list-item>
+                    />
                   </template>
                   <template #append>
                     <v-btn icon variant="text" :loading="loadingSubjects">

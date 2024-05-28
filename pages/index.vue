@@ -10,15 +10,8 @@
     gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
   >
     <v-container class="fill-height">
-      <v-row
-        align="center"
-        class="text-white mx-auto"
-        justify="center"
-      >
-        <v-col
-          class="text-white text-center"
-          cols="12"
-        >
+      <v-row align="center" class="text-white mx-auto" justify="center">
+        <v-col class="text-white text-center" cols="12">
           <h1>
             <span
               :class="[$vuetify.display.smAndDown ? 'display-1' : 'display-2']"
@@ -26,7 +19,7 @@
             >
               Bienvenido a
             </span>
-            <br>
+            <br />
             <span
               :class="[$vuetify.display.smAndDown ? 'display-3' : 'display-4']"
               class="font-weight-black"
@@ -35,10 +28,7 @@
             </span>
           </h1>
         </v-col>
-        <v-col
-          class="text-center"
-          cols="12"
-        >
+        <v-col class="text-center" cols="12">
           <v-btn
             class="align-self-end font-weight-bold"
             variant="outlined"
@@ -51,10 +41,7 @@
             Generar mis horarios
           </v-btn>
         </v-col>
-        <v-col
-          class="text-center"
-          cols="12"
-        >
+        <v-col class="text-center" cols="12">
           <v-btn
             class="align-self-end font-weight-bold"
             variant="outlined"

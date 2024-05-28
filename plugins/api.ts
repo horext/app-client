@@ -3,7 +3,6 @@ import Repositories from '~/repositories'
 declare module '#app' {
   interface NuxtApp {
     $api: Repositories
-
   }
 }
 

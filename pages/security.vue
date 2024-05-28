@@ -48,6 +48,6 @@
 
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Política de Seguridad'
+  title: 'Política de Seguridad',
 })
 </script>
