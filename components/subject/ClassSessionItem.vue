@@ -29,21 +29,22 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { session } = toRefs(props)
     const dayWeek = computed(() =>
-      WEEK_DAYS[props.session?.day]?.substring(0, 2).toUpperCase(),
+      WEEK_DAYS[session.value?.day]?.substring(0, 2).toUpperCase(),
     )
 
-    const type = computed(() => props.session?.type?.code)
+    const type = computed(() => session.value?.type?.code)
 
-    const teacherFullName = computed(() => props.session?.teacher?.fullName)
+    const teacherFullName = computed(() => session.value?.teacher?.fullName)
 
-    const classroom = computed(() => props.session?.classroom?.code)
+    const classroom = computed(() => session.value?.classroom?.code)
 
     const timeInterval = computed(
       () =>
-        props.session?.startTime?.substring(0, 5) +
+        session.value?.startTime?.substring(0, 5) +
         ' - ' +
-        props.session?.endTime?.substring(0, 5),
+        session.value?.endTime?.substring(0, 5),
     )
 
     return {
