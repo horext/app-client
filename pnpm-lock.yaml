@@ -69,8 +69,8 @@ dependencies:
     specifier: ^4.3.2
     version: 4.3.2(vue@3.4.27)
   vuetify:
-    specifier: ^3.6.7
-    version: 3.6.7(typescript@5.4.5)(vue@3.4.27)
+    specifier: ^3.6.8
+    version: 3.6.8(typescript@5.4.5)(vue@3.4.27)
 
 devDependencies:
   '@mdi/js':
@@ -10409,8 +10409,8 @@ packages:
       '@vue/shared': 3.4.27
       typescript: 5.4.5
 
-  /vuetify@3.6.7(typescript@5.4.5)(vue@3.4.27):
-    resolution: {integrity: sha512-oj7zrNbjKFlSS38449K9/ad9mc/o25bxuTFT9rs2AtSNnOA+BOLIVJCAPlmLGWoQGslPh80RzckXDedoifs+TQ==}
+  /vuetify@3.6.8(typescript@5.4.5)(vue@3.4.27):
+    resolution: {integrity: sha512-j0v0iTeSVRj2ZEM9Q8HxejHxmxrQLYQSalhH82hfcraORaiDoqf1XV05N3P5ERXkKiJjJc/LfxFAUUvYSldxeg==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
