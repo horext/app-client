@@ -57,8 +57,8 @@ dependencies:
     specifier: ^1.10.2
     version: 1.10.2(ioredis@5.4.1)
   uuid:
-    specifier: ^9.0.1
-    version: 9.0.1
+    specifier: ^10.0.0
+    version: 10.0.0
   vite:
     specifier: ^5.3.0
     version: 5.3.0(sass@1.77.2)
@@ -10602,6 +10602,11 @@ packages:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
     dependencies:
       base64-arraybuffer: 1.0.2
+    dev: false
+
+  /uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
     dev: false
 
   /uuid@9.0.1:
