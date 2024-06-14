@@ -18,8 +18,8 @@ dependencies:
     specifier: ^0.0.14
     version: 0.0.14
   '@vueuse/core':
-    specifier: ^10.10.0
-    version: 10.10.0(vue@3.4.27)
+    specifier: ^10.11.0
+    version: 10.11.0(vue@3.4.27)
   '@vueuse/nuxt':
     specifier: ^10.10.0
     version: 10.10.0(nuxt@3.12.1)(vue@3.4.27)
@@ -3668,7 +3668,7 @@ packages:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.10.0
       '@vueuse/shared': 10.10.0(vue@3.4.27)
-      vue-demi: 0.14.7(vue@3.4.27)
+      vue-demi: 0.14.8(vue@3.4.27)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -3773,7 +3773,7 @@ packages:
   /@vueuse/shared@10.10.0(vue@3.4.27):
     resolution: {integrity: sha512-2aW33Ac0Uk0U+9yo3Ypg9s5KcR42cuehRWl7vnUHadQyFvCktseyxxEPBi1Eiq4D2yBGACOnqLZpx1eMc7g5Og==}
     dependencies:
-      vue-demi: 0.14.7(vue@3.4.27)
+      vue-demi: 0.14.8(vue@3.4.27)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
