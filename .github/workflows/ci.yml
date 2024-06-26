@@ -20,10 +20,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup pnpm 8.x
+      - name: Setup pnpm 9.x
         uses: pnpm/action-setup@v4
         with:
-          version: 8.x
+          version: 9.x
   
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
