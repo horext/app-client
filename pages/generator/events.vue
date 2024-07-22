@@ -8,7 +8,7 @@
             <v-divider class="mx-4" inset vertical />
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
               <template #activator="{ props }">
-                <v-btn color="primary" theme="dark" class="mb-2" v-bind="props">
+                <v-btn color="primary" theme="dark" v-bind="props">
                   Nueva Actividad
                 </v-btn>
               </template>
