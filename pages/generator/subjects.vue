@@ -92,7 +92,7 @@
             </v-col>
             <v-col cols="12" md="6">
               <v-responsive>
-                <div id="noData" />
+                <div ref="noDataElement" />
               </v-responsive>
             </v-col>
           </v-row>
@@ -167,8 +167,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue'
-import Lottie from 'lottie-web'
+import { defineComponent, ref, computed } from 'vue'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
@@ -188,16 +187,14 @@ export default defineComponent({
     SubjectScheduleList,
   },
   async setup() {
-    const $api = useApi()
-    onMounted(() => {
-      Lottie.loadAnimation({
-        container: document.getElementById('noData') as Element,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: Animation,
-      })
+    const noDataElement = ref<HTMLElement | null>(null)
+    useLottie(noDataElement, {
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData: Animation,
     })
+    const $api = useApi()
 
     const configStore = useUserConfigStore()
 
@@ -370,6 +367,7 @@ export default defineComponent({
       mdiMagnify,
       mdiCheckCircle,
       mdiClose,
+      noDataElement,
     }
   },
 })
