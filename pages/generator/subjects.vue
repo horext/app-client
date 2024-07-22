@@ -23,7 +23,7 @@
                     errorSubjects
                       ? 'Error al buscar cursos'
                       : search
-                        ? statusSubjects ===  'pending'
+                        ? statusSubjects === 'pending'
                           ? 'Buscando cursos...'
                           : 'No se encontraron cursos'
                         : 'Escribe el nombre del curso'
@@ -45,7 +45,11 @@
                     />
                   </template>
                   <template #append>
-                    <v-btn icon variant="text" :loading="statusSubjects === 'pending'">
+                    <v-btn
+                      icon
+                      variant="text"
+                      :loading="statusSubjects === 'pending'"
+                    >
                       <v-icon>{{ mdiMagnify }}</v-icon>
                     </v-btn>
                   </template>
@@ -174,6 +178,7 @@ import {
   mdiCheckCircle,
   mdiClose,
 } from '@mdi/js'
+import { SUBJECT_HEADERS } from '~/constants/subjects'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -295,34 +300,7 @@ export default defineComponent({
       },
     )
 
-    const headers = ref([
-      {
-        title: 'Código',
-        value: 'course.id',
-        sortable: true,
-      },
-      {
-        title: 'Nombre de curso',
-        align: 'start',
-        sortable: true,
-        value: 'course.name',
-      },
-      {
-        title: 'Secciones',
-        value: 'sections',
-        sortable: true,
-      },
-      {
-        title: 'Creditos',
-        value: 'credits',
-        sortable: true,
-      },
-      {
-        title: 'Acciones',
-        value: 'actions',
-        sortable: false,
-      },
-    ] as const)
+    const headers = SUBJECT_HEADERS
 
     const myHourlyLoad = computed(() => {
       return configStore.hourlyLoad!
