@@ -1,7 +1,7 @@
 <template>
   <v-row dense>
     <v-col cols="12">
-      <v-data-table :headers="headers" :items="myEvents">
+      <v-data-table :headers="headers" :items="myEvents" mobile>
         <template #top>
           <v-toolbar density="compact" flat>
             <v-toolbar-title>Mis Actividades</v-toolbar-title>
