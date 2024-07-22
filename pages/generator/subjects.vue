@@ -1,7 +1,12 @@
 <template>
   <v-row dense>
     <v-col cols="12">
-      <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
+      <v-data-table
+        :headers="headers"
+        :items="mySubjects"
+        class="elevation-1"
+        mobile
+      >
         <template #top>
           <v-toolbar flat>
             <v-toolbar-title>Cursos Disponibles</v-toolbar-title>
@@ -80,9 +85,7 @@
           <v-toolbar flat>
             <v-toolbar-title> Cursos Seleccionados </v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
-            <v-btn to="/generator" color="primary">
-              Generar horarios
-            </v-btn>
+            <v-btn to="/generator" color="primary"> Generar horarios </v-btn>
           </v-toolbar>
         </template>
         <template #no-data>
