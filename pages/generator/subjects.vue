@@ -18,12 +18,12 @@
                   hide-details
                   item-title="course.name"
                   item-value="id"
-                  :loading="loadingSubjects"
+                  :loading="statusSubjects === 'pending'"
                   :no-data-text="
                     errorSubjects
                       ? 'Error al buscar cursos'
                       : search
-                        ? loadingSubjects
+                        ? statusSubjects ===  'pending'
                           ? 'Buscando cursos...'
                           : 'No se encontraron cursos'
                         : 'Escribe el nombre del curso'
@@ -45,7 +45,7 @@
                     />
                   </template>
                   <template #append>
-                    <v-btn icon variant="text" :loading="loadingSubjects">
+                    <v-btn icon variant="text" :loading="statusSubjects === 'pending'">
                       <v-icon>{{ mdiMagnify }}</v-icon>
                     </v-btn>
                   </template>
@@ -284,8 +284,8 @@ export default defineComponent({
 
     const {
       data: subjects,
-      pending: loadingSubjects,
       error: errorSubjects,
+      status: statusSubjects,
     } = await useAsyncData(
       'search',
       async () => {
@@ -360,7 +360,7 @@ export default defineComponent({
       totalCredits,
       openSearchMenu,
       myHourlyLoad,
-      loadingSubjects,
+      statusSubjects,
       errorSubjects,
       mdiPencil,
       mdiDelete,
