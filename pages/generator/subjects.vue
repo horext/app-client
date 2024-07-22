@@ -78,7 +78,7 @@
           </v-sheet>
 
           <v-toolbar flat>
-            <v-toolbar-title> Cursos seleccionados </v-toolbar-title>
+            <v-toolbar-title> Cursos Seleccionados </v-toolbar-title>
             <v-btn to="/generator" color="primary">
               Generar horarios
             </v-btn>
