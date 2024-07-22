@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-data-table :headers="headers" :items="myEvents">
         <template #top>
-          <v-toolbar flat>
+          <v-toolbar density="compact" flat>
             <v-toolbar-title>Mis Actividades</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
             <v-dialog v-model="dialog" max-width="500px" @click:outside="close">

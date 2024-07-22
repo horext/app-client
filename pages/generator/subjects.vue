@@ -8,7 +8,7 @@
         mobile
       >
         <template #top>
-          <v-toolbar flat>
+          <v-toolbar density="compact" flat>
             <v-toolbar-title>Cursos Disponibles</v-toolbar-title>
           </v-toolbar>
           <v-divider />
@@ -82,7 +82,7 @@
             </v-dialog>
           </v-sheet>
 
-          <v-toolbar flat>
+          <v-toolbar density="compact" flat>
             <v-toolbar-title> Cursos Seleccionados </v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
             <v-btn to="/generator" color="primary"> Generar horarios </v-btn>
