@@ -59,10 +59,6 @@
                   </template>
                 </v-autocomplete>
               </v-col>
-
-              <v-col cols="12" class="d-flex justify-end">
-                <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
-              </v-col>
             </v-row>
             <v-dialog
               v-model="dialog"
@@ -83,7 +79,9 @@
 
           <v-toolbar flat>
             <v-toolbar-title> Cursos seleccionados </v-toolbar-title>
-            <v-spacer />
+            <v-btn to="/generator" color="primary">
+              Generar horarios
+            </v-btn>
           </v-toolbar>
         </template>
         <template #no-data>
@@ -126,7 +124,7 @@
           <v-divider />
           <v-row align="center" justify="end" class="pa-2">
             <v-col cols="auto">
-              <v-chip color="blue" label>
+              <v-chip color="green" label>
                 Total de créditos: {{ totalCredits }}
               </v-chip>
             </v-col>
