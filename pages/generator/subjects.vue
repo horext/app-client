@@ -79,6 +79,7 @@
 
           <v-toolbar flat>
             <v-toolbar-title> Cursos Seleccionados </v-toolbar-title>
+            <v-divider class="mx-4" inset vertical />
             <v-btn to="/generator" color="primary">
               Generar horarios
             </v-btn>
