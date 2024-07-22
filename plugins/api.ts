@@ -1,10 +1,13 @@
 import Repositories from '~/repositories'
 
-const api = defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const apiFetcher = $fetch.create({
     baseURL: '/api',
   })
-  nuxtApp.provide('api', new Repositories(apiFetcher))
-})
 
-export default api
+  return {
+    provide: {
+      api: new Repositories(apiFetcher),
+    },
+  }
+})
