@@ -51,6 +51,13 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
+          <v-card flat>
+            <v-card-text>
+              Añade tus actividades para tener un mejor control de tu tiempo,
+              como por ejemplo, estudiar, hacer ejercicio, etc.
+            </v-card-text>
+          </v-card>
+          <v-divider />
         </template>
         <template #[`item.color`]="{ item }">
           <v-badge :color="item.color" />
