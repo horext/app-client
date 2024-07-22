@@ -84,13 +84,11 @@
 
           <v-toolbar density="compact" flat>
             <v-toolbar-title>
-              <span class="hidden-sm-and-down">Cursos</span>
-              Seleccionados
+              <span class="hidden-xs-and-down">Cursos </span> Seleccionados
             </v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
             <v-btn to="/generator" color="primary">
-              Generar
-              <span class="hidden-sm-and-down">Horarios</span>
+              Generar<span class="hidden-xs-and-down">&nbsp; Horarios</span>
             </v-btn>
           </v-toolbar>
         </template>
