@@ -98,14 +98,7 @@
           </v-row>
         </template>
         <template #[`item.sections`]="{ item }">
-          <v-chip
-            v-for="schedule in item.schedules"
-            :key="schedule.id"
-            theme="dark"
-            :color="getColor(schedule.section.id)"
-          >
-            {{ schedule.section.id }}
-          </v-chip>
+          <SubjectTableItemSectionList :schedules="item.schedules" />
         </template>
         <template #[`item.actions`]="{ item }">
           <v-tooltip location="bottom">
@@ -169,6 +162,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
+import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
@@ -185,6 +179,7 @@ export default defineComponent({
   name: 'MySubjects',
   components: {
     SubjectScheduleList,
+    SubjectTableItemSectionList,
   },
   async setup() {
     const noDataElement = ref<HTMLElement | null>(null)
@@ -205,11 +200,6 @@ export default defineComponent({
         (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
       )
     })
-
-    const getColor = (section: string) => {
-      const months = ['blue', 'purple', 'orange', 'indigo', 'teal']
-      return months[section.charCodeAt(0) % months.length]
-    }
 
     const mySubjects = computed(() => configStore.subjects)
 
@@ -349,7 +339,6 @@ export default defineComponent({
       headers,
       search,
       succcesAddCourse,
-      getColor,
       deleteItem,
       editItem,
       closeDelete,
