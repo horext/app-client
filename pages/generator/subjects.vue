@@ -3,6 +3,10 @@
     <v-col cols="12">
       <v-data-table :headers="headers" :items="mySubjects" class="elevation-1">
         <template #top>
+          <v-toolbar flat>
+            <v-toolbar-title>Cursos Disponibles</v-toolbar-title>
+          </v-toolbar>
+          <v-divider />
           <v-sheet flat class="pa-2">
             <v-row dense>
               <v-col cols="12">
@@ -60,15 +64,6 @@
                 <nuxt-link to="/generator"> Generar mis horarios </nuxt-link>
               </v-col>
             </v-row>
-            <v-row dense>
-              <v-col col="auto">
-                <v-toolbar-title> Mis cursos seleccionados </v-toolbar-title>
-              </v-col>
-              <v-spacer />
-              <v-col cols="auto">
-                <div>Créditos Necesarios : {{ totalCredits }}</div>
-              </v-col>
-            </v-row>
             <v-dialog
               v-model="dialog"
               dense
@@ -85,6 +80,11 @@
               />
             </v-dialog>
           </v-sheet>
+
+          <v-toolbar flat>
+            <v-toolbar-title> Cursos seleccionados </v-toolbar-title>
+            <v-spacer />
+          </v-toolbar>
         </template>
         <template #no-data>
           <v-row align="center">
@@ -121,6 +121,16 @@
             </template>
             <span>Eliminar</span>
           </v-tooltip>
+        </template>
+        <template #bottom>
+          <v-divider />
+          <v-row align="center" justify="end" class="pa-2">
+            <v-col cols="auto">
+              <v-chip color="blue" label>
+                Total de créditos: {{ totalCredits }}
+              </v-chip>
+            </v-col>
+          </v-row>
         </template>
       </v-data-table>
     </v-col>
