@@ -83,9 +83,15 @@
           </v-sheet>
 
           <v-toolbar density="compact" flat>
-            <v-toolbar-title> Cursos Seleccionados </v-toolbar-title>
+            <v-toolbar-title>
+              <span class="hidden-sm-and-down">Cursos</span>
+              Seleccionados
+            </v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
-            <v-btn to="/generator" color="primary"> Generar horarios </v-btn>
+            <v-btn to="/generator" color="primary">
+              Generar
+              <span class="hidden-sm-and-down">Horarios</span>
+            </v-btn>
           </v-toolbar>
         </template>
         <template #no-data>
