@@ -12,30 +12,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
+import { getSectionColor } from '~/utils/color'
 
 const props = defineProps<{
-  schedules: ISubjectSchedule[]
+  schedules: Pick<ISubjectSchedule, 'section' | 'id'>[]
 }>()
 
 const { schedules } = toRefs(props)
 
-const getColor = (id: string) => {
-  const colors = [
-    'primary',
-    'secondary',
-    'accent',
-    'error',
-    'info',
-    'success',
-    'warning',
-  ]
-
-  return colors[id.length % colors.length]
-}
-
 const internalItems = computed(() => {
   return schedules.value.map((schedule) => ({
-    color: getColor(schedule.section.id),
+    color: getSectionColor(schedule.section.id),
     text: schedule.section.id,
     id: schedule.id,
   }))
