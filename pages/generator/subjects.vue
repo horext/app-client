@@ -93,19 +93,7 @@
           </v-toolbar>
         </template>
         <template #no-data>
-          <v-row align="center">
-            <v-col cols="12" md="6">
-              <div class="text-md-h2 text-h4 text-left">
-                Busca tus cursos en la parte superior y luego ve al
-                <nuxt-link to="/generator"> generador </nuxt-link>
-              </div>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-responsive>
-                <div ref="noDataElement" />
-              </v-responsive>
-            </v-col>
-          </v-row>
+          <SubjectTableNoData />
         </template>
         <template #[`item.sections`]="{ item }">
           <SubjectTableItemSectionList :schedules="item.schedules" />
@@ -183,10 +171,10 @@
 import { defineComponent, ref, computed } from 'vue'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
+import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
-import Animation from '~/assets/lottie/15538-cat-woow.json'
 import {
   mdiPencil,
   mdiDelete,
@@ -201,15 +189,9 @@ export default defineComponent({
   components: {
     SubjectScheduleList,
     SubjectTableItemSectionList,
+    SubjectTableNoData,
   },
   async setup() {
-    const noDataElement = ref<HTMLElement | null>(null)
-    useLottie(noDataElement, {
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      animationData: Animation,
-    })
     const $api = useApi()
 
     const configStore = useUserConfigStore()
@@ -350,7 +332,6 @@ export default defineComponent({
       mdiMagnify,
       mdiCheckCircle,
       mdiClose,
-      noDataElement,
     }
   },
 })
