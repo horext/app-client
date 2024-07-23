@@ -1,8 +1,18 @@
 <template>
-  <v-sheet color="transparent" class="d-flex align-center justify-center">
-    <div ref="darkModeEl" class="dark-toggle" @click="toggleDark" />
-  </v-sheet>
+  <v-tooltip location="bottom">
+    <template #activator="{ props }">
+      <v-sheet
+        color="transparent"
+        class="d-flex align-center justify-center"
+        v-bind="props"
+      >
+        <div ref="darkModeEl" class="dark-toggle" @click="toggleDark" />
+      </v-sheet>
+    </template>
+    <span>{{ darkMode ? 'Modo Claro' : 'Modo Oscuro' }}</span>
+  </v-tooltip>
 </template>
+
 <script lang="ts">
 import { onMounted, ref, watch, defineComponent } from 'vue'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
