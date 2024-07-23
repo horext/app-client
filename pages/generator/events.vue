@@ -45,7 +45,8 @@
         </template>
         <template #[`item.schedule`]="{ item }">
           <div>
-            {{ weekdays[item.day] }} : {{ item.startTime }} - {{ item.endTime }}
+            {{ WEEK_DAYS[item.day] }} : {{ item.startTime }} -
+            {{ item.endTime }}
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -67,144 +68,116 @@
     </v-col>
   </v-row>
 </template>
-<script lang="ts">
-import { defineComponent, ref, nextTick, computed } from 'vue'
+<script setup lang="ts">
+import { ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
 import EventsCreator from '~/components/EventsCreatorForm.vue'
 import Event from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
-import { mdiPencil, mdiDelete, mdiCheck, mdiClose } from '@mdi/js'
+import { mdiPencil, mdiDelete } from '@mdi/js'
 
-export default defineComponent({
-  components: { EventsCreator },
-  setup() {
-    const store = useUserEventsStore()
+const store = useUserEventsStore()
 
-    const myEvents = computed(() => store.items)
-    const succcesAddEvent = ref(false)
-    const succcesUpdateEvent = ref(false)
-    const dialog = ref(false)
+const myEvents = computed(() => store.items)
+const succcesAddEvent = ref(false)
+const succcesUpdateEvent = ref(false)
+const dialog = ref(false)
 
-    const headers = [
-      { title: 'Color', value: 'color' },
-      { title: 'titulo', align: 'start', sortable: false, value: 'title' },
-      { title: 'Horario', value: 'schedule' },
-      { title: 'Acciones', value: 'actions', sortable: false },
-    ] as const
+const headers = [
+  { title: 'Color', value: 'color' },
+  { title: 'titulo', align: 'start', sortable: false, value: 'title' },
+  { title: 'Horario', value: 'schedule' },
+  { title: 'Acciones', value: 'actions', sortable: false },
+] as const
 
-    const editedItem = ref<IEvent>(
-      new Event(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT'),
+const editedItem = ref<IEvent>(
+  new Event(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT'),
+)
+
+const editedIndex = ref(-1)
+
+const dialogDelete = ref(false)
+
+const editItem = (item: IEvent) => {
+  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
+  editedItem.value = Object.assign({}, item)
+  dialog.value = true
+}
+
+const deleteItem = (item: IEvent) => {
+  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
+  editedItem.value = Object.assign({}, item)
+  dialogDelete.value = true
+}
+
+const deleteItemConfirm = () => {
+  store.deleteItemById(editedItem.value.id!)
+  closeDelete()
+}
+
+const close = () => {
+  dialog.value = false
+  nextTick(() => {
+    editedItem.value = new Event(
+      1,
+      '08:00',
+      '10:00',
+      '',
+      '',
+      '',
+      '#1976d2',
+      'MY_EVENT',
     )
+    editedIndex.value = -1
+  })
+}
 
-    const editedIndex = ref(-1)
+const closeDelete = () => {
+  dialogDelete.value = false
+  nextTick(() => {
+    editedItem.value = new Event(
+      1,
+      '08:00',
+      '10:00',
+      '',
+      '',
+      '',
+      '#1976d2',
+      'MY_EVENT',
+    )
+    editedIndex.value = -1
+  })
+}
 
-    const dialogDelete = ref(false)
+const form = ref<typeof EventsCreator>()
 
-    const editItem = (item: IEvent) => {
-      editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
-      editedItem.value = Object.assign({}, item)
-      dialog.value = true
-    }
+const save = () => {
+  if (!form?.value?.validated()) {
+    return
+  }
 
-    const deleteItem = (item: IEvent) => {
-      editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
-      editedItem.value = Object.assign({}, item)
-      dialogDelete.value = true
-    }
-
-    const deleteItemConfirm = () => {
-      store.deleteItemById(editedItem.value.id!)
-      closeDelete()
-    }
-
-    const close = () => {
-      dialog.value = false
-      nextTick(() => {
-        editedItem.value = new Event(
-          1,
-          '08:00',
-          '10:00',
-          '',
-          '',
-          '',
-          '#1976d2',
-          'MY_EVENT',
-        )
-        editedIndex.value = -1
-      })
-    }
-
-    const closeDelete = () => {
-      dialogDelete.value = false
-      nextTick(() => {
-        editedItem.value = new Event(
-          1,
-          '08:00',
-          '10:00',
-          '',
-          '',
-          '',
-          '#1976d2',
-          'MY_EVENT',
-        )
-        editedIndex.value = -1
-      })
-    }
-
-    const form = ref<typeof EventsCreator>()
-
-    const save = () => {
-      if (!form?.value?.validated()) {
-        return
-      }
-
-      const item = editedItem.value
-      const event = new Event(
-        item.day,
-        item.startTime,
-        item.endTime,
-        item.title,
-        item.title,
-        item.title,
-        item.color,
-        'MY_EVENT',
-        'MY_EVENT',
-      )
-      event.id = item.id || v4()
-      if (editedIndex.value > -1) {
-        store.updateItem(event)
-        succcesUpdateEvent.value = true
-      } else {
-        store.saveNewItem(event)
-        succcesAddEvent.value = true
-      }
-      close()
-    }
-
-    return {
-      weekdays: WEEK_DAYS,
-      dialog,
-      headers,
-      editedItem,
-      editedIndex,
-      dialogDelete,
-      myEvents,
-      editItem,
-      deleteItem,
-      deleteItemConfirm,
-      close,
-      closeDelete,
-      save,
-      form,
-      succcesAddEvent,
-      succcesUpdateEvent,
-      mdiPencil,
-      mdiDelete,
-      mdiCheck,
-      mdiClose,
-    }
-  },
-})
+  const item = editedItem.value
+  const event = new Event(
+    item.day,
+    item.startTime,
+    item.endTime,
+    item.title,
+    item.title,
+    item.title,
+    item.color,
+    'MY_EVENT',
+    'MY_EVENT',
+  )
+  event.id = item.id || v4()
+  if (editedIndex.value > -1) {
+    store.updateItem(event)
+    succcesUpdateEvent.value = true
+  } else {
+    store.saveNewItem(event)
+    succcesAddEvent.value = true
+  }
+  close()
+}
 </script>
