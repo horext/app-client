@@ -84,13 +84,13 @@ const dialogDelete = ref(false)
 
 const editItem = (item: IEvent) => {
   editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
-  editedItem.value = Object.assign({}, item)
+  editedItem.value = item
   dialog.value = true
 }
 
 const deleteItem = (item: IEvent) => {
   editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
-  editedItem.value = Object.assign({}, item)
+  editedItem.value = item
   dialogDelete.value = true
 }
 
