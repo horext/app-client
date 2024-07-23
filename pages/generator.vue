@@ -3,11 +3,11 @@
     <v-dialog v-model="firstEntry" max-width="600" persistent>
       <InitialSettings />
     </v-dialog>
-    <base-alert-dialog v-model="isNewHourlyLoad" max-width="600">
+    <base-alert-dialog v-model="isNewHourlyLoad">
       Se ha encontrado una nueva carga horaria. Actualiza las secciones de los
       cursos que ya tenias guardadas si deseas los nuevos horarios.
     </base-alert-dialog>
-    <base-alert-dialog v-model="isUpdateHourlyLoad" persistent>
+    <base-alert-dialog v-model="isUpdateHourlyLoad">
       Actualiza las secciones de las cursos que ya tenias guardados si deseas
       los nuevos horarios.
     </base-alert-dialog>
