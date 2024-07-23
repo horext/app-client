@@ -119,12 +119,8 @@
 
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
-        <v-card-title class="text-h5">
-          Atención
-        </v-card-title>
-        <v-card-text>
-          ¿Estás seguro de eliminar el curso?
-        </v-card-text>
+        <v-card-title class="text-h5"> Atención </v-card-title>
+        <v-card-text> ¿Estás seguro de eliminar el curso? </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="blue-darken-1" variant="text" @click="closeDelete">
@@ -158,176 +154,126 @@
   </v-row>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
-import {
-  mdiPencil,
-  mdiDelete,
-  mdiMagnify,
-  mdiCheckCircle,
-  mdiClose,
-} from '@mdi/js'
+import { mdiMagnify, mdiCheckCircle, mdiClose } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 
-export default defineComponent({
-  name: 'MySubjects',
-  components: {
-    SubjectScheduleList,
-    SubjectTableItemSectionList,
-    SubjectTableNoData,
-    SubjectTableItemActions,
-  },
-  async setup() {
-    const $api = useApi()
+const $api = useApi()
 
-    const configStore = useUserConfigStore()
+const configStore = useUserConfigStore()
 
-    const succcesAddCourse = ref(false)
+const succcesAddCourse = ref(false)
 
-    const availableCourses = computed(() => {
-      return subjects.value?.filter(
-        (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
+const availableCourses = computed(() => {
+  return subjects.value?.filter(
+    (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
+  )
+})
+
+const mySubjects = computed(() => configStore.subjects)
+
+const totalCredits = computed(() => {
+  return mySubjects.value.reduce((previousValue, currentValue) => {
+    return currentValue.credits + previousValue
+  }, 0)
+})
+
+const dialog = ref(false)
+const dialogDelete = ref(false)
+
+const editedItem = ref<ISelectedSubject>()
+const editedIndex = ref(-1)
+
+const openSearchMenu = ref(false)
+const editItem = async (item: ISelectedSubject) => {
+  if (!item) {
+    return
+  }
+  editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
+  editedItem.value = Object.assign({}, item)
+  openSearchMenu.value = false
+  await nextTick(() => {
+    dialog.value = true
+  })
+}
+
+const deleteItem = (item: ISelectedSubject) => {
+  editedIndex.value = mySubjects.value.findIndex((c) => c.id === item.id)
+  editedItem.value = Object.assign({}, item)
+  dialogDelete.value = true
+}
+
+const deleteItemConfirm = async () => {
+  await configStore.deleteSubjectById(editedItem.value?.id!)
+  closeDelete()
+}
+
+const close = () => {
+  dialog.value = false
+  editedItem.value = undefined
+  editedIndex.value = -1
+}
+
+const closeDelete = () => {
+  dialogDelete.value = false
+  editedItem.value = undefined
+  editedIndex.value = -1
+}
+
+const save = async (schedules: ISubjectSchedule[]) => {
+  succcesAddCourse.value = false
+
+  if (editedIndex.value > -1 && schedules && schedules.length > 0) {
+    await configStore.updateSubject({ ...editedItem.value!, schedules })
+    close()
+  } else if (schedules && schedules.length > 0) {
+    await configStore.saveNewSubject({ ...editedItem.value!, schedules })
+    close()
+  } else if (editedIndex.value > -1) {
+    await configStore.deleteSubjectById(editedItem.value?.id!)
+  } else {
+    close()
+  }
+
+  succcesAddCourse.value = true
+}
+
+const search = ref('')
+
+const {
+  data: subjects,
+  error: errorSubjects,
+  status: statusSubjects,
+} = await useAsyncData(
+  'search',
+  async () => {
+    if (!search.value) return []
+    if (configStore.specialityId && configStore.hourlyLoadId) {
+      const response = await $api.course.findBySearch(
+        search.value,
+        configStore.specialityId,
+        configStore.hourlyLoadId,
       )
-    })
-
-    const mySubjects = computed(() => configStore.subjects)
-
-    const totalCredits = computed(() => {
-      return mySubjects.value.reduce((previousValue, currentValue) => {
-        return currentValue.credits + previousValue
-      }, 0)
-    })
-
-    const dialog = ref(false)
-    const loading = ref(false)
-    const dialogDelete = ref(false)
-
-    const editedItem = ref<ISelectedSubject>()
-    const editedIndex = ref(-1)
-
-    const openSearchMenu = ref(false)
-    const editItem = async (item: ISelectedSubject) => {
-      if (!item) {
-        return
-      }
-      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
-      editedItem.value = Object.assign({}, item)
-      openSearchMenu.value = false
-      await nextTick(() => {
-        dialog.value = true
-      })
-    }
-
-    const deleteItem = (item: ISelectedSubject) => {
-      editedIndex.value = mySubjects.value.findIndex((c) => c.id === item.id)
-      editedItem.value = Object.assign({}, item)
-      dialogDelete.value = true
-    }
-
-    const deleteItemConfirm = async () => {
-      await configStore.deleteSubjectById(editedItem.value?.id!)
-      closeDelete()
-    }
-
-    const close = () => {
-      dialog.value = false
-      editedItem.value = undefined
-      editedIndex.value = -1
-    }
-
-    const closeDelete = () => {
-      dialogDelete.value = false
-      editedItem.value = undefined
-      editedIndex.value = -1
-    }
-
-    const save = async (schedules: ISubjectSchedule[]) => {
-      succcesAddCourse.value = false
-
-      if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-        await configStore.updateSubject({ ...editedItem.value!, schedules })
-        close()
-      } else if (schedules && schedules.length > 0) {
-        await configStore.saveNewSubject({ ...editedItem.value!, schedules })
-        close()
-      } else if (editedIndex.value > -1) {
-        await configStore.deleteSubjectById(editedItem.value?.id!)
-      } else {
-        close()
-      }
-
-      succcesAddCourse.value = true
-    }
-
-    const search = ref('')
-
-    const {
-      data: subjects,
-      error: errorSubjects,
-      status: statusSubjects,
-    } = await useAsyncData(
-      'search',
-      async () => {
-        if (!search.value) return []
-        if (configStore.specialityId && configStore.hourlyLoadId) {
-          const response = await $api.course.findBySearch(
-            search.value,
-            configStore.specialityId,
-            configStore.hourlyLoadId,
-          )
-          return response.content
-        }
-      },
-      {
-        watch: [search],
-        default: () => [],
-      },
-    )
-
-    const headers = SUBJECT_HEADERS
-
-    const myHourlyLoad = computed(() => {
-      return configStore.hourlyLoad!
-    })
-
-    return {
-      mySubjects,
-      subjects,
-      dialog,
-      dialogDelete,
-      loading,
-      editedIndex,
-      editedItem,
-      headers,
-      search,
-      succcesAddCourse,
-      deleteItem,
-      editItem,
-      closeDelete,
-      close,
-      deleteItemConfirm,
-      save,
-      availableCourses,
-      totalCredits,
-      openSearchMenu,
-      myHourlyLoad,
-      statusSubjects,
-      errorSubjects,
-      mdiPencil,
-      mdiDelete,
-      mdiMagnify,
-      mdiCheckCircle,
-      mdiClose,
+      return response.content
     }
   },
+  {
+    watch: [search],
+    default: () => [],
+  },
+)
+
+const headers = SUBJECT_HEADERS
+
+const myHourlyLoad = computed(() => {
+  return configStore.hourlyLoad!
 })
 </script>
-
-<style scoped></style>
