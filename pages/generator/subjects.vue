@@ -16,6 +16,7 @@
             <v-row dense>
               <v-col cols="12">
                 <v-autocomplete
+                  id="search-course"
                   v-model="editedItem"
                   v-model:search="search"
                   v-model:menu="openSearchMenu"
@@ -54,13 +55,15 @@
                     />
                   </template>
                   <template #append>
-                    <v-btn
-                      icon
-                      variant="text"
-                      :loading="statusSubjects === 'pending'"
-                    >
-                      <v-icon>{{ mdiMagnify }}</v-icon>
-                    </v-btn>
+                    <label for="search-course">
+                      <v-progress-circular
+                        v-if="statusSubjects === 'pending'"
+                        size="20"
+                        indeterminate
+                        color="primary"
+                      />
+                      <v-icon color="primary" v-else>{{ mdiMagnify }}</v-icon>
+                    </label>
                   </template>
                 </v-autocomplete>
               </v-col>
