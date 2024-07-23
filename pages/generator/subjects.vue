@@ -122,7 +122,6 @@
 
     <base-confirm-dialog
       v-model="dialogDelete"
-      max-width="500px"
       @click:confirm="deleteItemConfirm"
       @click:reject="closeDelete"
     >
