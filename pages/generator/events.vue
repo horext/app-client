@@ -58,12 +58,12 @@
 </template>
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
-import { v4 } from 'uuid'
-import Event, { Activity } from '~/models/Event'
+import { Activity } from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
 import { mdiPencil, mdiDelete } from '@mdi/js'
+import { EVENT_HEADERS } from '~/constants/event'
 
 const store = useUserEventsStore()
 
@@ -72,12 +72,7 @@ const succcesAddEvent = ref(false)
 const succcesUpdateEvent = ref(false)
 const dialog = ref(false)
 
-const headers = [
-  { title: 'Color', value: 'color' },
-  { title: 'titulo', align: 'start', sortable: false, value: 'title' },
-  { title: 'Horario', value: 'schedule' },
-  { title: 'Acciones', value: 'actions', sortable: false },
-] as const
+const headers = EVENT_HEADERS
 
 const editedItem = ref<IEvent>(new Activity())
 
