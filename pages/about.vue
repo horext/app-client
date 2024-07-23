@@ -35,7 +35,20 @@
             Eres libre de contribuir al proyecto, puedes ver el código fuente
             en:
           </v-col>
-          <v-col cols="12">
+          <v-col cols="6">
+            <v-btn
+              color="black"
+              href="https://github.com/horext"
+              variant="outlined"
+              size="large"
+            >
+              <v-icon start>
+                {{ mdiGithub }}
+              </v-icon>
+              <span class="text-grey-darken-1 font-weight-bold"> GitHub </span>
+            </v-btn>
+          </v-col>
+          <v-col cols="6">
             <v-btn
               color="orange"
               href="https://gitlab.com/horext-app"
@@ -50,18 +63,12 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12">
-        <p class="text-h7 font-weight-light">
-          Próximamente se publicará la documentación del proyecto y se migrará a
-          GitHub.
-        </p>
-      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { mdiGitlab } from '@mdi/js'
+import { mdiGitlab, mdiGithub } from '@mdi/js'
 
 useSeoMeta({
   title: 'Acerca de',
