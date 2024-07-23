@@ -52,8 +52,11 @@
       <v-badge color="blue" :content="item.badge" overlap>
         <v-icon>{{ item.icon }}</v-icon>
       </v-badge>
-      <span>
+      <span class="hidden-xs">
         {{ item.title }}
+      </span>
+      <span class="hidden-sm-and-up">
+        {{ item.shortTitle }}
       </span>
     </v-btn>
   </v-bottom-navigation>
@@ -140,24 +143,28 @@ const items = computed(() => [
 const denseItems = computed(() => [
   {
     title: 'Generador',
+    shortTitle: 'Generador',
     icon: mdiCalendar,
     to: '/generator',
     badge: schedules.value.length,
   },
   {
     title: 'Favoritos',
+    shortTitle: 'Favoritos',
     icon: mdiCalendarStar,
     to: '/generator/favorites',
     badge: favoritesSchedules.value.length,
   },
   {
     title: 'Mis cursos',
+    shortTitle: 'Cursos',
     icon: mdiBook,
     to: '/generator/subjects',
     badge: subjects.value.length,
   },
   {
     title: 'Mis actividades',
+    shortTitle: 'Actividades',
     icon: mdiCalendarPlus,
     to: '/generator/events',
     badge: events.value.length,
