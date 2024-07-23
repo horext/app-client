@@ -17,14 +17,9 @@
       isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'
     }}</span>
   </v-tooltip>
-  <v-snackbar v-model="showMessage" :timeout="2000" color="success">
+  <base-snackbar v-model="showMessage">
     {{ isFavorite ? 'Agregado a favoritos' : 'Quitado de favoritos' }}
-    <template #actions>
-      <v-btn variant="text" size="small" icon @click="showMessage = false">
-        <v-icon> {{ mdiClose }} </v-icon>
-      </v-btn>
-    </template>
-  </v-snackbar>
+  </base-snackbar>
 </template>
 
 <script lang="ts">

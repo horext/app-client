@@ -140,20 +140,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="succcesAddCourse" color="blue" timeout="3000">
-      <v-icon> {{ mdiCheckCircle }} </v-icon>
+    <base-snackbar v-model="succcesAddCourse">
       Curso Agregado correctamente!
-      <template #actions>
-        <v-btn
-          variant="text"
-          size="small"
-          icon
-          @click="succcesAddCourse = false"
-        >
-          <v-icon> {{ mdiClose }} </v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
+    </base-snackbar>
   </v-row>
 </template>
 
@@ -165,7 +154,7 @@ import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
-import { mdiMagnify, mdiCheckCircle, mdiClose } from '@mdi/js'
+import { mdiMagnify} from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 

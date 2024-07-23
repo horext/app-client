@@ -64,15 +64,9 @@
         <v-icon> {{ mdiUpdate }} </v-icon>
         Generar
       </v-btn>
-      <v-snackbar v-model="succces" color="success" timeout="3000">
-        <v-icon> {{ mdiCheck }} </v-icon>
+      <base-snackbar v-model="succces">
         Horarios generados correctamente!
-        <template #actions>
-          <v-btn variant="text" size="small" icon @click="succces = false">
-            <v-icon> {{ mdiClose }} </v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+      </base-snackbar>
     </template>
 
     <template #emptyBody>

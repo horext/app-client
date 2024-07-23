@@ -76,44 +76,12 @@
         </template>
       </v-data-table>
 
-      <v-snackbar
-        v-model="succcesAddEvent"
-        color="blue"
-        timeout="3000"
-        location="bottom"
-      >
-        <v-icon>{{ mdiCheck }}</v-icon>
+      <base-snackbar v-model="succcesAddEvent">
         <span class="mr-4"> Actividad creada correctamente </span>
-        <template #actions>
-          <v-btn
-            variant="text"
-            size="small"
-            icon
-            @click="succcesAddEvent = false"
-          >
-            <v-icon>{{ mdiClose }}</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-      <v-snackbar
-        v-model="succcesUpdateEvent"
-        color="blue"
-        timeout="3000"
-        location="bottom"
-      >
-        <v-icon> {{ mdiCheck }} </v-icon>
+      </base-snackbar>
+      <base-snackbar v-model="succcesUpdateEvent">
         <span class="mr-4"> Actividad actualizada correctamente </span>
-        <template #actions>
-          <v-btn
-            variant="text"
-            size="small"
-            icon
-            @click="succcesUpdateEvent = false"
-          >
-            <v-icon> {{ mdiClose }} </v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+      </base-snackbar>
     </v-col>
   </v-row>
 </template>
