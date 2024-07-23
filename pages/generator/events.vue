@@ -153,8 +153,9 @@ const closeDelete = () => {
 
 const form = ref<typeof EventsCreator>()
 
-const save = () => {
-  if (!form?.value?.validated()) {
+const save = async() => {
+  const isValid = await form.value?.validated()
+  if (!isValid) {
     return
   }
 

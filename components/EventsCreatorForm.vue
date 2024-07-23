@@ -33,6 +33,7 @@
 import { computed, defineComponent, type PropType, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { IEvent } from '~/interfaces/event'
+import type { VForm } from 'vuetify/components/VForm'
 
 export default defineComponent({
   name: 'EventsCreator',
@@ -43,7 +44,7 @@ export default defineComponent({
     },
   },
   emits: ['update:event'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const eventSync = useVModel(props, 'event', emit)
     const color = ref<string>(props.event.color)
 
@@ -86,15 +87,14 @@ export default defineComponent({
       return rules
     })
 
-    const form = ref<any>()
+    const form = ref<VForm>()
 
-    const validated = () => {
-      const validate = form.value?.validate()
-      if (validate) {
-        return true
-      }
-      return validate
+    const validated = async () => {
+      const validate = await form.value?.validate()
+      return validate?.valid
     }
+
+    expose({ validated })
 
     watch(color, onChangeColor)
 
