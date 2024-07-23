@@ -6,7 +6,7 @@
           <v-toolbar density="compact" flat>
             <v-toolbar-title>Mis Actividades</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
-            <events-creator
+            <activity-create-form-dialog
               v-model="dialog"
               :event="editedItem"
               @save:event="save"
@@ -59,7 +59,6 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
-import EventsCreator from '~/components/EventsCreatorForm.vue'
 import Event from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
