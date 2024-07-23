@@ -2,9 +2,13 @@
   <v-dialog v-model="internalValue" max-width="500px">
     <v-card>
       <v-card-title class="text-h5">
-        <slot name="title"> {{ title }} </slot>
+        <slot name="title">
+          <v-icon left>{{ mdiAlertCircle }}</v-icon>
+          {{ title }}
+        </slot>
       </v-card-title>
-      <v-card-text> <slot></slot> </v-card-text>
+      <v-divider class="mb-4"></v-divider>
+      <v-card-text class="text-h6"> <slot></slot> </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn
@@ -28,7 +32,7 @@
           variant="text"
           @click="emit('update:modelValue', false)"
         >
-            Cerrar
+          Cerrar
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -36,6 +40,7 @@
 </template>
 
 <script lang="ts" setup>
+import { mdiAlertCircle } from '@mdi/js'
 const props = withDefaults(
   defineProps<{
     modelValue: boolean
