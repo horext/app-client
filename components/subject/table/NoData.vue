@@ -8,7 +8,7 @@
     </v-col>
     <v-col cols="12" md="6">
       <v-responsive>
-        <div ref="noDataElement" />
+        <LottieRender :animation-data="Animation" loop autoplay renderer="svg" />
       </v-responsive>
     </v-col>
   </v-row>
@@ -16,11 +16,4 @@
 
 <script setup lang="ts">
 import Animation from '~/assets/lottie/15538-cat-woow.json'
-const noDataElement = ref<HTMLElement | null>(null)
-useLottie(noDataElement, {
-  renderer: 'svg',
-  loop: true,
-  autoplay: true,
-  animationData: Animation,
-})
 </script>
