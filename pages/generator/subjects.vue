@@ -99,22 +99,10 @@
           <SubjectTableItemSectionList :schedules="item.schedules" />
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon color="blue" v-bind="props" @click="editItem(item)">
-                {{ mdiPencil }}
-              </v-icon>
-            </template>
-            <span>Modificar secciones</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon color="red" v-bind="props" @click="deleteItem(item)">
-                {{ mdiDelete }}
-              </v-icon>
-            </template>
-            <span>Eliminar</span>
-          </v-tooltip>
+          <SubjectTableItemActions
+            @click:edit="editItem(item)"
+            @click:delete="deleteItem(item)"
+          />
         </template>
         <template #bottom>
           <v-divider />
@@ -183,6 +171,7 @@ import {
   mdiClose,
 } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
+import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 
 export default defineComponent({
   name: 'MySubjects',
@@ -190,6 +179,7 @@ export default defineComponent({
     SubjectScheduleList,
     SubjectTableItemSectionList,
     SubjectTableNoData,
+    SubjectTableItemActions,
   },
   async setup() {
     const $api = useApi()
