@@ -11,7 +11,7 @@
         @click="emit('click:edit', $event)"
       />
     </template>
-    <span>Modificar secciones</span>
+    <span>Editar Actividad</span>
   </v-tooltip>
   <v-tooltip location="bottom">
     <template #activator="{ props }">
@@ -25,7 +25,7 @@
         @click="emit('click:delete', $event)"
       />
     </template>
-    <span>Eliminar</span>
+    <span>Eliminar Actividad</span>
   </v-tooltip>
 </template>
 
