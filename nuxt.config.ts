@@ -21,6 +21,8 @@ const config = defineNuxtConfig({
       },
     },
   },
+
+  spaLoadingTemplate: true,
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
