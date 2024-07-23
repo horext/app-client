@@ -73,7 +73,7 @@ export default defineComponent({
       return schedulesSubject.value.map((sb) => sb.schedule.id)
     })
 
-    const { data: sessions, pending: pendingSessions } = useAsyncData<
+    const { data: sessions, pending: pendingSessions,  execute } = useAsyncData<
       ISession[]
     >(
       async () => {
@@ -84,6 +84,7 @@ export default defineComponent({
       {
         default: () => [],
         watch: [scheduleIds],
+        immediate: false,
       },
     )
 

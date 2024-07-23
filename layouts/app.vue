@@ -93,6 +93,8 @@ await useAsyncData('initData', async () => {
   ])
 
   await store.fetchHourlyLoad()
+
+  return true
 })
 const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
