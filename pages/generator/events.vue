@@ -45,12 +45,10 @@
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon class="mr-2" color="primary" @click="editItem(item)">
-            {{ mdiPencil }}
-          </v-icon>
-          <v-icon color="red" @click="deleteItem(item)">
-            {{ mdiDelete }}
-          </v-icon>
+          <activity-table-item-actions
+            @click:edit="editItem(item)"
+            @click:delete="deleteItem(item)"
+          />
         </template>
       </v-data-table>
 
@@ -69,7 +67,6 @@ import { Activity } from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
-import { mdiPencil, mdiDelete } from '@mdi/js'
 import { EVENT_HEADERS } from '~/constants/event'
 
 const store = useUserEventsStore()
