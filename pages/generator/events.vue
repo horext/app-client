@@ -57,7 +57,7 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Activity } from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
@@ -108,10 +108,8 @@ const close = () => {
 
 const closeDelete = () => {
   dialogDelete.value = false
-  nextTick(() => {
-    editedItem.value = new Activity()
-    editedIndex.value = DEFAULT_INDEX
-  })
+  editedItem.value = new Activity()
+  editedIndex.value = DEFAULT_INDEX
 }
 
 const save = async (item: IEvent) => {
