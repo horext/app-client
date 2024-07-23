@@ -8,7 +8,7 @@
       cursos que ya tenias guardadas si deseas los nuevos horarios.
     </base-alert-dialog>
     <base-alert-dialog v-model="isUpdateHourlyLoad" persistent>
-      Actualiza las secciones de las materias que ya tenias guardadas si deseas
+      Actualiza las secciones de las cursos que ya tenias guardados si deseas
       los nuevos horarios.
     </base-alert-dialog>
     <NuxtPage />
