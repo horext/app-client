@@ -29,7 +29,7 @@
               @click:confirm="deleteItemConfirm"
               @click:reject="closeDelete"
             >
-              > ¿Está seguro de eliminar esta actividad?
+              ¿Está seguro de eliminar esta actividad?
             </base-confirm-dialog>
           </v-toolbar>
           <v-card flat>
