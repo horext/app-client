@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
 import { v4 } from 'uuid'
-import Event from '~/models/Event'
+import Event, { Activity } from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS } from '~/constants/weekdays'
@@ -79,9 +79,7 @@ const headers = [
   { title: 'Acciones', value: 'actions', sortable: false },
 ] as const
 
-const editedItem = ref<IEvent>(
-  new Event(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT'),
-)
+const editedItem = ref<IEvent>(new Activity())
 
 const editedIndex = ref(-1)
 
@@ -105,16 +103,7 @@ const deleteItemConfirm = () => {
 }
 
 const close = () => {
-  editedItem.value = new Event(
-    1,
-    '08:00',
-    '10:00',
-    '',
-    '',
-    '',
-    '#1976d2',
-    'MY_EVENT',
-  )
+  editedItem.value = new Activity()
   editedIndex.value = -1
 
   dialog.value = false
@@ -123,16 +112,7 @@ const close = () => {
 const closeDelete = () => {
   dialogDelete.value = false
   nextTick(() => {
-    editedItem.value = new Event(
-      1,
-      '08:00',
-      '10:00',
-      '',
-      '',
-      '',
-      '#1976d2',
-      'MY_EVENT',
-    )
+    editedItem.value = new Activity()
     editedIndex.value = -1
   })
 }

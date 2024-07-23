@@ -63,3 +63,9 @@ export default class Event {
     )
   }
 }
+
+export class Activity extends Event {
+  constructor() {
+    super(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT')
+  }
+}
