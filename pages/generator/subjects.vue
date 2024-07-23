@@ -62,7 +62,7 @@
                         indeterminate
                         color="primary"
                       />
-                      <v-icon color="primary" v-else>{{ mdiMagnify }}</v-icon>
+                      <v-icon v-else color="primary">{{ mdiMagnify }}</v-icon>
                     </label>
                   </template>
                 </v-autocomplete>
