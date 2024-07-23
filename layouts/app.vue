@@ -12,7 +12,7 @@
       </v-col>
     </v-row>
     <template #append>
-      <ThemeDarkToggle />
+      <ThemeDarkToggle v-model:dark-mode="darkMode" />
     </template>
   </v-app-bar>
   <v-navigation-drawer v-model="drawer" width="300">
@@ -79,6 +79,9 @@ import {
   mdiCog,
 } from '@mdi/js'
 
+const settingsStore = useSettingsStore()
+
+const { darkMode } = storeToRefs(settingsStore)
 const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
