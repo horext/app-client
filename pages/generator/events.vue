@@ -13,8 +13,9 @@
               @cancel="close"
             />
             <base-confirm-dialog
+              v-if="selectedDeleteItem"
               v-model="dialogDelete"
-              @click:confirm="deleteItemConfirm"
+              @click:confirm="deleteItemConfirm(selectedDeleteItem)"
               @click:reject="closeDelete"
             >
               ¿Está seguro de eliminar esta actividad?
@@ -88,27 +89,26 @@ const editItem = (item: IEvent) => {
   dialog.value = true
 }
 
+const selectedDeleteItem = ref<IEvent>()
 const deleteItem = (item: IEvent) => {
   editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
-  editedItem.value = item
+  selectedDeleteItem.value = item
   dialogDelete.value = true
 }
 
-const deleteItemConfirm = () => {
-  store.deleteItemById(editedItem.value.id!)
+const deleteItemConfirm = (selectedItem: IEvent) => {
+  store.deleteItemById(selectedItem.id!)
   closeDelete()
 }
 
 const close = () => {
   editedItem.value = new Activity()
   editedIndex.value = DEFAULT_INDEX
-
   dialog.value = false
 }
 
 const closeDelete = () => {
   dialogDelete.value = false
-  editedItem.value = new Activity()
   editedIndex.value = DEFAULT_INDEX
 }
 
