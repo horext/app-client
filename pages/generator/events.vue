@@ -118,18 +118,7 @@ const closeDelete = () => {
 }
 
 const save = async (item: IEvent) => {
-  const event = new Event(
-    item.day,
-    item.startTime,
-    item.endTime,
-    item.title,
-    item.title,
-    item.title,
-    item.color,
-    'MY_EVENT',
-    'MY_EVENT',
-  )
-  event.id = item.id || v4()
+  const event = Activity.buildFrom(item)
   if (editedIndex.value > -1) {
     store.updateItem(event)
     succcesUpdateEvent.value = true

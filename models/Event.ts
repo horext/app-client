@@ -65,7 +65,40 @@ export default class Event {
 }
 
 export class Activity extends Event {
-  constructor() {
-    super(1, '08:00', '10:00', '', '', '', '#1976d2', 'MY_EVENT')
+  constructor(
+    day: Weekdays = 1,
+    startTime = '08:00',
+    endTime = '10:00',
+    title = '',
+    description = '',
+    location = '',
+    color = '#1976d2',
+    id?: string,
+  ) {
+    super(
+      day,
+      startTime,
+      endTime,
+      title,
+      description,
+      location,
+      color,
+      'MY_EVENT',
+      'MY_EVENT',
+      id,
+    )
+  }
+
+  buildFrom(event: IEvent) {
+    return new Activity(
+      event.day,
+      event.startTime,
+      event.endTime,
+      event.title,
+      event.description,
+      event.location,
+      event.color,
+      event.id || v4(),
+    )
   }
 }
