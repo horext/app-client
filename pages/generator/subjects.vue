@@ -120,26 +120,14 @@
       </v-data-table>
     </v-col>
 
-    <v-dialog v-model="dialogDelete" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5"> Atención </v-card-title>
-        <v-card-text> ¿Estás seguro de eliminar el curso? </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="blue-darken-1" variant="text" @click="closeDelete">
-            No, cerrar
-          </v-btn>
-          <v-btn
-            color="blue-darken-1"
-            variant="text"
-            @click="deleteItemConfirm"
-          >
-            Sí, eliminar
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <base-confirm-dialog
+      v-model="dialogDelete"
+      max-width="500px"
+      @click:confirm="deleteItemConfirm"
+      @click:reject="closeDelete"
+    >
+      ¿Estás seguro de eliminar el curso?
+    </base-confirm-dialog>
     <base-snackbar v-model="succcesAddCourse">
       Curso Agregado correctamente!
     </base-snackbar>
@@ -154,7 +142,7 @@ import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import { useApi } from '~/composables/api'
-import { mdiMagnify} from '@mdi/js'
+import { mdiMagnify } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 
