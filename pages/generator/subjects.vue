@@ -120,19 +120,22 @@
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="text-h5">
-          ¿Estás segura de que quieres eliminar este curso?
+          Atención
         </v-card-title>
+        <v-card-text>
+          ¿Estás seguro de eliminar el curso?
+        </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="blue-darken-1" variant="text" @click="closeDelete">
-            Cancelar
+            No, cerrar
           </v-btn>
           <v-btn
             color="blue-darken-1"
             variant="text"
             @click="deleteItemConfirm"
           >
-            Aceptar
+            Sí, eliminar
           </v-btn>
           <v-spacer />
         </v-card-actions>
