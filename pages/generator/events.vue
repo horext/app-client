@@ -6,24 +6,12 @@
           <v-toolbar density="compact" flat>
             <v-toolbar-title>Mis Actividades</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
-            <v-dialog v-model="dialog" max-width="500px" @click:outside="close">
-              <template #activator="{ props }">
-                <v-btn color="primary" theme="dark" v-bind="props">
-                  Nueva Actividad
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title> Crear tu Actividad </v-card-title>
-                <v-card-text>
-                  <events-creator ref="form" v-model:event="editedItem" />
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn variant="text" @click="close"> Cancelar </v-btn>
-                  <v-btn variant="text" @click="save"> Guardar </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+            <events-creator
+              v-model="dialog"
+              :event="editedItem"
+              @save:event="save"
+              @cancel="close"
+            />
             <base-confirm-dialog
               v-model="dialogDelete"
               @click:confirm="deleteItemConfirm"
@@ -118,20 +106,19 @@ const deleteItemConfirm = () => {
 }
 
 const close = () => {
+  editedItem.value = new Event(
+    1,
+    '08:00',
+    '10:00',
+    '',
+    '',
+    '',
+    '#1976d2',
+    'MY_EVENT',
+  )
+  editedIndex.value = -1
+
   dialog.value = false
-  nextTick(() => {
-    editedItem.value = new Event(
-      1,
-      '08:00',
-      '10:00',
-      '',
-      '',
-      '',
-      '#1976d2',
-      'MY_EVENT',
-    )
-    editedIndex.value = -1
-  })
 }
 
 const closeDelete = () => {
@@ -151,15 +138,7 @@ const closeDelete = () => {
   })
 }
 
-const form = ref<typeof EventsCreator>()
-
-const save = async() => {
-  const isValid = await form.value?.validated()
-  if (!isValid) {
-    return
-  }
-
-  const item = editedItem.value
+const save = async (item: IEvent) => {
   const event = new Event(
     item.day,
     item.startTime,
