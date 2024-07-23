@@ -2,7 +2,7 @@
   <v-dialog
     v-model="dialog"
     max-width="500px"
-    @click:outside="emit('click:close')"
+    @click:outside="emit('cancel')"
   >
     <template #activator="{ props }">
       <v-btn color="primary" theme="dark" v-bind="props">
@@ -48,7 +48,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn variant="text" @click="emit('click:close')"> Cancelar </v-btn>
+        <v-btn variant="text" @click="emit('cancel')"> Cancelar </v-btn>
         <v-btn variant="text" @click="save"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
@@ -72,7 +72,7 @@ const _props = withDefaults(defineProps<{
 const emit = defineEmits<{
   (name: 'update:modelValue', value: boolean): void
   (name: 'save:event', event: IEvent): void
-  (name: 'click:close'): void
+  (name: 'cancel'): void
 }>()
 
 const dialog = useVModel(_props, 'modelValue', emit)
