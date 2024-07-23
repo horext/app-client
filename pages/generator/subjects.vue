@@ -5,7 +5,8 @@
         :headers="headers"
         :items="mySubjects"
         class="elevation-1"
-        mobile
+        mobile-breakpoint="md"
+        :mobile="null"
       >
         <template #top>
           <v-toolbar density="compact" flat>
