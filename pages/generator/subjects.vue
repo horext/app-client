@@ -131,6 +131,12 @@
     <base-snackbar v-model="succcesAddCourse">
       Curso Agregado correctamente!
     </base-snackbar>
+    <base-snackbar v-model="succcesUpdateCourse">
+      Curso Actualizado correctamente!
+    </base-snackbar>
+    <base-snackbar v-model="succcesDeleteCourse">
+      Curso Eliminado correctamente!
+    </base-snackbar>
   </v-row>
 </template>
 
@@ -191,8 +197,10 @@ const deleteItem = (item: ISelectedSubject) => {
   dialogDelete.value = true
 }
 
+const succcesDeleteCourse = ref(false)
 const deleteItemConfirm = async () => {
   await configStore.deleteSubjectById(editedItem.value?.id!)
+  succcesDeleteCourse.value = true
   closeDelete()
 }
 
@@ -208,22 +216,20 @@ const closeDelete = () => {
   editedIndex.value = -1
 }
 
+const succcesUpdateCourse = ref(false)
 const save = async (schedules: ISubjectSchedule[]) => {
   succcesAddCourse.value = false
-
   if (editedIndex.value > -1 && schedules && schedules.length > 0) {
     await configStore.updateSubject({ ...editedItem.value!, schedules })
-    close()
+    succcesUpdateCourse.value = true
   } else if (schedules && schedules.length > 0) {
     await configStore.saveNewSubject({ ...editedItem.value!, schedules })
-    close()
+    succcesAddCourse.value = true
   } else if (editedIndex.value > -1) {
     await configStore.deleteSubjectById(editedItem.value?.id!)
-  } else {
-    close()
-  }
-
-  succcesAddCourse.value = true
+    succcesDeleteCourse.value = true
+  } 
+  close()
 }
 
 const search = ref('')
