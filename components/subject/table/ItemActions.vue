@@ -1,17 +1,29 @@
 <template>
   <v-tooltip location="bottom">
     <template #activator="{ props }">
-      <v-icon color="blue" v-bind="props" @click="emit('click:edit', $event)">
-        {{ mdiPencil }}
-      </v-icon>
+      <v-btn
+        color="blue"
+        variant="tonal"
+        rounded="full"
+        size="small"
+        :icon="mdiPencil"
+        v-bind="props"
+        @click="emit('click:edit', $event)"
+      />
     </template>
     <span>Modificar secciones</span>
   </v-tooltip>
   <v-tooltip location="bottom">
     <template #activator="{ props }">
-      <v-icon color="red" v-bind="props" @click="emit('click:delete', $event)">
-        {{ mdiDelete }}
-      </v-icon>
+      <v-btn
+        color="red"
+        variant="tonal"
+        rounded="full"
+        size="small"
+        :icon="mdiDelete"
+        v-bind="props"
+        @click="emit('click:delete', $event)"
+      />
     </template>
     <span>Eliminar</span>
   </v-tooltip>
