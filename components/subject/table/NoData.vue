@@ -8,12 +8,12 @@
     </v-col>
     <v-col cols="12" md="6">
       <v-responsive>
-        <LottieRender :animation-data="Animation" loop autoplay renderer="svg" />
+        <LottieRender :animation-data="AnimationData" loop autoplay renderer="svg" />
       </v-responsive>
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import Animation from '~/assets/lottie/15538-cat-woow.json'
+import AnimationData from '~/assets/lottie/15538-cat-woow.json'
 </script>

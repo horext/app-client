@@ -7,7 +7,10 @@ import type { RendererType } from 'lottie-web'
 import { ref } from 'vue'
 import type { LottieOptions } from '~/composables/lottie'
 
-defineProps<LottieOptions<T>>()
+withDefaults(defineProps<LottieOptions<T>>(), {
+  renderer:() => 'svg' as T,
+  loop: () => true,
+})
 
 defineOptions({
   name: 'LottieRender',
