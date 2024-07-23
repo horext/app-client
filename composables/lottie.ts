@@ -21,14 +21,14 @@ export const getElReference = (reference: LottieRef) => {
 
 export const useLottie = <T extends RendererType = 'svg'>(
   reference: LottieRef,
-  options: LottieOptions<T>,
+  options: MaybeRef<LottieOptions<T>>,
 ) => {
   const lottie = ref<AnimationItem | null>(null)
   onMounted(() => {
     const el = getElReference(reference)
     if (!el) return
     lottie.value = Lottie.loadAnimation<T>({
-      ...options,
+      ...unref(options),
       container: el,
     })
   })

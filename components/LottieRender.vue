@@ -7,19 +7,14 @@ import type { RendererType } from 'lottie-web'
 import { ref } from 'vue'
 import type { LottieOptions } from '~/composables/lottie'
 
-withDefaults(defineProps<LottieOptions<T>>(), {
-  renderer:() => 'svg' as T,
-  loop: () => true,
-})
-
 defineOptions({
   name: 'LottieRender',
 })
-const animationEl = ref<HTMLElement | null>(null)
-useLottie(animationEl, {
-  renderer: 'svg',
-  loop: true,
-  autoplay: true,
-  animationData: Animation,
+
+const props = withDefaults(defineProps<LottieOptions<T>>(), {
+  renderer: () => 'svg' as T,
 })
+
+const animationEl = ref<HTMLElement | null>(null)
+useLottie(animationEl, props)
 </script>
