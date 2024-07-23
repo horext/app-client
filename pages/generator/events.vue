@@ -76,7 +76,9 @@ const headers = EVENT_HEADERS
 
 const editedItem = ref<IEvent>(new Activity())
 
-const editedIndex = ref(-1)
+const DEFAULT_INDEX = -1
+
+const editedIndex = ref(DEFAULT_INDEX)
 
 const dialogDelete = ref(false)
 
@@ -99,7 +101,7 @@ const deleteItemConfirm = () => {
 
 const close = () => {
   editedItem.value = new Activity()
-  editedIndex.value = -1
+  editedIndex.value = DEFAULT_INDEX
 
   dialog.value = false
 }
@@ -108,7 +110,7 @@ const closeDelete = () => {
   dialogDelete.value = false
   nextTick(() => {
     editedItem.value = new Activity()
-    editedIndex.value = -1
+    editedIndex.value = DEFAULT_INDEX
   })
 }
 
