@@ -3,46 +3,14 @@
     <v-dialog v-model="firstEntry" max-width="600" persistent>
       <InitialSettings />
     </v-dialog>
-    <v-dialog v-model="isNewHourlyLoad" max-width="600">
-      <v-card>
-        <v-card-title class="text-h5"> Nueva Carga Horaria </v-card-title>
-        <v-card-text>
-          Se ha encontrado una nueva carga horaria. Actualiza las secciones de
-          los cursos que ya tenias guardadas si deseas los nuevos horarios.
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="green-darken-1"
-            variant="text"
-            @click="isNewHourlyLoad = false"
-          >
-            Cerrar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="isUpdateHourlyLoad" persistent>
-      <v-card>
-        <v-card-title class="text-h5">
-          Se ha actualizado la Carga Horaria
-        </v-card-title>
-        <v-card-text>
-          Actualiza las secciones de las materias que ya tenias guardadas si
-          deseas los nuevos horarios.
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="green-darken-1"
-            variant="text"
-            @click="isUpdateHourlyLoad = false"
-          >
-            Cerrar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <base-alert-dialog v-model="isNewHourlyLoad" max-width="600">
+      Se ha encontrado una nueva carga horaria. Actualiza las secciones de los
+      cursos que ya tenias guardadas si deseas los nuevos horarios.
+    </base-alert-dialog>
+    <base-alert-dialog v-model="isUpdateHourlyLoad" persistent>
+      Actualiza las secciones de las materias que ya tenias guardadas si deseas
+      los nuevos horarios.
+    </base-alert-dialog>
     <NuxtPage />
   </v-container>
 </template>
