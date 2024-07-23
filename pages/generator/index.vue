@@ -88,8 +88,8 @@
   </schedules-presentation>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
@@ -99,74 +99,43 @@ import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiHelpCircle, mdiUpdate, mdiCheck, mdiClose } from '@mdi/js'
 
-export default defineComponent({
-  components: {
-    ScheduleFavoriteAdd,
-    SchedulesPresentation,
-    OccurrencesList,
-  },
-  setup() {
-    const configStore = useUserConfigStore()
-    const eventsStore = useUserEventsStore()
-    const openMySchedules = ref(false)
-    const succces = ref(false)
+const configStore = useUserConfigStore()
+const eventsStore = useUserEventsStore()
+const openMySchedules = ref(false)
+const succces = ref(false)
 
-    const {
-      crossings: crossingSubjects,
-      subjects: mySubjects,
-      favoritesSchedules: myFavoritesSchedules,
-      schedules,
-      occurrences,
-    } = storeToRefs(configStore)
-    const { items: myEvents } = storeToRefs(eventsStore)
+const {
+  crossings: crossingSubjects,
+  subjects: mySubjects,
+  favoritesSchedules: myFavoritesSchedules,
+  schedules,
+  occurrences,
+} = storeToRefs(configStore)
+const { items: myEvents } = storeToRefs(eventsStore)
 
-    const updateCrossings = (crossings: number) => {
-      configStore.updateCrossings(crossings)
-    }
+const updateFavoritesSchedules = (favoritesSchedules: IScheduleGenerate[]) => {
+  configStore.updateFavoritesSchedules(favoritesSchedules)
+}
 
-    const updateFavoritesSchedules = (
-      favoritesSchedules: IScheduleGenerate[],
-    ) => {
-      configStore.updateFavoritesSchedules(favoritesSchedules)
-    }
+const { loadSchedules } = useSchedules()
 
-    const { loadSchedules } = useSchedules()
-
-    const loadingGenerate = ref(false)
-    const generateAllUserSchedules = async () => {
-      succces.value = false
-      loadingGenerate.value = true
-      const { occurrences: occurrencesData, combinations } =
-        await loadSchedules(mySubjects.value, myEvents.value, {
-          crossingSubjects: crossingSubjects.value,
-        })
-      loadingGenerate.value = false
-      configStore.updateSchedules(combinations)
-      configStore.updateOccurrences(occurrencesData)
-      occurrences.value = occurrencesData
-      succces.value = true
-    }
-
-    return {
-      occurrences,
-      openMySchedules,
-      succces,
-      mySubjects,
-      crossingSubjects,
-      myEvents,
-      myFavoritesSchedules,
-      schedules,
-      updateCrossings,
-      updateFavoritesSchedules,
-      generateAllUserSchedules,
-      loadingGenerate,
-      mdiHelpCircle,
-      mdiUpdate,
-      mdiCheck,
-      mdiClose,
-    }
-  },
-})
+const loadingGenerate = ref(false)
+const generateAllUserSchedules = async () => {
+  succces.value = false
+  loadingGenerate.value = true
+  const { occurrences: occurrencesData, combinations } = await loadSchedules(
+    mySubjects.value,
+    myEvents.value,
+    {
+      crossingSubjects: crossingSubjects.value,
+    },
+  )
+  loadingGenerate.value = false
+  configStore.updateSchedules(combinations)
+  configStore.updateOccurrences(occurrencesData)
+  occurrences.value = occurrencesData
+  succces.value = true
+}
 </script>
 
 <style>
