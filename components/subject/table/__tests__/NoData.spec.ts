@@ -1,6 +1,11 @@
 import { config, shallowMount } from '@vue/test-utils'
-import { describe, it, expect, afterAll, beforeAll } from 'vitest'
+import { describe, it, expect, afterAll, beforeAll, vi } from 'vitest'
 import NoData from '../NoData.vue'
+import LottieRender from '~/components/LottieRender.vue'
+
+vi.mock('lottie-web', () => ({
+  loadAnimation: vi.fn(),
+}))
 
 describe('NoData', () => {
   beforeAll(() => {
@@ -12,13 +17,7 @@ describe('NoData', () => {
   })
 
   it('renders the correct message', () => {
-    const wrapper = shallowMount(NoData, {
-      global: {
-        stubs: {
-          LottieRender: true,  
-        },
-      },
-    })
+    const wrapper = shallowMount(NoData)
     const message = wrapper.find('.text-md-h2')
     expect(message.text()).toBe(
       'Busca tus cursos en la parte superior y luego ve al generador',
@@ -26,14 +25,9 @@ describe('NoData', () => {
   })
 
   it('renders the lottie animation', () => {
-    const wrapper = shallowMount(NoData, {
-      global: {
-        stubs: {
-          LottieRender: true,  
-        },
-      },
-    })
-    const lottie = wrapper.findComponent({ name: 'LottieRender' })
-    expect(lottie.exists()).toBe(true)
+    const wrapper = shallowMount(NoData)
+    const lottie = wrapper.findComponent(LottieRender)
+    expect(lottie).toBeDefined()
+    expect(lottie.attributes('animationdata')).toBeDefined()
   })
 })
