@@ -21,8 +21,6 @@ const config = defineNuxtConfig({
       },
     },
   },
-
-  spaLoadingTemplate: true,
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
@@ -57,20 +55,28 @@ const config = defineNuxtConfig({
   routeRules: {
     '/generator/**': {
       ssr: false,
+      prerender: true,
     },
-  },
-
-  nitro: {
-    prerender: {
-      routes: [
-        '/',
-        '/privacy',
-        '/terms',
-        '/about',
-        '/plans',
-        '/login',
-        'security',
-      ],
+    '/login': {
+      prerender: true,
+    },
+    '/plans': {
+      prerender: true,
+    },
+    '/about': {
+      prerender: true,
+    },
+    '/terms': {
+      prerender: true,
+    },
+    '/privacy': {
+      prerender: true,
+    },
+    '/security': {
+      prerender: true,
+    },
+    '/': {
+      prerender: true,
     },
   },
 })
