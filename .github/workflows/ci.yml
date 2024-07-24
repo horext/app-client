@@ -42,4 +42,4 @@ jobs:
           NUXT_PUBLIC_GSI_SCOPES: ${{ vars.NUXT_PUBLIC_GSI_SCOPES }}
 
       - name: Test
-        run: pnpm test:unit
+        run: pnpm test:unit:ci

@@ -15,6 +15,7 @@
     "lint": "yarn lint:js && yarn lint:prettier",
     "lint:fix": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,vue}\" && pnpm lint:js --fix",
     "test:unit": "vitest",
+    "test:unit:ci": "vitest run --coverage",
     "test:types": "nuxi prepare && vue-tsc --noEmit"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "@types/luxon": "^3.4.2",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^5.1.0",
+    "@vitest/coverage-v8": "^2.0.4",
     "@vue/test-utils": "^2.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
