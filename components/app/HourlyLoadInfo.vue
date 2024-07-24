@@ -3,7 +3,7 @@
     <template v-if="hourlyLoad">
       {{ hourlyLoad.name }}
       <v-list-item-subtitle>
-        Actual.: {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
+        {{ new Date(hourlyLoad.updatedAt).toLocaleString() }}
       </v-list-item-subtitle>
     </template>
     <template v-else>
@@ -13,5 +13,5 @@
 </template>
 <script setup lang="ts">
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-defineProps<{ hourlyLoad?: IHourlyLoad }>()
+defineProps<{ hourlyLoad?: Pick<IHourlyLoad, 'name' | 'updatedAt'> }>()
 </script>
