@@ -15,14 +15,26 @@
       </v-col>
       <v-col align-self="center">
         <v-avatar class="elevation-2 mb-4" size="128">
-          <v-img src="/octatec-logo.png" />
+          <v-img
+            :src="img('/octatec-logo.png', { quality: 100 })"
+            :lazy-src="img('/octatec-logo.png', { width: 128, quality: 100 })"
+            :srcset="octatecLogo.srcset"
+            :sizes="octatecLogo.sizes"
+         
+          />
         </v-avatar>
         <p class="text-h6 text-center">Octatec</p>
         <p class="text-subtitle-1 text-center">Email: octatec.pe@gmail.com</p>
       </v-col>
       <v-col>
         <v-avatar class="elevation-2 mb-4" size="128">
-          <v-img src="/me.jpeg" />
+          <v-img
+            :lazy-src="img('/me.jpeg', { width: 128, quality: 100 })"
+            :src="img('/me.jpeg', { quality: 100 })"
+            :srcset="mePhoto.srcset"
+            :sizes="mePhoto.sizes"
+        
+          />
         </v-avatar>
         <p class="text-h6 text-center">Franz A. Bendezu Isidro</p>
         <p class="text-subtitle-1 text-center">Email: fbendezui@uni.pe</p>
@@ -73,4 +85,26 @@ import { mdiGitlab, mdiGithub } from '@mdi/js'
 useSeoMeta({
   title: 'Acerca de',
 })
+
+const img = useImage()
+
+const octatecLogo = computed(() =>
+  img.getSizes('/octatec-logo.png', {
+    sizes: 'xs:100vw sm:100vw md:100vw lg:100vw xl:100vw',
+    modifiers: {
+      format: 'webp',
+      quality: 100,
+    },
+  }),
+)
+
+const mePhoto = computed(() =>
+  img.getSizes('/me.jpeg', {
+    sizes: 'xs:100vw sm:100vw md:100vw lg:100vw xl:100vw',
+    modifiers: {
+      format: 'webp',
+      quality: 100,
+    },
+  }),
+)
 </script>
