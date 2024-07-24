@@ -14,15 +14,13 @@
         <v-col class="text-white text-center" cols="12">
           <h1>
             <span
-              :class="[$vuetify.display.smAndDown ? 'display-1' : 'display-2']"
-              class="font-weight-light"
+              class="font-weight-light text-h5 text-md-4 text-lg-h3"
             >
               Bienvenido a
             </span>
             <br />
             <span
-              :class="[$vuetify.display.smAndDown ? 'display-3' : 'display-4']"
-              class="font-weight-black"
+              class="font-weight-black text-h6 text-md-3 text-lg-h2"
             >
               Horext
             </span>
