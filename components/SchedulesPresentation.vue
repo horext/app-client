@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, defineComponent, type PropType } from 'vue'
+import { computed, ref, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
@@ -68,16 +68,9 @@ import ScheduleShare from '~/components/ScheduleShare.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import {
-  mdiCalendar,
-  mdiTable,
-  mdiExport,
-  mdiShareVariant,
-  mdiShare,
-} from '@mdi/js'
 import ScheduleMode from './schedule/Mode.vue'
 
-const props = defineProps({
+defineProps({
   schedules: {
     type: Array as PropType<IScheduleGenerate[]>,
     default: () => [],
@@ -117,11 +110,7 @@ const currentSchedule = ref<IScheduleGenerate>()
 
 const dialogShare = ref(false)
 
-const message = ref('')
-
 const mode = ref(ViewMode.CALENDAR)
-
-const MODES = ref(ViewMode)
 
 const calendar = ref<ComponentPublicInstance | null>(null)
 
