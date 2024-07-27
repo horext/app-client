@@ -1,22 +1,9 @@
 <template>
-  <v-tooltip location="bottom">
-    <template #activator="{ props }">
-      <v-btn
-        variant="outlined"
-        icon
-        :color="isFavorite ? 'yellow' : undefined"
-        v-bind="props"
-        @click="changeFavoriteState"
-      >
-        <v-icon :color="isFavorite ? 'yellow' : undefined">
-          {{ mdiStar }}
-        </v-icon>
-      </v-btn>
-    </template>
-    <span>{{
-      isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'
-    }}</span>
-  </v-tooltip>
+  <schedule-favorite-action
+    :active="isFavorite"
+    @update:active="changeFavoriteState"
+  />
+
   <base-snackbar v-model="showMessage">
     {{ isFavorite ? 'Agregado a favoritos' : 'Quitado de favoritos' }}
   </base-snackbar>
@@ -24,12 +11,16 @@
 
 <script lang="ts">
 import { computed, defineComponent, type PropType, ref } from 'vue'
+import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import { useVModel } from '@vueuse/core'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiStar, mdiClose } from '@mdi/js'
 
 export default defineComponent({
   name: 'ScheduleFavoriteAdd',
+  components: {
+    ScheduleFavoriteAction,
+  },
   props: {
     schedule: {
       type: Object as PropType<IScheduleGenerate>,
@@ -49,9 +40,9 @@ export default defineComponent({
     const message = ref('')
 
     const showMessage = ref(false)
-    const changeFavoriteState = () => {
+    const changeFavoriteState = (isFavorite: boolean) => {
       if (currentSchedule.value) {
-        if (isFavorite.value) {
+        if (isFavorite) {
           const schedules = [...favoritesSchedulesSync.value]
           schedules.splice(indexSchedule.value, 1)
           favoritesSchedulesSync.value = schedules
