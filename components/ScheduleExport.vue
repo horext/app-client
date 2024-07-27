@@ -6,7 +6,7 @@
         color="success"
         theme="dark"
         class="ma-1"
-        @click="$emit('download:pdf')"
+        @click="$emit('download:pdf', $event)"
       >
         <v-icon> {{ mdiDownload }} </v-icon>
         Descargar (.pdf )
@@ -19,7 +19,7 @@
         color="success"
         theme="dark"
         class="ma-1"
-        @click="$emit('download:image')"
+        @click="$emit('download:image', $event)"
       >
         <v-icon> {{ mdiDownload }} </v-icon>
         Descargar (.png )
@@ -38,7 +38,7 @@ defineProps<{
 }>()
 
 defineEmits<{
-  (event: 'download:pdf'): void
-  (event: 'download:image'): void
+  (event: 'download:pdf', value: MouseEvent): void
+  (event: 'download:image', value: MouseEvent): void
 }>()
 </script>
