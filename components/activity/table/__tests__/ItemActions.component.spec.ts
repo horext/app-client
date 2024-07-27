@@ -15,7 +15,7 @@ describe('ItemActions', () => {
     })
     const actionButtons = wrapper.findAllComponents(VBtn)
     const editButton = actionButtons.find(
-      (button) => button.text() === 'Editar Actividad',
+      (button) => button.attributes('aria-label') === 'Editar Actividad',
     )
     expect(editButton).toBeTruthy()
     editButton?.trigger('click')
@@ -30,7 +30,7 @@ describe('ItemActions', () => {
     })
     const actionButtons = wrapper.findAllComponents(VBtn)
     const deleteButton = actionButtons.find(
-      (button) => button.text() === 'Eliminar Actividad',
+      (button) => button.attributes('aria-label') === 'Eliminar Actividad',
     )
     expect(deleteButton).toBeTruthy()
     deleteButton?.trigger('click')
