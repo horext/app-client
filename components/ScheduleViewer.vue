@@ -29,95 +29,73 @@
   </v-sheet>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { weekdayToDate } from '~/utils/weekday'
 
-export default {
-  components: {
-    ScheduleEventInfo,
-    EventInfoCard,
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<IScheduleGenerate>,
+    required: true,
   },
-  props: {
-    schedule: {
-      type: Object as PropType<IScheduleGenerate>,
-      required: true,
-    },
-    weekDays: {
-      type: Array,
-      default: () => [1, 2, 3, 4, 5, 6],
-    },
+  weekDays: {
+    type: Array,
+    default: () => [1, 2, 3, 4, 5, 6],
   },
-  setup(props) {
-    const hover = ref(false)
-    const focus = ref()
-    const type = ref('week')
-    const start = weekdayToDate(0)
+})
+const hover = ref(false)
+const focus = ref()
+const type = ref('week')
+const start = weekdayToDate(0)
 
-    const selectedEvent = ref(null)
-    const selectedElement = ref<HTMLElement | null>(null)
-    const selectedOpen = ref(false)
-    const events = ref([])
+const selectedEvent = ref(null)
+const selectedElement = ref<HTMLElement | null>(null)
+const selectedOpen = ref(false)
+const events = ref([])
 
-    const getEventColor = (event: any) => {
-      return event.color
-    }
-
-    const showEvent = ({
-      nativeEvent,
-      event,
-    }: {
-      nativeEvent: any
-      event: any
-    }) => {
-      const open = () => {
-        selectedEvent.value = event
-        selectedElement.value = nativeEvent.target
-        setTimeout(() => {
-          selectedOpen.value = true
-        }, 10)
-      }
-
-      if (selectedOpen.value) {
-        selectedOpen.value = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-
-      nativeEvent.stopPropagation()
-    }
-
-    const internalEvents = computed(
-      () =>
-        props.schedule?.events?.map((event) => {
-          return {
-            ...event,
-            start: event.startTime,
-            end: event.endTime,
-            weekDay: event.day,
-            id: event.id!,
-            name: event.title,
-          }
-        }) ?? [],
-    )
-
-    return {
-      hover,
-      focus,
-      type,
-      selectedEvent,
-      selectedElement,
-      selectedOpen,
-      events,
-      start,
-      getEventColor,
-      showEvent,
-      internalEvents,
-    }
-  },
+const getEventColor = (event: any) => {
+  return event.color
 }
+
+const showEvent = ({
+  nativeEvent,
+  event,
+}: {
+  nativeEvent: any
+  event: any
+}) => {
+  const open = () => {
+    selectedEvent.value = event
+    selectedElement.value = nativeEvent.target
+    setTimeout(() => {
+      selectedOpen.value = true
+    }, 10)
+  }
+
+  if (selectedOpen.value) {
+    selectedOpen.value = false
+    setTimeout(open, 10)
+  } else {
+    open()
+  }
+
+  nativeEvent.stopPropagation()
+}
+
+const internalEvents = computed(
+  () =>
+    props.schedule?.events?.map((event) => {
+      return {
+        ...event,
+        start: event.startTime,
+        end: event.endTime,
+        weekDay: event.day,
+        id: event.id!,
+        name: event.title,
+      }
+    }) ?? [],
+)
 </script>
