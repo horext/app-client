@@ -29,7 +29,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, watch, type WatchCallback } from 'vue'
 import { useVModel } from '@vueuse/core'
-import ViewList from './schedule/ViewList.vue'
+import ViewList from './schedule/SubjectsTable.vue'
 import ScheduleViewer from '~/components/schedule/CalendarEvents.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'

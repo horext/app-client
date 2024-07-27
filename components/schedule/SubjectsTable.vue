@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import ScheduleSection from './ViewListSubjectSection.vue'
+import ScheduleSection from './SubjectsTableItemSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
