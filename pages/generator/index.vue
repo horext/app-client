@@ -24,46 +24,11 @@
       />
     </template>
     <template #subtitle-items="">
-      <v-text-field
-        v-model.number="crossingSubjects"
-        class="flex-sm-1-1 flex-1-1-100 cross-input"
-        label="Cantidad de cruces"
-        hide-details
-        density="compact"
-        max="5"
-        min="0"
-        type="number"
-      >
-        <template #append-inner>
-          <v-menu bottom>
-            <template #activator="{ props }">
-              <v-icon v-bind="props">
-                {{ mdiHelpCircle }}
-              </v-icon>
-            </template>
-            <v-card max-width="300" density="compact">
-              <v-card-text>
-                Solo se contabiliza los cruces entre cursos y los horarios con
-                cruces entre Práctica y Práctica no se muestran.
-              </v-card-text>
-            </v-card>
-          </v-menu>
-        </template>
-      </v-text-field>
-
-      <v-btn
-        color="success"
-        theme="dark"
-        rounded
-        variant="outlined"
-        class="ma-1"
-        density="compact"
-        :loading="loadingGenerate"
-        @click="generateAllUserSchedules"
-      >
-        <v-icon> {{ mdiUpdate }} </v-icon>
-        Generar
-      </v-btn>
+      <schedule-generator-actions
+        v-model:crossings="crossingSubjects"
+        :loading-generate="loadingGenerate"
+        @click:generate="generateAllUserSchedules"
+      />
       <base-snackbar v-model="succces">
         Horarios generados correctamente!
       </base-snackbar>
@@ -91,7 +56,6 @@ import OccurrencesList from '~/components/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { mdiHelpCircle, mdiUpdate, mdiCheck, mdiClose } from '@mdi/js'
 
 const configStore = useUserConfigStore()
 const eventsStore = useUserEventsStore()
