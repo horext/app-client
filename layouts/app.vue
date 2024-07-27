@@ -60,7 +60,6 @@
       </span>
     </v-btn>
   </v-bottom-navigation>
-  <the-snackbar />
   <v-main>
     <slot />
   </v-main>
@@ -68,7 +67,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TheSnackbar from '~/components/base/TheSnackbar.vue'
 import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 import {
