@@ -9,76 +9,55 @@
   </base-snackbar>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, type PropType, ref } from 'vue'
+<script setup lang="ts">
+import { computed, type PropType, ref } from 'vue'
 import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import { useVModel } from '@vueuse/core'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { mdiStar, mdiClose } from '@mdi/js'
 
-export default defineComponent({
-  name: 'ScheduleFavoriteAdd',
-  components: {
-    ScheduleFavoriteAction,
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<IScheduleGenerate>,
+    required: true,
   },
-  props: {
-    schedule: {
-      type: Object as PropType<IScheduleGenerate>,
-      required: true,
-    },
-    favoritesSchedules: {
-      type: Array as PropType<Array<IScheduleGenerate>>,
-      default: () => [],
-    },
+  favoritesSchedules: {
+    type: Array as PropType<Array<IScheduleGenerate>>,
+    default: () => [],
   },
-  emits: ['update:schedule', 'update:favoritesSchedules'],
-  setup(props, { emit }) {
-    const currentSchedule = useVModel(props, 'schedule', emit)
+})
 
-    const favoritesSchedulesSync = useVModel(props, 'favoritesSchedules', emit)
+const emit = defineEmits(['update:schedule', 'update:favoritesSchedules'])
 
-    const message = ref('')
+const currentSchedule = useVModel(props, 'schedule', emit)
 
-    const showMessage = ref(false)
-    const changeFavoriteState = (isFavorite: boolean) => {
-      if (currentSchedule.value) {
-        if (isFavorite) {
-          const schedules = [...favoritesSchedulesSync.value]
-          schedules.splice(indexSchedule.value, 1)
-          favoritesSchedulesSync.value = schedules
-        } else {
-          favoritesSchedulesSync.value = [
-            ...favoritesSchedulesSync.value,
-            props.schedule,
-          ]
-        }
-        showMessage.value = true
-      }
+const favoritesSchedulesSync = useVModel(props, 'favoritesSchedules', emit)
+
+const showMessage = ref(false)
+const changeFavoriteState = (isFavorite: boolean) => {
+  if (currentSchedule.value) {
+    if (isFavorite) {
+      const schedules = [...favoritesSchedulesSync.value]
+      schedules.splice(indexSchedule.value, 1)
+      favoritesSchedulesSync.value = schedules
+    } else {
+      favoritesSchedulesSync.value = [
+        ...favoritesSchedulesSync.value,
+        props.schedule,
+      ]
     }
+    showMessage.value = true
+  }
+}
 
-    const isFavorite = computed(() => indexSchedule.value > -1)
+const isFavorite = computed(() => indexSchedule.value > -1)
 
-    const indexSchedule = computed(() => {
-      if (currentSchedule.value) {
-        return favoritesSchedulesSync.value.findIndex(
-          (e) => e && e.id === currentSchedule.value.id,
-        )
-      } else {
-        return -1
-      }
-    })
-
-    return {
-      favoritesSchedulesSync,
-      currentSchedule,
-      showMessage,
-      message,
-      changeFavoriteState,
-      isFavorite,
-      indexSchedule,
-      mdiStar,
-      mdiClose,
-    }
-  },
+const indexSchedule = computed(() => {
+  if (currentSchedule.value) {
+    return favoritesSchedulesSync.value.findIndex(
+      (e) => e && e.id === currentSchedule.value.id,
+    )
+  } else {
+    return -1
+  }
 })
 </script>
