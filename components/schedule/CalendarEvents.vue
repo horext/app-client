@@ -34,7 +34,17 @@ import { ref, toRefs } from 'vue'
 import EventInfoCard from '~/components/schedule/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
+import type { IEvent } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
+
+interface ICalendarEvent extends IEvent {
+  weekDay: number
+  start: string
+  end: string
+  name: string
+  id: string
+}
 
 const props = defineProps({
   schedule: {
@@ -47,20 +57,14 @@ const props = defineProps({
   },
 })
 const { schedule } = toRefs(props)
-const selectedEvent = ref(null)
+const selectedEvent = ref<ICalendarEvent | null>(null)
 const selectedElement = ref<HTMLElement | null>(null)
 const selectedOpen = ref(false)
 
-const showEvent = ({
-  nativeEvent,
-  event,
-}: {
-  nativeEvent: any
-  event: any
-}) => {
+const showEvent = ({ nativeEvent, event }: IEventEmitData<ICalendarEvent>) => {
   const open = () => {
     selectedEvent.value = event
-    selectedElement.value = nativeEvent.target
+    selectedElement.value = nativeEvent.target as HTMLElement
     setTimeout(() => {
       selectedOpen.value = true
     }, 10)
