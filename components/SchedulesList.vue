@@ -50,7 +50,7 @@ export default defineComponent({
       default: () => [],
     },
     weekDays: {
-      type: Array,
+      type: Array as PropType<number[]>,
       default: () => DEFAULT_CALENDAR_WEEK_DAYS,
     },
     currentSchedule: {
