@@ -26,20 +26,15 @@
   </v-table>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import ScheduleSection from './ViewListSubjectSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-export default defineComponent({
-  name: 'ScheduleViewList',
-  components: { ScheduleSection, ClassSessionItem },
-  props: {
-    schedule: {
-      type: Object as PropType<IScheduleGenerate>,
-      required: true,
-    },
+defineProps({
+  schedule: {
+    type: Object as PropType<IScheduleGenerate>,
+    required: true,
   },
 })
 </script>
