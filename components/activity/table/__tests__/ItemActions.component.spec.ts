@@ -7,12 +7,16 @@ import { createVuetify } from 'vuetify'
 const vuetify = createVuetify()
 
 describe('ItemActions', () => {
-  it('emits click:edit event when edit button is clicked', () => {
-    const wrapper = mount(ItemActions, {
+
+  const mountComponent = () => {
+    return mount(ItemActions, {
       global: {
         plugins: [vuetify],
       },
     })
+  }
+  it('emits click:edit event when edit button is clicked', () => {
+    const wrapper = mountComponent()
     const actionButtons = wrapper.findAllComponents(VBtn)
     const editButton = actionButtons.find(
       (button) => button.attributes('aria-label') === 'Editar Actividad',
@@ -23,11 +27,7 @@ describe('ItemActions', () => {
   })
 
   it('emits click:delete event when delete button is clicked', () => {
-    const wrapper = mount(ItemActions, {
-      global: {
-        plugins: [vuetify],
-      },
-    })
+    const wrapper = mountComponent()
     const actionButtons = wrapper.findAllComponents(VBtn)
     const deleteButton = actionButtons.find(
       (button) => button.attributes('aria-label') === 'Eliminar Actividad',
