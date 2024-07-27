@@ -56,6 +56,7 @@ defineEmits<{
     Compartir
   </v-btn>
   <v-btn
+    v-if="false"
     color="indigo"
     theme="dark"
     rounded
@@ -63,7 +64,6 @@ defineEmits<{
     class="ma-1"
     density="compact"
     @click="$emit('click:sync', $event)"
-
   >
     <v-icon start>
       {{ mdiSync }}
