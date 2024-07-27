@@ -8,37 +8,27 @@
     </td>
   </tr>
 </template>
-<script lang="ts">
-import { defineComponent, type PropType, computed } from 'vue'
+
+<script setup lang="ts">
+import { type PropType, computed } from 'vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
-export default defineComponent({
-  props: {
-    schedule: {
-      type: Object as PropType<ISubjectSchedule>,
-      required: true,
-    },
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<ISubjectSchedule>,
+    required: true,
   },
-  setup(props) {
-    const sessionsCount = computed(() => {
-      return props.schedule?.sessions?.length
-    })
+})
 
-    const courseName = computed(() => {
-      return props.schedule?.subject?.course.name
-    })
+const sessionsCount = computed(() => {
+  return props.schedule?.sessions?.length
+})
 
-    const subjectSection = computed(() => {
-      return (
-        props.schedule?.subject?.course.id + ' ' + props.schedule?.section?.id
-      )
-    })
+const courseName = computed(() => {
+  return props.schedule?.subject?.course.name
+})
 
-    return {
-      sessionsCount,
-      courseName,
-      subjectSection,
-    }
-  },
+const subjectSection = computed(() => {
+  return props.schedule?.subject?.course.id + ' ' + props.schedule?.section?.id
 })
 </script>
