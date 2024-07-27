@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiShareVariant, mdiExport } from '@mdi/js'
+import { mdiShareVariant, mdiExport, mdiSync } from '@mdi/js'
 import { defineEmits } from 'vue'
 import { ViewMode } from '~/models/ViewMode'
 
@@ -34,7 +34,7 @@ defineEmits<{
         Exportar
       </v-btn>
     </template>
-    <ScheduleExport
+    <schedule-export-actions
       :loading-pdf="loadingExportPdf"
       :loading-image="loadingExportImage"
       @download:pdf="$emit('click:export-pdf', $event)"
