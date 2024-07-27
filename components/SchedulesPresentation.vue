@@ -8,7 +8,7 @@
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
 
-    <div class="d-flex align-center justify-center flex-wrap ma-1">
+    <div class="d-flex align-center justify-center flex-wrap ma-1 ga-1">
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0">
