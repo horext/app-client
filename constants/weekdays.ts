@@ -1,4 +1,4 @@
-export const WEEK_DAYS = [
+export const WEEK_DAYS_NAMES = [
   'Domingo',
   'Lunes',
   'Martes',

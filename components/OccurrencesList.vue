@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { WEEK_DAYS } from '~/constants/weekdays'
+import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export default defineComponent({
@@ -67,7 +67,7 @@ export default defineComponent({
       },
     ] as const
     return {
-      weekDays: WEEK_DAYS,
+      weekDays: WEEK_DAYS_NAMES,
       headers,
       itemsSync,
     }

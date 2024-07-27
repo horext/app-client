@@ -40,7 +40,7 @@
         </template>
         <template #[`item.schedule`]="{ item }">
           <div>
-            {{ WEEK_DAYS[item.day] }} : {{ item.startTime }} -
+            {{ WEEK_DAYS_NAMES[item.day] }} : {{ item.startTime }} -
             {{ item.endTime }}
           </div>
         </template>
@@ -66,7 +66,7 @@ import { ref, computed } from 'vue'
 import { Activity } from '~/models/Event'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
-import { WEEK_DAYS } from '~/constants/weekdays'
+import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
 
 const store = useUserEventsStore()
