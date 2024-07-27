@@ -34,7 +34,6 @@ import { ref } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { weekdayToDate } from '~/utils/weekday'
 
 const props = defineProps({
   schedule: {
@@ -46,19 +45,10 @@ const props = defineProps({
     default: () => [1, 2, 3, 4, 5, 6],
   },
 })
-const hover = ref(false)
-const focus = ref()
-const type = ref('week')
-const start = weekdayToDate(0)
 
 const selectedEvent = ref(null)
 const selectedElement = ref<HTMLElement | null>(null)
 const selectedOpen = ref(false)
-const events = ref([])
-
-const getEventColor = (event: any) => {
-  return event.color
-}
 
 const showEvent = ({
   nativeEvent,
