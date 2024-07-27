@@ -52,6 +52,10 @@ const config = defineNuxtConfig({
     },
   },
 
+  experimental: {
+    componentIslands: true,
+  },
+
   routeRules: {
     '/generator/**': {
       ssr: false,

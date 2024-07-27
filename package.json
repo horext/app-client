@@ -15,6 +15,7 @@
     "lint": "yarn lint:js && yarn lint:prettier",
     "lint:fix": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,vue}\" && pnpm lint:js --fix",
     "test:unit": "vitest",
+    "test:unit:cov": "vitest --coverage",
     "test:unit:ci": "vitest run --coverage",
     "test:types": "nuxi prepare && vue-tsc --noEmit"
   },
