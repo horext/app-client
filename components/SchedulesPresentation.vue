@@ -39,7 +39,6 @@
             @click:export-pdf="downloadPdf"
             @click:export-image="downloadImage"
             @click:share="dialogShare = true"
-            @click:sync="dialogExport = true"
           />
           <GoogleAuth
             v-if="currentSchedule"
@@ -47,14 +46,6 @@
             :end-date="endDate"
             :start-date="startDate"
           />
-          <v-dialog v-model="dialogExport" max-width="600">
-            <ScheduleExport
-              :loading-pdf="loadingPdf"
-              :loading-image="loadingImage"
-              @download:pdf="downloadPdf"
-              @download:image="downloadImage"
-            />
-          </v-dialog>
           <v-dialog
             v-if="currentSchedule"
             v-model="dialogShare"
@@ -93,7 +84,6 @@ import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesList.vue'
 import ScheduleShare from '~/components/ScheduleShare.vue'
-import ScheduleExport from '~/components/schedule/ExportActions.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
@@ -110,7 +100,6 @@ export default defineComponent({
     SchedulesList,
     GoogleAuth,
     ScheduleShare,
-    ScheduleExport,
   },
   props: {
     schedules: {
@@ -154,7 +143,6 @@ export default defineComponent({
     const currentSchedule = ref<IScheduleGenerate>()
 
     const dialogShare = ref(false)
-    const dialogExport = ref(false)
 
     const message = ref('')
 
@@ -185,7 +173,6 @@ export default defineComponent({
     return {
       weekDays,
       dialogShare,
-      dialogExport,
       message,
       mode,
       startDate,
