@@ -42,22 +42,26 @@ describe('CalendarEvent', () => {
       },
     })
 
-    wrapper.trigger('dblclick')
+    const eventWrapper = wrapper.find('.h-calendar-event-timed')
+
+    expect(eventWrapper.exists()).toBe(true)
+
+    eventWrapper.trigger('dblclick')
     expect(wrapper.emitted('dblclick')).toBeTruthy()
 
-    wrapper.trigger('click')
+    eventWrapper.trigger('click')
     expect(wrapper.emitted('click')).toBeTruthy()
 
-    wrapper.trigger('mousedown')
+    eventWrapper.trigger('mousedown')
     expect(wrapper.emitted('mousedown')).toBeTruthy()
 
-    wrapper.trigger('mouseenter')
+    eventWrapper.trigger('mouseenter')
     expect(wrapper.emitted('mouseenter')).toBeTruthy()
 
-    wrapper.trigger('mouseleave')
+    eventWrapper.trigger('mouseleave')
     expect(wrapper.emitted('mouseleave')).toBeTruthy()
 
-    wrapper.trigger('mousemove')
+    eventWrapper.trigger('mousemove')
     expect(wrapper.emitted('mousemove')).toBeTruthy()
   })
 })
