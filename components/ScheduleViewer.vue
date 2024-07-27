@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, toRefs } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
@@ -45,7 +45,7 @@ const props = defineProps({
     default: () => [1, 2, 3, 4, 5, 6],
   },
 })
-
+const { schedule } = toRefs(props)
 const selectedEvent = ref(null)
 const selectedElement = ref<HTMLElement | null>(null)
 const selectedOpen = ref(false)
@@ -77,7 +77,7 @@ const showEvent = ({
 
 const internalEvents = computed(
   () =>
-    props.schedule?.events?.map((event) => {
+    schedule.value?.events?.map((event) => {
       return {
         ...event,
         start: event.startTime,
