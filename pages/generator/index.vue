@@ -32,6 +32,7 @@
       <base-snackbar v-model="succces">
         Horarios generados correctamente!
       </base-snackbar>
+      <v-spacer />
     </template>
 
     <template #emptyBody>
