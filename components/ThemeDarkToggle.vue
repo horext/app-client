@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import { useLottie } from '~/composables/lottie'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
 const props = defineProps<{
