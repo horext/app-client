@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import ScheduleViewer from '~/components/ScheduleViewer.vue'
+import ScheduleViewer from '~/components/schedule/CalendarEvents.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useApi } from '~/composables/api'
 import type { IScheduleGenerate } from '~/interfaces/schedule'

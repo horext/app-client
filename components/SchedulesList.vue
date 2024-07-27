@@ -30,10 +30,11 @@
 import { defineComponent, computed, ref, watch, type WatchCallback } from 'vue'
 import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/ViewList.vue'
-import ScheduleViewer from '~/components/ScheduleViewer.vue'
+import ScheduleViewer from '~/components/schedule/CalendarEvents.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiArrowRightBoldCircle, mdiArrowLeftBoldCircle } from '@mdi/js'
+import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 
 export default defineComponent({
   name: 'SchedulesList',
@@ -50,7 +51,7 @@ export default defineComponent({
     },
     weekDays: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5, 6],
+      default: () => DEFAULT_CALENDAR_WEEK_DAYS,
     },
     currentSchedule: {
       type: Object as PropType<IScheduleGenerate | undefined>,

@@ -6,7 +6,7 @@
       interval-count="16"
       interval-width="40"
       :events="internalEvents"
-      :weekdays="[0, 1, 2, 3, 4, 5, 6]"
+      :weekdays="weekDays"
       @click:event="showEvent"
     >
       <template #event="{ event }">
@@ -33,6 +33,7 @@
 import { ref, toRefs } from 'vue'
 import EventInfoCard from '~/components/EventInfoCard.vue'
 import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 const props = defineProps({
@@ -41,8 +42,8 @@ const props = defineProps({
     required: true,
   },
   weekDays: {
-    type: Array,
-    default: () => [1, 2, 3, 4, 5, 6],
+    type: Array as PropType<number[]>,
+    default: DEFAULT_CALENDAR_WEEK_DAYS,
   },
 })
 const { schedule } = toRefs(props)
