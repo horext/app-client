@@ -3,26 +3,7 @@
     <v-toolbar flat theme="dark" :color="color" class="px-2">
       <slot name="top-items-right" />
       <v-spacer />
-      <div class="d-flex align-self-center ga-3">
-        <div class="d-flex align-self-center">Modo:</div>
-        <v-radio-group v-model="mode" hide-details density="compact" inline>
-          <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
-            <template #label>
-              <v-icon size="small" start>
-                {{ mdiCalendar }} </v-icon
-              >Calendario
-            </template>
-          </v-radio>
-          <v-radio :value="MODES.LIST" color="primary-darken-2">
-            <template #label>
-              <v-icon size="small" start>
-                {{ mdiTable }}
-              </v-icon>
-              Lista
-            </template>
-          </v-radio>
-        </v-radio-group>
-      </div>
+      <ScheduleMode v-model:mode="mode" />
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
@@ -94,12 +75,14 @@ import {
   mdiShareVariant,
   mdiShare,
 } from '@mdi/js'
+import ScheduleMode from './schedule/Mode.vue'
 
 export default defineComponent({
   components: {
     SchedulesList,
     GoogleAuth,
     ScheduleShare,
+    ScheduleMode,
   },
   props: {
     schedules: {
