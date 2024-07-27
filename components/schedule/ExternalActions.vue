@@ -24,8 +24,7 @@ defineEmits<{
         theme="dark"
         rounded
         variant="outlined"
-        class="ma-1"
-        density="compact"
+        density="comfortable"
         v-bind="props"
       >
         <v-icon start>
@@ -46,8 +45,7 @@ defineEmits<{
     theme="dark"
     rounded
     variant="outlined"
-    class="ma-1"
-    density="compact"
+    density="comfortable"
     @click="$emit('click:share', $event)"
   >
     <v-icon start>

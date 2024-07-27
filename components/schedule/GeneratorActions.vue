@@ -29,9 +29,8 @@
     color="success"
     theme="dark"
     rounded
-    variant="outlined"
-    class="ma-1"
-    density="compact"
+    variant="flat"
+    density="comfortable"
     :loading="loadingGenerate"
     @click="onClickGenerate"
   >
