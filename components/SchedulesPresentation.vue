@@ -31,45 +31,16 @@
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0">
-          <v-menu v-if="mode === MODES.CALENDAR" offset-y>
-            <template #activator="{ props }">
-              <v-btn
-                color="purple"
-                theme="dark"
-                rounded
-                variant="outlined"
-                class="ma-1"
-                density="compact"
-                v-bind="props"
-              >
-                <v-icon start>
-                  {{ mdiExport }}
-                </v-icon>
-                Exportar
-              </v-btn>
-            </template>
-            <ScheduleExport
-              :loading-pdf="loadingPdf"
-              :loading-image="loadingImage"
-              @download:pdf="downloadPdf"
-              @download:image="downloadImage"
-            />
-          </v-menu>
-
-          <v-btn
-            color="indigo"
-            theme="dark"
-            rounded
-            variant="outlined"
-            class="ma-1"
-            density="compact"
-            @click="dialogShare = !dialogShare"
-          >
-            <v-icon start>
-              {{ mdiShareVariant }}
-            </v-icon>
-            Compartir
-          </v-btn>
+          <schedule-external-actions
+            v-if="currentSchedule"
+            :mode="mode"
+            :loading-export-pdf="loadingPdf"
+            :loading-export-image="loadingImage"
+            @click:export-pdf="downloadPdf"
+            @click:export-image="downloadImage"
+            @click:share="dialogShare = true"
+            @click:sync="dialogExport = true"
+          />
           <GoogleAuth
             v-if="currentSchedule"
             :events="currentSchedule.events"
