@@ -19,16 +19,16 @@ const props = defineProps({
     required: true,
   },
 })
-
+const { schedule } = toRefs(props)
 const sessionsCount = computed(() => {
-  return props.schedule?.sessions?.length
+  return schedule.value.sessions?.length
 })
 
 const courseName = computed(() => {
-  return props.schedule?.subject?.course.name
+  return schedule.value.subject?.course.name
 })
 
 const subjectSection = computed(() => {
-  return props.schedule?.subject?.course.id + ' ' + props.schedule?.section?.id
+  return schedule.value.subject?.course.id + ' ' + schedule.value.section?.id
 })
 </script>
