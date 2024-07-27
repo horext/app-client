@@ -59,7 +59,7 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { computed, ref, defineComponent, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
@@ -77,102 +77,69 @@ import {
 } from '@mdi/js'
 import ScheduleMode from './schedule/Mode.vue'
 
-export default defineComponent({
-  components: {
-    SchedulesList,
-    GoogleAuth,
-    ScheduleShare,
-    ScheduleMode,
+const props = defineProps({
+  schedules: {
+    type: Array as PropType<IScheduleGenerate[]>,
+    default: () => [],
   },
-  props: {
-    schedules: {
-      type: Array as PropType<IScheduleGenerate[]>,
-      default: () => [],
-    },
-    path: {
-      type: String,
-      default: '/subject',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    color: {
-      type: String,
-      default: 'primary',
-    },
-    emptyMessage: {
-      type: String,
-      default: '',
-    },
-    dialog: {
-      type: Boolean,
-      default: false,
-    },
+  path: {
+    type: String,
+    default: '/subject',
   },
-  setup() {
-    const store = useUserConfigStore()
-    const { weekDays, hourlyLoad } = storeToRefs(store)
-    const academicPeriodOrganizationUnit = computed(
-      () => hourlyLoad.value?.academicPeriodOrganizationUnit!,
-    )
-
-    const startDate = computed(
-      () => academicPeriodOrganizationUnit.value?.fromDate,
-    )
-
-    const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
-
-    const currentSchedule = ref<IScheduleGenerate>()
-
-    const dialogShare = ref(false)
-
-    const message = ref('')
-
-    const mode = ref(ViewMode.CALENDAR)
-
-    const MODES = ref(ViewMode)
-
-    const calendar = ref<ComponentPublicInstance | null>(null)
-
-    function getCalendar(): HTMLElement | null {
-      return document.getElementById('calendar')
-    }
-
-    const loadingImage = ref(false)
-    async function downloadImage() {
-      loadingImage.value = true
-      await exportToPNG(getCalendar())
-      loadingImage.value = false
-    }
-
-    const loadingPdf = ref(false)
-    async function downloadPdf() {
-      loadingPdf.value = true
-      await exportToPDF(getCalendar())
-      loadingPdf.value = false
-    }
-
-    return {
-      weekDays,
-      dialogShare,
-      message,
-      mode,
-      startDate,
-      endDate,
-      MODES,
-      currentSchedule,
-      calendar,
-      downloadImage,
-      downloadPdf,
-      loadingImage,
-      loadingPdf,
-      mdiCalendar,
-      mdiTable,
-      mdiExport,
-      mdiShareVariant,
-      mdiShare,
-    }
+  title: {
+    type: String,
+    default: '',
+  },
+  color: {
+    type: String,
+    default: 'primary',
+  },
+  emptyMessage: {
+    type: String,
+    default: '',
+  },
+  dialog: {
+    type: Boolean,
+    default: false,
   },
 })
+const store = useUserConfigStore()
+const { weekDays, hourlyLoad } = storeToRefs(store)
+const academicPeriodOrganizationUnit = computed(
+  () => hourlyLoad.value?.academicPeriodOrganizationUnit!,
+)
+
+const startDate = computed(() => academicPeriodOrganizationUnit.value?.fromDate)
+
+const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
+
+const currentSchedule = ref<IScheduleGenerate>()
+
+const dialogShare = ref(false)
+
+const message = ref('')
+
+const mode = ref(ViewMode.CALENDAR)
+
+const MODES = ref(ViewMode)
+
+const calendar = ref<ComponentPublicInstance | null>(null)
+
+function getCalendar(): HTMLElement | null {
+  return document.getElementById('calendar')
+}
+
+const loadingImage = ref(false)
+async function downloadImage() {
+  loadingImage.value = true
+  await exportToPNG(getCalendar())
+  loadingImage.value = false
+}
+
+const loadingPdf = ref(false)
+async function downloadPdf() {
+  loadingPdf.value = true
+  await exportToPDF(getCalendar())
+  loadingPdf.value = false
+}
 </script>
