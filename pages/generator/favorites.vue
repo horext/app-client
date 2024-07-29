@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import FavoriteBanner from '~/components/FavoriteBanner.vue'
+import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
