@@ -12,10 +12,10 @@
         <v-icon>{{ item.icon }}</v-icon>
       </v-badge>
       <span class="hidden-xs">
-        {{ item.title }}
+        {{ item.shortTitle }}
       </span>
       <span class="hidden-sm-and-up">
-        {{ item.shortTitle }}
+        {{ item.denseTitle }}
       </span>
     </v-btn>
   </v-bottom-navigation>
@@ -24,8 +24,8 @@
 <script setup lang="ts">
 defineProps<{
   items: {
-    title: string
     shortTitle: string
+    denseTitle: string
     icon: string
     to: string
     badge: number

@@ -6,10 +6,7 @@
   />
   <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
-  <AppBottomNavigation
-    v-if="$vuetify.display.smAndDown"
-    :items="denseItems"
-  />
+  <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
   <v-main>
     <slot />
   </v-main>
@@ -17,16 +14,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  mdiCalendar,
-  mdiCalendarStar,
-  mdiBook,
-  mdiCalendarPlus,
-  mdiCog,
-} from '@mdi/js'
 import AppBar from '../components/app/Bar.vue'
 import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
 import AppBottomNavigation from '../components/app/BottomNavigation.vue'
+import {
+  EVENTS_ROUTE,
+  FAVORITES_ROUTE,
+  GENERATOR_ROUTE,
+  HOME_ROUTE,
+  SETTINGS_ROUTE,
+  SUBJECTS_ROUTE,
+} from '~/constants/app-routes'
 
 const settingsStore = useSettingsStore()
 
@@ -58,69 +56,41 @@ onMounted(async () => {
 })
 const drawer = ref(true)
 const items = computed(() => [
+  HOME_ROUTE,
   {
-    title: 'Inicio',
-    icon: mdiCalendar,
-    to: '/',
-  },
-  {
-    title: 'Generador de Horarios',
-    icon: mdiCalendar,
-    to: '/generator',
+    ...GENERATOR_ROUTE,
     badge: schedules.value.length,
   },
   {
-    title: 'Horarios Favoritos',
-    icon: mdiCalendarStar,
-    to: '/generator/favorites',
+    ...FAVORITES_ROUTE,
     badge: favoritesSchedules.value.length,
   },
   {
-    title: 'Mis cursos y secciones',
-    icon: mdiBook,
-    to: '/generator/subjects',
+    ...SUBJECTS_ROUTE,
     badge: subjects.value.length,
   },
   {
-    title: 'Mis actividades',
-    icon: mdiCalendarPlus,
-    to: '/generator/events',
+    ...EVENTS_ROUTE,
     badge: events.value.length,
   },
-  {
-    title: 'Avanzado',
-    icon: mdiCog,
-    to: '/generator/settings',
-  },
+  SETTINGS_ROUTE,
 ])
 
 const denseItems = computed(() => [
   {
-    title: 'Generador',
-    shortTitle: 'Generador',
-    icon: mdiCalendar,
-    to: '/generator',
+    ...GENERATOR_ROUTE,
     badge: schedules.value.length,
   },
   {
-    title: 'Favoritos',
-    shortTitle: 'Favoritos',
-    icon: mdiCalendarStar,
-    to: '/generator/favorites',
+    ...FAVORITES_ROUTE,
     badge: favoritesSchedules.value.length,
   },
   {
-    title: 'Mis cursos',
-    shortTitle: 'Cursos',
-    icon: mdiBook,
-    to: '/generator/subjects',
+    ...SUBJECTS_ROUTE,
     badge: subjects.value.length,
   },
   {
-    title: 'Mis actividades',
-    shortTitle: 'Actividades',
-    icon: mdiCalendarPlus,
-    to: '/generator/events',
+    ...EVENTS_ROUTE,
     badge: events.value.length,
   },
 ])
