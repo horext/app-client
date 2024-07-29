@@ -1,6 +1,6 @@
 import { config, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import HourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
+import HourlyLoadInfo from '~/components/app/BarHourlyLoadInfo.vue'
 
 describe('HourlyLoadInfo', () => {
   beforeAll(() => {

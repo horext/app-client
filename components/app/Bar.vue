@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
+import AppHourlyLoadInfo from '~/components/app/BarHourlyLoadInfo.vue'
 import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 
