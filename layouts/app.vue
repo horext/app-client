@@ -6,26 +6,10 @@
   />
   <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
-  <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
-    <v-btn
-      v-for="item in denseItems"
-      :key="item.to"
-      exact
-      tag="div"
-      :to="item.to"
-      stacked
-    >
-      <v-badge color="blue" :content="item.badge" overlap>
-        <v-icon>{{ item.icon }}</v-icon>
-      </v-badge>
-      <span class="hidden-xs">
-        {{ item.title }}
-      </span>
-      <span class="hidden-sm-and-up">
-        {{ item.shortTitle }}
-      </span>
-    </v-btn>
-  </v-bottom-navigation>
+  <AppBottomNavigation
+    v-if="$vuetify.display.smAndDown"
+    :items="denseItems"
+  />
   <v-main>
     <slot />
   </v-main>
@@ -42,6 +26,7 @@ import {
 } from '@mdi/js'
 import AppBar from '../components/app/Bar.vue'
 import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
+import AppBottomNavigation from '../components/app/BottomNavigation.vue'
 
 const settingsStore = useSettingsStore()
 
