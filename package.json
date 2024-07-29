@@ -50,7 +50,7 @@
     "@nuxt/test-utils": "^3.13.1",
     "@types/luxon": "^3.4.2",
     "@types/uuid": "^10.0.0",
-    "@vitejs/plugin-vue": "^5.1.0",
+    "@vitejs/plugin-vue": "^5.1.1",
     "@vitest/coverage-v8": "^2.0.4",
     "@vue/test-utils": "^2.4.5",
     "eslint": "^8.57.0",
