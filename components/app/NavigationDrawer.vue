@@ -31,7 +31,7 @@ const props = defineProps<{
   items: { title: string; icon: string; to: string; badge?: number }[]
 }>()
 const emit = defineEmits<{
-  (eventName: 'update:drawer', value: boolean)
+  (eventName: 'update:drawer', value: boolean): void
 }>()
 
 const internalDrawer = useVModel(props, 'drawer', emit)
