@@ -1,20 +1,9 @@
 <template>
-  <v-app-bar flat height="72">
-    <template #prepend>
-      <v-app-bar-nav-icon
-        aria-label="Menu Iziquierdo"
-        @click.stop="drawer = !drawer"
-      />
-    </template>
-    <v-row justify="center" align="center" no-gutters>
-      <v-col cols="12">
-        <AppHourlyLoadInfo :hourly-load="hourlyLoad" class="pa-0" />
-      </v-col>
-    </v-row>
-    <template #append>
-      <ThemeDarkToggle v-model:dark-mode="darkMode" />
-    </template>
-  </v-app-bar>
+  <AppBar
+    v-model:drawer="drawer"
+    v-model:dark-mode="darkMode"
+    :hourly-load="hourlyLoad"
+  />
   <v-navigation-drawer v-model="drawer" width="300">
     <v-card-title> Opciones </v-card-title>
     <v-divider />
@@ -67,8 +56,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
-import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
 import {
   mdiCalendar,
   mdiCalendarStar,
@@ -76,6 +63,7 @@ import {
   mdiCalendarPlus,
   mdiCog,
 } from '@mdi/js'
+import AppBar from '../components/app/Bar.vue'
 
 const settingsStore = useSettingsStore()
 
