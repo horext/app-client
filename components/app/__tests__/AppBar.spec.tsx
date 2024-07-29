@@ -3,7 +3,7 @@ import AppBar from '../Bar.vue'
 import { describe, it, expect, vi } from 'vitest'
 import { VAppBarNavIcon, VLayout } from 'vuetify/components'
 import { createVuetify } from 'vuetify'
-import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
+import ThemeDarkToggle from '~/components/app/ThemeDarkToggle.vue'
 
 vi.mock('~/composables/lottie', () => ({
   useLottie: () => ({

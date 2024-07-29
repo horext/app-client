@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import AppHourlyLoadInfo from '~/components/app/BarHourlyLoadInfo.vue'
-import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
+import ThemeDarkToggle from '~/components/app/ThemeDarkToggle.vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 
 defineProps<{
