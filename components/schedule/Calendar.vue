@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
-import EventInfoCard from '~/components/schedule/EventInfoCard.vue'
-import ScheduleEventInfo from '~/components/ScheduleEventInfo.vue'
+import EventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
+import ScheduleEventInfo from '~/components/schedule/CalendarEventCard.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IEvent } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
