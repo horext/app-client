@@ -4,30 +4,7 @@
     v-model:dark-mode="darkMode"
     :hourly-load="hourlyLoad"
   />
-  <v-navigation-drawer v-model="drawer" width="300">
-    <v-card-title> Opciones </v-card-title>
-    <v-divider />
-    <v-list>
-      <v-list-item
-        v-for="item in items"
-        :key="item.to"
-        :to="item.to"
-        link
-        exact
-      >
-        <template #prepend>
-          <v-badge v-if="item.badge" color="blue" :content="item.badge">
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-badge>
-
-          <v-icon v-else>
-            {{ item.icon }}
-          </v-icon>
-        </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+  <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
   <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
     <v-btn
@@ -64,6 +41,7 @@ import {
   mdiCog,
 } from '@mdi/js'
 import AppBar from '../components/app/Bar.vue'
+import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
 
 const settingsStore = useSettingsStore()
 
