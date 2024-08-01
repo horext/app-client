@@ -161,6 +161,17 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
+  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
+    await updateFavoritesSchedules([...favoritesSchedules.value, schedule])
+  }
+
+  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
+    const newFavorites = favoritesSchedules.value.filter(
+      (s) => s.id !== schedule.id,
+    )
+    await updateFavoritesSchedules(newFavorites)
+  }
+
   function fetchFaculty() {
     const data = myFaculty.value
     if (data) {
@@ -292,5 +303,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     fetchMyOcurrences,
     updateOccurrences,
     occurrences,
+    addFavoriteSchedule,
+    removeFavoriteSchedule,
   }
 })

@@ -20,8 +20,15 @@
         v-if="item"
         :favorites-schedules="myFavoritesSchedules"
         :schedule="item"
-        @update:favorites-schedules="updateFavoritesSchedules"
+        @click:add-favorite="addFavorite"
+        @click:remove-favorite="removeFavorite"
       />
+      <base-snackbar v-model="showAddFavoriteMessage">
+        Horario agregado a favoritos!
+      </base-snackbar>
+      <base-snackbar v-model="showRemoveFavoriteMessage">
+        Horario eliminado de favoritos!
+      </base-snackbar>
     </template>
     <template #subtitle-items="">
       <schedule-generator-actions
@@ -72,8 +79,19 @@ const {
 } = storeToRefs(configStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
-const updateFavoritesSchedules = (favoritesSchedules: IScheduleGenerate[]) => {
-  configStore.updateFavoritesSchedules(favoritesSchedules)
+const showAddFavoriteMessage = ref(false)
+
+const addFavorite = async (schedule: IScheduleGenerate) => {
+  showAddFavoriteMessage.value = false
+  await configStore.addFavoriteSchedule(schedule)
+  showAddFavoriteMessage.value = true
+}
+
+const showRemoveFavoriteMessage = ref(false)
+const removeFavorite = async (schedule: IScheduleGenerate) => {
+  showRemoveFavoriteMessage.value = false
+  await configStore.removeFavoriteSchedule(schedule)
+  showRemoveFavoriteMessage.value = true
 }
 
 const { loadSchedules } = useSchedules()

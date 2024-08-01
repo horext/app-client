@@ -3,16 +3,11 @@
     :active="isFavorite"
     @update:active="changeFavoriteState"
   />
-
-  <base-snackbar v-model="showMessage">
-    {{ isFavorite ? 'Agregado a favoritos' : 'Quitado de favoritos' }}
-  </base-snackbar>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, ref } from 'vue'
+import { computed, type PropType } from 'vue'
 import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
-import { useVModel } from '@vueuse/core'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 const props = defineProps({
@@ -26,30 +21,15 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:schedule', 'update:favoritesSchedules'])
+const emit = defineEmits<{
+  (event: 'click:addFavorite', value: IScheduleGenerate): void
+  (event: 'click:removeFavorite', value: IScheduleGenerate): void
+}>()
 
-const currentSchedule = useVModel(props, 'schedule', emit)
-
-const favoritesSchedulesSync = useVModel(props, 'favoritesSchedules', emit)
-
-const showMessage = ref(false)
-const changeFavoriteState = (isFavorite: boolean) => {
-  if (currentSchedule.value) {
-    if (isFavorite) {
-      const schedules = [...favoritesSchedulesSync.value]
-      schedules.splice(indexSchedule.value, 1)
-      favoritesSchedulesSync.value = schedules
-    } else {
-      favoritesSchedulesSync.value = [
-        ...favoritesSchedulesSync.value,
-        props.schedule,
-      ]
-    }
-    showMessage.value = true
-  }
-}
-
-const isFavorite = computed(() => indexSchedule.value > -1)
+const {
+  schedule: currentSchedule,
+  favoritesSchedules: favoritesSchedulesSync,
+} = toRefs(props)
 
 const indexSchedule = computed(() => {
   if (currentSchedule.value) {
@@ -60,4 +40,13 @@ const indexSchedule = computed(() => {
     return -1
   }
 })
+
+const isFavorite = computed(() => indexSchedule.value > -1)
+const changeFavoriteState = (isFavorite: boolean) => {
+  if (isFavorite) {
+    emit('click:addFavorite', currentSchedule.value)
+  } else {
+    emit('click:removeFavorite', currentSchedule.value)
+  }
+}
 </script>

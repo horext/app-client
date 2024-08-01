@@ -14,8 +14,15 @@
         v-if="item"
         :favorites-schedules="schedules"
         :schedule="item"
-        @update:favorites-schedules="updateFavoritesSchedules"
+        @click:add-favorite="addFavorite"
+        @click:remove-favorite="removeFavorite"
       />
+      <base-snackbar v-model="showAddFavoriteMessage">
+        Horario agregado a favoritos!
+      </base-snackbar>
+      <base-snackbar v-model="showRemoveFavoriteMessage">
+        Horario eliminado de favoritos!
+      </base-snackbar>
     </template>
     <template #emptyBody>
       <FavoriteBanner />
@@ -33,6 +40,19 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 const store = useUserConfigStore()
 const schedules = computed(() => store.favoritesSchedules)
-const updateFavoritesSchedules = (schedules: IScheduleGenerate[]) =>
-  store.updateFavoritesSchedules(schedules)
+
+const showAddFavoriteMessage = ref(false)
+
+const addFavorite = async (schedule: IScheduleGenerate) => {
+  showAddFavoriteMessage.value = false
+  await store.addFavoriteSchedule(schedule)
+  showAddFavoriteMessage.value = true
+}
+
+const showRemoveFavoriteMessage = ref(false)
+const removeFavorite = async (schedule: IScheduleGenerate) => {
+  showRemoveFavoriteMessage.value = false
+  await store.removeFavoriteSchedule(schedule)
+  showRemoveFavoriteMessage.value = true
+}
 </script>
