@@ -337,6 +337,7 @@ function onChangeSignInStatus(value: boolean) {
   console.log(value)
   if (value) {
     getCalendarList()
+    dialogCalendarSync.value = true
   }
 }
 
