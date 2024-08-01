@@ -176,6 +176,7 @@ import type { IEvent } from '~/interfaces/event'
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
 import { mdiBell, mdiDelete, mdiPlus } from '@mdi/js'
+import { EventNotification } from '~/models/google'
 
 const props = defineProps<{
   startDate: string
@@ -206,16 +207,8 @@ const dateEnd = ref(
 
 const progress = ref(0)
 
-class Notification {
-  method: 'popup' | 'email'
-  minutes: number
-  constructor(minutes: number = 15, method: 'popup' | 'email' = 'popup') {
-    this.method = method
-    this.minutes = minutes
-  }
-}
-const defaultNotification = ref(new Notification())
-const notifications = ref([new Notification()])
+const defaultNotification = ref(new EventNotification())
+const notifications = ref([new EventNotification()])
 
 const selected = ref<any>(null)
 
@@ -232,7 +225,7 @@ const { execute: handleSignOutClick, status: signOutStatus } = useAsyncData(
   },
 )
 
-function deleteNotification(index: Notification) {
+function deleteNotification(index: EventNotification) {
   notifications.value = notifications.value.filter(
     (notification) => notification !== index,
   )
@@ -240,12 +233,12 @@ function deleteNotification(index: Notification) {
 
 function addNotification() {
   notifications.value.push(
-    new Notification(
+    new EventNotification(
       defaultNotification.value.minutes,
       defaultNotification.value.method,
     ),
   )
-  defaultNotification.value = new Notification()
+  defaultNotification.value = new EventNotification()
 }
 
 function addCalendar(this: any) {
