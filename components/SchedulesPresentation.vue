@@ -63,7 +63,7 @@
 import { computed, ref, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
-import SchedulesList from '~/components/SchedulesList.vue'
+import SchedulesList from '~/components/SchedulesWindow.vue'
 import ScheduleShare from '~/components/schedule/ShareCard.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
