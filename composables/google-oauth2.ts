@@ -9,18 +9,27 @@ export const useGoogleOAuth2 = () => {
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
 
+  const isPendingClient = ref(false)
+  const isPendingToken = ref(false)
   const loadClient = async () => {
     try {
+      isPendingClient.value = true
+      isPendingToken.value = true
       const gsi = config.public.gsi
       const client = google.accounts.oauth2.initTokenClient({
         client_id: gsi.clientId,
         scope: gsi.scopes,
         callback: handleTokenResponse,
+        error_callback: () => {
+          isPendingClient.value = false
+        }
       })
       tokenClient.value = client
       console.log('Google script loaded', client)
     } catch (error) {
       console.error('Error loading Google script', error)
+    } finally {
+      isPendingClient.value = false
     }
   }
   onMounted(() => {
@@ -35,6 +44,7 @@ export const useGoogleOAuth2 = () => {
   ) {
     tokenResponse.value = response
     expiresAt.value = Number(response.expires_in) * 1000 + Date.now()
+    isPendingToken.value = false
   }
   const getToken = async () => {
     tokenClient.value?.requestAccessToken()
