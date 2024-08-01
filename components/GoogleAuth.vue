@@ -14,7 +14,16 @@
       Agregar a mi Calendario
     </v-btn>
     <v-dialog v-model="dialogCalendarSync">
-      <v-card :disabled="loading">
+      <v-card
+        :disabled="
+          calendarListStatus === 'pending' ||
+          exportEventToGCalendarStatus === 'pending'
+        "
+        :loading="
+          calendarListStatus === 'pending' ||
+          exportEventToGCalendarStatus === 'pending'
+        "
+      >
         <v-card-title>Google Calendar</v-card-title>
         <v-dialog v-model="dialog" max-width="320">
           <CreateGoogleCalendar
@@ -101,6 +110,24 @@
               </v-text-field>
             </v-form>
           </v-form>
+          <v-alert
+            v-if="calendarListStatus === 'error'"
+            type="error"
+            dense
+            dismissible
+          >
+            Ha ocurrido un error al obtener la lista de calendarios
+          </v-alert>
+          <v-alert
+            v-if="exportEventToGCalendarStatus === 'error'"
+            type="error"
+            dense
+            dismissible
+          >
+            <div>Ha ocurrido un error al exportar los eventos.</div>
+
+            {{ exportEventToGCalendarError?.data?.error?.message }}
+          </v-alert>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -191,7 +218,6 @@ const defaultNotification = ref(new Notification())
 const notifications = ref([new Notification()])
 
 const selected = ref<any>(null)
-const loading = ref(false)
 
 /**
  *  Sign out the user upon button click.
@@ -228,11 +254,12 @@ function addCalendar(this: any) {
     calendarItem.value.summary = search.value
   }
 }
-
+const loading = ref(false)
 async function handleSaveCalendar({
   summary,
 }: Pick<IGoogleCalendarItem, 'summary'>) {
   try {
+    loading.value = true
     const response = await createCalendar({ summary })
     await getCalendarList()
     return response
@@ -240,28 +267,34 @@ async function handleSaveCalendar({
     console.error('Execute error', e)
   } finally {
     dialog.value = false
+    loading.value = false
   }
 }
 
 const form = ref<typeof VForm | null>(null)
 
-const exportEventToGCalendar = async () => {
-  if (!form.value) return
-  const { valid } = await form.value.validate()
-  if (!valid) {
-    return
-  }
-  progress.value = 0
-  for (const event of events.value) {
-    try {
+const {
+  execute: exportEventToGCalendar,
+  status: exportEventToGCalendarStatus,
+  error: exportEventToGCalendarError,
+} = useAsyncData(
+  async () => {
+    if (!form.value) return
+    const { valid } = await form.value.validate()
+    if (!valid) {
+      return
+    }
+    progress.value = 0
+    for (const event of events.value) {
       await eventRequest(event)
       progress.value++
-    } catch (e) {
-      console.error(e)
     }
-  }
-  progress.value = 0
-}
+    progress.value = 0
+  },
+  {
+    immediate: false,
+  },
+)
 
 async function eventRequest(event: IEvent): Promise<any> {
   if (!dateEnd.value) {
