@@ -176,7 +176,7 @@ import type { IEvent } from '~/interfaces/event'
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
 import { mdiBell, mdiDelete, mdiPlus } from '@mdi/js'
-import { EventNotification } from '~/models/google'
+import { CalendarEvent, EventNotification } from '~/models/google'
 
 const props = defineProps<{
   startDate: string
@@ -293,55 +293,15 @@ async function eventRequest(event: IEvent): Promise<any> {
   if (!dateEnd.value) {
     throw new Error('No se ha seleccionado una fecha de fin')
   }
-  const format =
-    event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
-  let color = EVENT_COLORS.findIndex((color) => event.color === color)
-  if (color === -1) {
-    color = 10
-  }
-  const eventData = {
-    iCalUID: 'Horext-' + v4(),
-    summary: event.title,
-    description: event.description,
-    location: event?.location,
-    start: {
-      dateTime: DateTime.fromFormat(
-        dateStart.value + ' ' + event.startTime,
-        format,
-      )
-        .set({ weekday: event.day === 0 ? 7 : event.day })
-        .toISO(),
-      timeZone: 'America/Lima',
-    },
-    end: {
-      dateTime: DateTime.fromFormat(
-        dateStart.value + ' ' + event.endTime,
-        format,
-      )
-        .set({ weekday: event.day === 0 ? 7 : event.day })
-        .toISO(),
-      timeZone: 'America/Lima',
-    },
-    recurrence: [
-      'RRULE:FREQ=WEEKLY;UNTIL=' +
-        new Date(dateEnd.value)
-          .toISOString()
-          .substring(0, 10)
-          .split('-')
-          .join('') +
-        'T000000Z',
-    ],
-    colorId: color,
-    source: {
-      title: 'Horext',
-      url: 'https://horext.octatec.io',
-    },
-    reminders: {
-      useDefault: !1,
-      overrides: [...notifications.value],
-    },
-  }
-  return await createEvent(selected.value.id, eventData)
+  return await createEvent(
+    selected.value.id,
+    new CalendarEvent(
+      event,
+      notifications.value,
+      dateStart.value,
+      dateEnd.value,
+    ),
+  )
 }
 
 const {
