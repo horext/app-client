@@ -33,6 +33,7 @@
               :items="calendarList"
               return-object
               clearable
+              :loading="calendarListStatus === 'pending'"
               :rules="[(r) => !!r || 'Requerido']"
               item-title="summary"
             >
@@ -189,7 +190,6 @@ class Notification {
 const defaultNotification = ref(new Notification())
 const notifications = ref([new Notification()])
 
-const calendarList = ref<IGoogleCalendarItem[]>([])
 const selected = ref<any>(null)
 const loading = ref(false)
 
@@ -318,14 +318,20 @@ async function eventRequest(event: IEvent): Promise<any> {
   return await createEvent(selected.value.id, eventData)
 }
 
-async function getCalendarList() {
-  try {
+const {
+  execute: getCalendarList,
+  data: calendarList,
+  status: calendarListStatus,
+} = useAsyncData(
+  async () => {
     const response = await fetchCalendars()
-    calendarList.value = response.items
-  } catch (e) {
-    console.error('Execute error', e)
-  }
-}
+    return response.items
+  },
+  {
+    immediate: false,
+    default: () => [],
+  },
+)
 
 function onChangeSignInStatus(value: boolean) {
   console.log(value)
