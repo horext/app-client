@@ -34,7 +34,7 @@
 import { computed,  } from 'vue'
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
-import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
+import ScheduleFavoriteAdd from '~/components/schedule/FavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 

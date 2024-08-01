@@ -10,6 +10,10 @@ import { computed, type PropType } from 'vue'
 import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
+defineOptions({
+  name: 'ScheduleFavoriteAdd'
+})
+
 const props = defineProps({
   schedule: {
     type: Object as PropType<IScheduleGenerate>,

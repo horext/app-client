@@ -59,7 +59,7 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
-import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
+import ScheduleFavoriteAdd from '~/components/schedule/FavoriteAdd.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
