@@ -168,10 +168,8 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
-import { v4 } from 'uuid'
 import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
-import { EVENT_COLORS } from '~/constants/event'
 import type { IEvent } from '~/interfaces/event'
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
