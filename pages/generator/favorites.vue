@@ -23,22 +23,16 @@
   </schedules-presentation>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script setup lang="ts">
+import { computed,  } from 'vue'
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-export default defineComponent({
-  components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },
-  setup() {
-    const store = useUserConfigStore()
-    const schedules = computed(() => store.favoritesSchedules)
-    const updateFavoritesSchedules = (schedules: IScheduleGenerate[]) =>
-      store.updateFavoritesSchedules(schedules)
-    return { schedules, updateFavoritesSchedules }
-  },
-})
+const store = useUserConfigStore()
+const schedules = computed(() => store.favoritesSchedules)
+const updateFavoritesSchedules = (schedules: IScheduleGenerate[]) =>
+  store.updateFavoritesSchedules(schedules)
 </script>
