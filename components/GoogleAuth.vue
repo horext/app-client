@@ -123,7 +123,12 @@
             </template>
           </v-btn>
           <v-spacer />
-          <v-btn variant="text" color="success" @click="handleSignOutClick()">
+          <v-btn
+            variant="text"
+            color="success"
+            :loading="signOutStatus === 'pending'"
+            @click="handleSignOutClick()"
+          >
             Cerrar Sesión
           </v-btn>
         </v-card-actions>
@@ -191,9 +196,15 @@ const loading = ref(false)
 /**
  *  Sign out the user upon button click.
  */
-const handleSignOutClick = () => {
-  signOut()
-}
+const { execute: handleSignOutClick, status: signOutStatus } = useAsyncData(
+  async () => {
+    await signOut()
+    dialogCalendarSync.value = false
+  },
+  {
+    immediate: false,
+  },
+)
 
 function deleteNotification(index: Notification) {
   notifications.value = notifications.value.filter(

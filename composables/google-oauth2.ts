@@ -99,9 +99,9 @@ export const useGoogleOAuth2 = () => {
 
   const expiresAt = ref<number | null>(null)
 
-  const signOut = () => {
+  const signOut = async () => {
     if (tokenResponse.value) {
-      revokeToken(tokenResponse.value)
+      await revokeToken(tokenResponse.value)
       tokenResponse.value = null
     }
   }
