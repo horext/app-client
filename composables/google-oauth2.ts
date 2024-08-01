@@ -1,3 +1,8 @@
+import type {
+  IGoogleCalendarItem,
+  IGoogleCalendarListPayload,
+} from '~/interfaces/google/calendar'
+
 export const useGoogleOAuth2 = () => {
   const { $script } = useGoogleAccounts()
   const config = useRuntimeConfig()
@@ -60,6 +65,36 @@ export const useGoogleOAuth2 = () => {
     },
   })
 
+  async function fetchCalendars() {
+    return await googleApis<IGoogleCalendarListPayload>(
+      'calendar/v3/users/me/calendarList',
+    )
+  }
+
+  async function createCalendar({
+    summary,
+  }: Pick<IGoogleCalendarItem, 'summary'>): Promise<IGoogleCalendarItem> {
+    const response = await googleApis<IGoogleCalendarItem>(
+      'calendar/v3/calendars',
+      {
+        method: 'POST',
+        body: { summary },
+      },
+    )
+    return response
+  }
+
+  async function createEvent(calendarId: string, event: object) {
+    const response = await googleApis(
+      `calendar/v3/calendars/${calendarId}/events`,
+      {
+        method: 'POST',
+        body: event,
+      },
+    )
+    return response
+  }
+
   const isSignedIn = computed(() => !!tokenResponse.value)
 
   const expiresAt = ref<number | null>(null)
@@ -79,5 +114,8 @@ export const useGoogleOAuth2 = () => {
     isSignedIn,
     signOut,
     tokenClient,
+    fetchCalendars,
+    createCalendar,
+    createEvent,
   }
 }

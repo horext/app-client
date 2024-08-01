@@ -21,7 +21,7 @@
             :calendar="calendarItem"
             :loading="loading"
             @close="dialog = false"
-            @update:calendar="createCalendar"
+            @update:calendar="handleSaveCalendar"
           />
         </v-dialog>
         <v-card-text>
@@ -140,10 +140,7 @@ import CreateGoogleCalendar from '~/components/CreateGoogleCalendar.vue'
 import GoogleSignIn from '~/components/GoogleSignIn.vue'
 import { EVENT_COLORS } from '~/constants/event'
 import type { IEvent } from '~/interfaces/event'
-import type {
-  IGoogleCalendarListPayload,
-  IGoogleCalendarItem,
-} from '~/interfaces/google/calendar'
+import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
 import { mdiBell, mdiDelete, mdiPlus } from '@mdi/js'
 
@@ -153,8 +150,15 @@ const props = defineProps<{
   events: IEvent[]
 }>()
 
-const { googleApis, tokenClient, getToken, isSignedIn, signOut } =
-  useGoogleOAuth2()
+const {
+  tokenClient,
+  getToken,
+  isSignedIn,
+  signOut,
+  fetchCalendars,
+  createCalendar,
+  createEvent,
+} = useGoogleOAuth2()
 const { events } = toRefs(props)
 
 const search = ref('')
@@ -214,19 +218,11 @@ function addCalendar(this: any) {
   }
 }
 
-async function createCalendar({
+async function handleSaveCalendar({
   summary,
 }: Pick<IGoogleCalendarItem, 'summary'>) {
   try {
-    const response = await googleApis<IGoogleCalendarItem>(
-      'calendar/v3/calendars',
-      {
-        method: 'POST',
-        body: { summary },
-      },
-    )
-    // Handle the results here (response.result has the parsed body).
-    console.log('Response', response)
+    const response = await createCalendar({ summary })
     await getCalendarList()
     return response
   } catch (e) {
@@ -308,22 +304,12 @@ async function eventRequest(event: IEvent): Promise<any> {
       overrides: [...notifications.value],
     },
   }
-  // create the request
-  const request = await googleApis(
-    'calendar/v3/calendars/' + selected.value.id + '/events',
-    {
-      method: 'POST',
-      body: eventData,
-    },
-  )
-  return request
+  return await createEvent(selected.value.id, eventData)
 }
 
 async function getCalendarList() {
   try {
-    const response = await googleApis<IGoogleCalendarListPayload>(
-      'calendar/v3/users/me/calendarList',
-    )
+    const response = await fetchCalendars()
     calendarList.value = response.items
   } catch (e) {
     console.error('Execute error', e)
