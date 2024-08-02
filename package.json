@@ -41,7 +41,7 @@
     "vite": "^5.3.5",
     "vue": "^3.4.34",
     "vue-router": "^4.4.2",
-    "vuetify": "^3.6.13"
+    "vuetify": "^3.6.14"
   },
   "devDependencies": {
     "@mdi/js": "^7.4.47",
