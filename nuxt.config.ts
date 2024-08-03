@@ -1,4 +1,4 @@
-const config = defineNuxtConfig({
+export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
@@ -21,6 +21,7 @@ const config = defineNuxtConfig({
       },
     },
   },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
@@ -35,9 +36,11 @@ const config = defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/scripts',
   ],
+
   image: {
     dir: 'assets/images',
   },
+
   runtimeConfig: {
     public: {
       gsi: {
@@ -83,6 +86,6 @@ const config = defineNuxtConfig({
       prerender: true,
     },
   },
-})
 
-export default config
+  compatibilityDate: '2024-08-03',
+})
