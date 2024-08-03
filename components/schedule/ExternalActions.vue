@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { mdiShareVariant, mdiExport, mdiSync } from '@mdi/js'
-import { defineEmits } from 'vue'
 import { ViewMode } from '~/models/ViewMode'
 
 defineProps<{
