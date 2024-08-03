@@ -239,7 +239,7 @@ function addNotification() {
   defaultNotification.value = new EventNotification()
 }
 
-function addCalendar(this: any) {
+function addCalendar() {
   dialog.value = true
   if (search.value) {
     calendarItem.value.summary = search.value
