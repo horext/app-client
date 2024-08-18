@@ -1,4 +1,4 @@
-const config = defineNuxtConfig({
+export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
@@ -84,5 +84,3 @@ const config = defineNuxtConfig({
     },
   },
 })
-
-export default config
