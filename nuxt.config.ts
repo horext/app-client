@@ -21,6 +21,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
@@ -35,9 +36,11 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/scripts',
   ],
+
   image: {
     dir: 'assets/images',
   },
+
   runtimeConfig: {
     public: {
       gsi: {
@@ -83,4 +86,6 @@ export default defineNuxtConfig({
       prerender: true,
     },
   },
+
+  compatibilityDate: '2024-08-18',
 })
