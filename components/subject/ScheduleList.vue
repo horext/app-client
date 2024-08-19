@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="pending">
+  <v-card :loading="loading">
     <v-card-title>
       <span class="text-h5">{{ title }}</span>
     </v-card-title>
@@ -7,7 +7,7 @@
       <ScheduleSubjectList
         v-model="selected"
         :schedules="schedules"
-        :loading="pending"
+        :loading="loading"
       />
     </v-card-text>
     <v-card-actions>
@@ -26,12 +26,7 @@
 import { computed, defineComponent, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import {
-  useClassSessionApi,
-  useScheduleSubjectApi,
-} from '~/modules/apis/runtime/composables'
 
 export default defineComponent({
   components: { ScheduleSubjectList },
@@ -40,47 +35,20 @@ export default defineComponent({
       type: Object as PropType<ISelectedSubject>,
       required: true,
     },
-    hourlyLoad: {
-      type: Object as PropType<IHourlyLoad>,
+    schedules: {
+      type: Array as PropType<ISubjectSchedule[]>,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['save', 'cancel'],
   setup(props, { emit }) {
-    const { subject, hourlyLoad } = toRefs(props)
-    const scheduleSubjectApi = useScheduleSubjectApi()
-    const classSessionsApi = useClassSessionApi()
+    const { subject, schedules } = toRefs(props)
 
     const selected = ref<ISubjectSchedule[]>([])
-    const { data: schedules, pending } = useAsyncData<ISubjectSchedule[]>(
-      async () => {
-        const hourlyLoadId = hourlyLoad.value?.id
-        const subjectId = subject.value?.id
-        if (!hourlyLoadId || !subjectId) return []
-
-        const schedulesSubject =
-          await scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
-            subjectId,
-            hourlyLoadId,
-          )
-        const scheduleIds = schedulesSubject.map((sb) => sb.schedule.id)
-
-        const sessions = await classSessionsApi.findScheduleIds(scheduleIds)
-
-        return schedulesSubject.map((sb) => ({
-          ...sb?.schedule,
-          scheduleSubject: {
-            id: sb.id,
-          },
-          sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
-          subject: subject.value,
-        }))
-      },
-      {
-        default: () => [],
-        watch: [subject, hourlyLoad],
-      },
-    )
 
     const availableSchedules = computed(() => {
       const currentSchedules = schedules.value
@@ -107,10 +75,8 @@ export default defineComponent({
     })
     return {
       selected,
-      schedules,
       saveSections,
       title,
-      pending,
     }
   },
 })

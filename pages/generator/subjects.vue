@@ -79,7 +79,8 @@
               <SubjectScheduleList
                 v-if="selectedSubject"
                 :subject="selectedSubject"
-                :hourly-load="myHourlyLoad"
+                :schedules="schedules"
+                :loading="pending"
                 @save="save(selectedSubject, $event)"
                 @cancel="close"
               />
@@ -154,7 +155,11 @@ import type {
 import { mdiMagnify } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
-import { useCourseApi } from '~/modules/apis/runtime/composables'
+import {
+  useClassSessionApi,
+  useCourseApi,
+  useScheduleSubjectApi,
+} from '~/modules/apis/runtime/composables'
 
 const courseApi = useCourseApi()
 
@@ -189,6 +194,39 @@ const openSearchMenu = ref(false)
 const addNewSubject = (item: ISubject) => {
   editItem({ ...item, schedules: [] })
 }
+
+const scheduleSubjectApi = useScheduleSubjectApi()
+const classSessionsApi = useClassSessionApi()
+
+const { data: schedules, pending } = useAsyncData<ISubjectSchedule[]>(
+  async () => {
+    const _hourlyLoadId = hourlyLoadId.value
+    const subject = selectedSubject.value
+    if (!_hourlyLoadId || !subject) return []
+
+    const schedulesSubject =
+      await scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
+        subject.id,
+        _hourlyLoadId,
+      )
+    const scheduleIds = schedulesSubject.map((sb) => sb.schedule.id)
+
+    const sessions = await classSessionsApi.findScheduleIds(scheduleIds)
+
+    return schedulesSubject.map((sb) => ({
+      ...sb?.schedule,
+      scheduleSubject: {
+        id: sb.id,
+      },
+      sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
+      subject: subject,
+    }))
+  },
+  {
+    default: () => [],
+    watch: [selectedSubject, hourlyLoadId],
+  },
+)
 
 const editItem = async (item: ISelectedSubject) => {
   selectedSubject.value = item
@@ -263,8 +301,4 @@ const {
 )
 
 const headers = SUBJECT_HEADERS
-
-const myHourlyLoad = computed(() => {
-  return configStore.hourlyLoad!
-})
 </script>
