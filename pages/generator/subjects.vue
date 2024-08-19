@@ -255,7 +255,7 @@ const close = () => {
 
 const closeDelete = () => {
   dialogDelete.value = false
-  selectedSubject.value = undefined
+  selectedDelete.value = undefined
 }
 
 const succcesUpdateCourse = ref(false)
