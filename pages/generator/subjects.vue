@@ -180,9 +180,6 @@ const editedIndex = ref(-1)
 
 const openSearchMenu = ref(false)
 const editItem = async (item: ISelectedSubject) => {
-  if (!item) {
-    return
-  }
   editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
   editedItem.value = Object.assign({}, item)
   openSearchMenu.value = false
