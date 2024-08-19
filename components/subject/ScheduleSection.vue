@@ -1,13 +1,13 @@
 <template>
   <tr>
-    <td :rowspan="sessionsCount + 1">
+    <td :rowspan="sessionsCount + 1" class="section-cell">
       <v-checkbox
+        :id="section"
         v-model="valueSync"
         class="text-caption"
         density="compact"
         :label="section"
         :value="schedule"
-        :id="section"
         hide-details
         multiple
       />
@@ -46,3 +46,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.section-cell.active {
+  background-color: #f5f5f5;
+}
+</style>
