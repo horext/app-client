@@ -83,9 +83,10 @@ export default defineComponent({
     )
 
     watch(schedules, () => {
-      if (props.subject.schedules) {
+      const currentSubject = subject.value
+      if (currentSubject.schedules) {
         selected.value = schedules.value.filter((s1) => {
-          const schedule = props.subject.schedules.find(
+          const schedule = currentSubject.schedules.find(
             (s2) => s2.section.id === s1.section.id,
           )
           return schedule?.id === s1?.id
