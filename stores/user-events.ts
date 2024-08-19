@@ -18,7 +18,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     items.value.splice(index, 1)
   }
 
-  function updateItemByIndex({ index, item }: { index: number; item: any }) {
+  function updateItemByIndex({ index, item }: { index: number; item: IEvent }) {
     items.value = items.value.map((c, i) => (i === index ? item : c))
   }
 
