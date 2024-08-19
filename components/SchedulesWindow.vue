@@ -46,6 +46,8 @@ const emit = defineEmits<{
   (event: 'update:currentSchedule', value: IScheduleGenerate): void
 }>()
 
+const { schedules } = toRefs(props)
+
 const index = ref(0)
 
 const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
@@ -57,7 +59,7 @@ const onChangeSchedules: WatchCallback = (newValue, oldValue) => {
     index.value = 0
   }
 }
-watch(() => props.schedules, onChangeSchedules)
+watch(schedules, onChangeSchedules)
 
 const onChangeSchedule: WatchCallback = (value) => {
   if (index.value >= props.schedules.length) {
@@ -66,7 +68,7 @@ const onChangeSchedule: WatchCallback = (value) => {
   syncedCurrentSchedule.value = value
 }
 
-const schedule = computed(() => props.schedules[index.value])
+const schedule = computed(() => schedules.value[index.value])
 
 watch(schedule, onChangeSchedule, { immediate: true })
 
