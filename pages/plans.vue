@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { IStudyPlan } from '~/interfaces/subject'
-import { useStudyPlanApi } from '~/modules/apis/composables';
+import { useStudyPlanApi } from '~/modules/apis/runtime/composables';
 
 const api = useStudyPlanApi();
 const { data } = useAsyncData<IStudyPlan[]>(() => api.getAll(), {

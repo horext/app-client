@@ -31,7 +31,10 @@ import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiStar } from '@mdi/js'
-import { useScheduleSubjectApi, useClassSessionApi } from '~/modules/apis/composables'
+import {
+  useClassSessionApi,
+  useScheduleSubjectApi,
+} from '~/modules/apis/runtime/composables'
 
 definePageMeta({
   layout: 'app',
