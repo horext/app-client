@@ -1,96 +1,93 @@
 <template>
-  <v-row dense>
-    <v-col cols="12">
-      <v-data-table
-        :headers="SUBJECT_HEADERS"
-        :items="mySubjects"
-        class="elevation-1"
-        mobile-breakpoint="md"
-        :mobile="null"
-      >
-        <template #top>
-          <v-toolbar density="compact" flat>
-            <v-toolbar-title>Cursos Disponibles</v-toolbar-title>
-          </v-toolbar>
-          <v-divider />
-          <v-sheet flat class="pa-2">
-            <v-row dense>
-              <v-col cols="12">
-                <SubjectSelect
-                  v-model="selectedSubject"
-                  v-model:search="search"
-                  v-model:menu="openSearchMenu"
-                  :status-subjects="statusSubjects"
-                  :subjects="availableCourses"
-                  @update:model-value="addNewSubject"
-                />
-              </v-col>
-            </v-row>
-            <v-dialog
-              v-model="dialog"
-              dense
-              max-width="800"
-              @click:outside="close"
-              @keydown.esc="close"
-            >
-              <SubjectScheduleList
-                v-if="selectedSubject"
-                :subject="selectedSubject"
-                :schedules="schedules"
-                :loading="statusSchedules === 'pending'"
-                @save="save(selectedSubject, $event)"
-                @cancel="close"
-              />
-            </v-dialog>
-          </v-sheet>
-
-          <v-toolbar density="compact" flat>
-            <v-toolbar-title>
-              <span class="hidden-xs-and-down">Cursos </span> Seleccionados
-            </v-toolbar-title>
-            <v-divider class="mx-4" inset vertical />
-            <v-btn to="/generator" color="primary">
-              Generar<span class="hidden-xs-and-down">&nbsp; Horarios</span>
-            </v-btn>
-          </v-toolbar>
-        </template>
-        <template #no-data>
-          <SubjectTableNoData />
-        </template>
-        <template #[`item.sections`]="{ item }">
-          <SubjectTableItemSectionList :schedules="item.schedules" />
-        </template>
-        <template #[`item.actions`]="{ item }">
-          <SubjectTableItemActions
-            @click:edit="editItem(item)"
-            @click:delete="deleteItem(item)"
+  <v-data-table
+    :headers="SUBJECT_HEADERS"
+    :items="mySubjects"
+    class="elevation-1"
+    mobile-breakpoint="md"
+    :mobile="null"
+  >
+    <template #top>
+      <v-toolbar density="compact" flat>
+        <v-toolbar-title>Cursos Disponibles</v-toolbar-title>
+      </v-toolbar>
+      <v-divider />
+      <v-sheet flat class="pa-2">
+        <v-row dense>
+          <v-col cols="12">
+            <SubjectSelect
+              v-model="selectedSubject"
+              v-model:search="search"
+              v-model:menu="openSearchMenu"
+              :status-subjects="statusSubjects"
+              :subjects="availableCourses"
+              @update:model-value="addNewSubject"
+            />
+          </v-col>
+        </v-row>
+        <v-dialog
+          v-model="dialog"
+          dense
+          max-width="800"
+          @click:outside="close"
+          @keydown.esc="close"
+        >
+          <SubjectScheduleList
+            v-if="selectedSubject"
+            :subject="selectedSubject"
+            :schedules="schedules"
+            :loading="statusSchedules === 'pending'"
+            @save="save(selectedSubject, $event)"
+            @cancel="close"
           />
-        </template>
-        <template #bottom>
-          <v-divider />
-          <SubjectTotalCredits :subjects="mySubjects" />
-        </template>
-      </v-data-table>
-    </v-col>
+        </v-dialog>
+      </v-sheet>
 
-    <base-confirm-dialog
-      v-if="selectedDelete"
-      v-model="dialogDelete"
-      @click:confirm="deleteItemConfirm(selectedDelete)"
-      @click:reject="closeDelete"
-    >
-      ¿Estás seguro de eliminar el curso de {{ selectedDelete?.course?.name }}?
-    </base-confirm-dialog>
-    <base-snackbar v-model="succcesAddCourse">
-      Curso Agregado correctamente!
-    </base-snackbar>
-    <base-snackbar v-model="succcesUpdateCourse">
-      Curso Actualizado correctamente!
-    </base-snackbar>
-    <base-snackbar v-model="succcesDeleteCourse">
-      Curso Eliminado correctamente!
-    </base-snackbar>
-  </v-row>
+      <v-toolbar density="compact" flat>
+        <v-toolbar-title>
+          <span class="hidden-xs-and-down">Cursos </span> Seleccionados
+        </v-toolbar-title>
+        <v-divider class="mx-4" inset vertical />
+        <v-btn to="/generator" color="primary">
+          Generar<span class="hidden-xs-and-down">&nbsp; Horarios</span>
+        </v-btn>
+      </v-toolbar>
+    </template>
+    <template #no-data>
+      <SubjectTableNoData />
+    </template>
+    <template #[`item.sections`]="{ item }">
+      <SubjectTableItemSectionList :schedules="item.schedules" />
+    </template>
+    <template #[`item.actions`]="{ item }">
+      <SubjectTableItemActions
+        @click:edit="editItem(item)"
+        @click:delete="deleteItem(item)"
+      />
+    </template>
+    <template #bottom>
+      <v-divider />
+      <SubjectTotalCredits :subjects="mySubjects" />
+
+      <base-confirm-dialog
+        v-if="selectedDelete"
+        v-model="dialogDelete"
+        @click:confirm="deleteItemConfirm(selectedDelete)"
+        @click:reject="closeDelete"
+      >
+        ¿Estás seguro de eliminar el curso de
+        {{ selectedDelete?.course?.name }}?
+      </base-confirm-dialog>
+      <base-snackbar v-model="succcesAddCourse">
+        Curso Agregado correctamente!
+      </base-snackbar>
+      <base-snackbar v-model="succcesUpdateCourse">
+        Curso Actualizado correctamente!
+      </base-snackbar>
+      <base-snackbar v-model="succcesDeleteCourse">
+        Curso Eliminado correctamente!
+      </base-snackbar>
+    </template>
+  </v-data-table>
 </template>
 
 <script setup lang="ts">
