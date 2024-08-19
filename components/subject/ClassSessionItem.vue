@@ -17,53 +17,34 @@
     </td>
   </tr>
 </template>
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
-import type { ISession } from '~/interfaces/subject';
+import type { ISession } from '~/interfaces/subject'
 
-export default defineComponent({
-  props: {
-    session: {
-      type: Object as PropType<ISession>,
-      required: true,
-    },
-    for: {
-      type: String,
-      default: undefined,
-    },
-  },
-  setup(props) {
-    const { session, for: forLabel } = toRefs(props)
-    const dayWeek = computed(() =>
-      WEEK_DAYS_NAMES[session.value?.day]?.substring(0, 2).toUpperCase(),
-    )
+const props = defineProps<{
+  session: ISession
+  for: string
+}>()
 
-    const type = computed(() => session.value?.type?.code)
+const { session, for: forLabel } = toRefs(props)
+const dayWeek = computed(() =>
+  WEEK_DAYS_NAMES[session.value?.day]?.substring(0, 2).toUpperCase(),
+)
 
-    const teacherFullName = computed(() => session.value?.teacher?.fullName)
+const type = computed(() => session.value?.type?.code)
 
-    const classroom = computed(() => session.value?.classroom?.code)
+const teacherFullName = computed(() => session.value?.teacher?.fullName)
 
-    const timeInterval = computed(
-      () =>
-        session.value?.startTime?.substring(0, 5) +
-        ' - ' +
-        session.value?.endTime?.substring(0, 5),
-    )
+const classroom = computed(() => session.value?.classroom?.code)
 
-    return {
-      dayWeek,
-      type,
-      teacherFullName,
-      classroom,
-      timeInterval,
-      forLabel,
-    }
-  },
-})
+const timeInterval = computed(
+  () =>
+    session.value?.startTime?.substring(0, 5) +
+    ' - ' +
+    session.value?.endTime?.substring(0, 5),
+)
 </script>
-
 
 <style scoped>
 label {
