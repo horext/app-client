@@ -230,11 +230,7 @@ const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
 
 const search = ref('')
 
-const {
-  data: subjects,
-  error: errorSubjects,
-  status: statusSubjects,
-} = await useAsyncData(
+const { data: subjects, status: statusSubjects } = await useAsyncData(
   'search',
   async () => {
     const _search = search.value
