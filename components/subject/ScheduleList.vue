@@ -82,18 +82,19 @@ export default defineComponent({
       },
     )
 
-    watch(schedules, (schedules) => {
+    const availableSchedules = computed(() => {
+      const currentSchedules = schedules.value
       const subjectSchedules = subject.value.schedules
-      if (subjectSchedules) {
-        selected.value = schedules.filter((s1) => {
-          const subjectSchedule = subjectSchedules.find(
-            (s2) => s2.section.id === s1.section.id,
-          )
-          return subjectSchedule?.id === s1?.id
-        })
-      } else {
-        selected.value = []
-      }
+      return currentSchedules.filter((s1) => {
+        const schedule = subjectSchedules.find(
+          (s2) => s2.section.id === s1.section.id,
+        )
+        return schedule?.id === s1?.id
+      })
+    })
+
+    watch(availableSchedules, (availableSchedules) => {
+      selected.value = availableSchedules.map((s) => ({ ...s }))
     })
 
     const saveSections = () => {
