@@ -55,43 +55,41 @@ const store = useUserConfigStore()
 const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const route = useRoute()
 
-const { data } = useAsyncData(async () => {
-  const encodedQuery = route.query.q
-  if (!encodedQuery) return { scheduleSubjects: [], sessions: [] }
-  const result = decodeBase64(encodedQuery.toString())
-  const scheduleSubjectIds = result.split(',').map(Number)
-  const scheduleSubjects =
-    await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
-  const schedulesIds = scheduleSubjects.map((ss) => ss.schedule.id)
-  const sessions = await classSessionApi.findScheduleIds(schedulesIds)
-  return { scheduleSubjects, sessions }
-})
+const { data: subjects } = useAsyncData(
+  async () => {
+    const encodedQuery = route.query.q
+    if (!encodedQuery) return []
+    const result = decodeBase64(encodedQuery.toString())
+    const scheduleSubjectIds = result.split(',').map(Number)
+    const scheduleSubjects =
+      await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
+    const schedulesIds = scheduleSubjects.map((ss) => ss.schedule.id)
+    const sessions = await classSessionApi.findScheduleIds(schedulesIds)
 
-const scheduleSubjects = computed(() => data.value?.scheduleSubjects || [])
-const sessions = computed(() => data.value?.sessions || [])
+    return scheduleSubjects.map((sb) => ({
+      ...sb.subject,
+      schedules: [
+        {
+          ...sb?.schedule,
+          scheduleSubject: {
+            id: sb.id,
+          },
+          sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
+          subject: sb.subject,
+        },
+      ],
+    }))
+  },
+  {
+    default: () => [],
+  },
+)
 
 const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
   store.deleteFavoriteScheduleById(favorites.id)
 
 const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
   store.saveNewFavoriteSchedule(favorites)
-
-const subjects = computed(() => {
-  const _sessions = sessions.value
-  return scheduleSubjects.value.map((sb) => ({
-    ...sb.subject,
-    schedules: [
-      {
-        ...sb?.schedule,
-        scheduleSubject: {
-          id: sb.id,
-        },
-        sessions: _sessions.filter((s) => s.schedule.id === sb.schedule.id),
-        subject: sb.subject,
-      },
-    ],
-  }))
-})
 
 const { loadSchedules } = useSchedules()
 
