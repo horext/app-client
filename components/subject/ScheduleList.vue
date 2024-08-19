@@ -86,10 +86,10 @@ export default defineComponent({
       const subjectSchedules = subject.value.schedules
       if (subjectSchedules) {
         selected.value = schedules.filter((s1) => {
-          const schedule = subjectSchedules.find(
+          const subjectSchedule = subjectSchedules.find(
             (s2) => s2.section.id === s1.section.id,
           )
-          return schedule?.id === s1?.id
+          return subjectSchedule?.id === s1?.id
         })
       } else {
         selected.value = []
