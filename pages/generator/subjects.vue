@@ -16,57 +16,14 @@
           <v-sheet flat class="pa-2">
             <v-row dense>
               <v-col cols="12">
-                <v-autocomplete
-                  id="search-course"
+                <SubjectSelect
                   v-model="selectedSubject"
                   v-model:search="search"
                   v-model:menu="openSearchMenu"
-                  variant="outlined"
-                  :items="availableCourses"
-                  label="Buscar cursos"
-                  return-object
-                  no-filter
-                  hide-details
-                  item-title="course.name"
-                  item-value="id"
-                  :loading="statusSubjects === 'pending'"
-                  :no-data-text="
-                    errorSubjects
-                      ? 'Error al buscar cursos'
-                      : search
-                        ? statusSubjects === 'pending'
-                          ? 'Buscando cursos...'
-                          : 'No se encontraron cursos'
-                        : 'Escribe el nombre del curso'
-                  "
+                  :status-subjects="statusSubjects"
+                  :subjects="availableCourses"
                   @update:model-value="addNewSubject"
-                >
-                  <template #selection="{ item }">
-                    <v-list-item
-                      v-if="item.raw"
-                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-                    />
-                  </template>
-                  <template #item="{ props, item }">
-                    <v-list-item
-                      v-bind="props"
-                      :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-                      :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
-                    />
-                  </template>
-                  <template #append>
-                    <label for="search-course">
-                      <v-progress-circular
-                        v-if="statusSubjects === 'pending'"
-                        size="20"
-                        indeterminate
-                        color="primary"
-                      />
-                      <v-icon v-else color="primary">{{ mdiMagnify }}</v-icon>
-                    </label>
-                  </template>
-                </v-autocomplete>
+                />
               </v-col>
             </v-row>
             <v-dialog
@@ -147,7 +104,6 @@ import type {
   ISubjectSchedule,
   ISubject,
 } from '~/interfaces/subject'
-import { mdiMagnify } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
@@ -156,6 +112,7 @@ import {
   useScheduleSubjectApi,
 } from '~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
+import SubjectSelect from '../../components/subject/Select.vue'
 
 const courseApi = useCourseApi()
 
@@ -181,7 +138,8 @@ const selectedSubject = ref<ISelectedSubject>()
 
 const openSearchMenu = ref(false)
 
-const addNewSubject = (item: ISubject) => {
+const addNewSubject = (item?: ISubject) => {
+  if (!item) return
   openSearchMenu.value = false
   editItem({ ...item, schedules: [] })
 }
