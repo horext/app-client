@@ -55,7 +55,7 @@ export default defineComponent({
     const { subject, hourlyLoad } = toRefs(props)
     const scheduleSubjectApi = useScheduleSubjectApi()
     const classSessionsApi = useClassSessionApi()
-  
+
     const selected = ref<ISubjectSchedule[]>([])
     const { data: schedulesSubject, pending: pendingSchedulesSubject } =
       useAsyncData<IScheduleSubject[]>(
@@ -84,9 +84,7 @@ export default defineComponent({
       execute,
     } = useAsyncData<ISession[]>(
       async () => {
-        const ids = scheduleIds.value
-        const sessionsData = await classSessionsApi.findScheduleIds(ids)
-        return sessionsData
+        return await classSessionsApi.findScheduleIds(scheduleIds.value)
       },
       {
         default: () => [],
