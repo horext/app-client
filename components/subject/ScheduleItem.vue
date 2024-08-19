@@ -23,6 +23,7 @@
             v-for="session in schedule.sessions"
             :key="session.id"
             :session="session"
+            :for="schedule?.section?.id"
           />
         </template>
       </template>
