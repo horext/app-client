@@ -199,9 +199,11 @@ const addNewSubject = (item: ISubject) => {
 const scheduleSubjectApi = useScheduleSubjectApi()
 const classSessionsApi = useClassSessionApi()
 
-const { data: schedules, status: statusSchedules } = useAsyncData<
-  ISubjectSchedule[]
->(
+const {
+  data: schedules,
+  status: statusSchedules,
+  execute: fetchSchedules,
+} = useAsyncData<ISubjectSchedule[]>(
   async () => {
     const _hourlyLoadId = hourlyLoadId.value
     const subject = selectedSubject.value
@@ -227,7 +229,7 @@ const { data: schedules, status: statusSchedules } = useAsyncData<
   },
   {
     default: () => [],
-    watch: [selectedSubject, hourlyLoadId],
+    watch: [hourlyLoadId],
     immediate: false,
   },
 )
@@ -235,6 +237,7 @@ const { data: schedules, status: statusSchedules } = useAsyncData<
 const editItem = async (item: ISelectedSubject) => {
   selectedSubject.value = item
   openSearchMenu.value = false
+  fetchSchedules()  
   dialog.value = true
 }
 
