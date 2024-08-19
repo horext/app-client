@@ -23,24 +23,19 @@
     </template>
   </v-sheet>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { mdiInformation } from '@mdi/js'
 
-export default defineComponent({
-  name: 'ScheduleEventInfo',
-  props: {
-    event: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup() {
-    return {
-      mdiInformation,
-    }
-  },
-})
+defineProps<{
+  event: {
+    color: string
+    title: string
+    code: string
+    section: string
+    type: string
+    name: string
+  }
+}>()
 </script>
 <style lang="scss">
 .border-1 {
