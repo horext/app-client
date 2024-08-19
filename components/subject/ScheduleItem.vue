@@ -31,39 +31,23 @@
   </v-table>
 </template>
 
-<script lang="ts">
-import type { PropType } from 'vue'
+<script setup lang="ts">
 import { useVModel } from '@vueuse/core'
-import { defineComponent } from 'vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
-export default defineComponent({
-  components: { ScheduleSection, ClassSessionItem },
-  props: {
-    schedules: {
-      type: Array as PropType<ISubjectSchedule[]>,
-      required: true,
-    },
-    modelValue: {
-      type: Array as PropType<ISubjectSchedule[]>,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const valueSync = useVModel(props, 'modelValue', emit)
+const props = defineProps<{
+  schedules: ISubjectSchedule[]
+  modelValue: ISubjectSchedule[]
+  loading: boolean
+}>()
 
-    return {
-      valueSync,
-    }
-  },
-})
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: ISubjectSchedule[]): void
+}>()
+
+const valueSync = useVModel(props, 'modelValue', emit)
 </script>
 
 <style>
