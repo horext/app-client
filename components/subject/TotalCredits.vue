@@ -12,7 +12,7 @@
 import type { ISubject } from '~/interfaces/subject'
 
 const props = defineProps<{
-  subjects: ISubject[]
+  subjects: Pick<ISubject, 'credits'>[]
 }>()
 
 const { subjects } = toRefs(props)
