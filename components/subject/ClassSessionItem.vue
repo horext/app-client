@@ -20,11 +20,12 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
+import type { ISession } from '~/interfaces/subject';
 
 export default defineComponent({
   props: {
     session: {
-      type: Object,
+      type: Object as PropType<ISession>,
       required: true,
     },
     for: {
