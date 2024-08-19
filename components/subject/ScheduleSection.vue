@@ -2,12 +2,12 @@
   <tr>
     <td :rowspan="sessionsCount + 1">
       <v-checkbox
-        :id="section"
         v-model="valueSync"
         class="text-caption"
         density="compact"
         :label="section"
         :value="schedule"
+        hide-details
         multiple
       />
     </td>
