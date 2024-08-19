@@ -264,15 +264,15 @@ const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
   const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
   if (editedIndex > -1 && schedules && schedules.length > 0) {
     await configStore.updateSubject({ ...item, schedules })
+    close()
     succcesUpdateCourse.value = true
   } else if (schedules && schedules.length > 0) {
     await configStore.saveNewSubject({ ...item, schedules })
+    close()
     succcesAddCourse.value = true
   } else if (editedIndex > -1) {
-    await configStore.deleteSubjectById(item?.id!)
-    succcesDeleteCourse.value = true
+    deleteItem(item)
   }
-  close()
 }
 
 const search = ref('')
