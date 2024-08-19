@@ -80,7 +80,7 @@
                 v-if="selectedSubject"
                 :subject="selectedSubject"
                 :schedules="schedules"
-                :loading="pending"
+                :loading="statusSchedules === 'pending'"
                 @save="save(selectedSubject, $event)"
                 @cancel="close"
               />
@@ -199,7 +199,9 @@ const addNewSubject = (item: ISubject) => {
 const scheduleSubjectApi = useScheduleSubjectApi()
 const classSessionsApi = useClassSessionApi()
 
-const { data: schedules, pending } = useAsyncData<ISubjectSchedule[]>(
+const { data: schedules, status: statusSchedules } = useAsyncData<
+  ISubjectSchedule[]
+>(
   async () => {
     const _hourlyLoadId = hourlyLoadId.value
     const subject = selectedSubject.value
