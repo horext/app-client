@@ -26,7 +26,6 @@
 import { computed, defineComponent, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
-import { useApi } from '~/composables/api'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IScheduleSubject } from '~/interfaces/schedule-subject'
 import type {
@@ -34,6 +33,10 @@ import type {
   ISession,
   ISubjectSchedule,
 } from '~/interfaces/subject'
+import {
+  useClassSessionApi,
+  useScheduleSubjectApi,
+} from '~/modules/apis/runtime/composables'
 
 export default defineComponent({
   components: { ScheduleSubjectList },
@@ -50,7 +53,9 @@ export default defineComponent({
   emits: ['save', 'cancel'],
   setup(props, { emit }) {
     const { subject, hourlyLoad } = toRefs(props)
-    const $api = useApi()
+    const scheduleSubjectApi = useScheduleSubjectApi()
+    const classSessionsApi = useClassSessionApi()
+  
     const selected = ref<ISubjectSchedule[]>([])
     const { data: schedulesSubject, pending: pendingSchedulesSubject } =
       useAsyncData<IScheduleSubject[]>(
@@ -59,7 +64,7 @@ export default defineComponent({
           const subjectId = subject.value?.id
           if (!hourlyLoadId || !subjectId) return []
 
-          return $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
+          return scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
             subjectId,
             hourlyLoadId,
           )
@@ -73,12 +78,14 @@ export default defineComponent({
       return schedulesSubject.value.map((sb) => sb.schedule.id)
     })
 
-    const { data: sessions, pending: pendingSessions,  execute } = useAsyncData<
-      ISession[]
-    >(
+    const {
+      data: sessions,
+      pending: pendingSessions,
+      execute,
+    } = useAsyncData<ISession[]>(
       async () => {
         const ids = scheduleIds.value
-        const sessionsData = await $api.classSessions.findScheduleIds(ids)
+        const sessionsData = await classSessionsApi.findScheduleIds(ids)
         return sessionsData
       },
       {

@@ -29,9 +29,9 @@
 import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import { useApi } from '~/composables/api'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiStar } from '@mdi/js'
+import { useScheduleSubjectApi, useClassSessionApi } from '~/modules/apis/composables'
 
 definePageMeta({
   layout: 'app',
@@ -42,7 +42,8 @@ useSeoMeta({
   description: 'Comparte tu horario a tus amigos! ',
 })
 
-const $api = useApi()
+const scheduleSubjectApi = useScheduleSubjectApi()
+const classSessionApi = useClassSessionApi()
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
 
@@ -54,11 +55,11 @@ const route = useRoute()
 const { data } = useAsyncData(async () => {
   const query: any = route.query
   const result = decodeBase64(query.q)
-  const scheduleSubjects = await $api.scheduleSubject.getAllByIds(
+  const scheduleSubjects = await scheduleSubjectApi.getAllByIds(
     result.split(',').map(Number),
   )
   const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
-  const sessions = await $api.classSessions.findScheduleIds(schedulesId)
+  const sessions = await classSessionApi.findScheduleIds(schedulesId)
   return { scheduleSubjects, sessions }
 })
 

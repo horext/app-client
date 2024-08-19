@@ -44,9 +44,15 @@ import { ref, watch, onMounted } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IOrganization } from '~/interfaces/organization'
-import { useApi } from '~/composables/api'
+import {
+  useFacultyApi,
+  useHourlyLoadApi,
+  useSpecialityApi,
+} from '~/modules/apis/runtime/composables'
 
-const $api = useApi()
+const houlyLoadApi = useHourlyLoadApi()
+const facultyApi = useFacultyApi()
+const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
 
 const faculties = ref<IOrganization[]>([])
@@ -63,7 +69,7 @@ const loadingSpecialities = ref(false)
 const initSpecialities = async (selectedFaculty: IOrganization) => {
   speciality.value = undefined
   loadingSpecialities.value = true
-  const data = await $api.speciality.getAllByFaculty(selectedFaculty.id)
+  const data = await specialityApi.getAllByFaculty(selectedFaculty.id)
   specialities.value = data
   loadingSpecialities.value = false
 }
@@ -80,7 +86,7 @@ const onChangeSpeciality = async (_speciality: IOrganization) => {
   if (!faculty.value) return
   try {
     loadingHourlyLoad.value = true
-    const data = await $api.hourlyLoad.getLatestByFaculty(faculty.value.id)
+    const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
     hourlyLoad.value = data
   } catch (e) {
     errorMessage.value = 'No se pudo obtener la carga horaria.'
@@ -97,9 +103,21 @@ watch(speciality, async (newValue) => {
 })
 
 const loadingFaculties = ref(false)
+
+const hourlyLoadApi = useHourlyLoadApi()
+
+async function fetchHourlyLoad(faculty: IOrganization) {
+  try {
+    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
+    store.updateHourlyLoad(data)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 const init = async () => {
   loadingFaculties.value = true
-  const data = await $api.faculty.getAll()
+  const data = await facultyApi.getAll()
   faculties.value = data
   loadingFaculties.value = false
   faculty.value = store.faculty
@@ -107,10 +125,11 @@ const init = async () => {
   speciality.value = store.speciality
 }
 
-const ending = () => {
+const ending = async () => {
   loading.value = true
   store.updateFaculty(faculty.value!)
   store.updateSpeciality(speciality.value!)
+  await fetchHourlyLoad(faculty.value!)
   store.updateFirstEntry(false)
   loading.value = false
 }

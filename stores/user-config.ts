@@ -4,8 +4,8 @@ import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import { useApi } from '~/composables/api'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
+
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage()
@@ -26,7 +26,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     maxAge: 60 * 60 * 24 * 365,
   })
 
-  const $api = useApi()
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
@@ -106,7 +105,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function updateSpeciality(_speciality: IOrganization) {
     mySpeciality.value = _speciality
     speciality.value = _speciality
-    await fetchHourlyLoad()
   }
 
   function updateFirstEntry(_myFirstEntry: boolean) {
@@ -176,6 +174,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const data = myFaculty.value
     if (data) {
       faculty.value = data
+      return data
     }
   }
 
@@ -183,6 +182,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const data = mySpeciality.value
     if (data) {
       speciality.value = data
+      return data
     }
   }
 
@@ -234,17 +234,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     myHourlyLoad.value = newHourlyLoad
   }
 
-  async function fetchHourlyLoad() {
-    if (facultyId.value) {
-      try {
-        const data = await $api.hourlyLoad.getLatestByFaculty(facultyId.value)
-        updateHourlyLoad(data)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  }
-
   const fetchMyOcurrences = async () => {
     const data =
       await storage.getItem<IIntersectionOccurrence[]>('myOcurrences')
@@ -257,7 +246,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   return {
-    fetchHourlyLoad,
     crossings,
     faculty,
     speciality,

@@ -147,12 +147,12 @@ import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionL
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
-import { useApi } from '~/composables/api'
 import { mdiMagnify } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
+import { useCourseApi } from '~/modules/apis/runtime/composables'
 
-const $api = useApi()
+const courseApi = useCourseApi()
 
 const configStore = useUserConfigStore()
 
@@ -243,7 +243,7 @@ const {
   async () => {
     if (!search.value) return []
     if (configStore.specialityId && configStore.hourlyLoadId) {
-      const response = await $api.course.findBySearch(
+      const response = await courseApi.findBySearch(
         search.value,
         configStore.specialityId,
         configStore.hourlyLoadId,
