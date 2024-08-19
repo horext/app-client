@@ -30,8 +30,8 @@ defineProps<{
   event: {
     color: string
     title: string
-    code: string
-    section: string
+    code?: string
+    section?: string
     type: string
     name: string
   }
