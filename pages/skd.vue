@@ -35,6 +35,7 @@ import {
   useClassSessionApi,
   useScheduleSubjectApi,
 } from '~/modules/apis/runtime/composables'
+import type { ISelectedSubject } from '~/interfaces/subject'
 
 definePageMeta({
   layout: 'app',
@@ -55,7 +56,7 @@ const store = useUserConfigStore()
 const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const route = useRoute()
 
-const { data: subjects } = useAsyncData(
+const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   async () => {
     const encodedQuery = route.query.q
     if (!encodedQuery) return []
