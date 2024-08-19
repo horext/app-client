@@ -83,10 +83,10 @@ export default defineComponent({
     )
 
     watch(schedules, (schedules) => {
-      const currentSchedules = subject.value.schedules
-      if (currentSchedules) {
+      const subjectSchedules = subject.value.schedules
+      if (subjectSchedules) {
         selected.value = schedules.filter((s1) => {
-          const schedule = currentSchedules.find(
+          const schedule = subjectSchedules.find(
             (s2) => s2.section.id === s1.section.id,
           )
           return schedule?.id === s1?.id
