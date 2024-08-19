@@ -46,7 +46,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
     }
   }
 
-  function updateItems(items: any[]) {
+  function updateItems(items: IEvent[]) {
     setItems(items)
     storage.setItem('myEvents', items)
   }
