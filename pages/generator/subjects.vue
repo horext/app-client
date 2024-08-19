@@ -181,9 +181,7 @@ const openSearchMenu = ref(false)
 const editItem = async (item: ISelectedSubject) => {
   selectedSubject.value = item
   openSearchMenu.value = false
-  await nextTick(() => {
-    dialog.value = true
-  })
+  dialog.value = true
 }
 
 const deleteItem = (item: ISelectedSubject) => {
