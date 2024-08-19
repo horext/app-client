@@ -27,12 +27,7 @@ import { computed, defineComponent, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import type { IScheduleSubject } from '~/interfaces/schedule-subject'
-import type {
-  ISelectedSubject,
-  ISession,
-  ISubjectSchedule,
-} from '~/interfaces/subject'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import {
   useClassSessionApi,
   useScheduleSubjectApi,
@@ -57,54 +52,35 @@ export default defineComponent({
     const classSessionsApi = useClassSessionApi()
 
     const selected = ref<ISubjectSchedule[]>([])
-    const { data: schedulesSubject, pending: pendingSchedulesSubject } =
-      useAsyncData<IScheduleSubject[]>(
-        async () => {
-          const hourlyLoadId = hourlyLoad.value?.id
-          const subjectId = subject.value?.id
-          if (!hourlyLoadId || !subjectId) return []
+    const { data: schedules, pending } = useAsyncData<ISubjectSchedule[]>(
+      async () => {
+        const hourlyLoadId = hourlyLoad.value?.id
+        const subjectId = subject.value?.id
+        if (!hourlyLoadId || !subjectId) return []
 
-          return scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
+        const schedulesSubject =
+          await scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
             subjectId,
             hourlyLoadId,
           )
-        },
-        {
-          default: () => [],
-          watch: [subject, hourlyLoad],
-        },
-      )
-    const scheduleIds = computed(() => {
-      return schedulesSubject.value.map((sb) => sb.schedule.id)
-    })
+        const scheduleIds = schedulesSubject.map((sb) => sb.schedule.id)
 
-    const {
-      data: sessions,
-      pending: pendingSessions,
-      execute,
-    } = useAsyncData<ISession[]>(
-      async () => {
-        return await classSessionsApi.findScheduleIds(scheduleIds.value)
+        const sessions = await classSessionsApi.findScheduleIds(scheduleIds)
+
+        return schedulesSubject.map((sb) => ({
+          ...sb?.schedule,
+          scheduleSubject: {
+            id: sb.id,
+          },
+          sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
+          subject: subject.value,
+        }))
       },
       {
         default: () => [],
-        watch: [scheduleIds],
-        immediate: false,
+        watch: [subject, hourlyLoad],
       },
     )
-
-    const schedules = computed<ISubjectSchedule[]>(() => {
-      return schedulesSubject.value.map((sb) => ({
-        ...sb?.schedule,
-        scheduleSubject: {
-          id: sb.id,
-        },
-        sessions: sessions.value.filter(
-          (s) => s.schedule.id === sb.schedule.id,
-        ),
-        subject: subject.value,
-      }))
-    })
 
     watch(schedules, () => {
       if (props.subject.schedules) {
@@ -127,11 +103,6 @@ export default defineComponent({
       const course = subject.value?.course
       return `${course?.id} - ${course?.name}`
     })
-
-    const pending = computed(() => {
-      return pendingSchedulesSubject.value || pendingSessions.value
-    })
-
     return {
       selected,
       schedules,
