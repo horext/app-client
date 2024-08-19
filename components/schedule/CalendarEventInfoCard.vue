@@ -61,9 +61,9 @@
     </v-list-item>
   </v-card>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { useVModel } from '@vueuse/core'
-import { defineComponent, type PropType, computed, type Ref } from 'vue'
+import { computed, type Ref } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import {
@@ -75,40 +75,18 @@ import {
   mdiMapMarker,
 } from '@mdi/js'
 
-export default defineComponent({
-  props: {
-    selectedEvent: {
-      type: Object as PropType<IEvent>,
-      required: true,
-    },
-    dialog: {
-      type: Boolean as PropType<boolean>,
-      required: true,
-    },
-  },
-  emits: ['update:dialog'],
-  setup(props, { emit }) {
-    const dialogSync = useVModel(props, 'dialog', emit)
+const props = defineProps<{
+  selectedEvent: IEvent
+  dialog: boolean
+}>()
 
-    const selectedDay: Ref<string> = computed(
-      () => WEEK_DAYS_NAMES[props.selectedEvent.day],
-    )
+const emit = defineEmits<{
+  (event: 'update:dialog', value: boolean): void
+}>()
 
-    const moreInfo = () => {
-      // do something
-    }
+const dialogSync = useVModel(props, 'dialog', emit)
 
-    return {
-      selectedDay,
-      moreInfo,
-      dialogSync,
-      mdiInformation,
-      mdiClose,
-      mdiBook,
-      mdiText,
-      mdiCalendar,
-      mdiMapMarker,
-    }
-  },
-})
+const selectedDay: Ref<string> = computed(
+  () => WEEK_DAYS_NAMES[props.selectedEvent.day],
+)
 </script>
