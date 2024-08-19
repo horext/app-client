@@ -62,8 +62,8 @@ const { data } = useAsyncData(async () => {
   const scheduleSubjectIds = result.split(',').map(Number)
   const scheduleSubjects =
     await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
-  const schedulesId = scheduleSubjects.map((ss) => ss.schedule.id)
-  const sessions = await classSessionApi.findScheduleIds(schedulesId)
+  const schedulesIds = scheduleSubjects.map((ss) => ss.schedule.id)
+  const sessions = await classSessionApi.findScheduleIds(schedulesIds)
   return { scheduleSubjects, sessions }
 })
 
