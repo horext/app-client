@@ -128,7 +128,7 @@
       @click:confirm="deleteItemConfirm(selectedDelete)"
       @click:reject="closeDelete"
     >
-      ¿Estás seguro de eliminar el curso?
+      ¿Estás seguro de eliminar el curso de {{ selectedDelete?.course?.name }}?
     </base-confirm-dialog>
     <base-snackbar v-model="succcesAddCourse">
       Curso Agregado correctamente!
