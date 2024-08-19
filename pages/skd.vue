@@ -117,9 +117,7 @@ const addFavoriteCurrentSchedule = () => {
 }
 
 const isFavorite = (schedule: IScheduleGenerate) => {
-  return myFavoritesSchedules.value.findIndex(
-    (x: { id: any }) => x.id === schedule.id,
-  )
+  return myFavoritesSchedules.value.findIndex((x) => x.id === schedule.id)
 }
 </script>
 
