@@ -39,7 +39,7 @@
                           : 'No se encontraron cursos'
                         : 'Escribe el nombre del curso'
                   "
-                  @update:model-value="editItem"
+                  @update:model-value="addNewSubject"
                 >
                   <template #selection="{ item }">
                     <v-list-item
@@ -146,7 +146,11 @@ import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type {
+  ISelectedSubject,
+  ISubjectSchedule,
+  ISubject,
+} from '~/interfaces/subject'
 import { mdiMagnify } from '@mdi/js'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
@@ -163,8 +167,11 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
   )
 })
-
-const mySubjects = computed(() => configStore.subjects)
+const {
+  subjects: mySubjects,
+  specialityId,
+  hourlyLoadId,
+} = storeToRefs(configStore)
 
 const totalCredits = computed(() => {
   return mySubjects.value.reduce((previousValue, currentValue) => {
@@ -178,6 +185,11 @@ const dialogDelete = ref(false)
 const selectedSubject = ref<ISelectedSubject>()
 
 const openSearchMenu = ref(false)
+
+const addNewSubject = (item: ISubject) => {
+  editItem({ ...item, schedules: [] })
+}
+
 const editItem = async (item: ISelectedSubject) => {
   selectedSubject.value = item
   openSearchMenu.value = false
@@ -232,15 +244,17 @@ const {
 } = await useAsyncData(
   'search',
   async () => {
-    if (!search.value) return []
-    if (configStore.specialityId && configStore.hourlyLoadId) {
-      const response = await courseApi.findBySearch(
-        search.value,
-        configStore.specialityId,
-        configStore.hourlyLoadId,
-      )
-      return response.content
-    }
+    const _search = search.value
+    if (!_search) return []
+    const _hourlyLoadId = hourlyLoadId.value
+    const _specialityId = specialityId.value
+    if (!_hourlyLoadId || !_specialityId) return []
+    const response = await courseApi.findBySearch(
+      _search,
+      _specialityId,
+      _hourlyLoadId,
+    )
+    return response.content
   },
   {
     watch: [search],
