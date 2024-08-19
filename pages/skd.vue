@@ -56,8 +56,9 @@ const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const route = useRoute()
 
 const { data } = useAsyncData(async () => {
-  const query: any = route.query
-  const result = decodeBase64(query.q)
+  const encodedQuery = route.query.q
+  if (!encodedQuery) return { scheduleSubjects: [], sessions: [] }
+  const result = decodeBase64(encodedQuery.toString())
   const scheduleSubjects = await scheduleSubjectApi.getAllByIds(
     result.split(',').map(Number),
   )
