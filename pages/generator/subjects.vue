@@ -111,13 +111,7 @@
         </template>
         <template #bottom>
           <v-divider />
-          <v-row align="center" justify="end" class="pa-2">
-            <v-col cols="auto">
-              <v-chip color="green" label>
-                Total de créditos: {{ totalCredits }}
-              </v-chip>
-            </v-col>
-          </v-row>
+          <SubjectTotalCredits :subjects="mySubjects" />
         </template>
       </v-data-table>
     </v-col>
@@ -161,6 +155,7 @@ import {
   useCourseApi,
   useScheduleSubjectApi,
 } from '~/modules/apis/runtime/composables'
+import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
 
 const courseApi = useCourseApi()
 
@@ -179,11 +174,7 @@ const {
   hourlyLoadId,
 } = storeToRefs(configStore)
 
-const totalCredits = computed(() => {
-  return mySubjects.value.reduce((previousValue, currentValue) => {
-    return currentValue.credits + previousValue
-  }, 0)
-})
+
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
