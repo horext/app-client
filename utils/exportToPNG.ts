@@ -36,7 +36,7 @@ export const exportToPDF = async function (element: HTMLElement | null) {
   doc.save('Horario ' + Date.now() + ' - Octatec .pdf')
 }
 
-export const exportToPNG = async function (element: any) {
+export const exportToPNG = async function (element: HTMLElement) {
   const canvas = await exportToCanvas(element)
   const a = document.createElement('a')
   a.href = canvas.toDataURL('image/jpeg')
