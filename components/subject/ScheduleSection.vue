@@ -7,6 +7,7 @@
         density="compact"
         :label="section"
         :value="schedule"
+        :id="section"
         hide-details
         multiple
       />
