@@ -174,8 +174,6 @@ const {
   hourlyLoadId,
 } = storeToRefs(configStore)
 
-
-
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
@@ -184,6 +182,7 @@ const selectedSubject = ref<ISelectedSubject>()
 const openSearchMenu = ref(false)
 
 const addNewSubject = (item: ISubject) => {
+  openSearchMenu.value = false
   editItem({ ...item, schedules: [] })
 }
 
@@ -227,8 +226,7 @@ const {
 
 const editItem = async (item: ISelectedSubject) => {
   selectedSubject.value = item
-  openSearchMenu.value = false
-  fetchSchedules()  
+  fetchSchedules()
   dialog.value = true
 }
 
