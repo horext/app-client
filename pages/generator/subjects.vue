@@ -226,6 +226,7 @@ const { data: schedules, pending } = useAsyncData<ISubjectSchedule[]>(
   {
     default: () => [],
     watch: [selectedSubject, hourlyLoadId],
+    immediate: false,
   },
 )
 
