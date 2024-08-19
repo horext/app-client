@@ -123,8 +123,9 @@
     </v-col>
 
     <base-confirm-dialog
+      v-if="selectedDelete"
       v-model="dialogDelete"
-      @click:confirm="deleteItemConfirm"
+      @click:confirm="deleteItemConfirm(selectedDelete)"
       @click:reject="closeDelete"
     >
       ¿Estás seguro de eliminar el curso?
@@ -234,14 +235,15 @@ const editItem = async (item: ISelectedSubject) => {
   dialog.value = true
 }
 
+const selectedDelete = ref<ISelectedSubject>()
 const deleteItem = (item: ISelectedSubject) => {
-  selectedSubject.value = item
+  selectedDelete.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
-const deleteItemConfirm = async () => {
-  await configStore.deleteSubjectById(selectedSubject.value?.id!)
+const deleteItemConfirm = async (item: ISelectedSubject) => {
+  await configStore.deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
 }
