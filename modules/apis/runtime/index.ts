@@ -1,11 +1,11 @@
-import type { Fetch } from 'ofetch'
+import type { $Fetch } from 'nitropack'
 import type { ApiFactory } from './interfaces/registry'
 import { APIS_REGISTRY } from './registry'
 import type { BaseApi } from './resources/base'
 import { provide, inject } from 'vue'
 import type { InjectionKey } from 'vue'
 
-export const FETCH_KEY: InjectionKey<Fetch> = Symbol('Fetch')
+export const FETCH_KEY: InjectionKey<$Fetch> = Symbol('Fetch')
 
 export const createFetchApi = () => {
   const fetch = $fetch.create({

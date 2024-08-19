@@ -1,5 +1,5 @@
-import type { Fetch } from 'ofetch'
+import type { $Fetch } from 'nitropack'
 
 export abstract class BaseApi {
-  constructor(protected $fetch: Fetch) {}
+  constructor(protected $fetch: $Fetch) {}
 }
