@@ -2,7 +2,7 @@
   <v-row dense>
     <v-col cols="12">
       <v-data-table
-        :headers="headers"
+        :headers="SUBJECT_HEADERS"
         :items="mySubjects"
         class="elevation-1"
         mobile-breakpoint="md"
@@ -250,6 +250,4 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     default: () => [],
   },
 )
-
-const headers = SUBJECT_HEADERS
 </script>
