@@ -18,7 +18,7 @@
               <v-col cols="12">
                 <v-autocomplete
                   id="search-course"
-                  v-model="editedItem"
+                  v-model="selectedSubject"
                   v-model:search="search"
                   v-model:menu="openSearchMenu"
                   variant="outlined"
@@ -77,10 +77,10 @@
               @keydown.esc="close"
             >
               <SubjectScheduleList
-                v-if="editedItem"
-                :subject="editedItem"
+                v-if="selectedSubject"
+                :subject="selectedSubject"
                 :hourly-load="myHourlyLoad"
-                @save="save"
+                @save="save(selectedSubject, $event)"
                 @cancel="close"
               />
             </v-dialog>
@@ -175,13 +175,11 @@ const totalCredits = computed(() => {
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const editedItem = ref<ISelectedSubject>()
-const editedIndex = ref(-1)
+const selectedSubject = ref<ISelectedSubject>()
 
 const openSearchMenu = ref(false)
 const editItem = async (item: ISelectedSubject) => {
-  editedIndex.value = mySubjects.value.findIndex((c) => c.id === item?.id)
-  editedItem.value = Object.assign({}, item)
+  selectedSubject.value = item
   openSearchMenu.value = false
   await nextTick(() => {
     dialog.value = true
@@ -189,43 +187,41 @@ const editItem = async (item: ISelectedSubject) => {
 }
 
 const deleteItem = (item: ISelectedSubject) => {
-  editedIndex.value = mySubjects.value.findIndex((c) => c.id === item.id)
-  editedItem.value = Object.assign({}, item)
+  selectedSubject.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
 const deleteItemConfirm = async () => {
-  await configStore.deleteSubjectById(editedItem.value?.id!)
+  await configStore.deleteSubjectById(selectedSubject.value?.id!)
   succcesDeleteCourse.value = true
   closeDelete()
 }
 
 const close = () => {
   dialog.value = false
-  editedItem.value = undefined
-  editedIndex.value = -1
+  selectedSubject.value = undefined
 }
 
 const closeDelete = () => {
   dialogDelete.value = false
-  editedItem.value = undefined
-  editedIndex.value = -1
+  selectedSubject.value = undefined
 }
 
 const succcesUpdateCourse = ref(false)
-const save = async (schedules: ISubjectSchedule[]) => {
+const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
   succcesAddCourse.value = false
-  if (editedIndex.value > -1 && schedules && schedules.length > 0) {
-    await configStore.updateSubject({ ...editedItem.value!, schedules })
+  const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
+  if (editedIndex > -1 && schedules && schedules.length > 0) {
+    await configStore.updateSubject({ ...item, schedules })
     succcesUpdateCourse.value = true
   } else if (schedules && schedules.length > 0) {
-    await configStore.saveNewSubject({ ...editedItem.value!, schedules })
+    await configStore.saveNewSubject({ ...item, schedules })
     succcesAddCourse.value = true
-  } else if (editedIndex.value > -1) {
-    await configStore.deleteSubjectById(editedItem.value?.id!)
+  } else if (editedIndex > -1) {
+    await configStore.deleteSubjectById(item?.id!)
     succcesDeleteCourse.value = true
-  } 
+  }
   close()
 }
 
