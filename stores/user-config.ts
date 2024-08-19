@@ -63,22 +63,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
   }
 
-  function ADD_SCHEDULE(subject: IScheduleGenerate) {
-    schedules.value.push(Object.assign({}, subject))
-  }
-
-  function DELETE_SCHEDULE_BY_INDEX(index: number) {
-    schedules.value.splice(index, 1)
-  }
-
-  function UPDATE_SCHEDULE_BY_INDEX(
-    index: number,
-    schedule: IScheduleGenerate,
-  ) {
-    schedules.value = schedules.value.map((c, i) =>
-      i === index ? schedule : c,
-    )
-  }
 
   function ADD_FAVORITE_SCHEDULE(subject: IScheduleGenerate) {
     favoritesSchedules.value.push(Object.assign({}, subject))
@@ -86,15 +70,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   function DELETE_FAVORITE_SCHEDULE_BY_INDEX(index: number) {
     favoritesSchedules.value.splice(index, 1)
-  }
-
-  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX(
-    index: number,
-    subject: IScheduleGenerate,
-  ) {
-    favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
-      i === index ? subject : c,
-    )
   }
 
   function updateFaculty(_faculty: IOrganization) {
@@ -260,15 +235,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoadId,
     isNewHourlyLoad,
     isUpdateHourlyLoad,
-    ADD_SUBJECT,
-    DELETE_SUBJECT_BY_INDEX,
-    UPDATE_SUBJECT_BY_INDEX,
-    ADD_SCHEDULE,
-    DELETE_SCHEDULE_BY_INDEX,
-    UPDATE_SCHEDULE_BY_INDEX,
-    ADD_FAVORITE_SCHEDULE,
-    DELETE_FAVORITE_SCHEDULE_BY_INDEX,
-    UPDATE_FAVORITE_SCHEDULE_BY_INDEX,
     updateFaculty,
     updateSpeciality,
     updateFirstEntry,
