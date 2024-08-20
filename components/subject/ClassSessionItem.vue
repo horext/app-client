@@ -1,59 +1,56 @@
 <template>
   <tr>
     <td class="text-left">
-      {{ dayWeek }}
+      <label :for="forLabel">{{ dayWeek }}</label>
     </td>
     <td class="text-left">
-      {{ timeInterval }}
+      <label :for="forLabel">{{ timeInterval }}</label>
     </td>
     <td class="text-left">
-      {{ teacherFullName }}
+      <label :for="forLabel">{{ teacherFullName }}</label>
     </td>
     <td class="text-left">
-      {{ type }}
+      <label :for="forLabel">{{ type }}</label>
     </td>
     <td class="text-left">
-      {{ classroom }}
+      <label :for="forLabel">{{ classroom }}</label>
     </td>
   </tr>
 </template>
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
+import type { ISession } from '~/interfaces/subject'
 
-export default defineComponent({
-  props: {
-    session: {
-      type: Object,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { session } = toRefs(props)
-    const dayWeek = computed(() =>
-      WEEK_DAYS_NAMES[session.value?.day]?.substring(0, 2).toUpperCase(),
-    )
+const props = defineProps<{
+  session: ISession
+  for?: string
+}>()
 
-    const type = computed(() => session.value?.type?.code)
+const { session, for: forLabel } = toRefs(props)
+const dayWeek = computed(() =>
+  WEEK_DAYS_NAMES[session.value?.day]?.substring(0, 2).toUpperCase(),
+)
 
-    const teacherFullName = computed(() => session.value?.teacher?.fullName)
+const type = computed(() => session.value?.type?.code)
 
-    const classroom = computed(() => session.value?.classroom?.code)
+const teacherFullName = computed(() => session.value?.teacher?.fullName)
 
-    const timeInterval = computed(
-      () =>
-        session.value?.startTime?.substring(0, 5) +
-        ' - ' +
-        session.value?.endTime?.substring(0, 5),
-    )
+const classroom = computed(() => session.value?.classroom?.code)
 
-    return {
-      dayWeek,
-      type,
-      teacherFullName,
-      classroom,
-      timeInterval,
-    }
-  },
-})
+const timeInterval = computed(
+  () =>
+    session.value?.startTime?.substring(0, 5) +
+    ' - ' +
+    session.value?.endTime?.substring(0, 5),
+)
 </script>
+
+<style scoped>
+label {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  align-items: center;
+}
+</style>

@@ -25,6 +25,9 @@ import {
   SETTINGS_ROUTE,
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
+import { createApis } from '~/modules/apis/runtime'
+
+createApis()
 
 const settingsStore = useSettingsStore()
 
@@ -32,17 +35,7 @@ const { darkMode } = storeToRefs(settingsStore)
 const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
-await useAsyncData('initData', async () => {
-  await Promise.all([
-    store.fetchFirstEntry(),
-    store.fetchFaculty(),
-    store.fetchSpeciality(),
-  ])
 
-  await store.fetchHourlyLoad()
-
-  return true
-})
 const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
 

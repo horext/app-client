@@ -1,10 +1,16 @@
 import type { ISession } from '~/interfaces/subject'
-import { BaseRepository } from './BaseRepository'
+import { BaseApi } from './base'
 
 const PATH_SUBJECTS = 'classSessions'
-export class ClassSessionRepository extends BaseRepository {
+
+export interface IClassSessionApi {
+  findScheduleId(schedule: number): Promise<ISession[]>
+  findScheduleIds(schedulesIds: Array<number>): Promise<ISession[]>
+}
+
+export class ClassSessionApi extends BaseApi implements IClassSessionApi {
   findScheduleId(schedule: number) {
-    return this.$fetch(PATH_SUBJECTS, {
+    return this.$fetch<ISession[]>(PATH_SUBJECTS, {
       method: 'GET',
       params: {
         schedule,

@@ -19,6 +19,8 @@
 import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 import InitialSettings from '~/components/setting/Initial.vue'
+import type { IOrganization } from '~/interfaces/organization'
+import { useHourlyLoadApi } from '~/modules/apis/runtime/composables'
 import { useUserConfigStore } from '~/stores/user-config'
 
 definePageMeta({
@@ -28,6 +30,32 @@ definePageMeta({
 useSeoMeta({
   title: 'Generador de Horarios',
   description: 'Genera tu horario de clases de manera sencilla',
+})
+
+const store = useUserConfigStore()
+
+const hourlyLoadApi = useHourlyLoadApi()
+
+async function fetchHourlyLoad(faculty: IOrganization) {
+  try {
+    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
+    store.updateHourlyLoad(data)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+await useAsyncData('initData', async () => {
+  const [_, faculty] = await Promise.all([
+    store.fetchFirstEntry(),
+    store.fetchFaculty(),
+    store.fetchSpeciality(),
+  ])
+  if (faculty) {
+    await fetchHourlyLoad(faculty)
+  }
+
+  return true
 })
 
 const configStore = useUserConfigStore()

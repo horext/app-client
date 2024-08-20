@@ -268,7 +268,14 @@ const {
   execute: exportEventToGCalendar,
   status: exportEventToGCalendarStatus,
   error: exportEventToGCalendarError,
-} = useAsyncData(
+} = useAsyncData<
+  void,
+  {
+    error?: {
+      message?: string
+    }
+  }
+>(
   async () => {
     if (!form.value) return
     const { valid } = await form.value.validate()

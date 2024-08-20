@@ -4,7 +4,6 @@ import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import { useApi } from '~/composables/api'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
 export const useUserConfigStore = defineStore('user-config', () => {
@@ -26,7 +25,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     maxAge: 60 * 60 * 24 * 365,
   })
 
-  const $api = useApi()
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
@@ -52,52 +50,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     return hourlyLoad?.value?.id
   })
 
-  function ADD_SUBJECT(subject: ISelectedSubject) {
-    subjects.value.push(Object.assign({}, subject))
-  }
-
-  function DELETE_SUBJECT_BY_INDEX(index: number) {
-    subjects.value.splice(index, 1)
-  }
-
-  function UPDATE_SUBJECT_BY_INDEX(index: number, subject: ISelectedSubject) {
-    subjects.value = subjects.value.map((c, i) => (i === index ? subject : c))
-  }
-
-  function ADD_SCHEDULE(subject: IScheduleGenerate) {
-    schedules.value.push(Object.assign({}, subject))
-  }
-
-  function DELETE_SCHEDULE_BY_INDEX(index: number) {
-    schedules.value.splice(index, 1)
-  }
-
-  function UPDATE_SCHEDULE_BY_INDEX(
-    index: number,
-    schedule: IScheduleGenerate,
-  ) {
-    schedules.value = schedules.value.map((c, i) =>
-      i === index ? schedule : c,
-    )
-  }
-
-  function ADD_FAVORITE_SCHEDULE(subject: IScheduleGenerate) {
-    favoritesSchedules.value.push(Object.assign({}, subject))
-  }
-
-  function DELETE_FAVORITE_SCHEDULE_BY_INDEX(index: number) {
-    favoritesSchedules.value.splice(index, 1)
-  }
-
-  function UPDATE_FAVORITE_SCHEDULE_BY_INDEX(
-    index: number,
-    subject: IScheduleGenerate,
-  ) {
-    favoritesSchedules.value = favoritesSchedules.value.map((c, i) =>
-      i === index ? subject : c,
-    )
-  }
-
   function updateFaculty(_faculty: IOrganization) {
     myFaculty.value = _faculty
     faculty.value = _faculty
@@ -106,7 +58,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function updateSpeciality(_speciality: IOrganization) {
     mySpeciality.value = _speciality
     speciality.value = _speciality
-    await fetchHourlyLoad()
   }
 
   function updateFirstEntry(_myFirstEntry: boolean) {
@@ -120,19 +71,19 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function saveNewSubject(_subject: ISelectedSubject) {
-    ADD_SUBJECT(_subject)
+    subjects.value.push(Object.assign({}, _subject))
     await storage.setItem('mySubjects', subjects.value)
   }
 
   async function deleteSubjectById(id: number) {
     const index = subjects.value.findIndex((s) => s.id === id)
-    DELETE_SUBJECT_BY_INDEX(index)
+    subjects.value.splice(index, 1)
     await storage.setItem('mySubjects', subjects.value)
   }
 
   async function updateSubject(_subject: ISelectedSubject) {
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    UPDATE_SUBJECT_BY_INDEX(index, _subject)
+    subjects.value = subjects.value.map((c, i) => (i === index ? _subject : c))
     await storage.setItem('mySubjects', subjects.value)
   }
 
@@ -144,13 +95,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate,
   ) {
-    ADD_FAVORITE_SCHEDULE(_favoritesSchedule)
+    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
     await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
   async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
     const index = favoritesSchedules.value.findIndex((s) => s.id === id)
-    DELETE_FAVORITE_SCHEDULE_BY_INDEX(index)
+    favoritesSchedules.value.splice(index, 1)
     await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
   }
 
@@ -176,6 +127,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const data = myFaculty.value
     if (data) {
       faculty.value = data
+      return data
     }
   }
 
@@ -183,6 +135,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const data = mySpeciality.value
     if (data) {
       speciality.value = data
+      return data
     }
   }
 
@@ -234,17 +187,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     myHourlyLoad.value = newHourlyLoad
   }
 
-  async function fetchHourlyLoad() {
-    if (facultyId.value) {
-      try {
-        const data = await $api.hourlyLoad.getLatestByFaculty(facultyId.value)
-        updateHourlyLoad(data)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  }
-
   const fetchMyOcurrences = async () => {
     const data =
       await storage.getItem<IIntersectionOccurrence[]>('myOcurrences')
@@ -257,7 +199,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   return {
-    fetchHourlyLoad,
     crossings,
     faculty,
     speciality,
@@ -272,15 +213,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoadId,
     isNewHourlyLoad,
     isUpdateHourlyLoad,
-    ADD_SUBJECT,
-    DELETE_SUBJECT_BY_INDEX,
-    UPDATE_SUBJECT_BY_INDEX,
-    ADD_SCHEDULE,
-    DELETE_SCHEDULE_BY_INDEX,
-    UPDATE_SCHEDULE_BY_INDEX,
-    ADD_FAVORITE_SCHEDULE,
-    DELETE_FAVORITE_SCHEDULE_BY_INDEX,
-    UPDATE_FAVORITE_SCHEDULE_BY_INDEX,
     updateFaculty,
     updateSpeciality,
     updateFirstEntry,

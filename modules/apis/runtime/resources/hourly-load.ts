@@ -1,9 +1,14 @@
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import { BaseRepository } from './BaseRepository'
+import { BaseApi } from './base'
+
+export interface IHourlyLoadApi {
+  getLatestByFaculty(facultyId: number): Promise<IHourlyLoad>
+}
 
 const PATH_SUBJECTS = 'hourlyLoads'
-export class HourlyLoadRepository extends BaseRepository {
-  getLatestByFaculty(facultyId: any) {
+
+export class HourlyLoadApi extends BaseApi {
+  getLatestByFaculty(facultyId: number) {
     return this.$fetch<IHourlyLoad>(PATH_SUBJECTS + '/latest', {
       method: 'GET',
       params: {

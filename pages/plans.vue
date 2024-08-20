@@ -1,8 +1,15 @@
 <script lang="ts" setup>
 import type { IStudyPlan } from '~/interfaces/subject'
+import { useStudyPlanApi } from '~/modules/apis/runtime/composables';
 
-const api = useApi()
-const { data } = useAsyncData<IStudyPlan[]>(() => api.studyPlan.getAll(), {
+definePageMeta({
+  title: 'Study Plans',
+  description: 'List of study plans',
+  layout: 'plans',
+})
+
+const api = useStudyPlanApi();
+const { data } = useAsyncData<IStudyPlan[]>(() => api.getAll(), {
   default: () => [],
 })
 </script>

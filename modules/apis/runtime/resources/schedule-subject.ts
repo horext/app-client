@@ -2,10 +2,24 @@ import type {
   IScheduleSubject,
   IScheduleSubjectSessionDetail,
 } from '~/interfaces/schedule-subject'
-import { BaseRepository } from './BaseRepository'
+import { BaseApi } from './base'
+
+export interface IScheduleSubjectApi {
+  findBySubjectIdAndHourlyLoadId(
+    subject: number,
+    hourlyLoad: number,
+  ): Promise<IScheduleSubject[]>
+  getAllByIds(ids: Array<number>): Promise<IScheduleSubjectSessionDetail[]>
+  findBySearch(
+    search: string,
+    speciality: string,
+    hourlyLoad: string,
+  ): Promise<IScheduleSubject[]>
+}
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
-export class ScheduleSubjectRepository extends BaseRepository {
+
+export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
   findBySubjectIdAndHourlyLoadId(subject: number, hourlyLoad: number) {
     return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {
@@ -27,7 +41,7 @@ export class ScheduleSubjectRepository extends BaseRepository {
   }
 
   findBySearch(search: string, speciality: string, hourlyLoad: string) {
-    return this.$fetch(PATH_SCHEDULE_SUBJECTS, {
+    return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {
         speciality,
         hourlyLoad,

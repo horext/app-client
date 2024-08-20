@@ -1,8 +1,12 @@
 import type { IOrganization } from '~/interfaces/organization'
-import { BaseRepository } from './BaseRepository'
+import { BaseApi } from './base'
+
+export interface IFacultyApi {
+  getAll(): Promise<IOrganization[]>
+}
 
 const PATH_SUBJECTS = 'faculties'
-export class FacultyRepository extends BaseRepository {
+export class FacultyApi extends BaseApi {
   getAll() {
     return this.$fetch<IOrganization[]>(PATH_SUBJECTS)
   }
