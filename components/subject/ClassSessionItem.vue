@@ -24,7 +24,7 @@ import type { ISession } from '~/interfaces/subject'
 
 const props = defineProps<{
   session: ISession
-  for: string
+  for?: string
 }>()
 
 const { session, for: forLabel } = toRefs(props)
