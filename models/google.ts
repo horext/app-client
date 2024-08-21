@@ -66,4 +66,10 @@ export class CalendarEvent {
     this.colorId = event.color
     this.reminders.overrides = notifications
   }
+
+  toRequest() {
+    return {
+      ...this,
+    }
+  }
 }
