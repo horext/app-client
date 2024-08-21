@@ -88,7 +88,7 @@ const internalEvents = computed<ICalendarEvent[]>(
         ...event,
         start: event.startTime,
         end: event.endTime,
-        weekDay: (event.day % 7) as WeekdaysISO,
+        weekDay: event.day,
         id: event.id!,
         name: event.title,
       }

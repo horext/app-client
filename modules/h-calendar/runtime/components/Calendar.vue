@@ -50,7 +50,7 @@ import {
   INTERVAL_HEIGHT_IN_REM,
   INTERVAL_WIDTH_IN_REM,
 } from '../constants/interval'
-import { WEEKDAYS, WEEKDAY_NAMES, type WeekdaysISO } from '../constants/week'
+import { WEEKDAYS, WEEKDAY_NAMES, type Weekdays } from '../constants/week'
 import CalendarTime from './CalendarTime.vue'
 import CalendarDay from './CalendarDay.vue'
 
@@ -63,7 +63,7 @@ const props = withDefaults(
     events?: T[]
     firstInterval?: number | string
     lastInterval?: number | string
-    weekdays?: WeekdaysISO[]
+    weekdays?: Weekdays[]
     intervalMinutes?: number | string
     intervalHeight?: number | string
     internalWidth?: number | string
@@ -138,6 +138,7 @@ const internalDays = computed(() => {
   const _weekdays = weekdays.value
   return _weekdays.map((day) => ({
     id: day,
+    weekDay: day % 7 as Weekdays,
     name: WEEKDAY_NAMES[day % 7],
   }))
 })
