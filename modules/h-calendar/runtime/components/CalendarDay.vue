@@ -71,9 +71,10 @@ import type { ICalendarEvent, IEventEmitData } from '../types'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
 import { extractBlocks } from '../utils/block'
+import type { Weekdays } from '../constants/week'
 
 const props = defineProps<{
-  weekDay: number
+  weekDay: Weekdays
   day: string
   hours: string[]
   events: T[]
