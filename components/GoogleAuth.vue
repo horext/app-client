@@ -305,7 +305,7 @@ async function eventRequest(event: IEvent): Promise<any> {
       notifications.value,
       dateStart.value,
       dateEnd.value,
-    ).toRequest(),
+    ),
   )
 }
 

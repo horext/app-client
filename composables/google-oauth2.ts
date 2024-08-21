@@ -102,7 +102,7 @@ export const useGoogleOAuth2 = () => {
       `calendar/v3/calendars/${calendarId}/events`,
       {
         method: 'POST',
-        body: event,
+        body: event.toRequest(),
       },
     )
     return response
