@@ -26,8 +26,10 @@ import {
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
 import { createApis } from '~/modules/apis/runtime'
+import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
+import type { IOrganization } from '~/interfaces/organization'
 
-createApis()
+const apis = createApis()
 
 const settingsStore = useSettingsStore()
 
@@ -38,6 +40,31 @@ const { hourlyLoad } = storeToRefs(store)
 
 const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
+
+const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
+
+async function fetchHourlyLoad(faculty: IOrganization) {
+  try {
+    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
+    console.log('fetchHourlyLoad', data)
+    store.updateHourlyLoad(data)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+await useAsyncData('initData', async () => {
+  const [_, faculty] = await Promise.all([
+    store.fetchFirstEntry(),
+    store.fetchFaculty(),
+    store.fetchSpeciality(),
+  ])
+  if (faculty) {
+    await fetchHourlyLoad(faculty)
+  }
+
+  return true
+})
 
 onMounted(async () => {
   await store.fetchSubjects()
