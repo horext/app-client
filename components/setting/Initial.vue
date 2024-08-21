@@ -55,7 +55,6 @@ const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
 
-const faculties = ref<IOrganization[]>([])
 const specialities = ref<IOrganization[]>([])
 const errorMessage = ref('')
 const showErrorMessage = ref(false)
@@ -102,8 +101,6 @@ watch(speciality, async (newValue) => {
   }
 })
 
-const loadingFaculties = ref(false)
-
 const hourlyLoadApi = useHourlyLoadApi()
 
 async function fetchHourlyLoad(faculty: IOrganization) {
@@ -115,11 +112,13 @@ async function fetchHourlyLoad(faculty: IOrganization) {
   }
 }
 
+const { data: faculties, pending: loadingFaculties } = useAsyncData<
+  IOrganization[]
+>(() => facultyApi.getAll(), {
+  default: () => [],
+})
+
 const init = async () => {
-  loadingFaculties.value = true
-  const data = await facultyApi.getAll()
-  faculties.value = data
-  loadingFaculties.value = false
   faculty.value = store.faculty
   hourlyLoad.value = store.hourlyLoad
   speciality.value = store.speciality
