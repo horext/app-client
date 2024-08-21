@@ -177,7 +177,7 @@ import { mdiBell, mdiDelete, mdiPlus } from '@mdi/js'
 import { CalendarEvent, EventNotification } from '~/models/google'
 
 const props = defineProps<{
-  startDate: string
+  startDate?: string
   endDate?: string | null
   events: IEvent[]
 }>()
@@ -198,7 +198,11 @@ const calendarItem = ref<Pick<IGoogleCalendarItem, 'summary'>>({ summary: '' })
 
 const dialogCalendarSync = ref(false)
 const dialog = ref(false)
-const dateStart = ref(DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd'))
+const dateStart = ref(
+  props.startDate
+    ? DateTime.fromISO(props.startDate).toFormat('yyyy-MM-dd')
+    : null,
+)
 const dateEnd = ref(
   props.endDate ? DateTime.fromISO(props.endDate).toFormat('yyyy-MM-dd') : null,
 )
@@ -295,6 +299,9 @@ const {
 )
 
 async function eventRequest(event: IEvent): Promise<any> {
+  if (!dateStart.value) {
+    throw new Error('No se ha seleccionado una fecha de inicio')
+  }
   if (!dateEnd.value) {
     throw new Error('No se ha seleccionado una fecha de fin')
   }
