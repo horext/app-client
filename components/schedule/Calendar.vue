@@ -40,7 +40,7 @@ import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
 import type { Weekdays } from '~/modules/h-calendar/runtime/constants/week'
 
 interface ICalendarEvent extends IEvent {
-  weekDay: number
+  weekDay: Weekdays
   start: string
   end: string
   name: string
