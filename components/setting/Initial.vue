@@ -1,12 +1,12 @@
 <template>
-  <v-card :loading="loadingHourlyLoad">
-    <v-card-title> Configuración Básica </v-card-title>
-    <v-card-subtitle>
-      Selecciona tu facultad para obtener tu carga horaria y selecciona tu
-      especialidad para filtrar los cursos.
-    </v-card-subtitle>
-    <v-card-text>
-      <v-form>
+  <v-form @submit.prevent="ending">
+    <v-card :loading="loadingHourlyLoad">
+      <v-card-title> Configuración Básica </v-card-title>
+      <v-card-subtitle>
+        Selecciona tu facultad para obtener tu carga horaria y selecciona tu
+        especialidad para filtrar los cursos.
+      </v-card-subtitle>
+      <v-card-text>
         <v-autocomplete
           v-model="faculty"
           :items="faculties"
@@ -16,8 +16,8 @@
           label="Selecciona tu facultad"
           placeholder="Facultad"
         />
-        <v-alert v-model="showErrorMessage" closable type="error">
-          {{ errorMessage }}
+        <v-alert v-if="errorMessage" closable type="error">
+          No se ha encontrado la carga horaria de tu facultad
         </v-alert>
         <v-autocomplete
           v-model="speciality"
@@ -29,26 +29,25 @@
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
         />
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        :loading="loading"
-        :disabled="!hourlyLoad"
-        variant="text"
-        @click="ending"
-      >
-        Guardar
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          type="submit"
+          :disabled="!hourlyLoad"
+          variant="text"
+          @click="ending"
+        >
+          Guardar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IOrganization } from '~/interfaces/organization'
 import {
   useFacultyApi,
@@ -61,46 +60,42 @@ const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
 
-const specialities = ref<IOrganization[]>([])
-const errorMessage = ref('')
-const showErrorMessage = ref(false)
 const loading = ref(false)
 
 const faculty = ref<IOrganization>()
 const speciality = ref<IOrganization>()
-const hourlyLoad = ref<IHourlyLoad>()
 
-const loadingSpecialities = ref(false)
-const initSpecialities = async (selectedFaculty: IOrganization) => {
-  speciality.value = undefined
-  loadingSpecialities.value = true
-  const data = await specialityApi.getAllByFaculty(selectedFaculty.id)
-  specialities.value = data
-  loadingSpecialities.value = false
-}
+const { pending: loadingSpecialities, data: specialities } = useAsyncData(
+  async () => {
+    if (!faculty.value) {
+      return []
+    }
+    speciality.value = undefined
+    return await specialityApi.getAllByFaculty(faculty.value.id)
+  },
+  {
+    default: () => [],
+    watch: [faculty],
+  },
+)
 
-watch(faculty, async (newValue) => {
-  if (newValue) {
-    await initSpecialities(newValue)
-    await onChangeFaculty(newValue)
-  }
-})
-
-const loadingHourlyLoad = ref(false)
-const onChangeFaculty = async (faculty: IOrganization) => {
-  showErrorMessage.value = false
-  hourlyLoad.value = undefined
-  try {
-    loadingHourlyLoad.value = true
-    const data = await houlyLoadApi.getLatestByFaculty(faculty.id)
-    hourlyLoad.value = data
-  } catch (e) {
-    errorMessage.value = 'No se pudo obtener la carga horaria de la facultad'
-    showErrorMessage.value = true
-  } finally {
-    loadingHourlyLoad.value = false
-  }
-}
+const {
+  pending: loadingHourlyLoad,
+  data: hourlyLoad,
+  error: errorMessage,
+} = useAsyncData(
+  async () => {
+    if (!faculty.value) {
+      return undefined
+    }
+    hourlyLoad.value = undefined
+    const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
+    return data
+  },
+  {
+    watch: [faculty],
+  },
+)
 
 const hourlyLoadApi = useHourlyLoadApi()
 
