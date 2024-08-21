@@ -16,6 +16,9 @@
           label="Selecciona tu facultad"
           placeholder="Facultad"
         />
+        <v-alert v-model="showErrorMessage" closable type="error">
+          {{ errorMessage }}
+        </v-alert>
         <v-autocomplete
           v-model="speciality"
           :disabled="!faculty"
@@ -27,9 +30,6 @@
           placeholder="Especialidad"
         />
       </v-form>
-      <v-alert v-model="showErrorMessage" closable type="error">
-        {{ errorMessage }}
-      </v-alert>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
@@ -82,30 +82,25 @@ const initSpecialities = async (selectedFaculty: IOrganization) => {
 watch(faculty, async (newValue) => {
   if (newValue) {
     await initSpecialities(newValue)
+    await onChangeFaculty(newValue)
   }
 })
 
 const loadingHourlyLoad = ref(false)
-const onChangeSpeciality = async (_speciality: IOrganization) => {
+const onChangeFaculty = async (faculty: IOrganization) => {
+  showErrorMessage.value = false
   hourlyLoad.value = undefined
-  if (!faculty.value) return
   try {
     loadingHourlyLoad.value = true
-    const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
+    const data = await houlyLoadApi.getLatestByFaculty(faculty.id)
     hourlyLoad.value = data
   } catch (e) {
-    errorMessage.value = 'No se pudo obtener la carga horaria.'
+    errorMessage.value = 'No se pudo obtener la carga horaria de la facultad'
     showErrorMessage.value = true
   } finally {
     loadingHourlyLoad.value = false
   }
 }
-watch(speciality, async (newValue) => {
-  showErrorMessage.value = false
-  if (newValue) {
-    await onChangeSpeciality(newValue)
-  }
-})
 
 const hourlyLoadApi = useHourlyLoadApi()
 
