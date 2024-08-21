@@ -72,6 +72,7 @@ onMounted(async () => {
   await store.fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
   await store.fetchMyOcurrences()
+  await store.fetchWeekDays()
 })
 const drawer = ref(true)
 const items = computed(() => [
