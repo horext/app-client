@@ -19,7 +19,7 @@ export const provideFetch = () => {
   provide(FETCH_KEY, fetch)
 }
 
-export const createApis = (registry = APIS_REGISTRY) => {
+export const provideApis = (registry = APIS_REGISTRY) => {
   type ProvidedType =
     (typeof registry)[number]['provide'] extends InjectionKey<infer T>
       ? T

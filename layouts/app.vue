@@ -25,11 +25,11 @@ import {
   SETTINGS_ROUTE,
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
-import { createApis } from '~/modules/apis/runtime'
+import { provideApis } from '~/modules/apis/runtime'
 import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
 import type { IOrganization } from '~/interfaces/organization'
 
-const apis = createApis()
+const apis = provideApis()
 
 const settingsStore = useSettingsStore()
 
