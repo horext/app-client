@@ -9,6 +9,7 @@ definePageMeta({
 })
 
 const api = useStudyPlanApi()
+const tab = ref(0)
 const { data } = await useAsyncData<IStudyPlan[]>(() => api.getAll(), {
   default: () => [],
 })
@@ -18,7 +19,7 @@ prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
 <template>
   <v-container>
     Planes de estudio
-    <v-tabs>
+    <v-tabs v-model="tab">
       <v-tab
         v-for="plan in data"
         :key="plan.id"
@@ -28,7 +29,7 @@ prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
         {{ plan.code }}
       </v-tab>
     </v-tabs>
-    <v-tabs-window>
+    <v-tabs-window v-model="tab">
       <NuxtPage />
     </v-tabs-window>
   </v-container>
