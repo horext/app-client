@@ -19,18 +19,30 @@ export const provideFetch = () => {
   provide(FETCH_KEY, fetch)
 }
 
-export const createApis = () => {
-  const registry = APIS_REGISTRY
-  const instances = new Map<InjectionKey<BaseApi>, BaseApi>()
+export const createApis = (registry = APIS_REGISTRY) => {
+  type ProvidedType =
+    (typeof registry)[number]['provide'] extends InjectionKey<infer T>
+      ? T
+      : never
+  const instances: Map<InjectionKey<ProvidedType>, ProvidedType> = new Map()
   for (const item of registry) {
-    const instance = provideApi(item.provide, item.use)
+    const instance = provideApi<ProvidedType>(item.provide, item.use)
     instances.set(item.provide, instance)
   }
-  return instances
+
+  return {
+    get: <T extends ProvidedType>(key: InjectionKey<T>) => {
+      const instance = instances.get(key)
+      if (!instance) {
+        throw new Error('Api not provided')
+      }
+      return instance as T
+    },
+  }
 }
 
-export const provideApi = <T extends BaseApi>(
-  key: InjectionKey<T>,
+export const provideApi = <R, T extends BaseApi & R = BaseApi & R>(
+  key: InjectionKey<R>,
   use: ApiFactory<T>,
 ) => {
   const fetch = inject(FETCH_KEY)
@@ -39,5 +51,5 @@ export const provideApi = <T extends BaseApi>(
   }
   const instance = new use(fetch)
   provide(key, instance)
-  return instance
+  return instance as T
 }
