@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" @submit.prevent="ending">
+  <v-form ref="form" @submit.prevent="ending" lazy-validation>
     <v-card :loading="loadingHourlyLoad">
       <v-card-title> Configuración Básica </v-card-title>
       <v-card-subtitle>
@@ -20,6 +20,12 @@
         <v-alert v-if="errorMessage" closable type="error">
           No se ha encontrado la carga horaria de tu facultad
         </v-alert>
+        <v-input
+          v-model="hourlyLoad"
+          :disabled="!internalFaculty"
+          label="Carga horaria"
+          :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
+        />
         <v-autocomplete
           v-model="internalSpeciality"
           :disabled="!internalFaculty"
@@ -34,14 +40,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          type="submit"
-          :disabled="!hourlyLoad"
-          variant="text"
-          @click="ending"
-        >
-          Guardar
-        </v-btn>
+        <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
