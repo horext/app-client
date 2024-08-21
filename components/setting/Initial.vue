@@ -1,6 +1,6 @@
 <template>
-  <v-form ref="form" @submit.prevent="ending" lazy-validation>
-    <v-card :loading="loadingHourlyLoad">
+  <v-form ref="form" lazy-validation @submit.prevent="ending">
+    <v-card :loading="loading">
       <v-card-title> Configuración Básica </v-card-title>
       <v-card-subtitle>
         Selecciona tu facultad para obtener tu carga horaria y selecciona tu
@@ -21,7 +21,7 @@
           No se ha encontrado la carga horaria de tu facultad
         </v-alert>
         <v-input
-          v-model="hourlyLoad"
+          v-model="internalHourlyLoad"
           :disabled="!internalFaculty"
           label="Carga horaria"
           :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IOrganization } from '~/interfaces/organization'
 import {
@@ -61,56 +61,78 @@ const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
+const { faculty, speciality, hourlyLoad } = storeToRefs(store)
 
 const loading = ref(false)
 
-const internalFaculty = ref<IOrganization>()
-const internalSpeciality = ref<IOrganization>()
+const internalFaculty = ref<IOrganization | undefined>(
+  faculty.value ? { ...faculty.value } : undefined,
+)
+const internalSpeciality = ref<IOrganization | undefined>(
+  speciality.value ? { ...speciality.value } : undefined,
+)
 
+const internalHourlyLoad = ref(
+  hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
+)
+
+watch(faculty, (value) => {
+  internalFaculty.value = value ? { ...value } : undefined
+})
+watch(speciality, (value) => {
+  internalSpeciality.value = value ? { ...value } : undefined
+})
+
+watch(hourlyLoad, (value) => {
+  internalHourlyLoad.value = value ? { ...value } : undefined
+})
+
+const internalFacultyId = computed(() => internalFaculty.value?.id)
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
   async () => {
-    if (!internalFaculty.value) {
+    if (!internalFacultyId.value) {
       return []
     }
-    internalSpeciality.value = undefined
-    return await specialityApi.getAllByFaculty(internalFaculty.value.id)
+    return await specialityApi.getAllByFaculty(internalFacultyId.value)
   },
   {
     default: () => [],
-    watch: [internalFaculty],
+    watch: [internalFacultyId],
   },
 )
 
-const {
-  pending: loadingHourlyLoad,
-  data: hourlyLoad,
-  error: errorMessage,
-} = useAsyncData(
+watch(specialities, (value) => {
+  const speciality = value.find((s) => s.id === internalSpeciality.value?.id)
+  if (!speciality) {
+    internalSpeciality.value = undefined
+  }
+})
+
+const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   async () => {
-    if (!internalFaculty.value) {
+    if (!internalFacultyId.value) {
       return undefined
     }
-    const data = await hourlyLoadApi.getLatestByFaculty(
-      internalFaculty.value.id,
-    )
-    return data
+    internalHourlyLoad.value = undefined
+    return await hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
   },
   {
-    watch: [internalFaculty],
+    watch: [internalFacultyId],
+    immediate: false,
   },
 )
+
+watch(lastHourlyLoad, (value) => {
+  if (value) {
+    internalHourlyLoad.value = { ...value }
+  }
+})
 
 const { data: faculties, pending: loadingFaculties } = useAsyncData<
   IOrganization[]
 >(() => facultyApi.getAll(), {
   default: () => [],
 })
-
-const init = async () => {
-  internalFaculty.value = store.faculty
-  hourlyLoad.value = store.hourlyLoad
-  internalSpeciality.value = store.speciality
-}
 
 const form = ref<VForm>()
 const ending = async () => {
@@ -121,12 +143,8 @@ const ending = async () => {
   loading.value = true
   store.updateFaculty(internalFaculty.value!)
   store.updateSpeciality(internalSpeciality.value!)
-  await store.updateHourlyLoad(hourlyLoad.value!)
+  store.updateHourlyLoad(internalHourlyLoad.value!)
   store.updateFirstEntry(false)
   loading.value = false
 }
-
-onMounted(async () => {
-  await init()
-})
 </script>
