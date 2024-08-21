@@ -58,7 +58,7 @@ import {
 } from '~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
 
-const houlyLoadApi = useHourlyLoadApi()
+const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
@@ -91,24 +91,15 @@ const {
     if (!internalFaculty.value) {
       return undefined
     }
-    const data = await houlyLoadApi.getLatestByFaculty(internalFaculty.value.id)
+    const data = await hourlyLoadApi.getLatestByFaculty(
+      internalFaculty.value.id,
+    )
     return data
   },
   {
     watch: [internalFaculty],
   },
 )
-
-const hourlyLoadApi = useHourlyLoadApi()
-
-async function fetchHourlyLoad(faculty: IOrganization) {
-  try {
-    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
-    store.updateHourlyLoad(data)
-  } catch (e) {
-    console.error(e)
-  }
-}
 
 const { data: faculties, pending: loadingFaculties } = useAsyncData<
   IOrganization[]
@@ -131,7 +122,7 @@ const ending = async () => {
   loading.value = true
   store.updateFaculty(internalFaculty.value!)
   store.updateSpeciality(internalSpeciality.value!)
-  await fetchHourlyLoad(internalFaculty.value!)
+  await store.updateHourlyLoad(hourlyLoad.value!)
   store.updateFirstEntry(false)
   loading.value = false
 }
