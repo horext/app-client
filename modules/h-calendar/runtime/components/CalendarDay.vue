@@ -113,7 +113,7 @@ const intervalMinuteHeight = computed(() => {
 })
 
 const weekDayEvents = computed(() => {
-  return events.value.filter((event) => event.weekDay === weekDay.value)
+  return events.value.filter((event) => event.weekDay % 7 === weekDay.value)
 })
 
 const groupEvents = computed(() => {
