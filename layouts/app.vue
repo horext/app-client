@@ -46,7 +46,6 @@ const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
 async function fetchHourlyLoad(faculty: IOrganization) {
   try {
     const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
-    console.log('fetchHourlyLoad', data)
     store.updateHourlyLoad(data)
   } catch (e) {
     console.error(e)
