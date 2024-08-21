@@ -20,9 +20,13 @@ export const provideFetch = () => {
 }
 
 export const createApis = () => {
-  for (const item of APIS_REGISTRY) {
-    provideApi(item.provide, item.use)
+  const registry = APIS_REGISTRY
+  const instances = new Map<InjectionKey<BaseApi>, BaseApi>()
+  for (const item of registry) {
+    const instance = provideApi(item.provide, item.use)
+    instances.set(item.provide, instance)
   }
+  return instances
 }
 
 export const provideApi = <T extends BaseApi>(
@@ -33,5 +37,7 @@ export const provideApi = <T extends BaseApi>(
   if (!fetch) {
     throw new Error('Fetch not provided')
   }
-  provide(key, new use(fetch))
+  const instance = new use(fetch)
+  provide(key, instance)
+  return instance
 }
