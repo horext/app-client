@@ -37,6 +37,7 @@ import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IEvent } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
+import type { Weekdays } from '~/modules/h-calendar/runtime/constants/week'
 
 interface ICalendarEvent extends IEvent {
   weekDay: number
@@ -52,7 +53,7 @@ const props = defineProps({
     required: true,
   },
   weekDays: {
-    type: Array as PropType<number[]>,
+    type: Array as PropType<Weekdays[]>,
     default: DEFAULT_CALENDAR_WEEK_DAYS,
   },
 })
