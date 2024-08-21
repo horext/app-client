@@ -41,6 +41,11 @@ import SettingInitial from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 
+useSeoMeta({
+  title: 'Configuración - Generador de Horarios',
+  description: 'Configura tu generador de horarios para tener una mejor experiencia',
+})
+
 const store = useUserConfigStore()
 const { weekDays } = storeToRefs(store)
 const internalWeekDays = ref(weekDays.value)

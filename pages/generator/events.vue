@@ -69,6 +69,11 @@ import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
 
+useSeoMeta({
+  title: 'Mis Actividades - Generador de Horarios',
+  description: 'Administra tus actividades para tener un mejor control de tu tiempo',
+})
+
 const store = useUserEventsStore()
 
 const myEvents = computed(() => store.items)

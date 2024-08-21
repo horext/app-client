@@ -37,6 +37,11 @@ import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
+useSeoMeta({
+  title: 'Horarios Favoritos - Generador de Horarios',
+  description: 'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
+})
+
 const store = useUserConfigStore()
 const { favoritesSchedules } = storeToRefs(store)
 
