@@ -1,6 +1,10 @@
 <template>
   <v-card :loading="loadingHourlyLoad">
-    <v-card-title> Configuración </v-card-title>
+    <v-card-title> Configuración Básica </v-card-title>
+    <v-card-subtitle>
+      Selecciona tu facultad para obtener tu carga horaria y selecciona tu
+      especialidad para filtrar los cursos.
+    </v-card-subtitle>
     <v-card-text>
       <v-form>
         <v-autocomplete
@@ -9,7 +13,8 @@
           :loading="loadingFaculties"
           return-object
           item-title="name"
-          label="Facultades"
+          label="Selecciona tu facultad"
+          placeholder="Facultad"
         />
         <v-autocomplete
           v-model="speciality"
@@ -18,7 +23,8 @@
           :loading="loadingSpecialities"
           item-title="name"
           :items="specialities"
-          label="Especialidades"
+          label="Selecciona tu especialidad"
+          placeholder="Especialidad"
         />
       </v-form>
       <v-alert v-model="showErrorMessage" closable type="error">
