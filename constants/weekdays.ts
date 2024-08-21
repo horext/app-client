@@ -1,4 +1,4 @@
-import type { Weekdays } from '~/modules/h-calendar/runtime/constants/week'
+import type { WeekdaysISO } from '~/modules/h-calendar/runtime/constants/week'
 
 export const WEEK_DAYS_NAMES = [
   'Domingo',
@@ -10,4 +10,4 @@ export const WEEK_DAYS_NAMES = [
   'Sábado',
 ] as const
 
-export const DEFAULT_CALENDAR_WEEK_DAYS: Weekdays[] = [1, 2, 3, 4, 5, 6]
+export const DEFAULT_CALENDAR_WEEK_DAYS: WeekdaysISO[] = [1, 2, 3, 4, 5, 6]

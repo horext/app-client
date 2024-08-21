@@ -37,10 +37,10 @@ import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IEvent } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
-import type { Weekdays } from '~/modules/h-calendar/runtime/constants/week'
+import type { WeekdaysISO } from '~/modules/h-calendar/runtime/constants/week'
 
 interface ICalendarEvent extends IEvent {
-  weekDay: Weekdays
+  weekDay: WeekdaysISO
   start: string
   end: string
   name: string
@@ -53,7 +53,7 @@ const props = defineProps({
     required: true,
   },
   weekDays: {
-    type: Array as PropType<Weekdays[]>,
+    type: Array as PropType<WeekdaysISO[]>,
     default: DEFAULT_CALENDAR_WEEK_DAYS,
   },
 })
@@ -81,14 +81,14 @@ const showEvent = ({ nativeEvent, event }: IEventEmitData<ICalendarEvent>) => {
   nativeEvent.stopPropagation()
 }
 
-const internalEvents = computed(
+const internalEvents = computed<ICalendarEvent[]>(
   () =>
     schedule.value?.events?.map((event) => {
       return {
         ...event,
         start: event.startTime,
         end: event.endTime,
-        weekDay: event.day,
+        weekDay: (event.day % 7) as WeekdaysISO,
         id: event.id!,
         name: event.title,
       }
