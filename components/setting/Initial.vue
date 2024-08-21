@@ -8,7 +8,7 @@
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          v-model="faculty"
+          v-model="internalFaculty"
           :items="faculties"
           :loading="loadingFaculties"
           return-object
@@ -21,8 +21,8 @@
           No se ha encontrado la carga horaria de tu facultad
         </v-alert>
         <v-autocomplete
-          v-model="speciality"
-          :disabled="!faculty"
+          v-model="internalSpeciality"
+          :disabled="!internalFaculty"
           return-object
           :loading="loadingSpecialities"
           item-title="name"
@@ -65,20 +65,20 @@ const store = useUserConfigStore()
 
 const loading = ref(false)
 
-const faculty = ref<IOrganization>()
-const speciality = ref<IOrganization>()
+const internalFaculty = ref<IOrganization>()
+const internalSpeciality = ref<IOrganization>()
 
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
   async () => {
-    if (!faculty.value) {
+    if (!internalFaculty.value) {
       return []
     }
-    speciality.value = undefined
-    return await specialityApi.getAllByFaculty(faculty.value.id)
+    internalSpeciality.value = undefined
+    return await specialityApi.getAllByFaculty(internalFaculty.value.id)
   },
   {
     default: () => [],
-    watch: [faculty],
+    watch: [internalFaculty],
   },
 )
 
@@ -88,14 +88,14 @@ const {
   error: errorMessage,
 } = useAsyncData(
   async () => {
-    if (!faculty.value) {
+    if (!internalFaculty.value) {
       return undefined
     }
-    const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
+    const data = await houlyLoadApi.getLatestByFaculty(internalFaculty.value.id)
     return data
   },
   {
-    watch: [faculty],
+    watch: [internalFaculty],
   },
 )
 
@@ -117,9 +117,9 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 })
 
 const init = async () => {
-  faculty.value = store.faculty
+  internalFaculty.value = store.faculty
   hourlyLoad.value = store.hourlyLoad
-  speciality.value = store.speciality
+  internalSpeciality.value = store.speciality
 }
 
 const form = ref<VForm>()
@@ -129,9 +129,9 @@ const ending = async () => {
     return
   }
   loading.value = true
-  store.updateFaculty(faculty.value!)
-  store.updateSpeciality(speciality.value!)
-  await fetchHourlyLoad(faculty.value!)
+  store.updateFaculty(internalFaculty.value!)
+  store.updateSpeciality(internalSpeciality.value!)
+  await fetchHourlyLoad(internalFaculty.value!)
   store.updateFirstEntry(false)
   loading.value = false
 }
