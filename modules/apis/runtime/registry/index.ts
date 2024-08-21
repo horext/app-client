@@ -1,3 +1,4 @@
+import type { IRegistryItem } from '../interfaces/registry'
 import { ClassSessionApi } from '../resources/class-session'
 import { CourseApi } from '../resources/course'
 import { FacultyApi } from '../resources/faculty'
@@ -26,7 +27,7 @@ export const APIS_REGISTRY = [
   },
   {
     provide: FACULTY_API_KEY,
-    use:FacultyApi,
+    use: FacultyApi,
   },
   {
     provide: HOURLY_LOAD_API_KEY,
@@ -44,4 +45,4 @@ export const APIS_REGISTRY = [
     provide: STUDY_PLAN_API_KEY,
     use: StudyPlanApi,
   },
-] as const 
+] as const satisfies IRegistryItem[]
