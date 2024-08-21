@@ -1,5 +1,5 @@
 <template>
-  <v-form @submit.prevent="ending">
+  <v-form ref="form" @submit.prevent="ending">
     <v-card :loading="loadingHourlyLoad">
       <v-card-title> Configuración Básica </v-card-title>
       <v-card-subtitle>
@@ -15,6 +15,7 @@
           item-title="name"
           label="Selecciona tu facultad"
           placeholder="Facultad"
+          :rules="[(v) => !!v || 'Facultad es requerida']"
         />
         <v-alert v-if="errorMessage" closable type="error">
           No se ha encontrado la carga horaria de tu facultad
@@ -28,6 +29,7 @@
           :items="specialities"
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
+          :rules="[(v) => !!v || 'Especialidad es requerida']"
         />
       </v-card-text>
       <v-card-actions>
@@ -54,6 +56,7 @@ import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~/modules/apis/runtime/composables'
+import type { VForm } from 'vuetify/components/VForm'
 
 const houlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
@@ -88,7 +91,6 @@ const {
     if (!faculty.value) {
       return undefined
     }
-    hourlyLoad.value = undefined
     const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
     return data
   },
@@ -120,7 +122,12 @@ const init = async () => {
   speciality.value = store.speciality
 }
 
+const form = ref<VForm>()
 const ending = async () => {
+  const formValue = await form.value?.validate()
+  if (!formValue?.valid) {
+    return
+  }
   loading.value = true
   store.updateFaculty(faculty.value!)
   store.updateSpeciality(speciality.value!)
