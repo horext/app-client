@@ -19,8 +19,8 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { ISession } from '~/interfaces/subject'
+import { getWeekdayName } from '~/utils/weekday'
 
 const props = defineProps<{
   session: ISession
@@ -29,7 +29,9 @@ const props = defineProps<{
 
 const { session, for: forLabel } = toRefs(props)
 const dayWeek = computed(() =>
-  WEEK_DAYS_NAMES[session.value?.day]?.substring(0, 2).toUpperCase(),
+  getWeekdayName(session.value?.day ?? 0)
+    ?.substring(0, 2)
+    .toUpperCase(),
 )
 
 const type = computed(() => session.value?.type?.code)
