@@ -63,7 +63,7 @@ export class CalendarEvent {
     if (color === -1) {
       color = 10
     }
-    this.colorId = event.color
+    this.colorId = Number(color + 1).toString()
     this.reminders.overrides = notifications
   }
 
