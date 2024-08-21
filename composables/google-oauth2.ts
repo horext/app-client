@@ -1,7 +1,10 @@
+import { ofetch } from 'ofetch'
 import type {
   IGoogleCalendarItem,
   IGoogleCalendarListPayload,
 } from '~/interfaces/google/calendar'
+
+import { CalendarEvent } from '~/models/google'
 
 export const useGoogleOAuth2 = () => {
   const { $script } = useGoogleAccounts()
@@ -22,7 +25,7 @@ export const useGoogleOAuth2 = () => {
         callback: handleTokenResponse,
         error_callback: () => {
           isPendingClient.value = false
-        }
+        },
       })
       tokenClient.value = client
       console.log('Google script loaded', client)
@@ -57,7 +60,7 @@ export const useGoogleOAuth2 = () => {
     })
   }
 
-  const googleApis = $fetch.create({
+  const googleApis = ofetch.create({
     method: 'GET',
     baseURL: 'https://www.googleapis.com/',
     onRequest: (config) => {
@@ -94,12 +97,12 @@ export const useGoogleOAuth2 = () => {
     return response
   }
 
-  async function createEvent(calendarId: string, event: object) {
+  async function createEvent(calendarId: string, event: CalendarEvent) {
     const response = await googleApis(
       `calendar/v3/calendars/${calendarId}/events`,
       {
         method: 'POST',
-        body: event,
+        body: event.toRequest(),
       },
     )
     return response
