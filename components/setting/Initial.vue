@@ -43,6 +43,9 @@
         <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
+    <base-snackbar v-model="successSave">
+      La configuración se ha guardado correctamente
+    </base-snackbar>
   </v-form>
 </template>
 
@@ -135,16 +138,19 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 })
 
 const form = ref<VForm>()
+const successSave = ref(false)
 const ending = async () => {
   const formValue = await form.value?.validate()
   if (!formValue?.valid) {
     return
   }
+  successSave.value = false
   loading.value = true
   store.updateFaculty(internalFaculty.value!)
   store.updateSpeciality(internalSpeciality.value!)
   store.updateHourlyLoad(internalHourlyLoad.value!)
   store.updateFirstEntry(false)
   loading.value = false
+  successSave.value = true
 }
 </script>
