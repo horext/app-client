@@ -198,6 +198,16 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await storage.setItem<IIntersectionOccurrence[]>('myOcurrences', data)
   }
 
+  const fetchWeekDays = async () => {
+    const data = await storage.getItem<number[]>('myWeekDays')
+    weekDays.value = data || [0, 1, 2, 3, 4, 5, 6]
+  }
+
+  const saveWeekDays = async (data: number[]) => {
+    weekDays.value = data
+    await storage.setItem<number[]>('myWeekDays', data)
+  }
+
   return {
     crossings,
     faculty,
@@ -237,5 +247,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     occurrences,
     addFavoriteSchedule,
     removeFavoriteSchedule,
+    fetchWeekDays,
+    saveWeekDays,
   }
 })
