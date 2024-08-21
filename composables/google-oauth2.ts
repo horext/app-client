@@ -1,3 +1,4 @@
+import { ofetch } from 'ofetch'
 import type {
   IGoogleCalendarItem,
   IGoogleCalendarListPayload,
@@ -59,7 +60,7 @@ export const useGoogleOAuth2 = () => {
     })
   }
 
-  const googleApis = $fetch.create({
+  const googleApis = ofetch.create({
     method: 'GET',
     baseURL: 'https://www.googleapis.com/',
     onRequest: (config) => {
