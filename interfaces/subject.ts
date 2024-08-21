@@ -53,7 +53,7 @@ export interface ISubject {
   type: ICourseType
   studyPlan: IStudyPlan
   credits: number
-  cycle: number
+  cycle: number | null
 }
 
 export interface ISubjectSchedule {
