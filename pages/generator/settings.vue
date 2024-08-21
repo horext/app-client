@@ -16,9 +16,11 @@
             <v-row>
               <v-col cols="12">
                 <v-checkbox
-                  v-for="day in WEEK_DAYS_NAMES"
+                  v-for="(day, index) in WEEK_DAYS_NAMES"
                   :key="day"
+                  v-model="internalWeekDays"
                   :label="day"
+                  :value="index"
                   multiple
                 />
               </v-col>
@@ -40,6 +42,13 @@ import { useUserConfigStore } from '~/stores/user-config'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 
 const store = useUserConfigStore()
+const { weekDays } = storeToRefs(store)
+const internalWeekDays = ref(weekDays.value)
+watch(weekDays, (value) => {
+  internalWeekDays.value = value
+})
 
-const save = () => {}
+const save = async () => {
+  await store.saveWeekDays(internalWeekDays.value)
+}
 </script>
