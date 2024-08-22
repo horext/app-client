@@ -18,7 +18,9 @@ export type ScheduleOptions = {
 }
 
 export interface ISubjectEntry
-  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {}
+  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {
+    
+  }
 
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
