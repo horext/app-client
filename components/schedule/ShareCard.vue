@@ -64,12 +64,12 @@
     </v-list>
     <v-text-field
       id="link"
-      ref="link"
+      ref="textLink"
       :label="copied ? 'Enlace copiado' : 'Click to copiar el link'"
       class="pa-4"
       readonly
       :model-value="link"
-      @click="copy"
+      @click="handleClickLink"
     />
   </v-card>
 </template>
@@ -82,6 +82,7 @@ import {
   mdiSendCheck,
   mdiCloseCircleOutline,
 } from '@mdi/js'
+import { VTextField } from 'vuetify/components/VTextField'
 
 defineOptions({
   name: 'ScheduleShare',
@@ -99,7 +100,6 @@ const emit = defineEmits(['update:dialog'])
 
 const { schedule, path, dialog } = toRefs(props)
 
-const copied = ref(false)
 const dialogSync = ref(true)
 
 const link = computed(() => location.origin + path.value + '?q=' + query.value)
@@ -118,16 +118,15 @@ const close = () => {
   dialogSync.value = false
 }
 
-const copy = () => {
-  const copyText = document.querySelector<HTMLInputElement>('#link')
+const textLink = ref<VTextField | null>(null)
+const { copy, copied } = useClipboard({
+  legacy: true,
+})
+const handleClickLink = async () => {
+  const copyText = textLink.value?.$el.querySelector('input')
   if (copyText) {
     copyText.select()
-    navigator.clipboard.writeText(link.value).then(
-      () => {
-        copied.value = true
-      },
-      function () {},
-    )
+    await copy(link.value)
   }
 }
 </script>
