@@ -93,29 +93,18 @@ const props = defineProps({
     required: true,
   },
   path: { type: String, default: '/subject' },
-  dialog: { type: Boolean },
   postId: { type: Number, default: 1 },
 })
-const emit = defineEmits(['update:dialog'])
+const { schedule, path } = toRefs(props)
 
-const { schedule, path, dialog } = toRefs(props)
-
-const dialogSync = ref(true)
+const internalDialog = defineModel<boolean>('dialog')
 
 const link = computed(() => location.origin + path.value + '?q=' + query.value)
 
 const query = computed(() => btoa(schedule.value.scheduleSubjectIds.join(',')))
 
-watch(dialog, (newValue) => {
-  dialogSync.value = newValue
-})
-
-watch(dialogSync, (newValue) => {
-  emit('update:dialog', newValue)
-})
-
 const close = () => {
-  dialogSync.value = false
+  internalDialog.value = false
 }
 
 const textLink = ref<VTextField | null>(null)
