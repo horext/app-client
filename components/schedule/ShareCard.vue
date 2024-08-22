@@ -82,7 +82,7 @@ import {
   mdiSendCheck,
   mdiCloseCircleOutline,
 } from '@mdi/js'
-import { VTextField } from 'vuetify/components/VTextField'
+import type { VTextField } from 'vuetify/components/VTextField'
 
 defineOptions({
   name: 'ScheduleShare',
