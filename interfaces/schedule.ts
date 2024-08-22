@@ -1,10 +1,14 @@
 import type { IEvent } from './event'
-import type { ISubjectSchedule } from './subject'
+import type { ISubject, ISubjectSchedule } from './subject'
+
+export interface ISubjectScheduleGenerate  extends ISubjectSchedule{
+  subject: Pick<ISubject, 'id' | 'course'>
+}
 
 export interface IScheduleGenerate {
   id: string
   scheduleSubjectIds: number[]
-  schedule: ISubjectSchedule[]
+  schedule: ISubjectScheduleGenerate[]
   crossings: number
   events: IEvent[]
 }

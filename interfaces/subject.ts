@@ -62,12 +62,14 @@ export interface ISubjectSchedule {
     id: string
   }
   scheduleSubject: Pick<IScheduleSubject, 'id'>
-  subject: ISubject
   sessions: ISession[]
 }
 
 export interface ISelectedSubject extends ISubject {
-  schedules: ISubjectSchedule[]
+  schedules: Pick<
+    ISubjectSchedule,
+    'id' | 'section' | 'scheduleSubject' | 'sessions'
+  >[]
 }
 
 export interface ISubjectStudyPlan extends ISubject {

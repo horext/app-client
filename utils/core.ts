@@ -1,6 +1,9 @@
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type {
+  IScheduleGenerate,
+  ISubjectScheduleGenerate,
+} from '~/interfaces/schedule'
+import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
@@ -14,8 +17,11 @@ export type ScheduleOptions = {
   crossPractices?: boolean
 }
 
+export interface ISubjectEntry
+  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {}
+
 export function getSchedules(
-  subjects: Array<ISelectedSubject>,
+  subjects: Array<ISubjectEntry>,
   myEvents: Array<IEvent>,
   options: ScheduleOptions = {
     credits: 100,
@@ -51,7 +57,7 @@ export function getSchedules(
 
   const crossings = Array(combinations).fill(0)
   for (let i = combinations; i--; ) {
-    const combination: Array<ISubjectSchedule> = []
+    const combination: Array<ISubjectScheduleGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
       const schedule = subject.schedules[indexSchedules[j]]
