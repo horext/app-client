@@ -34,13 +34,12 @@ import { ref, toRefs } from 'vue'
 import EventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
 import ScheduleEventInfo from '~/components/schedule/CalendarEventCard.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
-import type { IEvent } from '~/interfaces/event'
+import type { IEvent, Weekdays } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
-import type { WeekdaysISO } from '~/modules/h-calendar/runtime/constants/week'
 
 interface ICalendarEvent extends IEvent {
-  weekDay: WeekdaysISO
+  weekDay: Weekdays
   start: string
   end: string
   name: string
@@ -53,7 +52,7 @@ const props = defineProps({
     required: true,
   },
   weekDays: {
-    type: Array as PropType<WeekdaysISO[]>,
+    type: Array as PropType<Weekdays[]>,
     default: DEFAULT_CALENDAR_WEEK_DAYS,
   },
 })

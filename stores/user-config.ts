@@ -5,6 +5,7 @@ import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
+import type { Weekdays } from '~/interfaces/event'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage()
@@ -32,7 +33,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const schedules = ref<Array<IScheduleGenerate>>([])
   const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
   const occurrences = ref<IIntersectionOccurrence[]>([])
-  const weekDays = ref([0, 1, 2, 3, 4, 5, 6])
+  const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
   const firstEntry = ref(true)
   const isNewHourlyLoad = ref(false)
@@ -199,13 +200,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   const fetchWeekDays = async () => {
-    const data = await storage.getItem<number[]>('myWeekDays')
+    const data = await storage.getItem<Weekdays[]>('myWeekDays')
     weekDays.value = data || [0, 1, 2, 3, 4, 5, 6]
   }
 
-  const saveWeekDays = async (data: number[]) => {
+  const saveWeekDays = async (data: Weekdays[]) => {
     weekDays.value = data
-    await storage.setItem<number[]>('myWeekDays', data)
+    await storage.setItem<Weekdays[]>('myWeekDays', data)
   }
 
   return {

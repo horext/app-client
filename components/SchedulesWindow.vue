@@ -34,11 +34,11 @@ import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiArrowRightBoldCircle, mdiArrowLeftBoldCircle } from '@mdi/js'
-import type { WeekdaysISO } from '~/modules/h-calendar/runtime/constants/week'
+import type { Weekdays } from '~/interfaces/event'
 
 const props = defineProps<{
   schedules: IScheduleGenerate[]
-  weekDays: WeekdaysISO[]
+  weekDays: Weekdays[]
   currentSchedule: IScheduleGenerate | undefined
   mode: ViewMode
 }>()
