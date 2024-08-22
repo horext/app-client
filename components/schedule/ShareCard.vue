@@ -73,8 +73,7 @@
     />
   </v-card>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import {
   mdiFacebook,
@@ -84,66 +83,51 @@ import {
   mdiCloseCircleOutline,
 } from '@mdi/js'
 
-export default defineComponent({
+defineOptions({
   name: 'ScheduleShare',
-  props: {
-    schedule: {
-      type: Object as PropType<IScheduleGenerate>,
-      required: true,
-    },
-    path: { type: String, default: '/subject' },
-    dialog: { type: Boolean },
-    postId: { type: Number, default: 1 },
-  },
-  emits: ['update:dialog'],
-  setup() {
-    return {
-      mdiFacebook,
-      mdiTwitter,
-      mdiWhatsapp,
-      mdiSendCheck,
-      mdiCloseCircleOutline,
-    }
-  },
-  data: () => ({
-    copied: false,
-    dialogSync: true,
-  }),
-  computed: {
-    link() {
-      return location.origin + this.path + '?q=' + this.query
-    },
-    query() {
-      return btoa(this.schedule.scheduleSubjectIds.join(','))
-    },
-  },
-  watch: {
-    dialog(newValue) {
-      this.dialogSync = newValue
-    },
-    dialogSync(newValue) {
-      this.$emit('update:dialog', newValue)
-    },
-  },
-  methods: {
-    close() {
-      this.dialogSync = false
-    },
-    copy() {
-      const copyText = document.querySelector<HTMLInputElement>('#link')
-      if (copyText) {
-        copyText.select()
-        navigator.clipboard.writeText(this.link).then(
-          () => {
-            /* clipboard successfully set */
-            this.copied = true
-          },
-          function () {
-            /* clipboard write failed */
-          },
-        )
-      }
-    },
-  },
 })
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<IScheduleGenerate>,
+    required: true,
+  },
+  path: { type: String, default: '/subject' },
+  dialog: { type: Boolean },
+  postId: { type: Number, default: 1 },
+})
+const emit = defineEmits(['update:dialog'])
+
+const { schedule, path, dialog } = toRefs(props)
+
+const copied = ref(false)
+const dialogSync = ref(true)
+
+const link = computed(() => location.origin + path.value + '?q=' + query.value)
+
+const query = computed(() => btoa(schedule.value.scheduleSubjectIds.join(',')))
+
+watch(dialog, (newValue) => {
+  dialogSync.value = newValue
+})
+
+watch(dialogSync, (newValue) => {
+  emit('update:dialog', newValue)
+})
+
+const close = () => {
+  dialogSync.value = false
+}
+
+const copy = () => {
+  const copyText = document.querySelector<HTMLInputElement>('#link')
+  if (copyText) {
+    copyText.select()
+    navigator.clipboard.writeText(link.value).then(
+      () => {
+        copied.value = true
+      },
+      function () {},
+    )
+  }
+}
 </script>
