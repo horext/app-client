@@ -25,7 +25,6 @@ export function getSchedules(
   },
 ): {
   occurrences: IIntersectionOccurrence[]
-  schedules: ISubjectSchedule[]
   combinations: IScheduleGenerate[]
 } {
   const occurrences: IIntersectionOccurrence[] = []
@@ -153,7 +152,6 @@ export function getSchedules(
   }
 
   return {
-    schedules: [],
     combinations: schedules,
     occurrences,
   }
