@@ -145,9 +145,12 @@ export function getSchedules(
     }
     if (crossingCombination <= options.crossingSubjects && useCombination) {
       schedulesCrossings[i] = crossingCombination
+      const scheduleSubjectIds = scheduleSubjects.map(
+        (c) => c.scheduleSubject.id,
+      )
       schedules.push({
-        id: scheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
-        scheduleSubjectIds: scheduleSubjects.map((c) => c.scheduleSubject.id),
+        id: scheduleSubjectIds.join(','),
+        scheduleSubjectIds,
         schedule: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects
