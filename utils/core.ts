@@ -23,16 +23,18 @@ export interface ISubjectEntry
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
   myEvents: Array<IEvent>,
-  options: ScheduleOptions = {
-    credits: 100,
-    crossingSubjects: 0,
-    crossEvent: true,
-    crossPractices: false,
-  },
+  _options?: ScheduleOptions,
 ): {
   occurrences: IIntersectionOccurrence[]
   combinations: IScheduleGenerate[]
 } {
+  const options = {
+    credits: 100,
+    crossingSubjects: 0,
+    crossEvent: true,
+    crossPractices: false,
+    ..._options,
+  }
   const occurrences: IIntersectionOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
