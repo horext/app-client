@@ -89,7 +89,9 @@ export function getSchedules(
           if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
               const occurrence: IIntersectionOccurrence = {
-                id: [scheduleSubjectEvent.id, restScheduleEvent.id].sort().join('-'),
+                id: [scheduleSubjectEvent.id, restScheduleEvent.id]
+                  .sort()
+                  .join('-'),
                 name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
                 eventTarget: scheduleSubjectEvent,
                 eventSource: restScheduleEvent,
