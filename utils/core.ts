@@ -31,7 +31,7 @@ export function getSchedules(
   const options = {
     credits: 100,
     crossingSubjects: 0,
-    crossEvent: true,
+    crossEvent: false,
     crossPractices: false,
     ..._options,
   }
