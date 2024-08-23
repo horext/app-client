@@ -59,31 +59,27 @@ export function getSchedules(
 
   const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
   for (let i = totalSchedules; i--; ) {
-    const baseScheduleSubjects: Array<IScheduleSubjectGenerate> = []
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
       const schedule = subject.schedules[indexSchedules[j]]
-      baseScheduleSubjects.push({
+      scheduleSubjects.push({
         ...schedule,
         subject,
       })
     }
-    const scheduleSubjects = baseScheduleSubjects.map((c, index) => ({
-      ...c,
-      events: scheduleToEvent(c, EVENT_COLORS[index]),
-    }))
+    const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
+      scheduleToEvent(c, EVENT_COLORS[index]),
+    )
     // calculating crossing
     let crossingCombination = 0
     let useCombination = true
-    for (let j = 0; j < baseScheduleSubjects.length; j++) {
-      const currentScheduleSubject = scheduleSubjects.shift()
-      if (!currentScheduleSubject) continue
-      const currentScheduleSubjectEvents = currentScheduleSubject.events
+    for (let j = 0; j < scheduleSubjects.length; j++) {
+      const currentScheduleSubjectEvents = scheduleSubjectsEvents.shift()
+      if (!currentScheduleSubjectEvents) continue
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
-        const restScheduleScheduleEvents = scheduleSubjects
-          .map((c) => c.events)
-          .flat()
+        const restScheduleScheduleEvents = scheduleSubjectsEvents.flat()
 
         restScheduleScheduleEvents.push(...baseEvents)
         let intersections = 0
@@ -150,13 +146,11 @@ export function getSchedules(
     if (crossingCombination <= options.crossingSubjects && useCombination) {
       schedulesCrossings[i] = crossingCombination
       schedules.push({
-        id: baseScheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
-        scheduleSubjectIds: baseScheduleSubjects.map(
-          (c) => c.scheduleSubject.id,
-        ),
-        schedule: baseScheduleSubjects,
+        id: scheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
+        scheduleSubjectIds: scheduleSubjects.map((c) => c.scheduleSubject.id),
+        schedule: scheduleSubjects,
         crossings: crossingCombination,
-        events: baseScheduleSubjects
+        events: scheduleSubjects
           .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
           .concat(baseEvents),
