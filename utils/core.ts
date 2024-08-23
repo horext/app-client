@@ -57,39 +57,42 @@ export function getSchedules(
 
   const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
   for (let i = totalSchedules; i--; ) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
+    const baseScheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
       const schedule = subject.schedules[indexSchedules[j]]
-      scheduleSubjects.push({
+      baseScheduleSubjects.push({
         ...schedule,
         subject,
       })
     }
-    const currentScheduleSubject = scheduleSubjects.map((c, index) => ({
+    const scheduleSubjects = baseScheduleSubjects.map((c, index) => ({
       ...c,
       events: scheduleToEvent(c, EVENT_COLORS[index]),
     }))
     // calculating crossing
     let crossingCombination = 0
     let useCombination = true
-    for (let j = 0; j < scheduleSubjects.length; j++) {
-      const schedule = currentScheduleSubject.splice(0, 1)
-      const events = schedule[0].events
+    for (let j = 0; j < baseScheduleSubjects.length; j++) {
+      const currentScheduleSubject = scheduleSubjects.shift()
+      if (!currentScheduleSubject) continue
+      const currentScheduleSubjectEvents = currentScheduleSubject.events
 
-      for (const event of events) {
-        const otherEvents = currentScheduleSubject.map((c) => c.events).flat()
+      for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
+        const restScheduleScheduleEvents = scheduleSubjects
+          .map((c) => c.events)
+          .flat()
 
-        otherEvents.push(...baseEvents)
+        restScheduleScheduleEvents.push(...baseEvents)
         let intersections = 0
-        for (const item of otherEvents) {
-          if (isIntersects(event, item)) {
+        for (const restScheduleEvent of restScheduleScheduleEvents) {
+          if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
               const occurrence: IIntersectionOccurrence = {
-                id: [event.id, item.id].sort().join('-'),
-                name: `${event.title} - ${item.title}`,
-                eventTarget: event,
-                eventSource: item,
+                id: [scheduleSubjectEvent.id, restScheduleEvent.id].sort().join('-'),
+                name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
+                eventTarget: scheduleSubjectEvent,
+                eventSource: restScheduleEvent,
                 type,
               }
               if (
@@ -107,11 +110,11 @@ export function getSchedules(
               intersections++
             } else {
               if (
-                (item.type?.includes('P', 0) &&
-                  event.type?.includes('P', 0) &&
+                (restScheduleEvent.type?.includes('P', 0) &&
+                  scheduleSubjectEvent.type?.includes('P', 0) &&
                   !options.crossPractices) ||
-                (item.type?.includes('MY_EVENT', 0) &&
-                  event.type?.includes('MY_EVENT', 0) &&
+                (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
+                  scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
                   !options.crossEvent)
               ) {
                 addEventToIntersection('CROSSING_NOT_AVAILABLE')
@@ -122,11 +125,11 @@ export function getSchedules(
             }
 
             if (
-              (item.type?.includes('P', 0) &&
-                event.type?.includes('P', 0) &&
+              (restScheduleEvent.type?.includes('P', 0) &&
+                scheduleSubjectEvent.type?.includes('P', 0) &&
                 !options.crossPractices) ||
-              (item.type?.includes('MY_EVENT', 0) &&
-                event.type?.includes('MY_EVENT', 0) &&
+              (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
+                scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
                 !options.crossEvent)
             ) {
               addEventToIntersection('CROSSING_NOT_AVAILABLE')
@@ -143,13 +146,13 @@ export function getSchedules(
     if (crossingCombination <= options.crossingSubjects && useCombination) {
       schedulesCrossings[i] = crossingCombination
       schedules.push({
-        id: scheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
-        scheduleSubjectIds: scheduleSubjects.map(
+        id: baseScheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
+        scheduleSubjectIds: baseScheduleSubjects.map(
           (c) => c.scheduleSubject.id,
         ),
-        schedule: scheduleSubjects,
+        schedule: baseScheduleSubjects,
         crossings: crossingCombination,
-        events: scheduleSubjects
+        events: baseScheduleSubjects
           .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
           .concat(baseEvents),
