@@ -35,6 +35,88 @@ function convertScheduleSubjectToEvents(
   )
 }
 
+function generateIntersectionOccurrences(
+  scheduleSubjects: IScheduleSubjectGenerate[],
+  scheduleSubjectsEvents: Event[][],
+  baseEvents: Event[],
+  intersectionOccurrences: IIntersectionOccurrence[],
+  options: ScheduleOptions,
+) {
+  let crossingCombination = 0
+  let useCombination = true
+  for (let j = 0; j < scheduleSubjects.length; j++) {
+    const currentScheduleSubjectEvents = scheduleSubjectsEvents.shift()
+    if (!currentScheduleSubjectEvents) continue
+
+    for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
+      const restScheduleScheduleEvents = scheduleSubjectsEvents.flat()
+
+      restScheduleScheduleEvents.push(...baseEvents)
+      let intersections = 0
+      for (const restScheduleEvent of restScheduleScheduleEvents) {
+        if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
+          const addEventToIntersection = (type: string) => {
+            const intersectionId = generateIntersectionId(
+              scheduleSubjectEvent,
+              restScheduleEvent,
+            )
+
+            if (
+              !intersectionOccurrences.find(
+                (o) => o.id === intersectionId && o.type === type,
+              )
+            ) {
+              const intersectionOccurrence: IIntersectionOccurrence =
+                createIntersection(
+                  intersectionId,
+                  scheduleSubjectEvent,
+                  restScheduleEvent,
+                  type,
+                )
+              intersectionOccurrences.push(intersectionOccurrence)
+            }
+          }
+          // if have available crossings
+          if (crossingCombination + intersections <= options.crossingSubjects) {
+            intersections++
+          } else {
+            if (
+              (restScheduleEvent.type?.includes('P', 0) &&
+                scheduleSubjectEvent.type?.includes('P', 0) &&
+                !options.crossPractices) ||
+              (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
+                scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
+                !options.crossEvent)
+            ) {
+              addEventToIntersection('CROSSING_NOT_AVAILABLE')
+            } else {
+              addEventToIntersection('CROSSING_EXCEEDED')
+            }
+            break
+          }
+
+          if (
+            (restScheduleEvent.type?.includes('P', 0) &&
+              scheduleSubjectEvent.type?.includes('P', 0) &&
+              !options.crossPractices) ||
+            (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
+              scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
+              !options.crossEvent)
+          ) {
+            addEventToIntersection('CROSSING_NOT_AVAILABLE')
+            useCombination = false
+          } else {
+            addEventToIntersection('CROSSING_BASIS')
+          }
+        }
+      }
+
+      crossingCombination = crossingCombination + intersections
+    }
+  }
+  return { crossingCombination, useCombination }
+}
+
 function createIntersection(
   intersectionId: string,
   scheduleSubjectEvent: Event,
@@ -105,81 +187,14 @@ export function getSchedules(
     const scheduleSubjectsEvents =
       convertScheduleSubjectToEvents(scheduleSubjects)
     // calculating crossing
-    let crossingCombination = 0
-    let useCombination = true
-    for (let j = 0; j < scheduleSubjects.length; j++) {
-      const currentScheduleSubjectEvents = scheduleSubjectsEvents.shift()
-      if (!currentScheduleSubjectEvents) continue
-
-      for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
-        const restScheduleScheduleEvents = scheduleSubjectsEvents.flat()
-
-        restScheduleScheduleEvents.push(...baseEvents)
-        let intersections = 0
-        for (const restScheduleEvent of restScheduleScheduleEvents) {
-          if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
-            const addEventToIntersection = (type: string) => {
-              const intersectionId = generateIntersectionId(
-                scheduleSubjectEvent,
-                restScheduleEvent,
-              )
-
-              if (
-                !intersectionOccurrences.find(
-                  (o) => o.id === intersectionId && o.type === type,
-                )
-              ) {
-                const intersectionOccurrence: IIntersectionOccurrence =
-                  createIntersection(
-                    intersectionId,
-                    scheduleSubjectEvent,
-                    restScheduleEvent,
-                    type,
-                  )
-                intersectionOccurrences.push(intersectionOccurrence)
-              }
-            }
-            // if have available crossings
-            if (
-              crossingCombination + intersections <=
-              options.crossingSubjects
-            ) {
-              intersections++
-            } else {
-              if (
-                (restScheduleEvent.type?.includes('P', 0) &&
-                  scheduleSubjectEvent.type?.includes('P', 0) &&
-                  !options.crossPractices) ||
-                (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                  scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
-                  !options.crossEvent)
-              ) {
-                addEventToIntersection('CROSSING_NOT_AVAILABLE')
-              } else {
-                addEventToIntersection('CROSSING_EXCEEDED')
-              }
-              break
-            }
-
-            if (
-              (restScheduleEvent.type?.includes('P', 0) &&
-                scheduleSubjectEvent.type?.includes('P', 0) &&
-                !options.crossPractices) ||
-              (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
-                !options.crossEvent)
-            ) {
-              addEventToIntersection('CROSSING_NOT_AVAILABLE')
-              useCombination = false
-            } else {
-              addEventToIntersection('CROSSING_BASIS')
-            }
-          }
-        }
-
-        crossingCombination = crossingCombination + intersections
-      }
-    }
+    const { crossingCombination, useCombination } =
+      generateIntersectionOccurrences(
+        scheduleSubjects,
+        scheduleSubjectsEvents,
+        baseEvents,
+        intersectionOccurrences,
+        options,
+      )
     if (crossingCombination <= options.crossingSubjects && useCombination) {
       schedulesCrossings[i] = crossingCombination
       const scheduleSubjectIds = scheduleSubjects.map(
