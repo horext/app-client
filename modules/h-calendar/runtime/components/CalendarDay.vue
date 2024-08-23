@@ -100,8 +100,14 @@ const emit = defineEmits<{
   (key: 'mouseleave:event', event: IEventEmitData<T>): void
   (key: 'mousemove:event', event: IEventEmitData<T>): void
 }>()
-const { events, intervalHeight, hours, intervalMinutes, weekDay } =
-  toRefs(props)
+const {
+  events,
+  intervalHeight,
+  hours,
+  intervalMinutes,
+  weekDay,
+  internalWidth,
+} = toRefs(props)
 
 const startIntervalHour = computed(() => parseInt(hours.value[0]))
 
@@ -121,7 +127,7 @@ const groupEvents = computed(() => {
   return extractBlocks(events)
 })
 const dayContainer = ref<null | HTMLDivElement>(null)
-const internalWidthRem = computed(() => props.internalWidth + 'rem')
+const internalWidthRem = computed(() => internalWidth.value + 'rem')
 </script>
 
 <style scoped>

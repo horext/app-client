@@ -14,7 +14,9 @@ const props = defineProps<{
   intervalHeight: number
 }>()
 
-const intervalHeightPx = computed(() => `${props.intervalHeight}rem`)
+const { intervalHeight } = toRefs(props)
+
+const intervalHeightPx = computed(() => `${intervalHeight.value}rem`)
 </script>
 
 <style scoped>
