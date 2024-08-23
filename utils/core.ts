@@ -20,6 +20,28 @@ export type ScheduleOptions = {
 export interface ISubjectEntry
   extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {}
 
+function generateIntersectionId(
+  scheduleSubjectEvent: Event,
+  restScheduleEvent: Event,
+) {
+  return [scheduleSubjectEvent.id, restScheduleEvent.id].sort().join('-')
+}
+
+function createIntersection(
+  intersectionId: string,
+  scheduleSubjectEvent: Event,
+  restScheduleEvent: Event,
+  type: string,
+): IIntersectionOccurrence {
+  return {
+    id: intersectionId,
+    name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
+    eventTarget: scheduleSubjectEvent,
+    eventSource: restScheduleEvent,
+    type,
+  }
+}
+
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
   myEvents: Array<IEvent>,
@@ -86,21 +108,25 @@ export function getSchedules(
         for (const restScheduleEvent of restScheduleScheduleEvents) {
           if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
-              const intersectionOccurrence: IIntersectionOccurrence = {
-                id: [scheduleSubjectEvent.id, restScheduleEvent.id]
-                  .sort()
-                  .join('-'),
-                name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
-                eventTarget: scheduleSubjectEvent,
-                eventSource: restScheduleEvent,
-                type,
-              }
+              const intersectionId = generateIntersectionId(
+                scheduleSubjectEvent,
+                restScheduleEvent,
+              )
+
               if (
                 !intersectionOccurrences.find(
-                  (o) => o.id === intersectionOccurrence.id && o.type === type,
+                  (o) => o.id === intersectionId && o.type === type,
                 )
-              )
+              ) {
+                const intersectionOccurrence: IIntersectionOccurrence =
+                  createIntersection(
+                    intersectionId,
+                    scheduleSubjectEvent,
+                    restScheduleEvent,
+                    type,
+                  )
                 intersectionOccurrences.push(intersectionOccurrence)
+              }
             }
             // if have available crossings
             if (
