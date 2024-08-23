@@ -35,7 +35,7 @@ export function getSchedules(
     crossPractices: false,
     ..._options,
   }
-  const occurrences: IIntersectionOccurrence[] = []
+  const intersectionOccurrences: IIntersectionOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<IScheduleGenerate> = []
@@ -86,7 +86,7 @@ export function getSchedules(
         for (const restScheduleEvent of restScheduleScheduleEvents) {
           if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
-              const occurrence: IIntersectionOccurrence = {
+              const intersectionOccurrence: IIntersectionOccurrence = {
                 id: [scheduleSubjectEvent.id, restScheduleEvent.id]
                   .sort()
                   .join('-'),
@@ -96,11 +96,11 @@ export function getSchedules(
                 type,
               }
               if (
-                !occurrences.find(
-                  (o) => o.id === occurrence.id && o.type === type,
+                !intersectionOccurrences.find(
+                  (o) => o.id === intersectionOccurrence.id && o.type === type,
                 )
               )
-                occurrences.push(occurrence)
+                intersectionOccurrences.push(intersectionOccurrence)
             }
             // if have available crossings
             if (
@@ -165,6 +165,6 @@ export function getSchedules(
 
   return {
     combinations: schedules,
-    occurrences,
+    occurrences: intersectionOccurrences,
   }
 }
