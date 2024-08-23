@@ -27,6 +27,14 @@ function generateIntersectionId(
   return [scheduleSubjectEvent.id, restScheduleEvent.id].sort().join('-')
 }
 
+function convertScheduleSubjectToEvents(
+  scheduleSubjects: IScheduleSubjectGenerate[],
+) {
+  return scheduleSubjects.map((c, index) =>
+    scheduleToEvent(c, EVENT_COLORS[index]),
+  )
+}
+
 function createIntersection(
   intersectionId: string,
   scheduleSubjectEvent: Event,
@@ -90,9 +98,8 @@ export function getSchedules(
         subject,
       })
     }
-    const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      scheduleToEvent(c, EVENT_COLORS[index]),
-    )
+    const scheduleSubjectsEvents =
+      convertScheduleSubjectToEvents(scheduleSubjects)
     // calculating crossing
     let crossingCombination = 0
     let useCombination = true
@@ -179,8 +186,7 @@ export function getSchedules(
         scheduleSubjectIds,
         schedule: scheduleSubjects,
         crossings: crossingCombination,
-        events: scheduleSubjects
-          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
+        events: convertScheduleSubjectToEvents(scheduleSubjects)
           .flat()
           .concat(baseEvents),
       })
