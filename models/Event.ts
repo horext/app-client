@@ -25,7 +25,7 @@ export default class Event {
     location: string = '',
     color: string,
     type: string,
-    category?: EventCategories,
+    category: EventCategories = 'MY_EVENT',
     id: string = v4(),
   ) {
     this.day = day
