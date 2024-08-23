@@ -71,12 +71,16 @@ export function getSchedules(
   const schedules: Array<IScheduleGenerate> = []
   const baseEvents = myEvents.map(Event.buildFrom)
 
-  const advanceIndex = (i: number) => {
-    if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
-      indexSchedules[i] = 0
-      advanceIndex(i - 1)
+  const incrementScheduleIndex = (currentIndex: number) => {
+    if (
+      currentIndex >= 0 &&
+      indexSchedules[currentIndex] ===
+        subjects[currentIndex].schedules.length - 1
+    ) {
+      indexSchedules[currentIndex] = 0
+      incrementScheduleIndex(currentIndex - 1)
     } else {
-      indexSchedules[i]++
+      indexSchedules[currentIndex]++
     }
   }
 
@@ -192,7 +196,7 @@ export function getSchedules(
       })
     }
 
-    advanceIndex(indexSchedules.length - 1)
+    incrementScheduleIndex(indexSchedules.length - 1)
   }
 
   return {
