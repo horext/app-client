@@ -104,6 +104,7 @@ const {
   intervalHeight,
   weekdays,
   events,
+  internalWidth,
 } = toRefs(props)
 
 const internalIntervalHeight = computed(() => {
@@ -115,7 +116,7 @@ const internalIntervalMinutes = computed(() => {
 })
 
 const internalIntervalWidth = computed(() => {
-  return Number(props.internalWidth)
+  return Number(internalWidth.value)
 })
 
 const internaFirstInterval = computed(() => {
@@ -143,7 +144,7 @@ const internalDays = computed(() => {
   }))
 })
 
-const internalWidthRem = computed(() => props.internalWidth + 'rem')
+const internalWidthRem = computed(() => internalWidth.value + 'rem')
 </script>
 
 <style lang="css">
