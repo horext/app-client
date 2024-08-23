@@ -1,5 +1,5 @@
 import type { IInterval } from '~/interfaces/interval'
-import type { ISubjectScheduleGenerate } from '~/interfaces/schedule'
+import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 import Event from '~/models/Event'
 
 export const isIntersects = (
@@ -11,7 +11,7 @@ export const isIntersects = (
   )
 
 export function scheduleToEvent(
-  schedule: ISubjectScheduleGenerate,
+  schedule: IScheduleSubjectGenerate,
   color: string,
 ): Array<Event> {
   const events: Array<Event> = []

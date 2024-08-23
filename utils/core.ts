@@ -1,7 +1,7 @@
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
   IScheduleGenerate,
-  ISubjectScheduleGenerate,
+  IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
@@ -18,9 +18,7 @@ export type ScheduleOptions = {
 }
 
 export interface ISubjectEntry
-  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {
-    
-  }
+  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {}
 
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
@@ -50,37 +48,37 @@ export function getSchedules(
     }
   }
 
-  const combinations = subjects.reduce(
-    (previousValue, currentValue) => {
-      return previousValue * currentValue.schedules.length
+  const totalSchedules = subjects.reduce(
+    (total, subject) => {
+      return total * subject.schedules.length
     },
     subjects.length > 0 ? 1 : 0,
   )
 
-  const crossings = Array(combinations).fill(0)
-  for (let i = combinations; i--; ) {
-    const combination: Array<ISubjectScheduleGenerate> = []
+  const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
+  for (let i = totalSchedules; i--; ) {
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
       const schedule = subject.schedules[indexSchedules[j]]
-      combination.push({
+      scheduleSubjects.push({
         ...schedule,
         subject,
       })
     }
-    const currentSchedule = combination.map((c, index) => ({
+    const currentScheduleSubject = scheduleSubjects.map((c, index) => ({
       ...c,
       events: scheduleToEvent(c, EVENT_COLORS[index]),
     }))
     // calculating crossing
     let crossingCombination = 0
     let useCombination = true
-    for (let j = 0; j < combination.length; j++) {
-      const schedule = currentSchedule.splice(0, 1)
+    for (let j = 0; j < scheduleSubjects.length; j++) {
+      const schedule = currentScheduleSubject.splice(0, 1)
       const events = schedule[0].events
 
       for (const event of events) {
-        const otherEvents = currentSchedule.map((c) => c.events).flat()
+        const otherEvents = currentScheduleSubject.map((c) => c.events).flat()
 
         otherEvents.push(...baseEvents)
         let intersections = 0
@@ -143,13 +141,15 @@ export function getSchedules(
       }
     }
     if (crossingCombination <= options.crossingSubjects && useCombination) {
-      crossings[i] = crossingCombination
+      schedulesCrossings[i] = crossingCombination
       schedules.push({
-        id: combination.map((c) => c.scheduleSubject.id).join(','),
-        scheduleSubjectIds: combination.map((c) => c.scheduleSubject.id),
-        schedule: combination,
+        id: scheduleSubjects.map((c) => c.scheduleSubject.id).join(','),
+        scheduleSubjectIds: scheduleSubjects.map(
+          (c) => c.scheduleSubject.id,
+        ),
+        schedule: scheduleSubjects,
         crossings: crossingCombination,
-        events: combination
+        events: scheduleSubjects
           .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
           .flat()
           .concat(baseEvents),
