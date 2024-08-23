@@ -64,17 +64,16 @@
     </v-list>
     <v-text-field
       id="link"
-      ref="link"
+      ref="textLink"
       :label="copied ? 'Enlace copiado' : 'Click to copiar el link'"
       class="pa-4"
       readonly
       :model-value="link"
-      @click="copy"
+      @click="handleClickLink"
     />
   </v-card>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import {
   mdiFacebook,
@@ -83,67 +82,40 @@ import {
   mdiSendCheck,
   mdiCloseCircleOutline,
 } from '@mdi/js'
+import type { VTextField } from 'vuetify/components/VTextField'
 
-export default defineComponent({
+defineOptions({
   name: 'ScheduleShare',
-  props: {
-    schedule: {
-      type: Object as PropType<IScheduleGenerate>,
-      required: true,
-    },
-    path: { type: String, default: '/subject' },
-    dialog: { type: Boolean },
-    postId: { type: Number, default: 1 },
-  },
-  emits: ['update:dialog'],
-  setup() {
-    return {
-      mdiFacebook,
-      mdiTwitter,
-      mdiWhatsapp,
-      mdiSendCheck,
-      mdiCloseCircleOutline,
-    }
-  },
-  data: () => ({
-    copied: false,
-    dialogSync: true,
-  }),
-  computed: {
-    link() {
-      return location.origin + this.path + '?q=' + this.query
-    },
-    query() {
-      return btoa(this.schedule.scheduleSubjectIds.join(','))
-    },
-  },
-  watch: {
-    dialog(newValue) {
-      this.dialogSync = newValue
-    },
-    dialogSync(newValue) {
-      this.$emit('update:dialog', newValue)
-    },
-  },
-  methods: {
-    close() {
-      this.dialogSync = false
-    },
-    copy() {
-      const copyText = document.querySelector<HTMLInputElement>('#link')
-      if (copyText) {
-        copyText.select()
-        navigator.clipboard.writeText(this.link).then(
-          () => {
-            /* clipboard successfully set */
-            this.copied = true
-          },
-          function () {
-            /* clipboard write failed */
-          },
-        )
-      }
-    },
-  },
 })
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<IScheduleGenerate>,
+    required: true,
+  },
+  path: { type: String, default: '/subject' },
+  postId: { type: Number, default: 1 },
+})
+const { schedule, path } = toRefs(props)
+
+const internalDialog = defineModel<boolean>('dialog')
+
+const link = computed(() => location.origin + path.value + '?q=' + query.value)
+
+const query = computed(() => btoa(schedule.value.scheduleSubjectIds.join(',')))
+
+const close = () => {
+  internalDialog.value = false
+}
+
+const textLink = ref<VTextField | null>(null)
+const { copy, copied } = useClipboard({
+  legacy: true,
+})
+const handleClickLink = async () => {
+  const copyText = textLink.value?.$el.querySelector('input')
+  if (copyText) {
+    copyText.select()
+    await copy(link.value)
+  }
+}
 </script>

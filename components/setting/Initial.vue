@@ -1,140 +1,156 @@
 <template>
-  <v-card :loading="loadingHourlyLoad">
-    <v-card-title> Configuración </v-card-title>
-    <v-card-text>
-      <v-form>
+  <v-form ref="form" lazy-validation @submit.prevent="ending">
+    <v-card :loading="loading">
+      <v-card-title> Configuración Básica </v-card-title>
+      <v-card-subtitle>
+        Selecciona tu facultad para obtener tu carga horaria y selecciona tu
+        especialidad para filtrar los cursos.
+      </v-card-subtitle>
+      <v-card-text>
         <v-autocomplete
-          v-model="faculty"
+          v-model="internalFaculty"
           :items="faculties"
           :loading="loadingFaculties"
           return-object
           item-title="name"
-          label="Facultades"
+          label="Selecciona tu facultad"
+          placeholder="Facultad"
+          :rules="[(v) => !!v || 'Facultad es requerida']"
+        />
+        <v-alert v-if="errorMessage" closable type="error">
+          No se ha encontrado la carga horaria de tu facultad
+        </v-alert>
+        <v-input
+          v-model="internalHourlyLoad"
+          :disabled="!internalFaculty"
+          label="Carga horaria"
+          :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
         />
         <v-autocomplete
-          v-model="speciality"
-          :disabled="!faculty"
+          v-model="internalSpeciality"
+          :disabled="!internalFaculty"
           return-object
           :loading="loadingSpecialities"
           item-title="name"
           :items="specialities"
-          label="Especialidades"
+          label="Selecciona tu especialidad"
+          placeholder="Especialidad"
+          :rules="[(v) => !!v || 'Especialidad es requerida']"
         />
-      </v-form>
-      <v-alert v-model="showErrorMessage" closable type="error">
-        {{ errorMessage }}
-      </v-alert>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        :loading="loading"
-        :disabled="!hourlyLoad"
-        variant="text"
-        @click="ending"
-      >
-        Guardar
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
+      </v-card-actions>
+    </v-card>
+    <base-snackbar v-model="successSave">
+      La configuración se ha guardado correctamente
+    </base-snackbar>
+  </v-form>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IOrganization } from '~/interfaces/organization'
 import {
   useFacultyApi,
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~/modules/apis/runtime/composables'
+import type { VForm } from 'vuetify/components/VForm'
 
-const houlyLoadApi = useHourlyLoadApi()
+const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
+const { faculty, speciality, hourlyLoad } = storeToRefs(store)
 
-const faculties = ref<IOrganization[]>([])
-const specialities = ref<IOrganization[]>([])
-const errorMessage = ref('')
-const showErrorMessage = ref(false)
 const loading = ref(false)
 
-const faculty = ref<IOrganization>()
-const speciality = ref<IOrganization>()
-const hourlyLoad = ref<IHourlyLoad>()
+const internalFaculty = ref<IOrganization | undefined>(
+  faculty.value ? { ...faculty.value } : undefined,
+)
+const internalSpeciality = ref<IOrganization | undefined>(
+  speciality.value ? { ...speciality.value } : undefined,
+)
 
-const loadingSpecialities = ref(false)
-const initSpecialities = async (selectedFaculty: IOrganization) => {
-  speciality.value = undefined
-  loadingSpecialities.value = true
-  const data = await specialityApi.getAllByFaculty(selectedFaculty.id)
-  specialities.value = data
-  loadingSpecialities.value = false
-}
+const internalHourlyLoad = ref(
+  hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
+)
 
-watch(faculty, async (newValue) => {
-  if (newValue) {
-    await initSpecialities(newValue)
+watch(faculty, (value) => {
+  internalFaculty.value = value ? { ...value } : undefined
+})
+watch(speciality, (value) => {
+  internalSpeciality.value = value ? { ...value } : undefined
+})
+
+watch(hourlyLoad, (value) => {
+  internalHourlyLoad.value = value ? { ...value } : undefined
+})
+
+const internalFacultyId = computed(() => internalFaculty.value?.id)
+const { pending: loadingSpecialities, data: specialities } = useAsyncData(
+  async () => {
+    if (!internalFacultyId.value) {
+      return []
+    }
+    return await specialityApi.getAllByFaculty(internalFacultyId.value)
+  },
+  {
+    default: () => [],
+    watch: [internalFacultyId],
+  },
+)
+
+watch(specialities, (value) => {
+  const speciality = value.find((s) => s.id === internalSpeciality.value?.id)
+  if (!speciality) {
+    internalSpeciality.value = undefined
   }
 })
 
-const loadingHourlyLoad = ref(false)
-const onChangeSpeciality = async (_speciality: IOrganization) => {
-  hourlyLoad.value = undefined
-  if (!faculty.value) return
-  try {
-    loadingHourlyLoad.value = true
-    const data = await houlyLoadApi.getLatestByFaculty(faculty.value.id)
-    hourlyLoad.value = data
-  } catch (e) {
-    errorMessage.value = 'No se pudo obtener la carga horaria.'
-    showErrorMessage.value = true
-  } finally {
-    loadingHourlyLoad.value = false
-  }
-}
-watch(speciality, async (newValue) => {
-  showErrorMessage.value = false
-  if (newValue) {
-    await onChangeSpeciality(newValue)
+const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
+  async () => {
+    if (!internalFacultyId.value) {
+      return undefined
+    }
+    internalHourlyLoad.value = undefined
+    return await hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
+  },
+  {
+    watch: [internalFacultyId],
+    immediate: false,
+  },
+)
+
+watch(lastHourlyLoad, (value) => {
+  if (value) {
+    internalHourlyLoad.value = { ...value }
   }
 })
 
-const loadingFaculties = ref(false)
+const { data: faculties, pending: loadingFaculties } = useAsyncData<
+  IOrganization[]
+>(() => facultyApi.getAll(), {
+  default: () => [],
+})
 
-const hourlyLoadApi = useHourlyLoadApi()
-
-async function fetchHourlyLoad(faculty: IOrganization) {
-  try {
-    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
-    store.updateHourlyLoad(data)
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-const init = async () => {
-  loadingFaculties.value = true
-  const data = await facultyApi.getAll()
-  faculties.value = data
-  loadingFaculties.value = false
-  faculty.value = store.faculty
-  hourlyLoad.value = store.hourlyLoad
-  speciality.value = store.speciality
-}
-
+const form = ref<VForm>()
+const successSave = ref(false)
 const ending = async () => {
+  const formValue = await form.value?.validate()
+  if (!formValue?.valid) {
+    return
+  }
+  successSave.value = false
   loading.value = true
-  store.updateFaculty(faculty.value!)
-  store.updateSpeciality(speciality.value!)
-  await fetchHourlyLoad(faculty.value!)
+  store.updateFaculty(internalFaculty.value!)
+  store.updateSpeciality(internalSpeciality.value!)
+  store.updateHourlyLoad(internalHourlyLoad.value!)
   store.updateFirstEntry(false)
   loading.value = false
+  successSave.value = true
 }
-
-onMounted(async () => {
-  await init()
-})
 </script>

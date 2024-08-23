@@ -111,6 +111,11 @@ import {
 import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
 import SubjectSelect from '../../components/subject/Select.vue'
 
+useSeoMeta({
+  title: 'Cursos - Generador de Horarios',
+  description: 'Administra tus cursos para tener un mejor control de tu tiempo',
+})
+
 const courseApi = useCourseApi()
 
 const configStore = useUserConfigStore()

@@ -65,7 +65,6 @@
 import { useVModel } from '@vueuse/core'
 import { computed, type Ref } from 'vue'
 import type { IEvent } from '~/interfaces/event'
-import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import {
   mdiInformation,
   mdiClose,
@@ -74,6 +73,7 @@ import {
   mdiCalendar,
   mdiMapMarker,
 } from '@mdi/js'
+import { getWeekdayName } from '~/utils/weekday'
 
 const props = defineProps<{
   selectedEvent: IEvent
@@ -87,6 +87,6 @@ const emit = defineEmits<{
 const dialogSync = useVModel(props, 'dialog', emit)
 
 const selectedDay: Ref<string> = computed(
-  () => WEEK_DAYS_NAMES[props.selectedEvent.day],
+  () => getWeekdayName(props.selectedEvent.day),
 )
 </script>

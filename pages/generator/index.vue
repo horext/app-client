@@ -65,6 +65,11 @@ import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
+useSeoMeta({
+  title: 'Generador - Generador de Horarios',
+  description: 'Genera tus horarios de clases de manera automática',
+})
+
 const configStore = useUserConfigStore()
 const eventsStore = useUserEventsStore()
 const openMySchedules = ref(false)
