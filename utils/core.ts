@@ -66,14 +66,14 @@ function generateIntersectionOccurrences(
                 (o) => o.id === intersectionId && o.type === type,
               )
             ) {
-              const intersectionOccurrence: IIntersectionOccurrence =
+              intersectionOccurrences.push(
                 createIntersection(
                   intersectionId,
                   scheduleSubjectEvent,
                   restScheduleEvent,
                   type,
-                )
-              intersectionOccurrences.push(intersectionOccurrence)
+                ),
+              )
             }
           }
           // if have available crossings
