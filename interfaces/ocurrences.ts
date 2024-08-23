@@ -6,4 +6,5 @@ export interface IIntersectionOccurrence {
   type: string
   eventTarget: IEvent
   eventSource: IEvent
+  category: string
 }
