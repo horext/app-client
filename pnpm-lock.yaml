@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.14
         version: 0.0.14
       '@vueuse/core':
-        specifier: ^11.0.1
-        version: 11.0.1(vue@3.4.38(typescript@5.5.4))
+        specifier: ^11.0.3
+        version: 11.0.3(vue@3.4.38(typescript@5.5.4))
       '@vueuse/nuxt':
         specifier: ^11.0.1
         version: 11.0.1(magicast@0.3.4)(nuxt@3.13.0(@parcel/watcher@2.4.1)(@types/node@20.12.10)(eslint@8.57.0)(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.4)(rollup@4.19.0)(sass@1.77.8)(terser@5.31.0)(typescript@5.5.4)(vite@5.3.5(@types/node@20.12.10)(sass@1.77.8)(terser@5.31.0))(vue-tsc@2.0.29(typescript@5.5.4)))(rollup@4.19.0)(vue@3.4.38(typescript@5.5.4))
@@ -1840,6 +1840,9 @@ packages:
   '@vueuse/core@11.0.1':
     resolution: {integrity: sha512-YTrekI18WwEyP3h168Fir94G/HNC27wvXJI21Alm0sPOwvhihfkrvHIe+5PNJq+MpgWdRcsjvE/38JaoKrgZhQ==}
 
+  '@vueuse/core@11.0.3':
+    resolution: {integrity: sha512-RENlh64+SYA9XMExmmH1a3TPqeIuJBNNB/63GT35MZI+zpru3oMRUA6cEFr9HmGqEgUisurwGwnIieF6qu3aXw==}
+
   '@vueuse/integrations@10.11.0':
     resolution: {integrity: sha512-Pp6MtWEIr+NDOccWd8j59Kpjy5YDXogXI61Kb1JxvSfVBO8NzFQkmrKmSZz47i+ZqHnIzxaT38L358yDHTncZg==}
     peerDependencies:
@@ -1887,6 +1890,9 @@ packages:
   '@vueuse/metadata@11.0.1':
     resolution: {integrity: sha512-dTFvuHFAjLYOiSd+t9Sk7xUiuL6jbfay/eX+g+jaipXXlwKur2VCqBCZX+jfu+2vROUGcUsdn3fJR9KkpadIOg==}
 
+  '@vueuse/metadata@11.0.3':
+    resolution: {integrity: sha512-+FtbO4SD5WpsOcQTcC0hAhNlOid6QNLzqedtquTtQ+CRNBoAt9GuV07c6KNHK1wCmlq8DFPwgiLF2rXwgSHX5Q==}
+
   '@vueuse/nuxt@10.11.0':
     resolution: {integrity: sha512-PV15CU28qzr/+4IleyahobwU9kfTwfbsl8f+wkv6TWjboFVdt4WLMP2TNfPj7QgssyDdCRdl3gLZ4DC884wnDw==}
     peerDependencies:
@@ -1902,6 +1908,9 @@ packages:
 
   '@vueuse/shared@11.0.1':
     resolution: {integrity: sha512-eAPf5CQB3HR0S76HqrhjBqFYstZfiHWZq8xF9EQmobGBkrhPfErJEhr8aMNQMqd6MkENIx2pblIEfJGlHpClug==}
+
+  '@vueuse/shared@11.0.3':
+    resolution: {integrity: sha512-0rY2m6HS5t27n/Vp5cTDsKTlNnimCqsbh/fmT2LgE+aaU42EMfXo8+bNX91W9I7DDmxfuACXMmrd7d79JxkqWA==}
 
   '@webassemblyjs/ast@1.12.1':
     resolution: {integrity: sha512-EKfMUOPRRUTy5UII4qJDGPpqfwjOmZ5jeGFwid9mnoqIFK+e0vqoi1qH56JpmZSzEL53jKnNzScdmftJyG5xWg==}
@@ -8117,6 +8126,16 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@vueuse/core@11.0.3(vue@3.4.38(typescript@5.5.4))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.20
+      '@vueuse/metadata': 11.0.3
+      '@vueuse/shared': 11.0.3(vue@3.4.38(typescript@5.5.4))
+      vue-demi: 0.14.10(vue@3.4.38(typescript@5.5.4))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@vueuse/integrations@10.11.0(focus-trap@7.5.4)(vue@3.4.38(typescript@5.5.4))':
     dependencies:
       '@vueuse/core': 10.11.0(vue@3.4.38(typescript@5.5.4))
@@ -8131,6 +8150,8 @@ snapshots:
   '@vueuse/metadata@10.11.0': {}
 
   '@vueuse/metadata@11.0.1': {}
+
+  '@vueuse/metadata@11.0.3': {}
 
   '@vueuse/nuxt@10.11.0(magicast@0.3.4)(nuxt@3.13.0(@parcel/watcher@2.4.1)(@types/node@20.12.10)(eslint@8.57.0)(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.4)(rollup@4.19.0)(sass@1.77.8)(terser@5.31.0)(typescript@5.5.4)(vite@5.3.5(@types/node@20.12.10)(sass@1.77.8)(terser@5.31.0))(vue-tsc@2.0.29(typescript@5.5.4)))(rollup@4.19.0)(vue@3.4.38(typescript@5.5.4))':
     dependencies:
@@ -8170,6 +8191,13 @@ snapshots:
       - vue
 
   '@vueuse/shared@11.0.1(vue@3.4.38(typescript@5.5.4))':
+    dependencies:
+      vue-demi: 0.14.10(vue@3.4.38(typescript@5.5.4))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
+  '@vueuse/shared@11.0.3(vue@3.4.38(typescript@5.5.4))':
     dependencies:
       vue-demi: 0.14.10(vue@3.4.38(typescript@5.5.4))
     transitivePeerDependencies:
@@ -12869,7 +12897,7 @@ snapshots:
       '@webassemblyjs/wasm-parser': 1.12.1
       acorn: 8.12.1
       acorn-import-assertions: 1.9.0(acorn@8.12.1)
-      browserslist: 4.23.2
+      browserslist: 4.23.3
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.16.1
       es-module-lexer: 1.5.4
