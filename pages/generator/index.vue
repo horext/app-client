@@ -4,7 +4,7 @@
     color="blue"
     title="Generados"
     empty-message="Usted no tiene horarios generados"
-    :schedules="schedules"
+    :schedules="filterSchedules"
     path="/skd"
   >
     <template #top-items-right>
@@ -50,7 +50,7 @@
           </v-col>
         </v-row>
       </v-alert>
-      <occurrences-list :items="occurrences" />
+      <occurrences-list :items="filteredOccurrences" />
     </template>
   </schedules-presentation>
 </template>
@@ -118,6 +118,35 @@ const generateAllUserSchedules = async () => {
   occurrences.value = occurrencesData
   succces.value = true
 }
+
+
+const filterSchedules = computed(() => {
+  const maxTotalCrossingCourses = crossingSubjects.value
+  return schedules.value.filter((schedule) => {
+    const crossingPractical = schedule.intersections.typeStats.find(
+      (stat) => stat.type === 'CROSSING_PRA_PRA',
+    ) || { count: 0 }
+
+    if (crossingPractical?.count > 0) {
+      return false
+    }
+    const totalCrossingCourses = schedule.intersections.categoryStats.find(
+      (stat) => stat.category === 'CROSSING_COURSE_COURSE',
+    ) || { count: 0 }
+
+    return (
+     ( totalCrossingCourses?.count - crossingPractical?.count) <=
+      maxTotalCrossingCourses
+    )
+  })
+})
+
+const filteredOccurrences = computed(() => {
+  return occurrences.value.filter(
+    (o) =>
+      o.category === 'CROSSING_COURSE_COURSE' && o.type !== 'CROSSING_PRA_PRA',
+  )
+})
 </script>
 
 <style>
