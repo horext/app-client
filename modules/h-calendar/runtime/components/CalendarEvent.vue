@@ -2,12 +2,12 @@
   <div
     class="h-calendar-event-timed"
     :style="position"
-    @dblclick="$emit('dblclick', $event)"
-    @click.stop.prevent="$emit('click', $event)"
-    @mousedown="$emit('mousedown', $event)"
-    @mouseenter="$emit('mouseenter', $event)"
-    @mouseleave="$emit('mouseleave', $event)"
-    @mousemove="$emit('mousemove', $event)"
+    @dblclick="emit('dblclick', $event)"
+    @click.stop.prevent="emit('click', $event)"
+    @mousedown="emit('mousedown', $event)"
+    @mouseenter="emit('mouseenter', $event)"
+    @mouseleave="emit('mouseleave', $event)"
+    @mousemove="emit('mousemove', $event)"
   >
     <slot>
       <div class="h-calendar-event">
@@ -34,7 +34,7 @@ const props = defineProps<{
   intervalMinuteHeight: number
   events: ICalendarEvent[]
 }>()
-defineEmits<{
+const emit = defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
 const { event, startIntervalHour, intervalMinuteHeight, events } = toRefs(props)
