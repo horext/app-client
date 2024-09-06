@@ -23,13 +23,13 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
 import { WIDTH_FULL } from '../constants/event'
 import { HOUR_IN_MINUTES } from '../constants/time'
 import type { ICalendarEvent, MouseEventTypes } from '../types'
 
 const props = defineProps<{
-  event: ICalendarEvent
+  event: T
   startIntervalHour: number
   intervalMinuteHeight: number
   events: ICalendarEvent[]
