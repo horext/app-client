@@ -36,7 +36,6 @@ import VuetifyLogo from '../VuetifyLogo.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
 const settingsStore = useSettingsStore()
-const { darkMode } = storeToRefs(settingsStore)
 
 const drawer = ref(false)
 
@@ -51,7 +50,7 @@ const items = [
 ]
 
 const invertMode = () => {
-  darkMode.value = !darkMode.value
+  settingsStore.toggleDarkMode()
 }
 </script>
 
