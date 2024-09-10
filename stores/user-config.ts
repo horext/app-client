@@ -71,11 +71,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     crossings.value = _crossings
   }
 
-  async function updateSchedules(_schedules: IScheduleGenerate[]) {
-    schedules.value = _schedules
-    await storage.setItem('mySchedules', schedules.value)
-  }
-
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate,
   ) {
@@ -133,13 +128,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
       (await storage.getItem<number>('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
-  }
-
-  async function fetchSchedules() {
-    const data =
-      (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
-    const _schedules: IScheduleGenerate[] = data || []
-    schedules.value = _schedules
   }
 
   async function fetchFavoritesSchedules() {
@@ -206,7 +194,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateFirstEntry,
     updateCrossings,
     updateHourlyLoad,
-    updateSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
     updateFavoritesSchedules,
@@ -214,7 +201,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     fetchSpeciality,
     fetchFirstEntry,
     fetchCrossings,
-    fetchSchedules,
     fetchFavoritesSchedules,
     fetchMyOcurrences,
     updateOccurrences,
