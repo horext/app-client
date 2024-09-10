@@ -28,6 +28,7 @@ import {
 import { provideApis } from '~/modules/apis/runtime'
 import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
 import type { IOrganization } from '~/interfaces/organization'
+import { useUserSchedules } from '~/composables/user-schedules'
 
 const apis = provideApis()
 
@@ -66,10 +67,11 @@ await useAsyncData('initData', async () => {
 })
 
 const { fetchSubjects } = useUserSubjects()
+const { fetchSchedules } = useUserSchedules()
 
 onMounted(async () => {
   await fetchSubjects()
-  await store.fetchSchedules()
+  await fetchSchedules()
   await store.fetchCrossings()
   await store.fetchFavoritesSchedules()
   await userEventsStore.fetchItems()

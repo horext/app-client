@@ -64,6 +64,7 @@ import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { useUserSchedules } from '~/composables/user-schedules'
 
 useSeoMeta({
   title: 'Generador - Generador de Horarios',
@@ -100,7 +101,7 @@ const removeFavorite = async (schedule: IScheduleGenerate) => {
 }
 
 const { loadSchedules } = useSchedules()
-
+const { updateSchedules } = useUserSchedules()
 const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false
@@ -113,7 +114,7 @@ const generateAllUserSchedules = async () => {
     },
   )
   loadingGenerate.value = false
-  configStore.updateSchedules(combinations)
+  updateSchedules(combinations)
   configStore.updateOccurrences(occurrencesData)
   occurrences.value = occurrencesData
   succces.value = true
