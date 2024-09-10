@@ -65,8 +65,10 @@ await useAsyncData('initData', async () => {
   return true
 })
 
+const { fetchSubjects } = useUserSubjects()
+
 onMounted(async () => {
-  await store.fetchSubjects()
+  await fetchSubjects()
   await store.fetchSchedules()
   await store.fetchCrossings()
   await store.fetchFavoritesSchedules()
