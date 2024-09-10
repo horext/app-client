@@ -71,37 +71,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     crossings.value = _crossings
   }
 
-  async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
-  ) {
-    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
-    const index = favoritesSchedules.value.findIndex((s) => s.id === id)
-    favoritesSchedules.value.splice(index, 1)
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  async function updateFavoritesSchedules(
-    _favoritesSchedules: IScheduleGenerate[],
-  ) {
-    favoritesSchedules.value = _favoritesSchedules
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await updateFavoritesSchedules([...favoritesSchedules.value, schedule])
-  }
-
-  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    const newFavorites = favoritesSchedules.value.filter(
-      (s) => s.id !== schedule.id,
-    )
-    await updateFavoritesSchedules(newFavorites)
-  }
-
   function fetchFaculty() {
     const data = myFaculty.value
     if (data) {
@@ -128,13 +97,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
       (await storage.getItem<number>('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
-  }
-
-  async function fetchFavoritesSchedules() {
-    const data =
-      (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
-    const _schedules: IScheduleGenerate[] = data || []
-    favoritesSchedules.value = _schedules
   }
 
   function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
@@ -194,19 +156,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateFirstEntry,
     updateCrossings,
     updateHourlyLoad,
-    saveNewFavoriteSchedule,
-    deleteFavoriteScheduleById,
-    updateFavoritesSchedules,
     fetchFaculty,
     fetchSpeciality,
     fetchFirstEntry,
     fetchCrossings,
-    fetchFavoritesSchedules,
     fetchMyOcurrences,
     updateOccurrences,
     occurrences,
-    addFavoriteSchedule,
-    removeFavoriteSchedule,
     fetchWeekDays,
     saveWeekDays,
   }
