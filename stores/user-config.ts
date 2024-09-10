@@ -71,23 +71,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     crossings.value = _crossings
   }
 
-  async function saveNewSubject(_subject: ISelectedSubject) {
-    subjects.value.push(Object.assign({}, _subject))
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
-  async function deleteSubjectById(id: number) {
-    const index = subjects.value.findIndex((s) => s.id === id)
-    subjects.value.splice(index, 1)
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
-  async function updateSubject(_subject: ISelectedSubject) {
-    const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    subjects.value = subjects.value.map((c, i) => (i === index ? _subject : c))
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
   async function updateSchedules(_schedules: IScheduleGenerate[]) {
     schedules.value = _schedules
     await storage.setItem('mySchedules', schedules.value)
@@ -143,12 +126,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   function fetchFirstEntry() {
     const data = myFirstEntry.value
     firstEntry.value = data
-  }
-
-  async function fetchSubjects() {
-    const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
-    const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
-    subjects.value = _subjets
   }
 
   async function fetchCrossings() {
@@ -229,9 +206,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateFirstEntry,
     updateCrossings,
     updateHourlyLoad,
-    saveNewSubject,
-    deleteSubjectById,
-    updateSubject,
     updateSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
@@ -239,7 +213,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     fetchFaculty,
     fetchSpeciality,
     fetchFirstEntry,
-    fetchSubjects,
     fetchCrossings,
     fetchSchedules,
     fetchFavoritesSchedules,
