@@ -29,6 +29,7 @@ import { provideApis } from '~/modules/apis/runtime'
 import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
 import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
+import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 const apis = provideApis()
 
@@ -69,11 +70,13 @@ await useAsyncData('initData', async () => {
 const { fetchSubjects } = useUserSubjects()
 const { fetchSchedules } = useUserSchedules()
 
+const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
+
 onMounted(async () => {
   await fetchSubjects()
   await fetchSchedules()
   await store.fetchCrossings()
-  await store.fetchFavoritesSchedules()
+  await fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
   await store.fetchMyOcurrences()
   await store.fetchWeekDays()

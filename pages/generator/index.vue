@@ -65,6 +65,7 @@ import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { useUserSchedules } from '~/composables/user-schedules'
+import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
   title: 'Generador - Generador de Horarios',
@@ -87,16 +88,19 @@ const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)
 
+const { addFavoriteSchedule, removeFavoriteSchedule } =
+  useUserFavoriteSchedules()
+
 const addFavorite = async (schedule: IScheduleGenerate) => {
   showAddFavoriteMessage.value = false
-  await configStore.addFavoriteSchedule(schedule)
+  await addFavoriteSchedule(schedule)
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
 const removeFavorite = async (schedule: IScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
-  await configStore.removeFavoriteSchedule(schedule)
+  await removeFavoriteSchedule(schedule)
   showRemoveFavoriteMessage.value = true
 }
 
