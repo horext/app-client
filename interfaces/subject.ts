@@ -1,3 +1,4 @@
+import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
 
 export interface ICourse {
@@ -41,7 +42,7 @@ export interface ISession {
     id: number
     code: string
   }
-  day: number
+  day: Weekdays
   startTime: string
   endTime: string
 }
@@ -52,7 +53,7 @@ export interface ISubject {
   type: ICourseType
   studyPlan: IStudyPlan
   credits: number
-  cycle: number
+  cycle: number | null
 }
 
 export interface ISubjectSchedule {
@@ -61,12 +62,14 @@ export interface ISubjectSchedule {
     id: string
   }
   scheduleSubject: Pick<IScheduleSubject, 'id'>
-  subject: ISubject
   sessions: ISession[]
 }
 
 export interface ISelectedSubject extends ISubject {
-  schedules: ISubjectSchedule[]
+  schedules: Pick<
+    ISubjectSchedule,
+    'id' | 'section' | 'scheduleSubject' | 'sessions'
+  >[]
 }
 
 export interface ISubjectStudyPlan extends ISubject {

@@ -1,7 +1,7 @@
 <template>
   <div class="h-calendar">
     <div class="h-calendar-header">
-      <div class="h-calendar-empty-slot"></div>
+      <div class="h-calendar-empty-slot" />
       <div
         v-for="day in internalDays"
         :key="day.id"
@@ -30,7 +30,7 @@
         @mousemove:event="$emit('mousemove:event', $event)"
       >
         <template #event="{ event }">
-          <slot name="event" :event="event"></slot>
+          <slot name="event" :event="event" />
         </template>
       </CalendarDay>
     </div>
@@ -50,7 +50,7 @@ import {
   INTERVAL_HEIGHT_IN_REM,
   INTERVAL_WIDTH_IN_REM,
 } from '../constants/interval'
-import { WEEKDAYS, WEEKDAY_NAMES } from '../constants/week'
+import { WEEKDAYS, WEEKDAY_NAMES, type Weekdays } from '../constants/week'
 import CalendarTime from './CalendarTime.vue'
 import CalendarDay from './CalendarDay.vue'
 
@@ -63,7 +63,7 @@ const props = withDefaults(
     events?: T[]
     firstInterval?: number | string
     lastInterval?: number | string
-    weekdays?: number[]
+    weekdays?: Weekdays[]
     intervalMinutes?: number | string
     intervalHeight?: number | string
     internalWidth?: number | string
@@ -104,6 +104,7 @@ const {
   intervalHeight,
   weekdays,
   events,
+  internalWidth,
 } = toRefs(props)
 
 const internalIntervalHeight = computed(() => {
@@ -115,7 +116,7 @@ const internalIntervalMinutes = computed(() => {
 })
 
 const internalIntervalWidth = computed(() => {
-  return Number(props.internalWidth)
+  return Number(internalWidth.value)
 })
 
 const internaFirstInterval = computed(() => {
@@ -138,11 +139,12 @@ const internalDays = computed(() => {
   const _weekdays = weekdays.value
   return _weekdays.map((day) => ({
     id: day,
+    weekDay: day % 7 as Weekdays,
     name: WEEKDAY_NAMES[day % 7],
   }))
 })
 
-const internalWidthRem = computed(() => props.internalWidth + 'rem')
+const internalWidthRem = computed(() => internalWidth.value + 'rem')
 </script>
 
 <style lang="css">

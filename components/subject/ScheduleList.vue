@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="pending">
+  <v-card :loading="loading">
     <v-card-title>
       <span class="text-h5">{{ title }}</span>
     </v-card-title>
@@ -7,7 +7,7 @@
       <ScheduleSubjectList
         v-model="selected"
         :schedules="schedules"
-        :loading="pending"
+        :loading="loading"
       />
     </v-card-text>
     <v-card-actions>
@@ -22,117 +22,47 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
-import type { PropType } from 'vue'
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
-import { useApi } from '~/composables/api'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
-import type { IScheduleSubject } from '~/interfaces/schedule-subject'
-import type {
-  ISelectedSubject,
-  ISession,
-  ISubjectSchedule,
-} from '~/interfaces/subject'
+import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 
-export default defineComponent({
-  components: { ScheduleSubjectList },
-  props: {
-    subject: {
-      type: Object as PropType<ISelectedSubject>,
-      required: true,
-    },
-    hourlyLoad: {
-      type: Object as PropType<IHourlyLoad>,
-      required: true,
-    },
-  },
-  emits: ['save', 'cancel'],
-  setup(props, { emit }) {
-    const { subject, hourlyLoad } = toRefs(props)
-    const $api = useApi()
-    const selected = ref<ISubjectSchedule[]>([])
-    const { data: schedulesSubject, pending: pendingSchedulesSubject } =
-      useAsyncData<IScheduleSubject[]>(
-        async () => {
-          const hourlyLoadId = hourlyLoad.value?.id
-          const subjectId = subject.value?.id
-          if (!hourlyLoadId || !subjectId) return []
+const props = defineProps<{
+  subject: ISelectedSubject
+  schedules: ISubjectSchedule[]
+  loading: boolean
+}>()
 
-          return $api.scheduleSubject.findBySubjectIdAndHourlyLoadId(
-            subjectId,
-            hourlyLoadId,
-          )
-        },
-        {
-          default: () => [],
-          watch: [subject, hourlyLoad],
-        },
-      )
-    const scheduleIds = computed(() => {
-      return schedulesSubject.value.map((sb) => sb.schedule.id)
-    })
+const emit = defineEmits<{
+  (event: 'save', value: ISubjectSchedule[]): void
+  (event: 'cancel'): void
+}>()
 
-    const { data: sessions, pending: pendingSessions } = useAsyncData<
-      ISession[]
-    >(
-      async () => {
-        const ids = scheduleIds.value
-        const sessionsData = await $api.classSessions.findScheduleIds(ids)
-        return sessionsData
-      },
-      {
-        default: () => [],
-        watch: [scheduleIds],
-      },
+const { subject, schedules } = toRefs(props)
+
+const selected = ref<ISubjectSchedule[]>([])
+
+const availableSchedules = computed(() => {
+  const currentSchedules = schedules.value
+  const subjectSchedules = subject.value.schedules
+  return currentSchedules.filter((s1) => {
+    const schedule = subjectSchedules.find(
+      (s2) => s2.section.id === s1.section.id,
     )
+    return schedule?.id === s1?.id
+  })
+})
 
-    const schedules = computed<ISubjectSchedule[]>(() => {
-      return schedulesSubject.value.map((sb) => ({
-        ...sb?.schedule,
-        scheduleSubject: {
-          id: sb.id,
-        },
-        sessions: sessions.value.filter(
-          (s) => s.schedule.id === sb.schedule.id,
-        ),
-        subject: subject.value,
-      }))
-    })
+watch(availableSchedules, (availableSchedules) => {
+  selected.value = availableSchedules.map((s) => ({ ...s }))
+})
 
-    watch(schedules, () => {
-      if (props.subject.schedules) {
-        selected.value = schedules.value.filter((s1) => {
-          const schedule = props.subject.schedules.find(
-            (s2) => s2.section.id === s1.section.id,
-          )
-          return schedule?.id === s1?.id
-        })
-      } else {
-        selected.value = []
-      }
-    })
+const saveSections = () => {
+  emit('save', selected.value)
+}
 
-    const saveSections = () => {
-      emit('save', selected.value)
-    }
-
-    const title = computed(() => {
-      const course = subject.value?.course
-      return `${course?.id} - ${course?.name}`
-    })
-
-    const pending = computed(() => {
-      return pendingSchedulesSubject.value || pendingSessions.value
-    })
-
-    return {
-      selected,
-      schedules,
-      saveSections,
-      title,
-      pending,
-    }
-  },
+const title = computed(() => {
+  const course = subject.value?.course
+  return `${course?.id} - ${course?.name}`
 })
 </script>

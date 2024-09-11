@@ -1,88 +1,69 @@
 <template>
-  <v-app>
-    <v-app-bar flat height="72">
-      <template #prepend>
-        <v-app-bar-nav-icon
-          aria-label="Menu Iziquierdo"
-          @click.stop="drawer = !drawer"
-        />
-      </template>
-      <v-row justify="center" align="center" no-gutters>
-        <v-col cols="12">
-          <AppHourlyLoadInfo class="pa-0 " />
-        </v-col>
-      </v-row>
-      <template #append>
-        <ThemeDarkToggle />
-      </template>
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer" width="300">
-      <v-card-title> Opciones </v-card-title>
-      <v-divider />
-      <v-list>
-        <v-list-item
-          v-for="item in items"
-          :key="item.to"
-          :to="item.to"
-          link
-          exact
-        >
-          <template #prepend>
-            <v-badge v-if="item.badge" color="blue" :content="item.badge">
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-badge>
+  <AppBar
+    v-model:drawer="drawer"
+    v-model:dark-mode="darkMode"
+    :hourly-load="hourlyLoad"
+  />
+  <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
-            <v-icon v-else>{{ item.icon }}</v-icon>
-          </template>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-bottom-navigation v-if="$vuetify.display.smAndDown" color="primary" grow>
-      <v-btn
-        v-for="item in denseItems"
-        :key="item.to"
-        exact
-        tag="div"
-        :to="item.to"
-        stacked
-      >
-        <v-badge color="blue" :content="item.badge" overlap>
-          <v-icon>{{ item.icon }}</v-icon>
-        </v-badge>
-        <span>
-          {{ item.title }}
-        </span>
-      </v-btn>
-    </v-bottom-navigation>
-    <the-snackbar />
-    <v-main>
-      <slot />
-    </v-main>
-  </v-app>
+  <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
+  <v-main>
+    <slot />
+  </v-main>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TheSnackbar from '~/components/base/TheSnackbar.vue'
-import AppHourlyLoadInfo from '~/components/app/HourlyLoadInfo.vue'
-import ThemeDarkToggle from '~/components/ThemeDarkToggle.vue'
+import AppBar from '../components/app/Bar.vue'
+import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
+import AppBottomNavigation from '../components/app/BottomNavigation.vue'
+import {
+  EVENTS_ROUTE,
+  FAVORITES_ROUTE,
+  GENERATOR_ROUTE,
+  HOME_ROUTE,
+  SETTINGS_ROUTE,
+  SUBJECTS_ROUTE,
+} from '~/constants/app-routes'
+import { provideApis } from '~/modules/apis/runtime'
+import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
+import type { IOrganization } from '~/interfaces/organization'
 
+const apis = provideApis()
+
+const settingsStore = useSettingsStore()
+
+const { darkMode } = storeToRefs(settingsStore)
 const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
+const { hourlyLoad } = storeToRefs(store)
+
+const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { items: events } = storeToRefs(userEventsStore)
+
+const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
+
+async function fetchHourlyLoad(faculty: IOrganization) {
+  try {
+    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
+    store.updateHourlyLoad(data)
+  } catch (e) {
+    console.error(e)
+  }
+}
 
 await useAsyncData('initData', async () => {
-  await Promise.all([
+  const [_, faculty] = await Promise.all([
     store.fetchFirstEntry(),
     store.fetchFaculty(),
     store.fetchSpeciality(),
   ])
+  if (faculty) {
+    await fetchHourlyLoad(faculty)
+  }
 
-  await store.fetchHourlyLoad()
+  return true
 })
-const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
-const { items: events } = storeToRefs(userEventsStore)
 
 onMounted(async () => {
   await store.fetchSubjects()
@@ -91,68 +72,45 @@ onMounted(async () => {
   await store.fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
   await store.fetchMyOcurrences()
+  await store.fetchWeekDays()
 })
 const drawer = ref(true)
 const items = computed(() => [
+  HOME_ROUTE,
   {
-    title: 'Inicio',
-    icon: 'mdi-calendar',
-    to: '/',
-  },
-  {
-    title: 'Generador de Horarios',
-    icon: 'mdi-calendar',
-    to: '/generator',
+    ...GENERATOR_ROUTE,
     badge: schedules.value.length,
   },
   {
-    title: 'Horarios Favoritos',
-    icon: 'mdi-calendar-star',
-    to: '/generator/favorites',
+    ...FAVORITES_ROUTE,
     badge: favoritesSchedules.value.length,
   },
   {
-    title: 'Mis cursos y secciones',
-    icon: 'mdi-book',
-    to: '/generator/subjects',
+    ...SUBJECTS_ROUTE,
     badge: subjects.value.length,
   },
   {
-    title: 'Mis actividades',
-    icon: 'mdi-calendar-plus',
-    to: '/generator/events',
+    ...EVENTS_ROUTE,
     badge: events.value.length,
   },
-  {
-    title: 'Avanzado',
-    icon: 'mdi-cog',
-    to: '/generator/settings',
-  },
+  SETTINGS_ROUTE,
 ])
 
 const denseItems = computed(() => [
   {
-    title: 'Generador',
-    icon: 'mdi-calendar',
-    to: '/generator',
+    ...GENERATOR_ROUTE,
     badge: schedules.value.length,
   },
   {
-    title: 'Favoritos',
-    icon: 'mdi-calendar-star',
-    to: '/generator/favorites',
+    ...FAVORITES_ROUTE,
     badge: favoritesSchedules.value.length,
   },
   {
-    title: 'Mis cursos',
-    icon: 'mdi-book',
-    to: '/generator/subjects',
+    ...SUBJECTS_ROUTE,
     badge: subjects.value.length,
   },
   {
-    title: 'Mis actividades',
-    icon: 'mdi-calendar-plus',
-    to: '/generator/events',
+    ...EVENTS_ROUTE,
     badge: events.value.length,
   },
 ])

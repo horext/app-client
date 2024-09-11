@@ -5,7 +5,9 @@
         <v-card>
           <v-img>
             <div class="d-flex justify-center">
-              <v-icon size="64">mdi-account</v-icon>
+              <v-icon size="64">
+                {{ mdiAccount }}
+              </v-icon>
             </div>
           </v-img>
           <v-card-title class="text-center">
@@ -16,7 +18,7 @@
             cuenta automáticamente.
           </v-card-text>
           <v-card-actions class="d-flex justify-center">
-            <div ref="googleButton"></div>
+            <div ref="googleButton" />
           </v-card-actions>
         </v-card>
       </v-col>
@@ -25,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { mdiAccount } from '@mdi/js'
+
 defineOptions({
   name: 'LoginPage',
 })
@@ -59,7 +63,7 @@ const initGoogle = async () => {
 }
 
 onMounted(() => {
-  $script.waitForLoad().then(initGoogle)
+  $script.then(initGoogle)
 })
 
 async function handleCredentialResponse(

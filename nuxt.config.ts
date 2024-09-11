@@ -1,4 +1,4 @@
-const config = defineNuxtConfig({
+export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
@@ -16,8 +16,12 @@ const config = defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+      htmlAttrs: {
+        lang: 'es',
+      },
     },
   },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
@@ -30,10 +34,13 @@ const config = defineNuxtConfig({
     '@nuxt/test-utils/module',
     'nuxt-gtag',
     '@nuxt/image',
+    '@nuxt/scripts',
   ],
+
   image: {
     dir: 'assets/images',
   },
+
   runtimeConfig: {
     public: {
       gsi: {
@@ -48,22 +55,37 @@ const config = defineNuxtConfig({
     },
   },
 
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-  build: {
-    transpile: ['vuetify'],
+  experimental: {
+    componentIslands: true,
   },
 
   routeRules: {
     '/generator/**': {
       ssr: false,
+      prerender: true,
+    },
+    '/login': {
+      prerender: true,
+    },
+    '/plans': {
+      prerender: true,
+    },
+    '/about': {
+      prerender: true,
+    },
+    '/terms': {
+      prerender: true,
+    },
+    '/privacy': {
+      prerender: true,
+    },
+    '/security': {
+      prerender: true,
+    },
+    '/': {
+      prerender: true,
     },
   },
 
-  nitro: {
-    prerender: {
-      routes: ['/', '/privacy', '/terms', '/about', '/plans', '/login' ,'security'],
-    },
-  },
+  compatibilityDate: '2024-08-18',
 })
-
-export default config

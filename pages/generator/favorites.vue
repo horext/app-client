@@ -3,7 +3,7 @@
     color="warning"
     title="Horarios Favoritos"
     empty-message="Usted no tiene horarios favoritos"
-    :schedules="schedules"
+    :schedules="favoritesSchedules"
     path="/skd"
   >
     <template #top-items-right>
@@ -12,10 +12,17 @@
     <template #top-items-left="{ item }">
       <schedule-favorite-add
         v-if="item"
-        :favorites-schedules="schedules"
+        :favorites-schedules="favoritesSchedules"
         :schedule="item"
-        @update:favorites-schedules="updateFavoritesSchedules"
+        @click:add-favorite="addFavorite"
+        @click:remove-favorite="removeFavorite"
       />
+      <base-snackbar v-model="showAddFavoriteMessage">
+        Horario agregado a favoritos!
+      </base-snackbar>
+      <base-snackbar v-model="showRemoveFavoriteMessage">
+        Horario eliminado de favoritos!
+      </base-snackbar>
     </template>
     <template #emptyBody>
       <FavoriteBanner />
@@ -23,22 +30,33 @@
   </schedules-presentation>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import FavoriteBanner from '~/components/FavoriteBanner.vue'
+<script setup lang="ts">
+import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
-import ScheduleFavoriteAdd from '~/components/ScheduleFavoriteAdd.vue'
+import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-export default defineComponent({
-  components: { FavoriteBanner, SchedulesPresentation, ScheduleFavoriteAdd },
-  setup() {
-    const store = useUserConfigStore()
-    const schedules = computed(() => store.favoritesSchedules)
-    const updateFavoritesSchedules = (schedules: IScheduleGenerate[]) =>
-      store.updateFavoritesSchedules(schedules)
-    return { schedules, updateFavoritesSchedules }
-  },
+useSeoMeta({
+  title: 'Horarios Favoritos - Generador de Horarios',
+  description: 'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
 })
+
+const store = useUserConfigStore()
+const { favoritesSchedules } = storeToRefs(store)
+
+const showAddFavoriteMessage = ref(false)
+
+const addFavorite = async (schedule: IScheduleGenerate) => {
+  showAddFavoriteMessage.value = false
+  await store.addFavoriteSchedule(schedule)
+  showAddFavoriteMessage.value = true
+}
+
+const showRemoveFavoriteMessage = ref(false)
+const removeFavorite = async (schedule: IScheduleGenerate) => {
+  showRemoveFavoriteMessage.value = false
+  await store.removeFavoriteSchedule(schedule)
+  showRemoveFavoriteMessage.value = true
+}
 </script>

@@ -18,3 +18,10 @@ export const EVENT_COLORS = [
   'orange-lighten-3',
   'blue-lighten-3',
 ]
+
+export const EVENT_HEADERS =[
+  { title: 'Color', value: 'color' },
+  { title: 'titulo', align: 'start', sortable: false, value: 'title' },
+  { title: 'Horario', value: 'schedule' },
+  { title: 'Acciones', value: 'actions', sortable: false },
+] as const

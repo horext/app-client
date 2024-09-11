@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 
-export const exportToCanvas = async function (element: any) {
+export const exportToCanvas = async function (element: HTMLElement) {
   let options: any = {
     logging: true,
     scrollX: 0,
@@ -21,6 +21,7 @@ export const exportToCanvas = async function (element: any) {
   return await html2canvas(element, options)
 }
 export const exportToPDF = async function (element: HTMLElement | null) {
+  if (!element) throw new Error('Element not found')
   const canvas = await exportToCanvas(element)
   const imgData: string | HTMLImageElement | HTMLCanvasElement | Uint8Array =
     canvas.toDataURL('image/jpeg')
@@ -34,7 +35,8 @@ export const exportToPDF = async function (element: HTMLElement | null) {
   doc.save('Horario ' + Date.now() + ' - Octatec .pdf')
 }
 
-export const exportToPNG = async function (element: any) {
+export const exportToPNG = async function (element: HTMLElement | null) {
+  if (!element) throw new Error('Element not found')
   const canvas = await exportToCanvas(element)
   const a = document.createElement('a')
   a.href = canvas.toDataURL('image/jpeg')

@@ -1,5 +1,5 @@
 import { extractBlocks } from '../block'
-import { ICalendarEvent } from '../../types'
+import type { ICalendarEvent } from '../../types'
 import { describe, expect, it } from 'vitest'
 
 describe('extractBlocks', () => {

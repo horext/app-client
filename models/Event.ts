@@ -1,9 +1,10 @@
 import { v4 } from 'uuid'
-import type { EventCategories, IEvent } from '~/interfaces/event'
+import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
+
 export default class Event {
   id: string
-  day: number
+  day: Weekdays
   startTime: string
   endTime: string
 
@@ -16,7 +17,7 @@ export default class Event {
   type: string
 
   constructor(
-    day: number,
+    day: Weekdays,
     startTime: string,
     endTime: string,
     title: string,
@@ -25,7 +26,7 @@ export default class Event {
     color: string,
     type: string,
     category?: EventCategories,
-    id: string = v4()
+    id: string = v4(),
   ) {
     this.day = day
     this.startTime = startTime
@@ -58,7 +59,46 @@ export default class Event {
       event.color,
       event.type,
       event.category,
-      event.id
+      event.id,
+    )
+  }
+}
+
+export class Activity extends Event {
+  constructor(
+    day: Weekdays = 1,
+    startTime = '08:00',
+    endTime = '10:00',
+    title = '',
+    description = '',
+    location = '',
+    color = '#1976d2',
+    id?: string,
+  ) {
+    super(
+      day,
+      startTime,
+      endTime,
+      title,
+      description,
+      location,
+      color,
+      'MY_EVENT',
+      'MY_EVENT',
+      id,
+    )
+  }
+
+  buildFrom(event: IEvent) {
+    return new Activity(
+      event.day,
+      event.startTime,
+      event.endTime,
+      event.title,
+      event.description,
+      event.location,
+      event.color,
+      event.id || v4(),
     )
   }
 }

@@ -3,79 +3,35 @@
     <v-toolbar flat theme="dark" :color="color" class="px-2">
       <slot name="top-items-right" />
       <v-spacer />
-      <div class="d-flex align-self-center ga-3">
-        <div class="d-flex align-self-center">Modo:</div>
-        <v-radio-group v-model="mode" hide-details density="compact" inline>
-          <v-radio :value="MODES.CALENDAR" color="primary-darken-2">
-            <template #label>
-              <v-icon size="small" start> mdi-calendar </v-icon>Calendario
-            </template>
-          </v-radio>
-          <v-radio :value="MODES.LIST" color="primary-darken-2">
-            <template #label>
-              <v-icon size="small" start> mdi-table </v-icon> Lista
-            </template>
-          </v-radio>
-        </v-radio-group>
-      </div>
+      <ScheduleMode v-model:mode="mode" />
       <v-spacer />
       <slot name="top-items-left" :item="currentSchedule" />
     </v-toolbar>
 
-    <div class="d-flex align-center justify-center flex-wrap ma-1">
+    <div class="d-flex align-center justify-center flex-wrap ma-1 ga-1">
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
         <template v-if="schedules.length > 0">
-          <v-menu v-if="mode === MODES.CALENDAR" offset-y>
-            <template #activator="{ props }">
-              <v-btn
-                color="purple"
-                theme="dark"
-                rounded
-                variant="outlined"
-                class="ma-1"
-                density="compact"
-                v-bind="props"
-              >
-                <v-icon start>mdi-export</v-icon>
-                Exportar
-              </v-btn>
-            </template>
-            <ScheduleExport
-              :loading-pdf="loadingPdf"
-              :loading-image="loadingImage"
-              @download:pdf="downloadPdf"
-              @download:image="downloadImage"
-            />
-          </v-menu>
-
-          <v-btn
-            color="indigo"
-            theme="dark"
-            rounded
-            variant="outlined"
-            class="ma-1"
-            density="compact"
-            @click="dialogShare = !dialogShare"
-          >
-            <v-icon start>mdi-share-variant</v-icon>
-            Compartir
-          </v-btn>
+          <schedule-external-actions
+            v-if="currentSchedule"
+            :mode="mode"
+            :loading-export-pdf="loadingPdf"
+            :loading-export-image="loadingImage"
+            @click:export-pdf="downloadPdf"
+            @click:export-image="downloadImage"
+            @click:share="dialogShare = true"
+          />
           <GoogleAuth
             v-if="currentSchedule"
             :events="currentSchedule.events"
             :end-date="endDate"
             :start-date="startDate"
           />
-          <v-dialog v-model="dialogExport" max-width="600">
-            <ScheduleExport
-              :loading-pdf="loadingPdf"
-              :loading-image="loadingImage"
-              @download:pdf="downloadPdf"
-              @download:image="downloadImage"
-            />
-          </v-dialog>
-          <v-dialog v-model="dialogShare" max-width="600">
+          <v-dialog
+            v-if="currentSchedule"
+            v-model="dialogShare"
+            max-width="600"
+          >
             <ScheduleShare
               v-model:dialog="dialogShare"
               :path="path"
@@ -103,110 +59,76 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { computed, ref, defineComponent, type PropType } from 'vue'
+<script setup lang="ts">
+import { computed, ref, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
-import SchedulesList from '~/components/SchedulesList.vue'
-import ScheduleShare from '~/components/ScheduleShare.vue'
-import ScheduleExport from '~/components/ScheduleExport.vue'
+import SchedulesList from '~/components/SchedulesWindow.vue'
+import ScheduleShare from '~/components/schedule/ShareCard.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import ScheduleMode from './schedule/Mode.vue'
 
-export default defineComponent({
-  components: {
-    SchedulesList,
-    GoogleAuth,
-    ScheduleShare,
-    ScheduleExport,
+defineProps({
+  schedules: {
+    type: Array as PropType<IScheduleGenerate[]>,
+    default: () => [],
   },
-  props: {
-    schedules: {
-      type: Array as PropType<IScheduleGenerate[]>,
-      default: () => [],
-    },
-    path: {
-      type: String,
-      default: '/subject',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    color: {
-      type: String,
-      default: 'primary',
-    },
-    emptyMessage: {
-      type: String,
-      default: '',
-    },
-    dialog: {
-      type: Boolean,
-      default: false,
-    },
+  path: {
+    type: String,
+    default: '/subject',
   },
-  setup() {
-    const store = useUserConfigStore()
-    const { weekDays, hourlyLoad } = storeToRefs(store)
-    const academicPeriodOrganizationUnit = computed(
-      () => hourlyLoad.value?.academicPeriodOrganizationUnit!,
-    )
-
-    const startDate = computed(
-      () => academicPeriodOrganizationUnit.value?.fromDate,
-    )
-
-    const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
-
-    const currentSchedule = ref<IScheduleGenerate>()
-
-    const dialogShare = ref(false)
-    const dialogExport = ref(false)
-
-    const message = ref('')
-
-    const mode = ref(ViewMode.CALENDAR)
-
-    const MODES = ref(ViewMode)
-
-    const calendar = ref<ComponentPublicInstance | null>(null)
-
-    function getCalendar(): HTMLElement | null {
-      return document.getElementById('calendar')
-    }
-
-    const loadingImage = ref(false)
-    async function downloadImage() {
-      loadingImage.value = true
-      await exportToPNG(getCalendar())
-      loadingImage.value = false
-    }
-
-    const loadingPdf = ref(false)
-    async function downloadPdf() {
-      loadingPdf.value = true
-      await exportToPDF(getCalendar())
-      loadingPdf.value = false
-    }
-
-    return {
-      weekDays,
-      dialogShare,
-      dialogExport,
-      message,
-      mode,
-      startDate,
-      endDate,
-      MODES,
-      currentSchedule,
-      calendar,
-      downloadImage,
-      downloadPdf,
-      loadingImage,
-      loadingPdf,
-    }
+  title: {
+    type: String,
+    default: '',
+  },
+  color: {
+    type: String,
+    default: 'primary',
+  },
+  emptyMessage: {
+    type: String,
+    default: '',
+  },
+  dialog: {
+    type: Boolean,
+    default: false,
   },
 })
+const store = useUserConfigStore()
+const { weekDays, hourlyLoad } = storeToRefs(store)
+const academicPeriodOrganizationUnit = computed(
+  () => hourlyLoad.value?.academicPeriodOrganizationUnit,
+)
+
+const startDate = computed(() => academicPeriodOrganizationUnit.value?.fromDate)
+
+const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
+
+const currentSchedule = ref<IScheduleGenerate>()
+
+const dialogShare = ref(false)
+
+const mode = ref(ViewMode.CALENDAR)
+
+const calendar = ref<ComponentPublicInstance | null>(null)
+
+function getCalendar(): HTMLElement | null {
+  return document.getElementById('calendar')
+}
+
+const loadingImage = ref(false)
+async function downloadImage() {
+  loadingImage.value = true
+  await exportToPNG(getCalendar())
+  loadingImage.value = false
+}
+
+const loadingPdf = ref(false)
+async function downloadPdf() {
+  loadingPdf.value = true
+  await exportToPDF(getCalendar())
+  loadingPdf.value = false
+}
 </script>

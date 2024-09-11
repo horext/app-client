@@ -2,12 +2,12 @@ export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme()
   const localStorage = useLocalStorage()
 
-  const darkMode = computed({
-    get(): boolean {
+  const darkMode = computed<boolean>({
+    get() {
       return theme.global.name.value === 'dark'
     },
 
-    set(val: boolean) {
+    set(val) {
       theme.global.name.value = val ? 'dark' : 'light'
     },
   })
@@ -15,11 +15,16 @@ export const useSettingsStore = defineStore('settings', () => {
     darkMode.value = (await localStorage.getItem('darkMode')) || false
   })
 
+  function toggleDarkMode() {
+    darkMode.value = !darkMode.value
+  }
+
   watch(darkMode, (val) => {
     localStorage.setItem('darkMode', val)
   })
 
   return {
     darkMode,
+    toggleDarkMode,
   }
 })

@@ -2,16 +2,18 @@
   <div
     class="h-calendar-event-timed"
     :style="position"
-    @dblclick="$emit('dblclick', $event)"
-    @click.stop.prevent="$emit('click', $event)"
-    @mousedown="$emit('mousedown', $event)"
-    @mouseenter="$emit('mouseenter', $event)"
-    @mouseleave="$emit('mouseleave', $event)"
-    @mousemove="$emit('mousemove', $event)"
+    @dblclick="emit('dblclick', $event)"
+    @click.stop.prevent="emit('click', $event)"
+    @mousedown="emit('mousedown', $event)"
+    @mouseenter="emit('mouseenter', $event)"
+    @mouseleave="emit('mouseleave', $event)"
+    @mousemove="emit('mousemove', $event)"
   >
     <slot>
       <div class="h-calendar-event">
-        <div class="event-name">{{ event.name }}</div>
+        <div class="event-name">
+          {{ event.name }}
+        </div>
         <div class="event-time">
           <span>{{ event.start }} </span><span> - </span>
           <span>{{ event.end }}</span>
@@ -21,18 +23,18 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
 import { WIDTH_FULL } from '../constants/event'
 import { HOUR_IN_MINUTES } from '../constants/time'
 import type { ICalendarEvent, MouseEventTypes } from '../types'
 
 const props = defineProps<{
-  event: ICalendarEvent
+  event: T
   startIntervalHour: number
   intervalMinuteHeight: number
   events: ICalendarEvent[]
 }>()
-defineEmits<{
+const emit = defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
 const { event, startIntervalHour, intervalMinuteHeight, events } = toRefs(props)

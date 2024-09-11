@@ -3,10 +3,10 @@
     <vuetify-logo style="max-width: 48px" />
     <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
     <v-spacer />
-    <v-btn icon @click="invertMode">
-      <v-icon>mdi-brightness-6</v-icon>
+    <v-btn icon aria-label="Cambiar modo" @click="invertMode">
+      <v-icon>{{ mdiBrightness6 }}</v-icon>
     </v-btn>
-    <v-tabs class="hidden-sm-and-down" optional>
+    <v-tabs class="hidden-sm-and-down">
       <v-tab
         v-for="(item, i) in items"
         :key="i"
@@ -21,45 +21,37 @@
       </v-tab>
     </v-tabs>
 
-    <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
+    <v-app-bar-nav-icon
+      class="hidden-md-and-up"
+      aria-label="Menu Iziquierdo"
+      @click="drawer = !drawer"
+    />
   </v-app-bar>
 
-  <home-drawer v-model="drawer" :items="items" />
+  <lazy-home-drawer v-if="isMobile" v-model="drawer" :items="items" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import VuetifyLogo from '../VuetifyLogo.vue'
-import HomeDrawer from '@/components/home/Drawer.vue'
+import { mdiBrightness6 } from '@mdi/js'
 
-export default defineComponent({
-  name: 'HomeAppBar',
+const settingsStore = useSettingsStore()
 
-  components: {
-    VuetifyLogo,
-    HomeDrawer,
-  },
-  setup() {
-    const settingsStore = useSettingsStore()
-    const { darkMode } = storeToRefs(settingsStore)
+const drawer = ref(false)
 
-    const drawer = ref(false)
+const display = useDisplay()
 
-    return { darkMode, drawer }
-  },
-  data: () => ({
-    items: [
-      { name: 'Inicio', route: '/' },
-      { name: 'Generador', route: '/generator' },
-      { name: 'Acerca de ', route: '/about' },
-    ],
-  }),
-  methods: {
-    invertMode() {
-      this.darkMode = !this.darkMode
-    },
-  },
-})
+const isMobile = computed(() => display.mobile.value)
+
+const items = [
+  { name: 'Inicio', route: '/' },
+  { name: 'Generador', route: '/generator' },
+  { name: 'Acerca de ', route: '/about' },
+]
+
+const invertMode = () => {
+  settingsStore.toggleDarkMode()
+}
 </script>
 
 <style scoped lang="sass">

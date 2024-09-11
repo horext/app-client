@@ -1,46 +1,46 @@
 <template>
   <tr>
-    <td :rowspan="sessionsCount + 1">
+    <td :rowspan="sessionsCount + 1" class="section-cell">
       <v-checkbox
+        :id="section"
         v-model="valueSync"
         class="text-caption"
         density="compact"
         :label="section"
         :value="schedule"
+        hide-details
         multiple
       />
     </td>
   </tr>
 </template>
-<script lang="ts">
-import { defineComponent, type PropType, computed } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
-export default defineComponent({
-  props: {
-    schedule: {
-      type: Object as PropType<ISubjectSchedule>,
-      required: true,
-    },
-    modelValue: {
-      type: Array as PropType<ISubjectSchedule[]>,
-      default: null,
-    },
-  },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const valueSync = useVModel(props, 'modelValue', emit)
-    const { schedule } = toRefs(props)
+const props = defineProps<{
+  schedule: ISubjectSchedule
+  modelValue: ISubjectSchedule[]
+}>()
 
-    const sessionsCount = computed(() => {
-      return schedule.value?.sessions?.length
-    })
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: ISubjectSchedule[]): void
+}>()
 
-    const section = computed(() => {
-      return schedule.value?.section?.id
-    })
+const valueSync = useVModel(props, 'modelValue', emit)
+const { schedule } = toRefs(props)
 
-    return { valueSync, sessionsCount, section }
-  },
+const sessionsCount = computed(() => {
+  return schedule.value?.sessions?.length
+})
+
+const section = computed(() => {
+  return schedule.value?.section?.id
 })
 </script>
+
+<style>
+.section-cell.active {
+  background-color: #f5f5f5;
+}
+</style>

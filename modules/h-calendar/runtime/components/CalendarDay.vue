@@ -58,7 +58,7 @@
         "
       >
         <template #default>
-          <slot name="event" :event="event"> </slot>
+          <slot name="event" :event="event" />
         </template>
       </Event>
     </template>
@@ -71,9 +71,10 @@ import type { ICalendarEvent, IEventEmitData } from '../types'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
 import { extractBlocks } from '../utils/block'
+import type { Weekdays } from '../constants/week'
 
 const props = defineProps<{
-  weekDay: number
+  weekDay: Weekdays
   day: string
   hours: string[]
   events: T[]
@@ -88,7 +89,6 @@ const emit = defineEmits<{
   (key: 'mousemove:hour', event: string): void
   (key: 'mouseover:hour', event: string): void
   (key: 'mouseleave:hour', event: string): void
-  (key: 'mouseleave:event', event: T): void
   (key: 'mouseup', event: MouseEvent): void
   (key: 'mousemove', event: MouseEvent): void
   (key: 'mousedown', event: MouseEvent): void
@@ -99,8 +99,14 @@ const emit = defineEmits<{
   (key: 'mouseleave:event', event: IEventEmitData<T>): void
   (key: 'mousemove:event', event: IEventEmitData<T>): void
 }>()
-const { events, intervalHeight, hours, intervalMinutes, weekDay } =
-  toRefs(props)
+const {
+  events,
+  intervalHeight,
+  hours,
+  intervalMinutes,
+  weekDay,
+  internalWidth,
+} = toRefs(props)
 
 const startIntervalHour = computed(() => parseInt(hours.value[0]))
 
@@ -112,15 +118,15 @@ const intervalMinuteHeight = computed(() => {
 })
 
 const weekDayEvents = computed(() => {
-  return events.value.filter((event) => event.weekDay === weekDay.value)
+  return events.value.filter((event) => event.weekDay % 7 === weekDay.value)
 })
 
 const groupEvents = computed(() => {
   const events = weekDayEvents.value
   return extractBlocks(events)
-});
+})
 const dayContainer = ref<null | HTMLDivElement>(null)
-const internalWidthRem = computed(() => props.internalWidth + 'rem')
+const internalWidthRem = computed(() => internalWidth.value + 'rem')
 </script>
 
 <style scoped>

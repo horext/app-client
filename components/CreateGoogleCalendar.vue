@@ -22,39 +22,39 @@
     </v-card-actions>
   </v-card>
 </template>
-<script lang="ts">
-import { defineComponent, type PropType, ref, watch } from 'vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 
-export default defineComponent({
-  props: {
-    calendar: {
-      type: Object as PropType<any>,
-      required: true,
-    },
-  },
-  emits: ['update:calendar', 'close'],
-  setup(props, { emit }) {
-    const loading = ref(false)
-    const calendarCurrent = ref({
-      summary: '',
-    })
+const props = defineProps<{
+  calendar: Pick<IGoogleCalendarItem, 'summary'>
+}>()
 
-    watch(
-      () => props.calendar,
-      (calendar) => {
-        calendarCurrent.value = calendar
-      },
-    )
+const emit = defineEmits<{
+  (
+    event: 'update:calendar',
+    calendar: Pick<IGoogleCalendarItem, 'summary'>,
+  ): void
+  (event: 'close'): void
+}>()
 
-    const form = ref<any>()
-
-    const save = () => {
-      if (form.value?.validate()) {
-        emit('update:calendar', calendarCurrent.value)
-      }
-    }
-
-    return { loading, calendarCurrent, form, save }
-  },
+const loading = ref(false)
+const calendarCurrent = ref({
+  summary: '',
 })
+
+watch(
+  () => props.calendar,
+  (calendar) => {
+    calendarCurrent.value = calendar
+  },
+)
+
+const form = ref<any>()
+
+const save = () => {
+  if (form.value?.validate()) {
+    emit('update:calendar', calendarCurrent.value)
+  }
+}
 </script>
