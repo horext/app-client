@@ -1,22 +1,10 @@
 <template>
-  <div
-    ref="dayContainer"
-    class="h-calendar-day"
-    @mouseup="emit('mouseup', $event)"
-    @mousemove="emit('mousemove', $event)"
-    @mousedown="emit('mousedown', $event)"
-  >
+  <div ref="dayContainer" class="h-calendar-day">
     <DayHour
       v-for="hour in hours"
       :key="hour"
       :hour="hour"
       :interval-height="intervalHeight"
-      @click="emit('click:hour', hour)"
-      @mouseover="emit('mouseover:hour', hour)"
-      @mouseleave="emit('mouseleave:hour', hour)"
-      @mousedown="emit('mousedown:hour', hour)"
-      @mouseup="emit('mouseup:hour', hour)"
-      @mousemove="emit('mousemove:hour', hour)"
     />
     <template v-for="group in groupEvents">
       <Event
@@ -57,9 +45,7 @@
           })
         "
       >
-        <template #default>
-          <slot name="event" :event="event" />
-        </template>
+        <slot name="event" :event="event" />
       </Event>
     </template>
   </div>
@@ -83,16 +69,6 @@ const props = defineProps<{
   intervalHeight: number
 }>()
 const emit = defineEmits<{
-  (key: 'click:hour', hour: string): void
-  (key: 'mouseup:hour', event: string): void
-  (key: 'mousedown:hour', event: string): void
-  (key: 'mousemove:hour', event: string): void
-  (key: 'mouseover:hour', event: string): void
-  (key: 'mouseleave:hour', event: string): void
-  (key: 'mouseleave:event', event: T): void
-  (key: 'mouseup', event: MouseEvent): void
-  (key: 'mousemove', event: MouseEvent): void
-  (key: 'mousedown', event: MouseEvent): void
   (key: 'click:event', event: IEventEmitData<T>): void
   (key: 'dblclick:event', event: IEventEmitData<T>): void
   (key: 'mousedown:event', event: IEventEmitData<T>): void

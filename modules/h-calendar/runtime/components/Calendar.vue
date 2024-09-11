@@ -86,15 +86,6 @@ defineEmits<{
   (key: 'mousemove:event', value: IEventEmitData<T>): void
   (key: 'mousedown:event', value: IEventEmitData<T>): void
   (key: 'dblclick:event', value: IEventEmitData<T>): void
-  (key: 'click:hour', value: string): void
-  (key: 'mouseup:hour', value: string): void
-  (key: 'mousedown:hour', value: string): void
-  (key: 'mousemove:hour', value: string): void
-  (key: 'mouseover:hour', value: string): void
-  (key: 'mouseleave:hour', value: string): void
-  (key: 'mouseup', value: MouseEvent): void
-  (key: 'mousemove', value: MouseEvent): void
-  (key: 'mousedown', value: MouseEvent): void
 }>()
 
 const {
