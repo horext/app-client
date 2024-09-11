@@ -89,7 +89,6 @@ const emit = defineEmits<{
   (key: 'mousemove:hour', event: string): void
   (key: 'mouseover:hour', event: string): void
   (key: 'mouseleave:hour', event: string): void
-  (key: 'mouseleave:event', event: T): void
   (key: 'mouseup', event: MouseEvent): void
   (key: 'mousemove', event: MouseEvent): void
   (key: 'mousedown', event: MouseEvent): void
