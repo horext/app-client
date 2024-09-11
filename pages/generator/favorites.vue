@@ -36,27 +36,31 @@ import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
   title: 'Horarios Favoritos - Generador de Horarios',
-  description: 'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
+  description:
+    'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
 })
 
 const store = useUserConfigStore()
-const { favoritesSchedules } = storeToRefs(store)
 
 const showAddFavoriteMessage = ref(false)
 
+const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =
+  useUserFavoriteSchedules()
+
 const addFavorite = async (schedule: IScheduleGenerate) => {
   showAddFavoriteMessage.value = false
-  await store.addFavoriteSchedule(schedule)
+  await addFavoriteSchedule(schedule)
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
 const removeFavorite = async (schedule: IScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
-  await store.removeFavoriteSchedule(schedule)
+  await removeFavoriteSchedule(schedule)
   showRemoveFavoriteMessage.value = true
 }
 </script>
