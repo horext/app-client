@@ -57,9 +57,7 @@
           })
         "
       >
-        <template #default>
-          <slot name="event" :event="event" />
-        </template>
+        <slot name="event" :event="event" />
       </Event>
     </template>
   </div>
