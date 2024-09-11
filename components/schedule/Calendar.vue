@@ -38,7 +38,7 @@ import type { IEvent, Weekdays } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IEventEmitData } from '~/modules/h-calendar/runtime/types'
 
-interface ICalendarEvent extends IEvent {
+interface IScheduleCalendarEvent extends IEvent {
   weekDay: Weekdays
   start: string
   end: string
@@ -57,11 +57,11 @@ const props = defineProps({
   },
 })
 const { schedule } = toRefs(props)
-const selectedEvent = ref<ICalendarEvent | null>(null)
+const selectedEvent = ref<IScheduleCalendarEvent | null>(null)
 const selectedElement = ref<HTMLElement | null>(null)
 const selectedOpen = ref(false)
 
-const showEvent = ({ nativeEvent, event }: IEventEmitData<ICalendarEvent>) => {
+const showEvent = ({ nativeEvent, event }: IEventEmitData<IScheduleCalendarEvent>) => {
   const open = () => {
     selectedEvent.value = event
     selectedElement.value = nativeEvent.target as HTMLElement
@@ -80,7 +80,7 @@ const showEvent = ({ nativeEvent, event }: IEventEmitData<ICalendarEvent>) => {
   nativeEvent.stopPropagation()
 }
 
-const internalEvents = computed<ICalendarEvent[]>(
+const internalEvents = computed<IScheduleCalendarEvent[]>(
   () =>
     schedule.value?.events?.map((event) => {
       return {
