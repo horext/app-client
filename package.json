@@ -23,7 +23,7 @@
     "@mdi/font": "^7.4.47",
     "@nuxt/image": "^1.8.0",
     "@pinia/nuxt": "0.5.4",
-    "@types/google.accounts": "^0.0.14",
+    "@types/google.accounts": "^0.0.15",
     "@vueuse/core": "^11.0.3",
     "@vueuse/nuxt": "^11.0.3",
     "google-auth-library": "^9.14.1",
