@@ -24,8 +24,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3(vue@3.5.6(typescript@5.6.2))
       '@vueuse/nuxt':
-        specifier: ^11.0.3
-        version: 11.0.3(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.0)(eslint@9.10.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.19.0)(sass@1.79.2)(terser@5.31.6)(typescript@5.6.2)(vite@5.4.4(@types/node@22.5.0)(sass@1.79.2)(terser@5.31.6))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3))(rollup@4.19.0)(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
+        specifier: ^11.1.0
+        version: 11.1.0(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.0)(eslint@9.10.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.19.0)(sass@1.79.2)(terser@5.31.6)(typescript@5.6.2)(vite@5.4.4(@types/node@22.5.0)(sass@1.79.2)(terser@5.31.6))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3))(rollup@4.19.0)(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
       google-auth-library:
         specifier: ^9.14.1
         version: 9.14.1
@@ -1875,11 +1875,6 @@ packages:
 
   '@vueuse/metadata@11.1.0':
     resolution: {integrity: sha512-l9Q502TBTaPYGanl1G+hPgd3QX5s4CGnpXriVBR5fEZ/goI6fvDaVmIl3Td8oKFurOxTmbXvBPSsgrd6eu6HYg==}
-
-  '@vueuse/nuxt@11.0.3':
-    resolution: {integrity: sha512-1tZGM9lvFl6HqmSQNM6hsHbAzLkBitoh8RsVC8kIG/93d3Pb5dEqUdt1k+OfHyR8V2rfSOwCfJx+wlUTlY0A2g==}
-    peerDependencies:
-      nuxt: ^3.0.0
 
   '@vueuse/nuxt@11.1.0':
     resolution: {integrity: sha512-ZPYigcqgPPe9vk9nBHLF8p0zshX8qvWV/ox1Y4GdV4k2flPiw7+2THNTpU2NZDBXSOXlhB2sao+paGCsvJm/Qw==}
@@ -7962,22 +7957,6 @@ snapshots:
   '@vueuse/metadata@11.0.3': {}
 
   '@vueuse/metadata@11.1.0': {}
-
-  '@vueuse/nuxt@11.0.3(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.0)(eslint@9.10.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.19.0)(sass@1.79.2)(terser@5.31.6)(typescript@5.6.2)(vite@5.4.4(@types/node@22.5.0)(sass@1.79.2)(terser@5.31.6))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3))(rollup@4.19.0)(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)':
-    dependencies:
-      '@nuxt/kit': 3.13.0(magicast@0.3.5)(rollup@4.19.0)(webpack-sources@3.2.3)
-      '@vueuse/core': 11.0.3(vue@3.5.6(typescript@5.6.2))
-      '@vueuse/metadata': 11.0.3
-      local-pkg: 0.5.0
-      nuxt: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.0)(eslint@9.10.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.19.0)(sass@1.79.2)(terser@5.31.6)(typescript@5.6.2)(vite@5.4.4(@types/node@22.5.0)(sass@1.79.2)(terser@5.31.6))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3)
-      vue-demi: 0.14.10(vue@3.5.6(typescript@5.6.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - magicast
-      - rollup
-      - supports-color
-      - vue
-      - webpack-sources
 
   '@vueuse/nuxt@11.1.0(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.0)(eslint@9.10.0(jiti@1.21.6))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.19.0)(sass@1.79.2)(terser@5.31.6)(typescript@5.6.2)(vite@5.4.4(@types/node@22.5.0)(sass@1.79.2)(terser@5.31.6))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3))(rollup@4.19.0)(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)':
     dependencies:
