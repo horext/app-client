@@ -18,8 +18,8 @@ importers:
         specifier: 0.5.4
         version: 0.5.4(magicast@0.3.5)(rollup@4.19.0)(typescript@5.6.2)(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
       '@types/google.accounts':
-        specifier: ^0.0.14
-        version: 0.0.14
+        specifier: ^0.0.15
+        version: 0.0.15
       '@vueuse/core':
         specifier: ^11.0.3
         version: 11.0.3(vue@3.5.6(typescript@5.6.2))
@@ -1409,8 +1409,8 @@ packages:
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
-  '@types/google.accounts@0.0.14':
-    resolution: {integrity: sha512-HqIVkVzpiLWhlajhQQd4rIV7czanFvXblJI2J1fSrL+VKQuQwwZ63m35D/mI0flsqKE6p/hNrAG0Yn4FD6JvNA==}
+  '@types/google.accounts@0.0.15':
+    resolution: {integrity: sha512-NiydIuJzwdpnWNqTPOeDzGXhzz46Ll6T4rN3YWSm9Zfx/8ZfbwFbzyPSw1Tkz4uE3gQiU+fRj4KvBVUuHmk+KQ==}
 
   '@types/google.maps@3.58.0':
     resolution: {integrity: sha512-rZPrbNHoGxeY70uuQYFLGQqcz5mLd3pZy0u286GSugvN7PLFsHNRF2wN2QXtUgNiC33IC0LX+MD3LGAC3wN7Eg==}
@@ -7233,7 +7233,7 @@ snapshots:
 
   '@types/estree@1.0.5': {}
 
-  '@types/google.accounts@0.0.14': {}
+  '@types/google.accounts@0.0.15': {}
 
   '@types/google.maps@3.58.0': {}
 
