@@ -60,7 +60,7 @@
     "eslint-plugin-vue": "^9.28.0",
     "nitropack": "^2.9.7",
     "nuxt": "^3.13.2",
-    "nuxt-gtag": "^2.1.0",
+    "nuxt-gtag": "^3.0.1",
     "prettier": "^3.3.3",
     "sass": "^1.79.3",
     "typescript": "^5.6.2",
