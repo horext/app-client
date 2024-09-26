@@ -24,7 +24,7 @@
     "@nuxt/image": "^1.8.0",
     "@pinia/nuxt": "0.5.4",
     "@types/google.accounts": "^0.0.15",
-    "@vueuse/core": "^11.0.3",
+    "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^11.1.0",
     "google-auth-library": "^9.14.1",
     "happy-dom": "^15.7.4",
