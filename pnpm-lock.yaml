@@ -48,8 +48,8 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4
       pinia:
-        specifier: 2.2.2
-        version: 2.2.2(typescript@5.6.2)(vue@3.5.10(typescript@5.6.2))
+        specifier: 2.2.3
+        version: 2.2.3(typescript@5.6.2)(vue@3.5.10(typescript@5.6.2))
       ufo:
         specifier: ^1.5.4
         version: 1.5.4
@@ -1789,9 +1789,6 @@ packages:
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
-
-  '@vue/devtools-api@6.6.3':
-    resolution: {integrity: sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==}
 
   '@vue/devtools-api@6.6.4':
     resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
@@ -4222,18 +4219,6 @@ packages:
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
-
-  pinia@2.2.2:
-    resolution: {integrity: sha512-ja2XqFWZC36mupU4z1ZzxeTApV7DOw44cV4dhQ9sGwun+N89v/XP7+j7q6TanS1u1tdbK4r+1BUx7heMaIdagA==}
-    peerDependencies:
-      '@vue/composition-api': ^1.4.0
-      typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.3.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      typescript:
-        optional: true
 
   pinia@2.2.3:
     resolution: {integrity: sha512-t2X9y1FT0h5zHmi9PsVr0LMNC0DXdPiYxX6zM5IyZHoWFjLq/LGpM1OVpGhXTPHjUh0XaFlsQd3GvPvGGNLQnw==}
@@ -7832,8 +7817,6 @@ snapshots:
       de-indent: 1.0.2
       he: 1.2.0
 
-  '@vue/devtools-api@6.6.3': {}
-
   '@vue/devtools-api@6.6.4': {}
 
   '@vue/devtools-core@7.4.4(vite@5.4.8(@types/node@22.5.0)(sass@1.79.3)(terser@5.31.6))(vue@3.5.10(typescript@5.6.2))':
@@ -10781,14 +10764,6 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.2: {}
-
-  pinia@2.2.2(typescript@5.6.2)(vue@3.5.10(typescript@5.6.2)):
-    dependencies:
-      '@vue/devtools-api': 6.6.3
-      vue: 3.5.10(typescript@5.6.2)
-      vue-demi: 0.14.10(vue@3.5.10(typescript@5.6.2))
-    optionalDependencies:
-      typescript: 5.6.2
 
   pinia@2.2.3(typescript@5.6.2)(vue@3.5.10(typescript@5.6.2)):
     dependencies:
