@@ -27,8 +27,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(rollup@4.24.0)(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)
       google-auth-library:
-        specifier: ^9.14.1
-        version: 9.14.1
+        specifier: ^9.14.2
+        version: 9.14.2
       happy-dom:
         specifier: ^15.7.4
         version: 15.7.4
@@ -3145,8 +3145,8 @@ packages:
     resolution: {integrity: sha512-s3Fq41ZVh7vbbe2PN3nrW7yC7U7MFVc5c98/iTl9c2GawNMKx/J648KQRW6WKkuU8GIbbh2IXfIRQjOZnXcTnw==}
     engines: {node: '>=18'}
 
-  google-auth-library@9.14.1:
-    resolution: {integrity: sha512-Rj+PMjoNFGFTmtItH7gHfbHpGVSb3vmnGK3nwNBqxQF9NoBpttSZI/rc0WiM63ma2uGDQtYEkMHkK9U6937NiA==}
+  google-auth-library@9.14.2:
+    resolution: {integrity: sha512-R+FRIfk1GBo3RdlRYWPdwk8nmtVUOn6+BkDomAC46KoU8kzXzE1HLmOasSCbWUByMMAGkknVF0G5kQ69Vj7dlA==}
     engines: {node: '>=14'}
 
   gopd@1.0.1:
@@ -9345,7 +9345,7 @@ snapshots:
       slash: 5.1.0
       unicorn-magic: 0.1.0
 
-  google-auth-library@9.14.1:
+  google-auth-library@9.14.2:
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
