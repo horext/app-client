@@ -82,8 +82,8 @@ importers:
         specifier: ^0.5.7
         version: 0.5.7(eslint@9.12.0(jiti@2.3.3))(typescript@5.6.3)
       '@nuxt/scripts':
-        specifier: ^0.9.4
-        version: 0.9.4(@nuxt/devtools@1.5.1(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.11)(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(postcss@8.4.47)(rollup@4.24.0)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))
+        specifier: ^0.9.5
+        version: 0.9.5(@nuxt/devtools@1.5.1(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.11)(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(postcss@8.4.47)(rollup@4.24.0)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))
       '@nuxt/test-utils':
         specifier: ^3.14.3
         version: 3.14.3(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(magicast@0.3.5)(webpack-sources@3.2.3))(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vitest@2.0.5(@types/node@22.7.4)(happy-dom@15.7.4)(sass@1.79.4)(terser@5.34.1))(vue-router@4.4.5(vue@3.5.11(typescript@5.6.3)))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)
@@ -974,8 +974,8 @@ packages:
     resolution: {integrity: sha512-CCZgpm+MkqtOMDEgF9SWgGPBXlQ01hV/6+2reDEpJuqFPGzV8HYKPBcIFvn7/z5ahtgutHLzjP71Na+hYcqSpw==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
-  '@nuxt/scripts@0.9.4':
-    resolution: {integrity: sha512-9fEzXCAmdelCRsNW+hMN126Zko1behgoja4WbPBXR+3tRVH0UvMeLJmEVturahinFpnvUNrXhbx446XvVR/Yuw==}
+  '@nuxt/scripts@0.9.5':
+    resolution: {integrity: sha512-E71sk4HP7HjwAFPu2CnCdW8Aed0uBv8zkdADyIe0BRvLNBnfwXluEBRLwh/XFarlGSvD5557jWSQ/3+FGZvbSA==}
 
   '@nuxt/telemetry@2.6.0':
     resolution: {integrity: sha512-h4YJ1d32cU7tDKjjhjtIIEck4WF/w3DTQBT348E9Pz85YLttnLqktLM0Ez9Xc2LzCeUgBDQv1el7Ob/zT3KUqg==}
@@ -1295,24 +1295,28 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@shikijs/core@1.20.0':
-    resolution: {integrity: sha512-KlO3iE0THzSdYkzDFugt8SHe6FR3qNYTkmpbdW1d6xo8juQkMjybxAw/cBi2npL2eb2F4PbbnSs5Z9tDusfvyg==}
+  '@shikijs/core@1.22.0':
+    resolution: {integrity: sha512-S8sMe4q71TJAW+qG93s5VaiihujRK6rqDFqBnxqvga/3LvqHEnxqBIOPkt//IdXVtHkQWKu4nOQNk0uBGicU7Q==}
 
-  '@shikijs/engine-javascript@1.20.0':
-    resolution: {integrity: sha512-ZUMo758uduM0Tfgzi/kd+0IKMbNdumCxxWjY36uf1DIs2Qyg9HIq3vA1Wfa/vc6HE7tHWFpANRi3mv7UzJ68MQ==}
+  '@shikijs/engine-javascript@1.22.0':
+    resolution: {integrity: sha512-AeEtF4Gcck2dwBqCFUKYfsCq0s+eEbCEbkUuFou53NZ0sTGnJnJ/05KHQFZxpii5HMXbocV9URYVowOP2wH5kw==}
 
-  '@shikijs/engine-oniguruma@1.20.0':
-    resolution: {integrity: sha512-MQ40WkVTZk7by33ces4PGK6XNFSo6PYvKTSAr2kTWdRNhFmOcnaX+1XzvFwB26eySXR7U74t91czZ1qJkEgxTA==}
+  '@shikijs/engine-oniguruma@1.22.0':
+    resolution: {integrity: sha512-5iBVjhu/DYs1HB0BKsRRFipRrD7rqjxlWTj4F2Pf+nQSPqc3kcyqFFeZXnBMzDf0HdqaFVvhDRAGiYNvyLP+Mw==}
 
-  '@shikijs/types@1.20.0':
-    resolution: {integrity: sha512-y+EaDvU2K6/GaXOKXxJaGnr1XtmZMF7MfS0pSEDdxEq66gCtKsLwQvVwoQFdp7R7dLlNAro3ijEE19sMZ0pzqg==}
+  '@shikijs/types@1.22.0':
+    resolution: {integrity: sha512-Fw/Nr7FGFhlQqHfxzZY8Cwtwk5E9nKDUgeLjZgt3UuhcM3yJR9xj3ZGNravZZok8XmEZMiYkSMTPlPkULB8nww==}
 
-  '@shikijs/vscode-textmate@9.2.2':
-    resolution: {integrity: sha512-TMp15K+GGYrWlZM8+Lnj9EaHEFmOen0WJBrfa17hF7taDOYthuPPV0GWzfd/9iMij0akS/8Yw2ikquH7uVi/fg==}
+  '@shikijs/vscode-textmate@9.3.0':
+    resolution: {integrity: sha512-jn7/7ky30idSkd/O5yDBfAnVt+JJpepofP/POZ1iMOxK59cOfqIgg/Dj0eFsjOTMw+4ycJN0uhZH/Eb0bs/EUA==}
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
+
+  '@stripe/stripe-js@4.8.0':
+    resolution: {integrity: sha512-+4Cb0bVHlV4BJXxkJ3cCLSLuWxm3pXKtgcRacox146EuugjCzRRII5T5gUMgL4HpzrBLVwVxjKaZqntNWAXawQ==}
+    engines: {node: '>=12.16'}
 
   '@stylistic/eslint-plugin@2.8.0':
     resolution: {integrity: sha512-Ufvk7hP+bf+pD35R/QfunF793XlSRIC7USr3/EdgduK9j13i2JjmsM0LUz3/foS+jDYp2fzyWZA9N44CPur0Ow==}
@@ -1371,9 +1375,6 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
-
-  '@types/stripe-v3@3.1.33':
-    resolution: {integrity: sha512-fIE7F7alypCrnIMsk4naprHf8kXEvPM2Q9FGdL/3TDeGM0xlHohdVWkwuaEZ2tKzXB9QQKoS8k+ocLkPjZajwQ==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -1480,20 +1481,20 @@ packages:
   '@unhead/dom@1.11.5':
     resolution: {integrity: sha512-wANVBEVU1+ydnX/xW4AMejXoYTJw1NZF/d9jc9bZaNd93tS10/6Rg0qAC4L/9tGKTIaj9rmj1lSFnL9WpSWeuw==}
 
-  '@unhead/dom@1.11.6':
-    resolution: {integrity: sha512-FYU8Cu+XWcpbO4OvXdB6x7m6GTPcl6CW7igI8rNu6Kc0Ilxb+atxIvyFXdTGAyB7h/F0w3ex06ZVWJ65f3EW8A==}
+  '@unhead/dom@1.11.9':
+    resolution: {integrity: sha512-AOoCt05sLbkmp7ipCAs2JQdV0auLc5lCkLbCZj19kuPmWcFOoHNByQAG/AFKuSvi297OYp8abKGCStIgyz2x4A==}
 
   '@unhead/schema@1.11.5':
     resolution: {integrity: sha512-JwMWYsi7YdjWRQPnKAfVGU5prXma5LVlz036DfHbivaESTnARP7vDW6iuwm9bsp5t6IB2RqZKdw9h+9mgSaHIg==}
 
-  '@unhead/schema@1.11.6':
-    resolution: {integrity: sha512-Ava5+kQERaZ2fi66phgR9KZQr9SsheN1YhhKM8fCP2A4Jb5lHUssVQ19P0+89V6RX9iUg/Q27WdEbznm75LzhQ==}
+  '@unhead/schema@1.11.9':
+    resolution: {integrity: sha512-0V37bxG4sQuiLw3M5DMD+b99ndOOngecMlekQ122TDvBb24W8rWwkHhXvAu5eFg6bQXPdQF1A0U0PuRMcCj/ZA==}
 
   '@unhead/shared@1.11.5':
     resolution: {integrity: sha512-CyLLa6ci7+4dKbh9+H/ZGOAGt7k4B1aJtoj3mze1gGViILb968myhcgNJPwQcnivLux26ufOShgceUSkTIYCaw==}
 
-  '@unhead/shared@1.11.6':
-    resolution: {integrity: sha512-aGrtzRCcFlVh9iru73fBS8FA1vpQskS190t5cCRRMpisOEunVv3ueqXN1F8CseQd0W4wyEr/ycDvdfKt+RPv5g==}
+  '@unhead/shared@1.11.9':
+    resolution: {integrity: sha512-Df6Td9d87NM5EWf4ylAN98zwf50DwfMg3xoy6ofz3Qg1jSXewEIMD1w1C0/Q6KdpLo01TuoQ0RfpSyVtxt7oEA==}
 
   '@unhead/ssr@1.11.5':
     resolution: {integrity: sha512-J+UysZkAanJtMAExhYyvb8n8rtMg9KvZtJx4GU2A6OGarCWpQAHtqKUFCAirCXgmcvynlULbQbmyTuaadSulgA==}
@@ -1503,8 +1504,8 @@ packages:
     peerDependencies:
       vue: '>=2.7 || >=3'
 
-  '@unhead/vue@1.11.6':
-    resolution: {integrity: sha512-CMuDJGTi4n4wKdOp6/JmB9roGshjTdoFKF34PEkXu4+g97BiVFiZ9LvgY44+UlWCUzQHcqEPRQIzm9iKEqcfKw==}
+  '@unhead/vue@1.11.9':
+    resolution: {integrity: sha512-vdl3H1bwJNindhRplMun7zhtNFggP8QqpPwc1e7kd2a0ORp776+QpFXKdYHFSlX+eAMmDVv8LQ+VL0N++pXxNg==}
     peerDependencies:
       vue: '>=2.7 || >=3'
 
@@ -4643,8 +4644,8 @@ packages:
   shell-quote@1.8.1:
     resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
 
-  shiki@1.20.0:
-    resolution: {integrity: sha512-MZJJ1PCFsQB1Piq+25wiz0a75yUv8Q3/fzy7SzRx5ONdjdtGdyiKwYn8vb/FnK5kjS0voWGnPpjG16POauUR+g==}
+  shiki@1.22.0:
+    resolution: {integrity: sha512-/t5LlhNs+UOKQCYBtl5ZsH/Vclz73GIqT2yQsCBygr8L/ppTdmpL4w3kPLoZJbMKVWtoG77Ue1feOjZfDxvMkw==}
 
   side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
@@ -4675,6 +4676,10 @@ packages:
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
+
+  sirv@3.0.0:
+    resolution: {integrity: sha512-BPwJGUeDaDCHihkORDchNyyTvWFhcusy1XMmhEVTQTwGeybFbp8YEmB+njbPnth1FibULBSBVwCQni25XlCUDg==}
+    engines: {node: '>=18'}
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
@@ -5077,8 +5082,8 @@ packages:
   unhead@1.11.5:
     resolution: {integrity: sha512-1EJVldRTd4gWpP9wpE9n3skYW+4MXAd0r3B2piWrgc8FiRE5Ph2p/+SHRkB1b5D3eeoatd28nC1MbvSi6g+G/Q==}
 
-  unhead@1.11.6:
-    resolution: {integrity: sha512-TKTQGUzHKF925VZ4KZVbLfKFzTVTEWfPLaXKmkd/ptEY2FHEoJUF7xOpAWc3K7Jzy/ExS66TL7GnLLjtd4sISg==}
+  unhead@1.11.9:
+    resolution: {integrity: sha512-EwEGMjbXVVn2O5vNfXUHiAjHWFHngPjkAx0yVZZsrTgqzs7+A/YvJ90TLvBna874+HCKZWtufo7QAI7luU2CgA==}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -6452,7 +6457,7 @@ snapshots:
       semver: 7.6.3
       ufo: 1.5.4
       unctx: 2.3.1(webpack-sources@3.2.3)
-      unimport: 3.12.0(rollup@4.24.0)(webpack-sources@3.2.3)
+      unimport: 3.13.1(rollup@4.24.0)(webpack-sources@3.2.3)
       untyped: 1.4.2
     transitivePeerDependencies:
       - magicast
@@ -6526,16 +6531,16 @@ snapshots:
       - supports-color
       - webpack-sources
 
-  '@nuxt/scripts@0.9.4(@nuxt/devtools@1.5.1(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.11)(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(postcss@8.4.47)(rollup@4.24.0)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))':
+  '@nuxt/scripts@0.9.5(@nuxt/devtools@1.5.1(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.11)(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(postcss@8.4.47)(rollup@4.24.0)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))':
     dependencies:
       '@nuxt/devtools-kit': 1.5.1(magicast@0.3.5)(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(webpack-sources@3.2.3)
       '@nuxt/devtools-ui-kit': 1.5.1(@nuxt/devtools@1.5.1(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3))(@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.11)(magicast@0.3.5)(nuxt@3.13.2(@parcel/watcher@2.4.1)(@types/node@22.7.4)(eslint@9.12.0(jiti@2.3.3))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.0)(sass@1.79.4)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))(webpack-sources@3.2.3))(postcss@8.4.47)(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))(vue@3.5.11(typescript@5.6.3))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))
       '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.24.0)(webpack-sources@3.2.3)
+      '@stripe/stripe-js': 4.8.0
       '@types/google.maps': 3.58.1
-      '@types/stripe-v3': 3.1.33
       '@types/vimeo__player': 2.18.3
       '@types/youtube': 0.1.0
-      '@unhead/vue': 1.11.6(vue@3.5.11(typescript@5.6.3))
+      '@unhead/vue': 1.11.9(vue@3.5.11(typescript@5.6.3))
       '@vueuse/core': 11.1.0(vue@3.5.11(typescript@5.6.3))
       consola: 3.2.3
       defu: 6.1.4
@@ -6547,8 +6552,8 @@ snapshots:
       pathe: 1.1.2
       pkg-types: 1.2.0
       semver: 7.6.3
-      shiki: 1.20.0
-      sirv: 2.0.4
+      shiki: 1.22.0
+      sirv: 3.0.0
       std-env: 3.7.0
       third-party-capital: 2.3.0
       ufo: 1.5.4
@@ -6933,34 +6938,36 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@shikijs/core@1.20.0':
+  '@shikijs/core@1.22.0':
     dependencies:
-      '@shikijs/engine-javascript': 1.20.0
-      '@shikijs/engine-oniguruma': 1.20.0
-      '@shikijs/types': 1.20.0
-      '@shikijs/vscode-textmate': 9.2.2
+      '@shikijs/engine-javascript': 1.22.0
+      '@shikijs/engine-oniguruma': 1.22.0
+      '@shikijs/types': 1.22.0
+      '@shikijs/vscode-textmate': 9.3.0
       '@types/hast': 3.0.4
       hast-util-to-html: 9.0.3
 
-  '@shikijs/engine-javascript@1.20.0':
+  '@shikijs/engine-javascript@1.22.0':
     dependencies:
-      '@shikijs/types': 1.20.0
-      '@shikijs/vscode-textmate': 9.2.2
+      '@shikijs/types': 1.22.0
+      '@shikijs/vscode-textmate': 9.3.0
       oniguruma-to-js: 0.4.3
 
-  '@shikijs/engine-oniguruma@1.20.0':
+  '@shikijs/engine-oniguruma@1.22.0':
     dependencies:
-      '@shikijs/types': 1.20.0
-      '@shikijs/vscode-textmate': 9.2.2
+      '@shikijs/types': 1.22.0
+      '@shikijs/vscode-textmate': 9.3.0
 
-  '@shikijs/types@1.20.0':
+  '@shikijs/types@1.22.0':
     dependencies:
-      '@shikijs/vscode-textmate': 9.2.2
+      '@shikijs/vscode-textmate': 9.3.0
       '@types/hast': 3.0.4
 
-  '@shikijs/vscode-textmate@9.2.2': {}
+  '@shikijs/vscode-textmate@9.3.0': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
+
+  '@stripe/stripe-js@4.8.0': {}
 
   '@stylistic/eslint-plugin@2.8.0(eslint@9.12.0(jiti@2.3.3))(typescript@5.6.3)':
     dependencies:
@@ -7024,8 +7031,6 @@ snapshots:
     optional: true
 
   '@types/resolve@1.20.2': {}
-
-  '@types/stripe-v3@3.1.33': {}
 
   '@types/unist@3.0.3': {}
 
@@ -7163,17 +7168,17 @@ snapshots:
       '@unhead/schema': 1.11.5
       '@unhead/shared': 1.11.5
 
-  '@unhead/dom@1.11.6':
+  '@unhead/dom@1.11.9':
     dependencies:
-      '@unhead/schema': 1.11.6
-      '@unhead/shared': 1.11.6
+      '@unhead/schema': 1.11.9
+      '@unhead/shared': 1.11.9
 
   '@unhead/schema@1.11.5':
     dependencies:
       hookable: 5.5.3
       zhead: 2.2.4
 
-  '@unhead/schema@1.11.6':
+  '@unhead/schema@1.11.9':
     dependencies:
       hookable: 5.5.3
       zhead: 2.2.4
@@ -7182,9 +7187,9 @@ snapshots:
     dependencies:
       '@unhead/schema': 1.11.5
 
-  '@unhead/shared@1.11.6':
+  '@unhead/shared@1.11.9':
     dependencies:
-      '@unhead/schema': 1.11.6
+      '@unhead/schema': 1.11.9
 
   '@unhead/ssr@1.11.5':
     dependencies:
@@ -7200,13 +7205,13 @@ snapshots:
       unhead: 1.11.5
       vue: 3.5.11(typescript@5.6.3)
 
-  '@unhead/vue@1.11.6(vue@3.5.11(typescript@5.6.3))':
+  '@unhead/vue@1.11.9(vue@3.5.11(typescript@5.6.3))':
     dependencies:
-      '@unhead/schema': 1.11.6
-      '@unhead/shared': 1.11.6
+      '@unhead/schema': 1.11.9
+      '@unhead/shared': 1.11.9
       defu: 6.1.4
       hookable: 5.5.3
-      unhead: 1.11.6
+      unhead: 1.11.9
       vue: 3.5.11(typescript@5.6.3)
 
   '@unocss/astro@0.62.4(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))':
@@ -7223,7 +7228,7 @@ snapshots:
   '@unocss/cli@0.62.4(rollup@4.24.0)':
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@rollup/pluginutils': 5.1.0(rollup@4.24.0)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       '@unocss/config': 0.62.4
       '@unocss/core': 0.62.4
       '@unocss/preset-uno': 0.62.4
@@ -7368,7 +7373,7 @@ snapshots:
   '@unocss/vite@0.62.4(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@rollup/pluginutils': 5.1.0(rollup@4.24.0)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       '@unocss/config': 0.62.4
       '@unocss/core': 0.62.4
       '@unocss/inspector': 0.62.4
@@ -7383,7 +7388,7 @@ snapshots:
   '@unocss/webpack@0.62.4(rollup@4.24.0)(webpack@5.91.0(esbuild@0.23.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@rollup/pluginutils': 5.1.0(rollup@4.24.0)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       '@unocss/config': 0.62.4
       '@unocss/core': 0.62.4
       chokidar: 3.6.0
@@ -7495,7 +7500,7 @@ snapshots:
   '@vue-macros/common@1.12.2(rollup@4.24.0)(vue@3.5.11(typescript@5.6.3))':
     dependencies:
       '@babel/types': 7.25.6
-      '@rollup/pluginutils': 5.1.0(rollup@4.24.0)
+      '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       '@vue/compiler-sfc': 3.5.10
       ast-kit: 1.1.0
       local-pkg: 0.5.0
@@ -11106,13 +11111,13 @@ snapshots:
 
   shell-quote@1.8.1: {}
 
-  shiki@1.20.0:
+  shiki@1.22.0:
     dependencies:
-      '@shikijs/core': 1.20.0
-      '@shikijs/engine-javascript': 1.20.0
-      '@shikijs/engine-oniguruma': 1.20.0
-      '@shikijs/types': 1.20.0
-      '@shikijs/vscode-textmate': 9.2.2
+      '@shikijs/core': 1.22.0
+      '@shikijs/engine-javascript': 1.22.0
+      '@shikijs/engine-oniguruma': 1.22.0
+      '@shikijs/types': 1.22.0
+      '@shikijs/vscode-textmate': 9.3.0
       '@types/hast': 3.0.4
 
   side-channel@1.0.6:
@@ -11152,6 +11157,12 @@ snapshots:
     optional: true
 
   sirv@2.0.4:
+    dependencies:
+      '@polka/url': 1.0.0-next.25
+      mrmime: 2.0.0
+      totalist: 3.0.1
+
+  sirv@3.0.0:
     dependencies:
       '@polka/url': 1.0.0-next.25
       mrmime: 2.0.0
@@ -11591,11 +11602,11 @@ snapshots:
       '@unhead/shared': 1.11.5
       hookable: 5.5.3
 
-  unhead@1.11.6:
+  unhead@1.11.9:
     dependencies:
-      '@unhead/dom': 1.11.6
-      '@unhead/schema': 1.11.6
-      '@unhead/shared': 1.11.6
+      '@unhead/dom': 1.11.9
+      '@unhead/schema': 1.11.9
+      '@unhead/shared': 1.11.9
       hookable: 5.5.3
 
   unicorn-magic@0.1.0: {}
