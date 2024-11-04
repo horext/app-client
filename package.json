@@ -58,7 +58,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^9.29.1",
-    "nitropack": "^2.9.7",
+    "nitropack": "^2.10.2",
     "nuxt": "^3.13.2",
     "nuxt-gtag": "^2.1.0",
     "prettier": "^3.3.3",
