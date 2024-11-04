@@ -27,7 +27,7 @@
     "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^11.1.0",
     "google-auth-library": "^9.14.2",
-    "happy-dom": "^15.7.4",
+    "happy-dom": "^15.8.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "lottie-web": "^5.12.2",
