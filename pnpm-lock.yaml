@@ -85,8 +85,8 @@ importers:
         specifier: ^0.9.5
         version: 0.9.5(@nuxt/devtools@1.5.1(rollup@4.24.3)(vite@5.4.11(@types/node@22.10.1)(sass@1.82.0)(terser@5.36.0))(vue@3.5.13(typescript@5.7.2)))(@unocss/webpack@0.62.4(rollup@4.24.3)(webpack@5.91.0(esbuild@0.23.1)))(@vue/compiler-core@3.5.13)(change-case@5.4.4)(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.14.1592(@parcel/watcher@2.4.1)(@types/node@22.10.1)(eslint@9.16.0(jiti@2.4.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.1)(sass@1.82.0)(terser@5.36.0))(vue-tsc@2.1.10(typescript@5.7.2)))(postcss@8.4.49)(rollup@4.24.3)(typescript@5.7.2)(vite@5.4.11(@types/node@22.10.1)(sass@1.82.0)(terser@5.36.0))(vue@3.5.13(typescript@5.7.2))(webpack-sources@3.2.3)(webpack@5.91.0(esbuild@0.23.1))
       '@nuxt/test-utils':
-        specifier: ^3.15.0
-        version: 3.15.0(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))
+        specifier: ^3.15.1
+        version: 3.15.1(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))
       '@types/luxon':
         specifier: ^3.4.2
         version: 3.4.2
@@ -1109,8 +1109,8 @@ packages:
     resolution: {integrity: sha512-h4YJ1d32cU7tDKjjhjtIIEck4WF/w3DTQBT348E9Pz85YLttnLqktLM0Ez9Xc2LzCeUgBDQv1el7Ob/zT3KUqg==}
     hasBin: true
 
-  '@nuxt/test-utils@3.15.0':
-    resolution: {integrity: sha512-kl8nwCuB5/DhJVFNftO9n83yEHDsVjMCrLQmOc4Pmfb8Ba7CgE7GR+QVoVywv5x4DGiRryce7gRGXJkpLNRmGQ==}
+  '@nuxt/test-utils@3.15.1':
+    resolution: {integrity: sha512-+0MsHsE/F4FZcmirRWSqGSSlEGMeNBHXkdHmYU0cM7UItiFIxyVDdIHLkyW4bBvPfI0IRozQlZc8vht9V/5D7Q==}
     engines: {node: ^18.20.4 || ^20.9.0 || ^22.0.0 || >=23.0.0}
     peerDependencies:
       '@cucumber/cucumber': ^10.3.1 || ^11.0.0
@@ -7152,7 +7152,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@nuxt/test-utils@3.15.0(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))':
+  '@nuxt/test-utils@3.15.1(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))':
     dependencies:
       '@nuxt/kit': 3.14.1592(magicast@0.3.5)(rollup@4.24.3)
       '@nuxt/schema': 3.14.1592(magicast@0.3.5)(rollup@4.24.3)
@@ -7217,7 +7217,7 @@ snapshots:
       h3: 1.13.0
       jiti: 2.4.0
       knitwork: 1.1.0
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.3
       ohash: 1.1.4
       pathe: 1.1.2
@@ -7373,7 +7373,7 @@ snapshots:
       estree-walker: 2.0.2
       fdir: 6.4.2(picomatch@4.0.2)
       is-reference: 1.2.1
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       picomatch: 4.0.2
     optionalDependencies:
       rollup: 4.24.3
@@ -7382,7 +7382,7 @@ snapshots:
     dependencies:
       '@rollup/pluginutils': 5.1.3(rollup@4.24.3)
       estree-walker: 2.0.2
-      magic-string: 0.30.13
+      magic-string: 0.30.14
     optionalDependencies:
       rollup: 4.24.3
 
@@ -7405,7 +7405,7 @@ snapshots:
   '@rollup/plugin-replace@6.0.1(rollup@4.24.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.3(rollup@4.24.3)
-      magic-string: 0.30.13
+      magic-string: 0.30.14
     optionalDependencies:
       rollup: 4.24.3
 
@@ -8020,7 +8020,7 @@ snapshots:
   '@vitest/snapshot@2.0.5':
     dependencies:
       '@vitest/pretty-format': 2.0.5
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       pathe: 1.1.2
 
   '@vitest/spy@2.0.5':
@@ -12238,7 +12238,7 @@ snapshots:
     dependencies:
       acorn: 8.14.0
       estree-walker: 3.0.3
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       unplugin: 1.16.0
 
   undici-types@6.19.8: {}
@@ -12277,7 +12277,7 @@ snapshots:
       estree-walker: 3.0.3
       fast-glob: 3.3.2
       local-pkg: 0.5.1
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.2
       pathe: 1.1.2
       pkg-types: 1.2.1
@@ -12295,7 +12295,7 @@ snapshots:
       estree-walker: 3.0.3
       fast-glob: 3.3.2
       local-pkg: 0.5.1
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.2
       pathe: 1.1.2
       pkg-types: 1.2.1
@@ -12313,7 +12313,7 @@ snapshots:
       estree-walker: 3.0.3
       fast-glob: 3.3.2
       local-pkg: 0.5.1
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.3
       pathe: 1.1.2
       pkg-types: 1.2.1
@@ -12385,7 +12385,7 @@ snapshots:
       fast-glob: 3.3.2
       json5: 2.2.3
       local-pkg: 0.5.1
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.3
       pathe: 1.1.2
       scule: 1.3.0
@@ -12450,7 +12450,7 @@ snapshots:
   unwasm@0.3.9:
     dependencies:
       knitwork: 1.1.0
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       mlly: 1.7.2
       pathe: 1.1.2
       pkg-types: 1.2.1
@@ -12629,7 +12629,7 @@ snapshots:
       '@vue/babel-plugin-jsx': 1.2.2(@babel/core@7.25.2)
       '@vue/compiler-dom': 3.5.13
       kolorist: 1.8.0
-      magic-string: 0.30.13
+      magic-string: 0.30.14
       vite: 5.4.11(@types/node@22.10.1)(sass@1.82.0)(terser@5.36.0)
     transitivePeerDependencies:
       - supports-color
@@ -12647,7 +12647,7 @@ snapshots:
 
   vitest-environment-nuxt@1.0.1(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0)):
     dependencies:
-      '@nuxt/test-utils': 3.15.0(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))
+      '@nuxt/test-utils': 3.15.1(@types/node@22.10.1)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(magicast@0.3.5)(rollup@4.24.3)(sass@1.82.0)(terser@5.36.0)(typescript@5.7.2)(vitest@2.0.5(@types/node@22.10.1)(happy-dom@15.11.7)(sass@1.82.0)(terser@5.36.0))
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
