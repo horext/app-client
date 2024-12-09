@@ -22,7 +22,7 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@nuxt/image": "^1.8.1",
-    "@pinia/nuxt": "0.8.0",
+    "@pinia/nuxt": "0.9.0",
     "@types/google.accounts": "^0.0.15",
     "@vueuse/core": "^12.0.0",
     "@vueuse/nuxt": "^12.0.0",
