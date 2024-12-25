@@ -8,7 +8,16 @@ import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { Weekdays } from '~/interfaces/event'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const storage = useLocalStorage()
+  const storage = useLocalStorage<{
+    items: {
+      mySubjects: Array<ISelectedSubject>
+      myCrossings: number
+      mySchedules: Array<IScheduleGenerate>
+      myFavoritesSchedules: Array<IScheduleGenerate>
+      myOcurrences: Array<IIntersectionOccurrence>
+      myWeekDays: Weekdays[]
+    }
+  }>()
   const myFaculty = useCookie<IOrganization | null>('myFaculty', {
     default: () => null,
     maxAge: 60 * 60 * 24 * 365,
@@ -146,28 +155,28 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function fetchSubjects() {
-    const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
+    const data = (await storage.getItem('mySubjects')) || []
     const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
     subjects.value = _subjets
   }
 
   async function fetchCrossings() {
     const data: number | undefined =
-      (await storage.getItem<number>('myCrossings')) || 0
+      (await storage.getItem('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
   }
 
   async function fetchSchedules() {
     const data =
-      (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
+      (await storage.getItem('mySchedules')) || []
     const _schedules: IScheduleGenerate[] = data || []
     schedules.value = _schedules
   }
 
   async function fetchFavoritesSchedules() {
     const data =
-      (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
+      (await storage.getItem('myFavoritesSchedules')) || []
     const _schedules: IScheduleGenerate[] = data || []
     favoritesSchedules.value = _schedules
   }
@@ -190,23 +199,23 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   const fetchMyOcurrences = async () => {
     const data =
-      await storage.getItem<IIntersectionOccurrence[]>('myOcurrences')
+      await storage.getItem('myOcurrences')
     occurrences.value = data || []
   }
 
   const updateOccurrences = async (data: IIntersectionOccurrence[]) => {
     occurrences.value = data
-    await storage.setItem<IIntersectionOccurrence[]>('myOcurrences', data)
+    await storage.setItem('myOcurrences', data)
   }
 
   const fetchWeekDays = async () => {
-    const data = await storage.getItem<Weekdays[]>('myWeekDays')
+    const data = await storage.getItem('myWeekDays')
     weekDays.value = data || [0, 1, 2, 3, 4, 5, 6]
   }
 
   const saveWeekDays = async (data: Weekdays[]) => {
     weekDays.value = data
-    await storage.setItem<Weekdays[]>('myWeekDays', data)
+    await storage.setItem('myWeekDays', data)
   }
 
   return {
