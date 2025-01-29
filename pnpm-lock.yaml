@@ -69,8 +69,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.7.3))
       vuetify:
-        specifier: ^3.7.7
-        version: 3.7.7(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
+        specifier: ^3.7.8
+        version: 3.7.8(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
     devDependencies:
       '@mdi/js':
         specifier: ^7.4.47
@@ -1804,11 +1804,11 @@ packages:
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
 
-  '@types/node@22.10.10':
-    resolution: {integrity: sha512-X47y/mPNzxviAGY5TcYPtYL8JsY3kAq2n8fMmKoRCxq/c4v4pyGNCzM2R6+M5/umG4ZfHuT+sgqDYqWc9rJ6ww==}
-
   '@types/node@22.10.3':
     resolution: {integrity: sha512-DifAyw4BkrufCILvD3ucnuN8eydUfc/C1GlyrnI+LK6543w5/L3VeVgf05o3B4fqSXP1dKYLOZsKfutpxPzZrw==}
+
+  '@types/node@22.12.0':
+    resolution: {integrity: sha512-Fll2FZ1riMjNmlmJOdAyY5pUbkftXslB5DgEzlIuNaiWhXd00FhWxVC/r4yV/4wBb9JfImTu+jiSvXTkJ7F/gA==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -6183,8 +6183,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.7.7:
-    resolution: {integrity: sha512-YqKnRo2+BZWQRzfxHVA/5reQo1eLvbS9Z6N+Lvaot/5lpdi7JWooMr/hWoCr7/QPBGRcXArHppqIB+hMfPlsXw==}
+  vuetify@3.7.8:
+    resolution: {integrity: sha512-67p7Ton7EikHKhzauAmpsV1HT/zA2DmG8hjcHmQrktGl1eBrRaQVE+idWLtbhO51jqpTsrKQK9+HuG0KRwIGYQ==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -8334,11 +8334,11 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/node@22.10.10':
+  '@types/node@22.10.3':
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.10.3':
+  '@types/node@22.12.0':
     dependencies:
       undici-types: 6.20.0
 
@@ -11254,7 +11254,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.10.10
+      '@types/node': 22.12.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -13830,7 +13830,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.3
 
-  vuetify@3.7.7(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
+  vuetify@3.7.8(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       vue: 3.5.13(typescript@5.7.3)
     optionalDependencies:
