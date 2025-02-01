@@ -63,17 +63,15 @@ export const useGoogleOAuth2 = () => {
   const googleApis = ofetch.create({
     method: 'GET',
     baseURL: 'https://www.googleapis.com/',
-    onRequest: (config) => {
+    onRequest: ({ options }) => {
       const accessToken = tokenResponse.value?.access_token
       const isExpired = expiresAt.value && expiresAt.value < Date.now()
       if (isExpired) {
         getToken()
       }
       if (accessToken) {
-        config.options.headers = {
-          ...config.options.headers,
-          Authorization: `Bearer ${accessToken}`,
-        }
+        const headers = options?.headers ? new Headers(options.headers) : new Headers();
+        headers.set("Authorization", `Bearer ${accessToken}`);
       }
     },
   })

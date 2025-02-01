@@ -1,6 +1,10 @@
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme()
-  const localStorage = useLocalStorage()
+  const localStorage = useLocalStorage<{
+    items: {
+      darkMode: boolean
+    }
+  }>()
 
   const darkMode = computed<boolean>({
     get() {
