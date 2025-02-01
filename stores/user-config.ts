@@ -80,59 +80,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     crossings.value = _crossings
   }
 
-  async function saveNewSubject(_subject: ISelectedSubject) {
-    subjects.value.push(Object.assign({}, _subject))
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
-  async function deleteSubjectById(id: number) {
-    const index = subjects.value.findIndex((s) => s.id === id)
-    subjects.value.splice(index, 1)
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
-  async function updateSubject(_subject: ISelectedSubject) {
-    const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    subjects.value = subjects.value.map((c, i) => (i === index ? _subject : c))
-    await storage.setItem('mySubjects', subjects.value)
-  }
-
-  async function updateSchedules(_schedules: IScheduleGenerate[]) {
-    schedules.value = _schedules
-    await storage.setItem('mySchedules', schedules.value)
-  }
-
-  async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
-  ) {
-    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
-    const index = favoritesSchedules.value.findIndex((s) => s.id === id)
-    favoritesSchedules.value.splice(index, 1)
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  async function updateFavoritesSchedules(
-    _favoritesSchedules: IScheduleGenerate[],
-  ) {
-    favoritesSchedules.value = _favoritesSchedules
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await updateFavoritesSchedules([...favoritesSchedules.value, schedule])
-  }
-
-  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    const newFavorites = favoritesSchedules.value.filter(
-      (s) => s.id !== schedule.id,
-    )
-    await updateFavoritesSchedules(newFavorites)
-  }
-
   function fetchFaculty() {
     const data = myFaculty.value
     if (data) {
@@ -154,31 +101,11 @@ export const useUserConfigStore = defineStore('user-config', () => {
     firstEntry.value = data
   }
 
-  async function fetchSubjects() {
-    const data = (await storage.getItem('mySubjects')) || []
-    const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
-    subjects.value = _subjets
-  }
-
   async function fetchCrossings() {
     const data: number | undefined =
       (await storage.getItem('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
-  }
-
-  async function fetchSchedules() {
-    const data =
-      (await storage.getItem('mySchedules')) || []
-    const _schedules: IScheduleGenerate[] = data || []
-    schedules.value = _schedules
-  }
-
-  async function fetchFavoritesSchedules() {
-    const data =
-      (await storage.getItem('myFavoritesSchedules')) || []
-    const _schedules: IScheduleGenerate[] = data || []
-    favoritesSchedules.value = _schedules
   }
 
   function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
@@ -238,25 +165,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateFirstEntry,
     updateCrossings,
     updateHourlyLoad,
-    saveNewSubject,
-    deleteSubjectById,
-    updateSubject,
-    updateSchedules,
-    saveNewFavoriteSchedule,
-    deleteFavoriteScheduleById,
-    updateFavoritesSchedules,
     fetchFaculty,
     fetchSpeciality,
     fetchFirstEntry,
-    fetchSubjects,
     fetchCrossings,
-    fetchSchedules,
-    fetchFavoritesSchedules,
     fetchMyOcurrences,
     updateOccurrences,
     occurrences,
-    addFavoriteSchedule,
-    removeFavoriteSchedule,
     fetchWeekDays,
     saveWeekDays,
   }

@@ -36,6 +36,7 @@ import {
   useScheduleSubjectApi,
 } from '~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
+import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 definePageMeta({
   layout: 'app',
@@ -86,11 +87,8 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   },
 )
 
-const deleteFavoriteScheduleById = (favorites: IScheduleGenerate) =>
-  store.deleteFavoriteScheduleById(favorites.id)
-
-const saveNewFavoriteSchedule = (favorites: IScheduleGenerate) =>
-  store.saveNewFavoriteSchedule(favorites)
+const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
+  useUserFavoriteSchedules()
 
 const { loadSchedules } = useSchedules()
 
@@ -110,7 +108,7 @@ onMounted(async () => {
 const addFavoriteCurrentSchedule = () => {
   const index = isFavorite(schedules.value[0])
   if (index >= 0) {
-    deleteFavoriteScheduleById(schedules.value[0])
+    deleteFavoriteScheduleById(schedules.value[0].id)
   } else {
     saveNewFavoriteSchedule(schedules.value[0])
   }
