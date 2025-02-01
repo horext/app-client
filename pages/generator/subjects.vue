@@ -110,6 +110,7 @@ import {
 } from '~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
 import SubjectSelect from '../../components/subject/Select.vue'
+import { useUserSubjects } from '~/composables/user-subjects'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -119,6 +120,8 @@ useSeoMeta({
 const courseApi = useCourseApi()
 
 const configStore = useUserConfigStore()
+const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
+  useUserSubjects()
 
 const succcesAddCourse = ref(false)
 
@@ -127,11 +130,7 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
   )
 })
-const {
-  subjects: mySubjects,
-  specialityId,
-  hourlyLoadId,
-} = storeToRefs(configStore)
+const { specialityId, hourlyLoadId } = storeToRefs(configStore)
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
@@ -198,7 +197,7 @@ const deleteItem = (item: ISelectedSubject) => {
 
 const succcesDeleteCourse = ref(false)
 const deleteItemConfirm = async (item: ISelectedSubject) => {
-  await configStore.deleteSubjectById(item.id)
+  await deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
 }
@@ -218,11 +217,11 @@ const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
   succcesAddCourse.value = false
   const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
   if (editedIndex > -1 && schedules && schedules.length > 0) {
-    await configStore.updateSubject({ ...item, schedules })
+    await updateSubject({ ...item, schedules })
     close()
     succcesUpdateCourse.value = true
   } else if (schedules && schedules.length > 0) {
-    await configStore.saveNewSubject({ ...item, schedules })
+    await saveNewSubject({ ...item, schedules })
     close()
     succcesAddCourse.value = true
   } else if (editedIndex > -1) {
