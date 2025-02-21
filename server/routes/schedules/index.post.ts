@@ -7,10 +7,7 @@ export default defineEventHandler(async (event) => {
   const parsedBody = scheduleSchema.parse(body)
   const scheduleRepository = await useScheduleRepository(event)
 
-  const result = await scheduleRepository.create({
-    ...parsedBody,
-    categories: ['GENARATED']
-  })
+  const result = await scheduleRepository.create(parsedBody)
 
   return result
 })
