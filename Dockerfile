@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 ARG NUXT_API_URL
 ARG NUXT_PUBLIC_GSI_CLIENT_ID
@@ -9,7 +9,7 @@ ARG NUXT_PUBLIC_GSI_SCOPES
 WORKDIR /usr/src/app
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.x
 # Build
 COPY  pnpm-lock.yaml pnpm-lock.yaml
 COPY  package.json package.json
@@ -22,7 +22,7 @@ RUN NUXT_API_URL=$NUXT_API_URL \
     NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES \
     pnpm run build
 
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 WORKDIR /usr/src/app
 
