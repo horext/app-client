@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { favoriteScheduleSchema } from '../../schemas/favorite-schedule.schema'
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/db.provider'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)

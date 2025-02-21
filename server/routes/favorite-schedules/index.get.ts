@@ -1,4 +1,4 @@
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/db.provider'
 
 export default defineEventHandler(async (event) => {
   const db = await useMongoDB(event)

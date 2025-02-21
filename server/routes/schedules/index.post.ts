@@ -1,5 +1,5 @@
 import { readBody } from 'h3'
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/db.provider'
 import { scheduleSchema } from '../../schemas/schedule.schema'
 
 export default defineEventHandler(async (event) => {
