@@ -1,21 +1,13 @@
-import { ObjectId } from 'mongodb'
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useSubjectRepository } from '../../provider/subject.repository.provider'
 
 export default defineEventHandler(async (event) => {
   const { id } = getRouterParams(event)
-    const db = await useMongoDB(event)
-  const collection = db.collection('subjects')
+  const subjectRepository = await useSubjectRepository(event)
 
-  const result = await collection.deleteOne({ _id: new ObjectId(id) })
-
-  if (result.deletedCount === 0) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Subject not found',
-    })
-  }
+  await subjectRepository.deleteById(id)
 
   return {
     message: 'Subject deleted successfully',
-  }
+    status: 200
+  } 
 })

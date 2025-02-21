@@ -1,23 +1,15 @@
-import { z } from 'zod'
-import { ObjectId } from 'mongodb'
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useSubjectRepository } from '../../provider/subject.repository.provider'
 import { subjectSchema } from '../../schemas/subject.schema'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const parsedBody = subjectSchema.parse(body)
+  const subjectRepository = await useSubjectRepository(event)
 
-  const db = await useMongoDB(event)
-  const collection = db.collection('subjects')
-
-  const result = await collection.insertOne({
-    ...parsedBody,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  })
+  const result = await subjectRepository.create(parsedBody)
 
   return {
-    _id: result.insertedId,
-    ...parsedBody,
+    status: 'success',
+    data: result,
   }
 })

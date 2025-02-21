@@ -1,14 +1,10 @@
-import { ObjectId } from 'mongodb'
-import { useMongoDB } from '../../provider/mongodb.provider'
+import { useSubjectRepository } from '../../provider/subject.repository.provider'
 
 export default defineEventHandler(async (event) => {
-  const db = await useMongoDB(event)
-  const collection = db.collection('subjects')
+  const subjectRepository = await useSubjectRepository(event)
 
-  const subjects = await collection.find().toArray()
+  const subjects = await subjectRepository.findAll()
 
-  return subjects.map((subject) => ({
-    ...subject,
-    _id: subject._id.toString(),
-  }))
+  return subjects
 })
+
