@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb'
-import { useMongoDB } from '../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/mongodb.provider'
 
 export default defineEventHandler(async (event) => {
-  const { id } = event.context.params
-  const { db } = await useMongoDB()
+  const { id } = getRouterParams(event)
+    const db = await useMongoDB(event)
   const collection = db.collection('subjects')
 
   const result = await collection.deleteOne({ _id: new ObjectId(id) })

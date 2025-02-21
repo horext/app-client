@@ -1,8 +1,7 @@
-import { getMongoClient } from '../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/mongodb.provider'
 
 export default defineEventHandler(async (event) => {
-  const client = await getMongoClient()
-  const db = client.db()
+  const db = await useMongoDB(event)
   const collection = db.collection('favoriteSchedules')
 
   const favoriteSchedules = await collection.find().toArray()

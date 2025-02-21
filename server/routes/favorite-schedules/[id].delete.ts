@@ -1,10 +1,8 @@
-import { z } from 'zod'
-import { getMongoClient } from '../provider/mongodb.provider'
+import { useMongoDB } from '../../provider/mongodb.provider'
 
 export default defineEventHandler(async (event) => {
-  const id = event.context.params.id
-  const client = await getMongoClient()
-  const db = client.db()
+  const id =  getRouterParams(event).id
+  const db = await useMongoDB(event)
   const collection = db.collection('favoriteSchedules')
 
   const result = await collection.deleteOne({ id })
