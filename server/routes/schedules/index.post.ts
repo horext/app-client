@@ -2,12 +2,14 @@ import { readBody } from 'h3'
 import { scheduleSchema } from '../../schemas/schedule.schema'
 import { useScheduleRepository } from '~/server/provider/schedule.repository.provider'
 
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const parsedBody = scheduleSchema.parse(body)
-  const scheduleRepository = await useScheduleRepository(event)
+export default defineEventHandler({
+  handler: async (event) => {
+    const body = await readBody(event)
+    const parsedBody = scheduleSchema.parse(body)
+    const scheduleRepository = await useScheduleRepository(event)
 
-  const result = await scheduleRepository.create(parsedBody)
+    const result = await scheduleRepository.create(parsedBody)
 
-  return result
+    return result
+  }
 })

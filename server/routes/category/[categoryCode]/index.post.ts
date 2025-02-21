@@ -3,17 +3,19 @@ import { useScheduleRepository } from '~/server/provider/schedule.repository.pro
 import { categoryRouteSchema } from '~/server/schemas/category-route.schema'
 import { baseScheduleSchema } from '~/server/schemas/schedule.schema'
 
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const params = getRouterParams(event)
-  const { categoryCode } = categoryRouteSchema.parse(params)
-  const parsedBody = baseScheduleSchema.parse(body)
-  const scheduleRepository = await useScheduleRepository(event)
+export default defineEventHandler({
+  handler: async (event) => {
+    const body = await readBody(event)
+    const params = getRouterParams(event)
+    const { categoryCode } = categoryRouteSchema.parse(params)
+    const parsedBody = baseScheduleSchema.parse(body)
+    const scheduleRepository = await useScheduleRepository(event)
 
-  const result = await scheduleRepository.create({
-    ...parsedBody,
-    categories: [categoryCode],
-  })
+    const result = await scheduleRepository.create({
+      ...parsedBody,
+      categories: [categoryCode],
+    })
 
-  return result
+    return result
+  }
 })
