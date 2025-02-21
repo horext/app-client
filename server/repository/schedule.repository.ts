@@ -1,8 +1,15 @@
 import { Collection, Db, ObjectId } from "mongodb";
-import { IScheduleGenerate as ISchedule } from "~/interfaces/schedule";
+import { IScheduleGenerate } from "~/interfaces/schedule";
+
+export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
+
+export interface ISchedule extends IScheduleGenerate {
+    categories: ScheduleCategory[]
+}
 
 export interface IScheduleRepository {
     findAll(): Promise<ISchedule[]>
+    findAllByCategory(category: ScheduleCategory): Promise<ISchedule[]>
     create(schedule: ISchedule): Promise<ISchedule>
     deleteById(id: string): Promise<void>
 }
@@ -17,6 +24,11 @@ export class ScheduleRepository implements IScheduleRepository {
     findAll(): Promise<ISchedule[]> {
         return this.collection.find().toArray()
     }
+
+    findAllByCategory(category: ScheduleCategory): Promise<ISchedule[]> {
+        return this.collection.find({ categories: category }).toArray()
+    }
+
     async create(schedule: ISchedule): Promise<ISchedule> {
         const result = await this.collection.insertOne({
             ...schedule,

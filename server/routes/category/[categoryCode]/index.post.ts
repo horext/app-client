@@ -1,15 +1,18 @@
 import { readBody } from 'h3'
-import { scheduleSchema } from '../../schemas/schedule.schema'
 import { useScheduleRepository } from '~/server/provider/schedule.repository.provider'
+import { categoryRouteSchema } from '~/server/schemas/category-route.schema'
+import { baseScheduleSchema } from '~/server/schemas/schedule.schema'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const parsedBody = scheduleSchema.parse(body)
+  const params = getRouterParams(event)
+  const { categoryCode } = categoryRouteSchema.parse(params)
+  const parsedBody = baseScheduleSchema.parse(body)
   const scheduleRepository = await useScheduleRepository(event)
 
   const result = await scheduleRepository.create({
     ...parsedBody,
-    categories: ['GENARATED']
+    categories: [categoryCode],
   })
 
   return result
