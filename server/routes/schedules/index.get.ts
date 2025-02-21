@@ -1,13 +1,9 @@
-import { useMongoDB } from '../../provider/db.provider'
+import { useScheduleRepository } from '~/server/provider/schedule.repository.provider'
 
 export default defineEventHandler(async (event) => {
-  const db = await useMongoDB(event)
-  const collection = db.collection('schedules')
+  const scheduleRepository = await useScheduleRepository(event)
 
-  const schedules = await collection.find().toArray()
+  const schedules = await scheduleRepository.findAll()
 
-  return schedules.map((schedule) => ({
-    ...schedule,
-    _id: schedule._id.toString(),
-  }))
+  return schedules
 })
