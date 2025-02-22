@@ -11,14 +11,14 @@ export const AUTHORIZATION_PATTERN = new RegExp(
 export const authorizeEventRequest: _RequestMiddleware<
   EventHandlerRequest
 > = async (event) => {
-  const authHeader = event.headers.get(AUTHORIZATION_HEADER)
+  const authHeader = getAuthorizationHeader(event.headers)
   if (!authHeader) {
     throw createError({
       status: 401,
     })
   }
 
-  const token = AUTHORIZATION_PATTERN.exec(authHeader)?.groups?.token
+  const token = extractTokenFromAuthHeader(authHeader)
 
   if (!token) {
     throw createError({
@@ -36,6 +36,14 @@ export const authorizeEventRequest: _RequestMiddleware<
       cause: e,
     })
   }
+}
+
+function extractTokenFromAuthHeader(authHeader: string) {
+  return AUTHORIZATION_PATTERN.exec(authHeader)?.groups?.token
+}
+
+function getAuthorizationHeader(headers: Headers) {
+  return headers.get(AUTHORIZATION_HEADER)
 }
 
 export function getAuthenticatedUser(
