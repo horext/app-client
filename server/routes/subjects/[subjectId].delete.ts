@@ -5,10 +5,10 @@ export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
     const user = getAuthenticatedUser(event)
-    const { id } = getRouterParams(event)
+    const { subjectId } = getRouterParams(event)
     const subjectRepository = await useSubjectRepository(event)
 
-    await subjectRepository.deleteById(id, user.id)
+    await subjectRepository.deleteById(subjectId, user.id)
 
     return {
       message: 'Subject deleted successfully',
