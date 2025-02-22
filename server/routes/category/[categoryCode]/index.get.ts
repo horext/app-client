@@ -1,4 +1,3 @@
-import { H3Event, EventHandlerRequest } from 'h3'
 import { useScheduleRepository } from '~/server/provider/schedule.repository.provider'
 import { categoryRouteSchema } from '~/server/schemas/category-route.schema'
 import {

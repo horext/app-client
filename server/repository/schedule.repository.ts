@@ -1,5 +1,6 @@
-import { Collection, Db, ObjectId } from 'mongodb'
-import { IScheduleGenerate } from '~/interfaces/schedule'
+import type { Collection, Db} from 'mongodb';
+import { ObjectId } from 'mongodb'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
 
@@ -40,7 +41,7 @@ export class ScheduleRepository implements IScheduleRepository {
   }
 
   async create(schedule: ISchedule): Promise<ISchedule> {
-    const result = await this.collection.insertOne({
+    await this.collection.insertOne({
       ...schedule,
       createdAt: new Date(),
       updatedAt: new Date(),

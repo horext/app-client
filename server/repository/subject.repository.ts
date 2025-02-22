@@ -1,5 +1,6 @@
-import { Collection, Db, ObjectId } from 'mongodb'
-import { ISubject as IBaseSubject } from '~/interfaces/subject'
+import type { Collection, Db} from 'mongodb';
+import { ObjectId } from 'mongodb'
+import type { ISubject as IBaseSubject } from '~/interfaces/subject'
 
 export interface ISubject extends IBaseSubject {
   userId: string
@@ -32,7 +33,7 @@ export class SubjectRepository implements ISubjectRepository {
       createdAt: new Date(),
       updatedAt: new Date(),
     }
-    const result = await this.collection.insertOne(data)
+    await this.collection.insertOne(data)
 
     return data
   }

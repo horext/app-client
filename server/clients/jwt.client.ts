@@ -1,5 +1,5 @@
-import { JwtHeader, SigningKeyCallback } from 'jsonwebtoken'
-import { JwksClient } from 'jwks-rsa'
+import type { JwtHeader, SigningKeyCallback } from 'jsonwebtoken'
+import type { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 
 export interface JwtClientOptions {
