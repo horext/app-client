@@ -1,14 +1,6 @@
 import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
-import type { IBaseEvent as IBaseActivity } from '~/interfaces/event'
-
-export { IBaseActivity }
-
-export interface IActivity extends IBaseActivity {
-  userId: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { IBaseActivity, IActivity } from '../interfaces/activity.interface'
 
 export interface IActivityRepository {
   updateById(activityId: string, body: IBaseActivity, userId: string): Promise<IActivity | null>

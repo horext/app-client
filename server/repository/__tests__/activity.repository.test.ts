@@ -1,10 +1,10 @@
 import type { Mocked } from 'vitest'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ObjectId } from 'mongodb'
-import type { IActivity, IBaseActivity } from '../activity.repository'
 import { ActivityRepository } from '../activity.repository'
 import type { Collection, Db, FindCursor } from 'mongodb'
 import { Weekday } from '~/server/constants/weekday.constant'
+import type { IActivity, IBaseActivity } from '~/server/interfaces/activity.interface'
 
 describe('ActivityRepository', () => {
     let mockCollection: Mocked<
