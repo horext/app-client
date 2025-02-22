@@ -1,5 +1,6 @@
-import { type JwtPayload, verify, type JwtHeader, type SigningKeyCallback } from 'jsonwebtoken';
+import type { JwtPayload, JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
 import type { JwksClient } from 'jwks-rsa'
+import jwt from 'jsonwebtoken'
 
 export interface JwtClientOptions {
   audience: string
@@ -29,7 +30,7 @@ export class JwtClient implements IJwtClient {
 
   async verify(token: string) {
     return new Promise<JwtPayload>((resolve, reject) => {
-      verify(
+      jwt.verify(
         token,
         this.getKey,
         {
