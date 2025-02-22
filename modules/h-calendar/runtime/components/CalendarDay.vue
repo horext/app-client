@@ -68,13 +68,17 @@ const props = defineProps<{
   internalWidth: number
   intervalHeight: number
 }>()
-const emit = defineEmits<{
-  (key: 'click:event', event: IEventEmitData<T>): void
-  (key: 'dblclick:event', event: IEventEmitData<T>): void
-  (key: 'mousedown:event', event: IEventEmitData<T>): void
-  (key: 'mouseenter:event', event: IEventEmitData<T>): void
-  (key: 'mouseleave:event', event: IEventEmitData<T>): void
-  (key: 'mousemove:event', event: IEventEmitData<T>): void
+defineEmits<{
+  (
+    key:
+      | 'click:event'
+      | 'dblclick:event'
+      | 'mousedown:event'
+      | 'mouseenter:event'
+      | 'mouseleave:event'
+      | 'mousemove:event',
+    event: IEventEmitData<T>,
+  ): void
 }>()
 const {
   events,
