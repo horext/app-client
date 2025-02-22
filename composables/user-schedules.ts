@@ -5,7 +5,9 @@ export const useUserSchedules = () => {
   const storage = useLocalStorage()
   const configStore = useUserConfigStore()
   const { schedules } = storeToRefs(configStore)
-  const { public: { preferOfflineSave } } = useRuntimeConfig()
+  const {
+    public: { preferOfflineSave },
+  } = useRuntimeConfig()
 
   async function updateSchedules(_schedules: IScheduleGenerate[]) {
     schedules.value = _schedules

@@ -5,7 +5,9 @@ export const useUserFavoriteSchedules = () => {
   const storage = useLocalStorage()
   const configStore = useUserConfigStore()
   const { favoritesSchedules } = storeToRefs(configStore)
-  const { public: { preferOfflineSave } } = useRuntimeConfig()
+  const {
+    public: { preferOfflineSave },
+  } = useRuntimeConfig()
 
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate,
@@ -51,7 +53,8 @@ export const useUserFavoriteSchedules = () => {
   async function fetchFavoritesSchedules() {
     if (preferOfflineSave) {
       const data =
-        (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
+        (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) ||
+        []
       const _schedules: IScheduleGenerate[] = data || []
       favoritesSchedules.value = _schedules
     } else {

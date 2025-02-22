@@ -1,4 +1,4 @@
-import type { Db} from 'mongodb';
+import type { Db } from 'mongodb'
 import { MongoClient } from 'mongodb'
 import { useRuntimeConfig } from '#imports'
 import type { H3Event, EventHandlerRequest } from 'h3'

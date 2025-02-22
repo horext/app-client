@@ -73,5 +73,4 @@ describe('JwtClient', () => {
 
     expect(callback).toHaveBeenCalledWith(null, 'public-key')
   })
-
 })

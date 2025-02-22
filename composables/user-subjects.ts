@@ -5,7 +5,9 @@ export const useUserSubjects = () => {
   const storage = useLocalStorage()
   const configStore = useUserConfigStore()
   const { subjects } = storeToRefs(configStore)
-  const { public: { preferOfflineSave } } = useRuntimeConfig()
+  const {
+    public: { preferOfflineSave },
+  } = useRuntimeConfig()
 
   async function saveNewSubject(_subject: ISelectedSubject) {
     subjects.value.push(Object.assign({}, _subject))
@@ -43,7 +45,8 @@ export const useUserSubjects = () => {
 
   async function fetchSubjects() {
     if (preferOfflineSave) {
-      const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
+      const data =
+        (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
       const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
       subjects.value = _subjets
     } else {

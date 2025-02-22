@@ -7,7 +7,9 @@ export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
     const user = getAuthenticatedUser(event)
-    const body = await readValidatedBody(event, (data) => scheduleSchema.parse(data))
+    const body = await readValidatedBody(event, (data) =>
+      scheduleSchema.parse(data),
+    )
     const scheduleRepository = await useScheduleRepository(event)
 
     const result = await scheduleRepository.create(body, user.id)

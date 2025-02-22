@@ -1,4 +1,4 @@
-import type { JwtPayload, JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
+import type { JwtPayload, JwtHeader, SigningKeyCallback } from 'jsonwebtoken'
 import type { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 
@@ -16,7 +16,7 @@ export class JwtClient implements IJwtClient {
   constructor(
     private readonly options: JwtClientOptions,
     private readonly jwksClient: JwksClient,
-  ) { }
+  ) {}
 
   getKey(header: JwtHeader, callback: SigningKeyCallback) {
     this.jwksClient.getSigningKey(header.kid, (err, key) => {

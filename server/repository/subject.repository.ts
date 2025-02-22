@@ -42,6 +42,6 @@ export class SubjectRepository implements ISubjectRepository {
       userId,
     })
 
-    return result.deletedCount > 0 
+    return result.deletedCount > 0
   }
 }

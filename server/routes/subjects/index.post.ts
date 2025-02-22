@@ -6,7 +6,9 @@ import { readValidatedBody } from 'h3'
 export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
-    const body = await readValidatedBody(event, (data) => subjectSchema.parse(data))
+    const body = await readValidatedBody(event, (data) =>
+      subjectSchema.parse(data),
+    )
     const user = getAuthenticatedUser(event)
     const subjectRepository = await useSubjectRepository(event)
 
