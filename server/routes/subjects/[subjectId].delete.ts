@@ -8,7 +8,14 @@ export default defineEventHandler({
     const { subjectId } = getRouterParams(event)
     const subjectRepository = await useSubjectRepository(event)
 
-    await subjectRepository.deleteById(subjectId, user.id)
+   const isDeleted = await subjectRepository.deleteById(subjectId, user.id)
+
+    if (!isDeleted) {
+      return {
+        message: 'Subject not found',
+        status: 404,
+      }
+    }
 
     return {
       message: 'Subject deleted successfully',

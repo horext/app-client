@@ -11,7 +11,14 @@ export default defineEventHandler({
     const user = getAuthenticatedUser(event)
     const scheduleRepository = await useScheduleRepository(event)
 
-    await scheduleRepository.deleteById(scheduleId, user.id)
+    const isDeleted = await scheduleRepository.deleteById(scheduleId, user.id)
+
+    if (!isDeleted) {
+      return {
+        message: 'Schedule not found',
+        status: 404,
+      }
+    }
 
     return {
       message: 'Schedule deleted successfully',

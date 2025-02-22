@@ -26,7 +26,7 @@ export interface IScheduleRepository {
     schedule: Partial<IBaseSchedule>,
     userId: string,
   ): Promise<ISchedule>
-  deleteById(id: string, userId: string): Promise<void>
+  deleteById(id: string, userId: string): Promise<boolean>
 }
 
 export class ScheduleRepository implements IScheduleRepository {
@@ -43,7 +43,7 @@ export class ScheduleRepository implements IScheduleRepository {
   }
 
   findAllByCategory(category: ScheduleCategory, userId: string): Promise<ISchedule[]> {
-    return this.collection.find({ categories: category, userId }).toArray() 
+    return this.collection.find({ categories: category, userId }).toArray()
   }
 
   async create(schedule: IBaseSchedule, userId: string): Promise<ISchedule> {
@@ -57,18 +57,13 @@ export class ScheduleRepository implements IScheduleRepository {
     return data
   }
 
-  async deleteById(id: string, userId: string): Promise<void> {
+  async deleteById(id: string, userId: string): Promise<boolean> {
     const result = await this.collection.deleteOne({
       _id: new ObjectId(id),
       userId,
     })
 
-    if (result.deletedCount === 0) {
-      throw createError({
-        message: 'Schedule not found',
-        status: 404,
-      })
-    }
+    return result.deletedCount > 0
   }
 
   async partialUpdateById(
