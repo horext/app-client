@@ -1,5 +1,4 @@
-//@ts-ignore
-import { createVuetify } from 'vuetify/framework'
+import { createVuetify } from 'vuetify'
 import { es } from 'vuetify/locale'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
@@ -15,9 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         es,
       },
     },
-    theme: {
-     
-    },
+    theme: {},
     icons: {
       defaultSet: 'mdi',
       aliases,

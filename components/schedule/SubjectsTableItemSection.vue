@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
-import type { IScheduleSubjectGenerate } from '~/interfaces/schedule';
+import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
 const props = defineProps({
   schedule: {

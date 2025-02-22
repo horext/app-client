@@ -44,8 +44,6 @@ useSeoMeta({
     'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
 })
 
-const store = useUserConfigStore()
-
 const showAddFavoriteMessage = ref(false)
 
 const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =

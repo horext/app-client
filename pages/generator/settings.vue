@@ -43,7 +43,8 @@ import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 
 useSeoMeta({
   title: 'Configuración - Generador de Horarios',
-  description: 'Configura tu generador de horarios para tener una mejor experiencia',
+  description:
+    'Configura tu generador de horarios para tener una mejor experiencia',
 })
 
 const store = useUserConfigStore()

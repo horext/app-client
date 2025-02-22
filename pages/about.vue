@@ -20,7 +20,6 @@
             :lazy-src="img('/octatec-logo.png', { width: 128, quality: 100 })"
             :srcset="octatecLogo.srcset"
             :sizes="octatecLogo.sizes"
-         
           />
         </v-avatar>
         <p class="text-h6 text-center">Octatec</p>
@@ -33,7 +32,6 @@
             :src="img('/me.jpeg', { quality: 100 })"
             :srcset="mePhoto.srcset"
             :sizes="mePhoto.sizes"
-        
           />
         </v-avatar>
         <p class="text-h6 text-center">Franz A. Bendezu Isidro</p>

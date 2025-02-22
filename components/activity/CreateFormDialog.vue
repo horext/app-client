@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    max-width="500px"
-    @click:outside="emit('cancel')"
-  >
+  <v-dialog v-model="dialog" max-width="500px" @click:outside="emit('cancel')">
     <template #activator="{ props }">
       <v-btn color="primary" theme="dark" v-bind="props">
         Nueva Actividad
@@ -60,14 +56,17 @@ import { computed, ref, watch, toRefs } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 import type { VForm } from 'vuetify/components/VForm'
 
-const _props = withDefaults(defineProps<{
-  event: IEvent
-  loading?: boolean
-  modelValue: boolean
-}>(), {
-  modelValue: false,
-  loading: false,
-})
+const _props = withDefaults(
+  defineProps<{
+    event: IEvent
+    loading?: boolean
+    modelValue: boolean
+  }>(),
+  {
+    modelValue: false,
+    loading: false,
+  },
+)
 
 const emit = defineEmits<{
   (name: 'update:modelValue', value: boolean): void

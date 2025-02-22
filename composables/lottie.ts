@@ -5,8 +5,7 @@ import type {
   RendererType,
 } from 'lottie-web'
 import Lottie from 'lottie-web'
-import type { Ref } from 'vue'
-import type { ComponentPublicInstance } from 'vue'
+import type { Ref, ComponentPublicInstance  } from 'vue'
 
 export type LottieRef = Ref<ComponentPublicInstance | Element | null>
 

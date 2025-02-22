@@ -11,7 +11,7 @@ import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 defineOptions({
-  name: 'ScheduleFavoriteAdd'
+  name: 'ScheduleFavoriteAdd',
 })
 
 const props = defineProps({

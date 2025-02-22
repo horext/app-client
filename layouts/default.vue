@@ -5,4 +5,3 @@
   </home-view>
   <home-footer />
 </template>
-

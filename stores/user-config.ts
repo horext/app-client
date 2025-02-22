@@ -102,8 +102,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function fetchCrossings() {
-    const data: number | undefined =
-      (await storage.getItem('myCrossings')) || 0
+    const data: number | undefined = (await storage.getItem('myCrossings')) || 0
     const _crossings = Number(data) || 0
     crossings.value = _crossings
   }
@@ -125,8 +124,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   const fetchMyOcurrences = async () => {
-    const data =
-      await storage.getItem('myOcurrences')
+    const data = await storage.getItem('myOcurrences')
     occurrences.value = data || []
   }
 
