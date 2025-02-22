@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken'
 import type { _RequestMiddleware, EventHandlerRequest } from 'h3'
-import { useJwksClient } from '../provider/jwks.client.provider'
+import { useJwtClient } from '../provider/jwt.client.provider'
 
 export const AUTHORIZATION_HEADER = 'Authorization'
 export const AUTHORIZATION_PATTERN = new RegExp(
@@ -25,16 +24,11 @@ export const authorizeEventRequest: _RequestMiddleware<EventHandlerRequest> = as
             status: 401,
         })
     }
-
-    const { auth } = useRuntimeConfig(event)
-
     try {
-        const client = useJwksClient(event)
-        jwt.verify(token, client.getKey, {
-            algorithms: ['RS256'],
-            audience: auth.audience,
-            issuer: auth.issuer,
-        })
+        const client = useJwtClient(event)
+        const payload = await client.verify(token)
+
+        event.context.user = payload
     } catch (e) {
         throw createError({
             status: 401,
