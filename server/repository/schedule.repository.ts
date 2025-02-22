@@ -1,4 +1,4 @@
-import type { Collection, Db } from 'mongodb';
+import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
@@ -25,15 +25,13 @@ export interface IScheduleRepository {
     id: string,
     schedule: Partial<IBaseSchedule>,
     userId: string,
-  ): Promise<ISchedule>
+  ): Promise<ISchedule | null>
   deleteById(id: string, userId: string): Promise<boolean>
 }
 
 export class ScheduleRepository implements IScheduleRepository {
   private collectionName = 'schedules'
-  private collection: Collection<
-    ISchedule
-  >
+  private collection: Collection<ISchedule>
   constructor(private client: Pick<Db, 'collection'>) {
     this.collection = this.client.collection(this.collectionName)
   }
@@ -42,7 +40,10 @@ export class ScheduleRepository implements IScheduleRepository {
     return this.collection.find({ userId }).toArray()
   }
 
-  findAllByCategory(category: ScheduleCategory, userId: string): Promise<ISchedule[]> {
+  findAllByCategory(
+    category: ScheduleCategory,
+    userId: string,
+  ): Promise<ISchedule[]> {
     return this.collection.find({ categories: category, userId }).toArray()
   }
 
@@ -70,7 +71,7 @@ export class ScheduleRepository implements IScheduleRepository {
     id: string,
     schedule: Partial<IBaseSchedule>,
     userId: string,
-  ): Promise<ISchedule> {
+  ): Promise<ISchedule | null> {
     const result = await this.collection.findOneAndUpdate(
       {
         _id: new ObjectId(id),
@@ -86,13 +87,6 @@ export class ScheduleRepository implements IScheduleRepository {
         returnDocument: 'after',
       },
     )
-
-    if (!result) {
-      throw createError({
-        message: 'Schedule not found',
-        status: 404,
-      })
-    }
 
     return result
   }

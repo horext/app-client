@@ -22,6 +22,13 @@ export default defineEventHandler({
       user.id,
     )
 
+    if (!result) {
+      return {
+        message: 'Schedule not found',
+        status: 404,
+      }
+    }
+
     return result
   },
 })
