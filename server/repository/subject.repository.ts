@@ -1,4 +1,4 @@
-import type { Collection, Db} from 'mongodb';
+import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
 import type { ISubject as IBaseSubject } from '~/interfaces/subject'
 
@@ -16,10 +16,8 @@ export interface ISubjectRepository {
 
 export class SubjectRepository implements ISubjectRepository {
   private collectionName = 'subjects'
-  private collection: Collection<
-    ISubject & { createdAt: Date; updatedAt: Date }
-  >
-  constructor(private client: Db) {
+  private collection: Collection<ISubject>
+  constructor(private client: Pick<Db, 'collection'>) {
     this.collection = this.client.collection(this.collectionName)
   }
 
