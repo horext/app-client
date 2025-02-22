@@ -99,7 +99,7 @@ describe('createLazySingleton', () => {
     it('should return the same instance when called after resolve the promise', async () => {
         let callCount = 0;
         const creator = async (ctx: number) => {
-            console.log('creator', ctx);
+            console.timeLog('creator', ctx);
             const result = await new Promise<{ value: number; }>((resolve) => {
                 setTimeout(() => {
                     console.log('resolve', ctx);
@@ -107,7 +107,7 @@ describe('createLazySingleton', () => {
                     resolve({ value: ctx });
                 }, 300);
             });
-            console.log('result', result);
+            console.timeLog('result', result);
             return result;
         };
 
@@ -115,11 +115,13 @@ describe('createLazySingleton', () => {
 
         const delayedInstance = new Promise((resolve) => {
             setTimeout(() => {
+                console.timeLog('delayedInstance');
                 resolve(getInstance(2));
             }, 100);
         });
         let instance1
         getInstance(1).then((instance) => {
+            console.timeLog('instance', instance);
             instance1 = instance;
         });
         const instance2 = await delayedInstance;
