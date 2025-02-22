@@ -97,37 +97,55 @@ describe('createLazySingleton', () => {
     })
 
     it('should return the same instance when called after resolve the promise', async () => {
+        console.time('🔄 Creator Function');
+        console.time('📦 Result Value');
+        console.time('⏳ Delayed Instance');
+        console.time('✨ First Instance');
         let callCount = 0;
         const creator = async (ctx: number) => {
-            console.timeLog('creator', ctx);
+            console.timeLog('🔄 Creator Function', `Starting with context: ${ctx}`);
             const result = await new Promise<{ value: number; }>((resolve) => {
                 setTimeout(() => {
-                    console.log('resolve', ctx);
                     callCount++;
+                    console.timeLog('🔄 Creator Function', `Resolving with context: ${ctx}`);
                     resolve({ value: ctx });
                 }, 300);
             });
-            console.timeLog('result', result);
+            console.timeLog('📦 Result Value', `Created object: { value: ${result.value} }`);
             return result;
         };
-
+        const delayedInstance = () => new Promise<{
+            value: number;
+        }>((resolve) => {
+            setTimeout(async () => {
+                console.timeLog('⏳ Delayed Instance', 'Waiting for instance with context: 2');
+                const instance = await getInstance(2);
+                console.timeLog('⏳ Delayed Instance', 'Received: { value: 2 }');
+                resolve(instance);
+            }, 200);
+        });
         const getInstance = createLazySingleton(creator);
 
-        const delayedInstance = new Promise((resolve) => {
-            setTimeout(() => {
-                console.timeLog('delayedInstance');
-                resolve(getInstance(2));
-            }, 100);
-        });
+
         let instance1
-        getInstance(1).then((instance) => {
-            console.timeLog('instance', instance);
-            instance1 = instance;
-        });
-        const instance2 = await delayedInstance;
+        let instance2
+        console.timeLog('✨ First Instance', 'Requesting instance with context: 1');
+        await Promise.all([
+            getInstance(1).then((instance) => {
+                console.timeLog('✨ First Instance', `Received: { value: ${instance.value} }`);
+                instance1 = instance;
+            }),
+            delayedInstance().then((instance) => {
+                instance2 = instance;
+            })
+        ]);
 
         expect(instance1).toBe(instance2);
-
         expect(callCount).toBe(1);
+
+        console.timeEnd('🔄 Creator Function');
+        console.timeEnd('📦 Result Value');
+        console.timeEnd('⏳ Delayed Instance');
+        console.timeEnd('✨ First Instance');
     })
 });
