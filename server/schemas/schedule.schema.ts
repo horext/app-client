@@ -1,14 +1,5 @@
 import { z } from 'zod'
-
-enum Weekday {
-  Sunday = 0,
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 3,
-  Thursday = 4,
-  Friday = 5,
-  Saturday = 6,
-}
+import { weekdaySchema } from './common.schema'
 
 enum EventCategories {
   COURSE = 'COURSE',
@@ -54,7 +45,7 @@ const subjectScheduleSchema = z.array(
           id: z.number(),
           code: z.string(),
         }),
-        day: z.nativeEnum(Weekday),
+        day: weekdaySchema,
         startTime: z.string(),
         endTime: z.string(),
       }),
@@ -64,7 +55,7 @@ const subjectScheduleSchema = z.array(
 
 const eventSchedule = z.object({
   id: z.string(),
-  day: z.nativeEnum(Weekday),
+  day: weekdaySchema,
   startTime: z.string(),
   endTime: z.string(),
   title: z.string(),
