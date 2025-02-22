@@ -1,10 +1,10 @@
+import type {
+  IScheduleRepository} from '../repository/schedule.repository';
 import {
-  IScheduleRepository,
   ScheduleRepository,
 } from '../repository/schedule.repository'
 import { useMongoDB } from './db.provider'
-import type { H3Event } from 'h3'
-import type { EventHandlerRequest } from 'h3'
+import type { H3Event, EventHandlerRequest  } from 'h3'
 import { createLazySingleton } from './provider'
 
 export const useScheduleRepository = createLazySingleton(

@@ -1,10 +1,10 @@
+import type {
+  ISubjectRepository} from '../repository/subject.repository';
 import {
-  ISubjectRepository,
   SubjectRepository,
 } from '../repository/subject.repository'
 import { useMongoDB } from './db.provider'
-import type { H3Event } from 'h3'
-import type { EventHandlerRequest } from 'h3'
+import type { H3Event, EventHandlerRequest  } from 'h3'
 import { createLazySingleton } from './provider'
 
 export const useSubjectRepository = createLazySingleton(
