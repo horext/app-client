@@ -42,7 +42,7 @@ describe('ScheduleRepository', () => {
   })
 
   it('should find schedules by category', async () => {
-    const category: ScheduleCategory = 'GENARATED'
+    const category: ScheduleCategory = 'GENERATED'
     mockFind.toArray.mockResolvedValue([])
     const schedules = await repository.findAllByCategory(category, 'user123')
     expect(schedules).toEqual([])
@@ -50,7 +50,7 @@ describe('ScheduleRepository', () => {
 
   it('should create a schedule', async () => {
     const schedule: IBaseSchedule = {
-      categories: ['GENARATED'],
+      categories: ['GENERATED'],
       id: '',
       scheduleSubjectIds: [],
       schedule: [],

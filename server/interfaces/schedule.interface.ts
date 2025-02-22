@@ -1,6 +1,6 @@
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
+export type ScheduleCategory = 'GENERATED' | 'FAVORITE'
 
 export interface IBaseSchedule extends IScheduleGenerate {
   categories: ScheduleCategory[]
