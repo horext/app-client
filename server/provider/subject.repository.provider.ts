@@ -7,7 +7,6 @@ import { createLazySingleton } from "./provider"
 export const useSubjectRepository = createLazySingleton(
     async (event: H3Event<EventHandlerRequest>): Promise<ISubjectRepository> => {
         const db = await useMongoDB(event)
-        const subjectRepository = new SubjectRepository(db)
-        return subjectRepository
+        return new SubjectRepository(db)
     }
 )

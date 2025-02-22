@@ -98,13 +98,16 @@ describe('createLazySingleton', () => {
 
     it('should return the same instance when called after resolve the promise', async () => {
         let callCount = 0;
-        const creator = async (ctx: number) =>
-            new Promise<{ value: number }>((resolve) => {
+        const creator = async (ctx: number) => {
+            const result = await new Promise<{ value: number; }>((resolve) => {
                 setTimeout(() => {
                     callCount++;
                     resolve({ value: ctx });
                 }, 300);
             });
+
+            return result;
+        };
 
         const getInstance = createLazySingleton(creator);
 
@@ -117,7 +120,7 @@ describe('createLazySingleton', () => {
         getInstance(1).then((instance) => {
             instance1 = instance;
         });
-       const instance2 = await delayedInstance;
+        const instance2 = await delayedInstance;
 
         expect(instance1).toBe(instance2);
 

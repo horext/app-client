@@ -7,7 +7,6 @@ import { createLazySingleton } from "./provider"
 export const useScheduleRepository = createLazySingleton(
     async (event: H3Event<EventHandlerRequest>): Promise<IScheduleRepository> => {
         const db = await useMongoDB(event)
-        const scheduleRepository = new ScheduleRepository(db)
-        return scheduleRepository
+        return  new ScheduleRepository(db)
     },
 )
