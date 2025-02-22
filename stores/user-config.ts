@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '~/interfaces/schedule'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { Weekdays } from '~/interfaces/event'
@@ -12,8 +12,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     items: {
       mySubjects: Array<ISelectedSubject>
       myCrossings: number
-      mySchedules: Array<IScheduleGenerate>
-      myFavoritesSchedules: Array<IScheduleGenerate>
+      mySchedules: Array<IBaseScheduleGenerate>
+      myFavoritesSchedules: Array<IBaseScheduleGenerate>
       myOcurrences: Array<IIntersectionOccurrence>
       myWeekDays: Weekdays[]
     }
@@ -40,7 +40,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
   const schedules = ref<Array<IScheduleGenerate>>([])
-  const favoritesSchedules = ref<Array<IScheduleGenerate>>([])
   const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
@@ -150,7 +149,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoad,
     subjects,
     schedules,
-    favoritesSchedules,
     weekDays,
     firstEntry,
     facultyId,

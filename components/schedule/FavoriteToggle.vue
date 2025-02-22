@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import ScheduleFavoriteAction from '~/components/schedule/FavoriteAction.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 
 defineOptions({
   name: 'ScheduleFavoriteAdd',
@@ -16,11 +16,11 @@ defineOptions({
 
 const props = defineProps({
   schedule: {
-    type: Object as PropType<IScheduleGenerate>,
+    type: Object as PropType<IBaseScheduleGenerate>,
     required: true,
   },
   favoritesSchedules: {
-    type: Array as PropType<Array<IScheduleGenerate>>,
+    type: Array as PropType<Array<IBaseScheduleGenerate>>,
     default: () => [],
   },
 })
@@ -28,7 +28,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (
     event: 'click:addFavorite' | 'click:removeFavorite',
-    value: IScheduleGenerate,
+    value: IBaseScheduleGenerate,
   ): void
 }>()
 

@@ -18,7 +18,7 @@
     <template #top-items-left="{ item }">
       <schedule-favorite-add
         v-if="item"
-        :favorites-schedules="myFavoritesSchedules"
+        :favorites-schedules="favoritesSchedules"
         :schedule="item"
         @click:add-favorite="addFavorite"
         @click:remove-favorite="removeFavorite"
@@ -63,7 +63,7 @@ import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useUserEventsStore } from '~/stores/user-events'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
@@ -80,32 +80,33 @@ const succces = ref(false)
 const {
   crossings: crossingSubjects,
   subjects: mySubjects,
-  favoritesSchedules: myFavoritesSchedules,
-  schedules,
   occurrences,
 } = storeToRefs(configStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)
 
-const { addFavoriteSchedule, removeFavoriteSchedule } =
+const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =
   useUserFavoriteSchedules()
 
-const addFavorite = async (schedule: IScheduleGenerate) => {
+const addFavorite = async (schedule: IBaseScheduleGenerate) => {
   showAddFavoriteMessage.value = false
   await addFavoriteSchedule(schedule)
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
-const removeFavorite = async (schedule: IScheduleGenerate) => {
+const removeFavorite = async (schedule: IBaseScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
   await removeFavoriteSchedule(schedule)
   showRemoveFavoriteMessage.value = true
 }
 
 const { loadSchedules } = useSchedules()
-const { updateSchedules } = useUserSchedules()
+const { 
+  schedules,
+  updateSchedules,
+ } = useUserSchedules()
 const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false

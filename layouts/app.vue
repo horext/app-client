@@ -42,7 +42,7 @@ const store = useUserConfigStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
 
-const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { subjects } = storeToRefs(store)
 const { items: events } = storeToRefs(userEventsStore)
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
@@ -70,9 +70,9 @@ await useAsyncData('initData', async () => {
 })
 
 const { fetchSubjects } = useUserSubjects()
-const { fetchSchedules } = useUserSchedules()
+const { fetchSchedules, schedules } = useUserSchedules()
 
-const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
+const { fetchFavoritesSchedules, favoritesSchedules } = useUserFavoriteSchedules()
 
 onMounted(async () => {
   await fetchSubjects()

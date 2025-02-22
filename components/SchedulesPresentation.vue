@@ -67,12 +67,12 @@ import SchedulesList from '~/components/SchedulesWindow.vue'
 import ScheduleShare from '~/components/schedule/ShareCard.vue'
 import GoogleAuth from '~/components/GoogleAuth.vue'
 import { ViewMode } from '~/models/ViewMode'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import ScheduleMode from './schedule/Mode.vue'
 
 defineProps({
   schedules: {
-    type: Array as PropType<IScheduleGenerate[]>,
+    type: Array as PropType<IBaseScheduleGenerate[]>,
     default: () => [],
   },
   path: {
@@ -106,7 +106,7 @@ const startDate = computed(() => academicPeriodOrganizationUnit.value?.fromDate)
 
 const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 
-const currentSchedule = ref<IScheduleGenerate>()
+const currentSchedule = ref<IBaseScheduleGenerate>()
 
 const dialogShare = ref(false)
 

@@ -5,10 +5,14 @@ export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: Pick<ISubject, 'id' | 'course'>
 }
 
-export interface IScheduleGenerate {
+export interface IBaseScheduleGenerate {
   id: string
   scheduleSubjectIds: number[]
   schedule: IScheduleSubjectGenerate[]
   crossings: number
   events: IEvent[]
+}
+
+export interface IScheduleGenerate extends IBaseScheduleGenerate {
+  categories: ('GENERATED' | 'FAVORITE')[]
 }

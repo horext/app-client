@@ -29,11 +29,11 @@
 <script setup lang="ts">
 import ScheduleSection from './SubjectsTableItemSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 
 defineProps({
   schedule: {
-    type: Object as PropType<IScheduleGenerate>,
+    type: Object as PropType<IBaseScheduleGenerate>,
     required: true,
   },
 })

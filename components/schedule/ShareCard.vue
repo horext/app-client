@@ -74,7 +74,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import {
   mdiFacebook,
   mdiTwitter,
@@ -89,7 +89,7 @@ defineOptions({
 })
 const props = defineProps({
   schedule: {
-    type: Object as PropType<IScheduleGenerate>,
+    type: Object as PropType<IBaseScheduleGenerate>,
     required: true,
   },
   path: { type: String, default: '/subject' },

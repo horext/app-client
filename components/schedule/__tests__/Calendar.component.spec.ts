@@ -4,12 +4,12 @@ import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import { nextTick } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import { VMenu } from 'vuetify/components'
 
 const vuetify = createVuetify()
 describe('Schedule Calendar', () => {
-  const scheduleMock: IScheduleGenerate = {
+  const scheduleMock: IBaseScheduleGenerate = {
     events: [
       {
         id: '1',

@@ -32,19 +32,19 @@ import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/SubjectsTable.vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { ViewMode } from '~/models/ViewMode'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import { mdiArrowRightBoldCircle, mdiArrowLeftBoldCircle } from '@mdi/js'
 import type { Weekdays } from '~/interfaces/event'
 
 const props = defineProps<{
-  schedules: IScheduleGenerate[]
+  schedules: IBaseScheduleGenerate[]
   weekDays: Weekdays[]
-  currentSchedule: IScheduleGenerate | undefined
+  currentSchedule: IBaseScheduleGenerate | undefined
   mode: ViewMode
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:currentSchedule', value: IScheduleGenerate): void
+  (event: 'update:currentSchedule', value: IBaseScheduleGenerate): void
 }>()
 
 const { schedules } = toRefs(props)

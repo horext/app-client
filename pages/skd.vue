@@ -26,10 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
-import { useUserConfigStore } from '~/stores/user-config'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import { mdiStar } from '@mdi/js'
 import {
   useClassSessionApi,
@@ -49,12 +48,9 @@ useSeoMeta({
 
 const scheduleSubjectApi = useScheduleSubjectApi()
 const classSessionApi = useClassSessionApi()
-const schedules = ref<IScheduleGenerate[]>([])
+const schedules = ref<IBaseScheduleGenerate[]>([])
 const loading = ref(false)
 
-const store = useUserConfigStore()
-
-const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const route = useRoute()
 
 const { data: subjects } = useAsyncData<ISelectedSubject[]>(
@@ -87,7 +83,7 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   },
 )
 
-const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
+const { deleteFavoriteScheduleById, saveNewFavoriteSchedule, favoritesSchedules } =
   useUserFavoriteSchedules()
 
 const { loadSchedules } = useSchedules()
@@ -114,8 +110,8 @@ const addFavoriteCurrentSchedule = () => {
   }
 }
 
-const isFavorite = (schedule: IScheduleGenerate) => {
-  return myFavoritesSchedules.value.findIndex((x) => x.id === schedule.id)
+const isFavorite = (schedule: IBaseScheduleGenerate) => {
+  return favoritesSchedules.value.findIndex((x) => x.id === schedule.id)
 }
 </script>
 

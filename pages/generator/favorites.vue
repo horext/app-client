@@ -34,7 +34,7 @@
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
@@ -48,14 +48,14 @@ const showAddFavoriteMessage = ref(false)
 const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =
   useUserFavoriteSchedules()
 
-const addFavorite = async (schedule: IScheduleGenerate) => {
+const addFavorite = async (schedule: IBaseScheduleGenerate) => {
   showAddFavoriteMessage.value = false
   await addFavoriteSchedule(schedule)
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
-const removeFavorite = async (schedule: IScheduleGenerate) => {
+const removeFavorite = async (schedule: IBaseScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
   await removeFavoriteSchedule(schedule)
   showRemoveFavoriteMessage.value = true

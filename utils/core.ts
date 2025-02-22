@@ -1,6 +1,6 @@
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
-  IScheduleGenerate,
+  IBaseScheduleGenerate,
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
 import type { ISelectedSubject } from '~/interfaces/subject'
@@ -28,7 +28,7 @@ export function getSchedules(
   _options?: ScheduleOptions,
 ): {
   occurrences: IIntersectionOccurrence[]
-  combinations: IScheduleGenerate[]
+  combinations: IBaseScheduleGenerate[]
 } {
   const options = {
     credits: 100,
@@ -40,7 +40,7 @@ export function getSchedules(
   const occurrences: IIntersectionOccurrence[] = []
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const schedules: Array<IScheduleGenerate> = []
+  const schedules: Array<IBaseScheduleGenerate> = []
   const baseEvents = myEvents.map(Event.buildFrom)
 
   const advanceIndex = (i: number) => {
