@@ -26,8 +26,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'click:addFavorite', value: IScheduleGenerate): void
-  (event: 'click:removeFavorite', value: IScheduleGenerate): void
+  (
+    event: 'click:addFavorite' | 'click:removeFavorite',
+    value: IScheduleGenerate,
+  ): void
 }>()
 
 const {

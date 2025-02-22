@@ -8,10 +8,14 @@ defineProps<{
   loadingExportImage: boolean
 }>()
 defineEmits<{
-  (event: 'click:share', value: MouseEvent): void
-  (event: 'click:export-pdf', value: MouseEvent): void
-  (event: 'click:export-image', value: MouseEvent): void
-  (event: 'click:sync', value: MouseEvent): void
+  (
+    event:
+      | 'click:share'
+      | 'click:export-pdf'
+      | 'click:export-image'
+      | 'click:sync',
+    value: MouseEvent,
+  ): void
 }>()
 </script>
 
