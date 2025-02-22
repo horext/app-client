@@ -8,11 +8,11 @@ export interface ISchedule extends IScheduleGenerate {
 }
 
 export interface IScheduleRepository {
-    findAll(): Promise<ISchedule[]>
-    findAllByCategory(category: ScheduleCategory): Promise<ISchedule[]>
-    create(schedule: ISchedule): Promise<ISchedule>
-    partialUpdateById(id: string, schedule: Partial<ISchedule>): Promise<ISchedule>
-    deleteById(id: string): Promise<void>
+    findAll(userId: string): Promise<ISchedule[]>
+    findAllByCategory(category: ScheduleCategory, userId: string): Promise<ISchedule[]>
+    create(schedule: ISchedule, userId: string): Promise<ISchedule>
+    partialUpdateById(id: string, schedule: Partial<ISchedule>, userId: string): Promise<ISchedule>
+    deleteById(id: string, userId: string): Promise<void>
 }
 
 export class ScheduleRepository implements IScheduleRepository {
@@ -41,8 +41,13 @@ export class ScheduleRepository implements IScheduleRepository {
         }
     }
 
-    async deleteById(id: string): Promise<void> {
-        const result = await this.collection.deleteOne({ _id: new ObjectId(id) })
+    async deleteById(id: string, userId: string): Promise<void> {
+        const result = await this.collection.deleteOne(
+            {
+                _id: new ObjectId(id),
+                userId
+            }
+        )
 
         if (result.deletedCount === 0) {
             throw createError({
@@ -52,15 +57,22 @@ export class ScheduleRepository implements IScheduleRepository {
         }
     }
 
-    async partialUpdateById(id: string, schedule: Partial<ISchedule>): Promise<ISchedule> {
-        const result = await this.collection.findOneAndUpdate({ _id: new ObjectId(id) }, {
-            $set: {
-                ...schedule,
-                updatedAt: new Date(),
+    async partialUpdateById(id: string, schedule: Partial<ISchedule>, userId: string): Promise<ISchedule> {
+        const result = await this.collection.findOneAndUpdate(
+            {
+                _id: new ObjectId(id),
+                userId: userId
+            },
+            {
+                $set: {
+                    ...schedule,
+                    updatedAt: new Date()
+                }
+            },
+            {
+                returnDocument: 'after'
             }
-        }, {
-            returnDocument: 'after'
-        })
+        )
 
         if (!result) {
             throw createError({

@@ -1,10 +1,16 @@
 import { Collection, Db, ObjectId } from "mongodb";
-import { ISubject } from "~/interfaces/subject";
+import { ISubject as  IBaseSubject } from "~/interfaces/subject";
+
+export interface ISubject extends IBaseSubject {
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+}
 
 export interface ISubjectRepository {
-    findAll(): Promise<ISubject[]>
-    create(subject: ISubject): Promise<ISubject>
-    deleteById(id: string): Promise<void>
+    findAll(userId: string): Promise<ISubject[]>
+    create(subject: IBaseSubject, userId: string): Promise<ISubject>
+    deleteById(id: string, userId: string): Promise<void>
 }
 
 export class SubjectRepository implements ISubjectRepository {
@@ -14,22 +20,26 @@ export class SubjectRepository implements ISubjectRepository {
         this.collection = this.client.collection(this.collectionName)
     }
 
-    findAll(): Promise<ISubject[]> {
-        return this.collection.find().toArray()
+    findAll(userId: string): Promise<ISubject[]> {
+        return this.collection.find({ userId }).toArray()
     }
-    async create(subject: ISubject): Promise<ISubject> {
-        const result = await this.collection.insertOne({
+    async create(subject: IBaseSubject, userId: string): Promise<ISubject> {
+        const data = {
             ...subject,
+            userId,
             createdAt: new Date(),
             updatedAt: new Date(),
-        })
-        return {
-            ...subject,
         }
+        const result = await this.collection.insertOne(data)
+
+        return data
     }
 
-    async deleteById(id: string): Promise<void> {
-        const result = await this.collection.deleteOne({ _id: new ObjectId(id) })
+    async deleteById(id: string, userId: string): Promise<void> {
+        const result = await this.collection.deleteOne({
+            _id: new ObjectId(id),
+            userId
+        })
 
         if (result.deletedCount === 0) {
             throw createError({
