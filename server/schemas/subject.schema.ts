@@ -51,8 +51,8 @@ export const subjectSchema = z.object({
           day: z.number(),
           startTime: z.string(),
           endTime: z.string(),
-        })
+        }),
       ),
-    })
+    }),
   ),
 })

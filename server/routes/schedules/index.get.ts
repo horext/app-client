@@ -8,5 +8,5 @@ export default defineEventHandler({
     const scheduleRepository = await useScheduleRepository(event)
     const schedules = await scheduleRepository.findAll(user.id)
     return schedules
-  }
+  },
 })

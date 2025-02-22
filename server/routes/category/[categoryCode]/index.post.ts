@@ -2,8 +2,10 @@ import { readBody } from 'h3'
 import { useScheduleRepository } from '~/server/provider/schedule.repository.provider'
 import { categoryRouteSchema } from '~/server/schemas/category-route.schema'
 import { scheduleSchema } from '~/server/schemas/schedule.schema'
-import { authorizeEventRequest, getAuthenticatedUser } from '~/server/utils/auth'
-
+import {
+  authorizeEventRequest,
+  getAuthenticatedUser,
+} from '~/server/utils/auth'
 
 export default defineEventHandler({
   onRequest: authorizeEventRequest,
@@ -21,5 +23,5 @@ export default defineEventHandler({
     const result = await scheduleRepository.create(parsedBody, user.id)
 
     return result
-  }
+  },
 })

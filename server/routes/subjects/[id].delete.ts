@@ -4,7 +4,7 @@ import { useSubjectRepository } from '../../provider/subject.repository.provider
 export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
-      const user = getAuthenticatedUser(event)
+    const user = getAuthenticatedUser(event)
     const { id } = getRouterParams(event)
     const subjectRepository = await useSubjectRepository(event)
 
@@ -12,7 +12,7 @@ export default defineEventHandler({
 
     return {
       message: 'Subject deleted successfully',
-      status: 200
+      status: 200,
     }
-  }
+  },
 })

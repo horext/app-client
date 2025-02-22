@@ -7,17 +7,17 @@ enum Weekday {
   Wednesday = 3,
   Thursday = 4,
   Friday = 5,
-  Saturday = 6
+  Saturday = 6,
 }
 
 enum EventCategories {
   COURSE = 'COURSE',
-  MY_EVENT = 'MY_EVENT'
+  MY_EVENT = 'MY_EVENT',
 }
 
 enum ScheduleCategory {
   GENARATED = 'GENARATED',
-  FAVORITE = 'FAVORITE'
+  FAVORITE = 'FAVORITE',
 }
 
 const subjectScheduleSchema = z.array(
@@ -57,9 +57,9 @@ const subjectScheduleSchema = z.array(
         day: z.nativeEnum(Weekday),
         startTime: z.string(),
         endTime: z.string(),
-      })
+      }),
     ),
-  })
+  }),
 )
 
 const eventSchedule = z.object({
@@ -85,4 +85,3 @@ export const scheduleSchema = z.object({
   events: z.array(eventSchedule),
   categories: z.array(scheduleCategoryCodeSchema),
 })
-

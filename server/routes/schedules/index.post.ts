@@ -11,11 +11,8 @@ export default defineEventHandler({
     const parsedBody = scheduleSchema.parse(body)
     const scheduleRepository = await useScheduleRepository(event)
 
-    const result = await scheduleRepository.create(
-      parsedBody,
-      user.id
-    )
+    const result = await scheduleRepository.create(parsedBody, user.id)
 
     return result
-  }
+  },
 })

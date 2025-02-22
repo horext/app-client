@@ -12,8 +12,12 @@ export default defineEventHandler({
     const parsedBody = scheduleSchema.partial().parse(body)
     const scheduleRepository = await useScheduleRepository(event)
 
-    const result = await scheduleRepository.partialUpdateById(scheduleId, parsedBody, user.id)
+    const result = await scheduleRepository.partialUpdateById(
+      scheduleId,
+      parsedBody,
+      user.id,
+    )
 
     return result
-  }
+  },
 })

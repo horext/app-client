@@ -13,5 +13,5 @@ export default defineEventHandler({
     return {
       message: 'Schedule deleted successfully',
     }
-  }
+  },
 })

@@ -10,14 +10,11 @@ export default defineEventHandler({
     const user = getAuthenticatedUser(event)
     const subjectRepository = await useSubjectRepository(event)
 
-    const result = await subjectRepository.create(
-      parsedBody,
-      user.id
-    )
+    const result = await subjectRepository.create(parsedBody, user.id)
 
     return {
       status: 'success',
       data: result,
     }
-  }
+  },
 })
