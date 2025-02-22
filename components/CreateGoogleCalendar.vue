@@ -24,6 +24,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import type { VForm } from 'vuetify/components/VForm';
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 
 const props = defineProps<{
@@ -50,7 +51,7 @@ watch(
   },
 )
 
-const form = ref<any>()
+const form = ref<VForm>()
 
 const save = () => {
   if (form.value?.validate()) {

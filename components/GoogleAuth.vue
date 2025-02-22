@@ -212,7 +212,7 @@ const progress = ref(0)
 const defaultNotification = ref(new EventNotification())
 const notifications = ref([new EventNotification()])
 
-const selected = ref<any>(null)
+const selected = ref<IGoogleCalendarItem | null>(null)
 
 /**
  *  Sign out the user upon button click.
@@ -273,7 +273,7 @@ const {
   status: exportEventToGCalendarStatus,
   error: exportEventToGCalendarError,
 } = useAsyncData<
-  void,
+  undefined,
   {
     error?: {
       message?: string
@@ -284,7 +284,7 @@ const {
     if (!form.value) return
     const { valid } = await form.value.validate()
     if (!valid) {
-      return
+      return 
     }
     progress.value = 0
     for (const event of events.value) {
@@ -298,12 +298,15 @@ const {
   },
 )
 
-async function eventRequest(event: IEvent): Promise<any> {
+async function eventRequest(event: IEvent): Promise<CalendarEvent> {
   if (!dateStart.value) {
     throw new Error('No se ha seleccionado una fecha de inicio')
   }
   if (!dateEnd.value) {
     throw new Error('No se ha seleccionado una fecha de fin')
+  }
+  if (!selected.value) {
+    throw new Error('No se ha seleccionado un calendario')
   }
   return await createEvent(
     selected.value.id,
