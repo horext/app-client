@@ -2,6 +2,7 @@ import { useScheduleRepository } from '~/server/provider/schedule.repository.pro
 import { categoryRouteSchema } from '~/server/schemas/category-route.schema'
 
 export default defineEventHandler({
+  onRequest: authorizeEventRequest,
   handler: async (event) => {
     const params = getRouterParams(event)
     const { categoryCode } = categoryRouteSchema.parse(params)

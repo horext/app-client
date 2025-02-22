@@ -57,6 +57,11 @@ export default defineNuxtConfig({
       uri: '',
       dbName: '',
     },
+    auth: {
+      jwksUri: '',
+      audience: '',
+      issuer: '',
+    },
   },
 
   experimental: {
