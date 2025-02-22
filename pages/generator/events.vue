@@ -71,7 +71,8 @@ import { EVENT_HEADERS } from '~/constants/event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
-  description: 'Administra tus actividades para tener un mejor control de tu tiempo',
+  description:
+    'Administra tus actividades para tener un mejor control de tu tiempo',
 })
 
 const store = useUserEventsStore()

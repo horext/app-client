@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxt/image',
     '@nuxt/scripts',
+    '@nuxt/eslint',
   ],
 
   image: {

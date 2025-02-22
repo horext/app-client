@@ -7,6 +7,7 @@ export interface GoogleAccountsLoaderApi {
 }
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface Window extends GoogleAccountsLoaderApi {}
 }
 
@@ -16,7 +17,6 @@ export function useGoogleAccounts() {
       key: 'google-accounts',
       src: 'https://accounts.google.com/gsi/client',
       async: true,
-      //@ts-ignore
       crossorigin: false,
     },
     {

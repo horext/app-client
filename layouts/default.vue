@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-multiple-template-root -->
 <template>
   <home-app-bar />
   <home-view>
@@ -5,4 +6,3 @@
   </home-view>
   <home-footer />
 </template>
-

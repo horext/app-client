@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    max-width="500px"
-    @click:outside="emit('cancel')"
-  >
+  <v-dialog v-model="dialog" max-width="500px" @click:outside="emit('cancel')">
     <template #activator="{ props }">
       <v-btn color="primary" theme="dark" v-bind="props">
         Nueva Actividad
@@ -60,14 +56,17 @@ import { computed, ref, watch, toRefs } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 import type { VForm } from 'vuetify/components/VForm'
 
-const _props = withDefaults(defineProps<{
-  event: IEvent
-  loading?: boolean
-  modelValue: boolean
-}>(), {
-  modelValue: false,
-  loading: false,
-})
+const _props = withDefaults(
+  defineProps<{
+    event: IEvent
+    loading?: boolean
+    modelValue: boolean
+  }>(),
+  {
+    modelValue: false,
+    loading: false,
+  },
+)
 
 const emit = defineEmits<{
   (name: 'update:modelValue', value: boolean): void
@@ -111,29 +110,36 @@ const endTime = computed(() => {
   return internalEvent.value.endTime
 })
 const rules = computed(() => ({
-  required: (value: any) => !!value || 'Requerido.',
-  requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-  max: (value: any) =>
+  required: (value: unknown) => !!value || 'Requerido.',
+  requiredDay: (value: number) => (value >= 0 && value <= 6) || 'Requerido.',
+  max: (value: string) =>
     value < endTime.value || 'Tiene que ser menor que el fin',
-  min: (value: any) =>
+  min: (value: string) =>
     value > startTime.value || 'Tiene que ser mayor que el inicio',
 }))
 
 const startRules = computed(() => {
-  const rules: any[] = [(value: any) => !!value || 'Requerido.']
+  const rules: (
+    | ((value: unknown) => boolean | string)
+    | ((value: string) => boolean | string)
+  )[] = [(value: unknown) => !!value || 'Requerido.']
   if (endTime.value < startTime.value) {
     rules.push(
-      (value: any) => value < endTime.value || 'Tiene que ser menor que el fin',
+      (value: string) =>
+        value < endTime.value || 'Tiene que ser menor que el fin',
     )
   }
   return rules
 })
 
 const endRules = computed(() => {
-  const rules: any[] = [(value: any) => !!value || 'Requerido.']
+  const rules: (
+    | ((value: unknown) => boolean | string)
+    | ((value: string) => boolean | string)
+  )[] = [(value: unknown) => !!value || 'Requerido.']
   if (startTime.value > endTime.value) {
     rules.push(
-      (value: any) =>
+      (value: string) =>
         value > startTime.value || 'Tiene que ser mayor que el inicio',
     )
   }

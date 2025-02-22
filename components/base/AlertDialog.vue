@@ -37,8 +37,7 @@ const props = withDefaults(
 )
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
-  (event: 'click:confirm', value: MouseEvent): void
-  (event: 'click:reject', value: MouseEvent): void
+  (event: 'click:confirm' | 'click:reject', value: MouseEvent): void
 }>()
 
 const internalValue = useVModel(props, 'modelValue', emit)

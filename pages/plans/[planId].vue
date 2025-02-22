@@ -116,6 +116,5 @@ const handleUnselectAll = (cycle: number) => {
   .subjects {
     flex-direction: column;
   }
-  
 }
 </style>

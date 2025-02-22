@@ -13,15 +13,11 @@
       <v-row align="center" class="text-white mx-auto" justify="center">
         <v-col class="text-white text-center" cols="12">
           <h1>
-            <span
-              class="font-weight-light text-h5 text-md-4 text-lg-h3"
-            >
+            <span class="font-weight-light text-h5 text-md-4 text-lg-h3">
               Bienvenido a
             </span>
             <br />
-            <span
-              class="font-weight-black text-h6 text-md-3 text-lg-h2"
-            >
+            <span class="font-weight-black text-h6 text-md-3 text-lg-h2">
               Horext
             </span>
           </h1>

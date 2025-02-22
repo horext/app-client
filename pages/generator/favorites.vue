@@ -34,7 +34,6 @@
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
-import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
@@ -43,8 +42,6 @@ useSeoMeta({
   description:
     'Administra tus horarios favoritos para tener un mejor control de tu tiempo',
 })
-
-const store = useUserConfigStore()
 
 const showAddFavoriteMessage = ref(false)
 

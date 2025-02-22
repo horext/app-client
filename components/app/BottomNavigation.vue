@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation  color="primary" grow>
+  <v-bottom-navigation color="primary" grow>
     <v-btn
       v-for="item in items"
       :key="item.to"

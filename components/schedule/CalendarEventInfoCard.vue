@@ -86,7 +86,7 @@ const emit = defineEmits<{
 
 const dialogSync = useVModel(props, 'dialog', emit)
 
-const selectedDay: Ref<string> = computed(
-  () => getWeekdayName(props.selectedEvent.day),
+const selectedDay: Ref<string> = computed(() =>
+  getWeekdayName(props.selectedEvent.day),
 )
 </script>

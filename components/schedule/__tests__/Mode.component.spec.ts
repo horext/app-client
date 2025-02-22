@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import Mode from '../Mode.vue'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { ViewMode } from '~/models/ViewMode'
 import { createVuetify } from 'vuetify'
 import { VRadioGroup } from 'vuetify/components'
