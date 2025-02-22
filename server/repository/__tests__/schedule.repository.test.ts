@@ -67,7 +67,19 @@ describe('ScheduleRepository', () => {
             deletedCount: 1,
             acknowledged: false
         })
-        await expect(repository.deleteById(id, userId)).resolves.toBeUndefined()
+        const deleted = await repository.deleteById(id, userId)
+        expect(deleted).toBe(true)
+    })
+
+    it('should return false if the schedule was not found', async () => {
+        const id = new ObjectId().toString()
+        const userId = 'user123'
+        collection.deleteOne.mockResolvedValue({
+            deletedCount: 0,
+            acknowledged: false
+        })
+        const deleted = await repository.deleteById(id, userId)
+        expect(deleted).toBe(false)
     })
 
     it('should partially update a schedule by id', async () => {
