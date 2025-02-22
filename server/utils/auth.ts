@@ -38,11 +38,11 @@ export const authorizeEventRequest: _RequestMiddleware<
   }
 }
 
-function extractTokenFromAuthHeader(authHeader: string) {
+export function extractTokenFromAuthHeader(authHeader: string) {
   return AUTHORIZATION_PATTERN.exec(authHeader)?.groups?.token
 }
 
-function getAuthorizationHeader(headers: Headers) {
+export function getAuthorizationHeader(headers: Headers) {
   return headers.get(AUTHORIZATION_HEADER)
 }
 
