@@ -6,7 +6,12 @@ export interface JwtClientOptions {
   issuer: string
 }
 
-export class JwtClient {
+export interface IJwtClient {
+  getKey(header: JwtHeader, callback: SigningKeyCallback): void
+  verify(token: string): Promise<JwtPayload>
+}
+
+export class JwtClient implements IJwtClient {
   constructor(
     private readonly options: JwtClientOptions,
     private readonly jwksClient: JwksClient,
