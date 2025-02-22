@@ -9,8 +9,9 @@ export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
     const user = getAuthenticatedUser(event)
-    const params = getRouterParams(event)
-    const { categoryCode } = categoryRouteSchema.parse(params)
+    const { categoryCode } = await getValidatedRouterParams(event, (data) =>
+      categoryRouteSchema.parse(data),
+    )
     const scheduleRepository = await useScheduleRepository(event)
     const schedules = await scheduleRepository.findAllByCategory(
       categoryCode,
