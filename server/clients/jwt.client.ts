@@ -1,6 +1,5 @@
-import type { JwtHeader, SigningKeyCallback } from 'jsonwebtoken'
+import { type JwtPayload, verify, type JwtHeader, type SigningKeyCallback } from 'jsonwebtoken';
 import type { JwksClient } from 'jwks-rsa'
-import jwt from 'jsonwebtoken'
 
 export interface JwtClientOptions {
   audience: string
@@ -11,7 +10,7 @@ export class JwtClient {
   constructor(
     private readonly options: JwtClientOptions,
     private readonly jwksClient: JwksClient,
-  ) {}
+  ) { }
 
   getKey(header: JwtHeader, callback: SigningKeyCallback) {
     this.jwksClient.getSigningKey(header.kid, (err, key) => {
@@ -24,8 +23,8 @@ export class JwtClient {
   }
 
   async verify(token: string) {
-    return new Promise<jwt.JwtPayload>((resolve, reject) => {
-      jwt.verify(
+    return new Promise<JwtPayload>((resolve, reject) => {
+      verify(
         token,
         this.getKey,
         {
