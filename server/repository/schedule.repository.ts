@@ -34,16 +34,16 @@ export class ScheduleRepository implements IScheduleRepository {
   private collection: Collection<
     ISchedule
   >
-  constructor(private client: Db) {
+  constructor(private client: Pick<Db, 'collection'>) {
     this.collection = this.client.collection(this.collectionName)
   }
 
-  findAll(): Promise<ISchedule[]> {
-    return this.collection.find().toArray()
+  findAll(userId: string): Promise<ISchedule[]> {
+    return this.collection.find({ userId }).toArray()
   }
 
-  findAllByCategory(category: ScheduleCategory): Promise<ISchedule[]> {
-    return this.collection.find({ categories: category }).toArray()
+  findAllByCategory(category: ScheduleCategory, userId: string): Promise<ISchedule[]> {
+    return this.collection.find({ categories: category, userId }).toArray() 
   }
 
   async create(schedule: IBaseSchedule, userId: string): Promise<ISchedule> {
