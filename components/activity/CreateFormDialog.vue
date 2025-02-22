@@ -110,29 +110,29 @@ const endTime = computed(() => {
   return internalEvent.value.endTime
 })
 const rules = computed(() => ({
-  required: (value: any) => !!value || 'Requerido.',
-  requiredDay: (value: any) => (value >= 0 && value <= 6) || 'Requerido.',
-  max: (value: any) =>
+  required: (value: unknown) => !!value || 'Requerido.',
+  requiredDay: (value: number) => (value >= 0 && value <= 6) || 'Requerido.',
+  max: (value: string) =>
     value < endTime.value || 'Tiene que ser menor que el fin',
-  min: (value: any) =>
+  min: (value: string) =>
     value > startTime.value || 'Tiene que ser mayor que el inicio',
 }))
 
 const startRules = computed(() => {
-  const rules: any[] = [(value: any) => !!value || 'Requerido.']
+  const rules: unknown[] = [(value: unknown) => !!value || 'Requerido.']
   if (endTime.value < startTime.value) {
     rules.push(
-      (value: any) => value < endTime.value || 'Tiene que ser menor que el fin',
+      (value: string) => value < endTime.value || 'Tiene que ser menor que el fin',
     )
   }
   return rules
 })
 
 const endRules = computed(() => {
-  const rules: any[] = [(value: any) => !!value || 'Requerido.']
+  const rules: unknown[] = [(value: unknown) => !!value || 'Requerido.']
   if (startTime.value > endTime.value) {
     rules.push(
-      (value: any) =>
+      (value: string) =>
         value > startTime.value || 'Tiene que ser mayor que el inicio',
     )
   }

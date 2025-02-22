@@ -17,7 +17,6 @@ export function useGoogleAccounts() {
       key: 'google-accounts',
       src: 'https://accounts.google.com/gsi/client',
       async: true,
-      //@ts-ignore
       crossorigin: false,
     },
     {
