@@ -1,15 +1,9 @@
 import { z } from 'zod'
 import { weekdaySchema } from './common.schema'
-
-enum EventCategories {
-  COURSE = 'COURSE',
-  MY_EVENT = 'MY_EVENT',
-}
-
-enum ScheduleCategory {
-  GENARATED = 'GENARATED',
-  FAVORITE = 'FAVORITE',
-}
+import {
+  EventCategories,
+  ScheduleCategory,
+} from '../constants/categories.constant'
 
 const subjectScheduleSchema = z.array(
   z.object({
@@ -62,11 +56,15 @@ const eventSchedule = z.object({
   description: z.string().optional(),
   location: z.string().optional(),
   color: z.string(),
-  category: z.nativeEnum(EventCategories),
+  category: z
+    .literal(EventCategories.COURSE)
+    .or(z.literal(EventCategories.MY_EVENT)),
   type: z.string(),
 })
 
-export const scheduleCategoryCodeSchema = z.nativeEnum(ScheduleCategory)
+export const scheduleCategoryCodeSchema = z
+  .literal(ScheduleCategory.GENARATED)
+  .or(z.literal(ScheduleCategory.FAVORITE))
 
 export const scheduleSchema = z.object({
   id: z.string(),
