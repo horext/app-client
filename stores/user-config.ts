@@ -47,6 +47,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const firstEntry = ref(true)
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
+  const preferOfflineSave = ref(true)
 
   const facultyId = computed(() => {
     return faculty.value?.id
@@ -158,6 +159,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoadId,
     isNewHourlyLoad,
     isUpdateHourlyLoad,
+    preferOfflineSave,
     updateFaculty,
     updateSpeciality,
     updateFirstEntry,

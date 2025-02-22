@@ -54,6 +54,15 @@ export default defineNuxtConfig({
     gsi: {
       apiKey: '',
     },
+    mongodb: {
+      uri: '',
+      dbName: '',
+    },
+    auth: {
+      jwksUri: '',
+      audience: '',
+      issuer: '',
+    },
   },
 
   experimental: {

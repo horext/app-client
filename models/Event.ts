@@ -2,7 +2,7 @@ import { v4 } from 'uuid'
 import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
 
-export default class Event {
+export default class Event implements IEvent {
   id: string
   day: Weekdays
   startTime: string
