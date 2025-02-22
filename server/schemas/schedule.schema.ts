@@ -75,15 +75,14 @@ const eventSchedule = z.object({
   type: z.string(),
 })
 
-export const baseScheduleSchema = z.object({
+export const scheduleCategoryCodeSchema = z.nativeEnum(ScheduleCategory)
+
+export const scheduleSchema = z.object({
   id: z.string(),
   scheduleSubjectIds: z.array(z.number()),
   schedule: subjectScheduleSchema,
   crossings: z.number(),
   events: z.array(eventSchedule),
-})
-
-export const scheduleCategoryCodeSchema = z.nativeEnum(ScheduleCategory)
-export const scheduleSchema = baseScheduleSchema.extend({
   categories: z.array(scheduleCategoryCodeSchema),
 })
+
