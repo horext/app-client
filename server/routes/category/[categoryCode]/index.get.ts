@@ -14,7 +14,3 @@ export default defineEventHandler({
     return schedules
   }
 })
-function getAuthenticatedUser(event: H3Event<EventHandlerRequest>) {
-  throw new Error('Function not implemented.')
-}
-
