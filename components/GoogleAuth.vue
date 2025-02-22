@@ -284,7 +284,7 @@ const {
     if (!form.value) return
     const { valid } = await form.value.validate()
     if (!valid) {
-      return 
+      return
     }
     progress.value = 0
     for (const event of events.value) {

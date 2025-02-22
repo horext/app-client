@@ -11,7 +11,7 @@ export interface ExportToCanvasOptions {
 }
 
 export const exportToCanvas = async function (element: HTMLElement) {
-  let options:ExportToCanvasOptions = {
+  let options: ExportToCanvasOptions = {
     logging: true,
     scrollX: 0,
     scrollY: 0,

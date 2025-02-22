@@ -24,7 +24,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { VForm } from 'vuetify/components/VForm';
+import type { VForm } from 'vuetify/components/VForm'
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 
 const props = defineProps<{

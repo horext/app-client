@@ -24,7 +24,16 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  (key: 'click'| 'mouseover'| 'mouseleave'| 'mousedown' |'mousemove' | 'mouseup', event: MouseEvent): void
+  (
+    key:
+      | 'click'
+      | 'mouseover'
+      | 'mouseleave'
+      | 'mousedown'
+      | 'mousemove'
+      | 'mouseup',
+    event: MouseEvent,
+  ): void
 }>()
 
 const { intervalHeight } = toRefs(props)
