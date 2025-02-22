@@ -4,8 +4,8 @@ import { type Db, type Collection, type FindCursor, ObjectId } from 'mongodb'
 import type {
   ISchedule,
   IBaseSchedule,
-  ScheduleCategory,
-} from '../schedule.repository'
+  ScheduleCategory
+} from '../../interfaces/schedule.interface'
 import { ScheduleRepository } from '../schedule.repository'
 
 describe('ScheduleRepository', () => {

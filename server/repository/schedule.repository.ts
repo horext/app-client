@@ -1,18 +1,6 @@
 import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-
-export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
-
-export interface IBaseSchedule extends IScheduleGenerate {
-  categories: ScheduleCategory[]
-}
-
-export interface ISchedule extends IBaseSchedule {
-  userId: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { ISchedule, ScheduleCategory, IBaseSchedule } from '../interfaces/schedule.interface'
 
 export interface IScheduleRepository {
   findAll(userId: string): Promise<ISchedule[]>
