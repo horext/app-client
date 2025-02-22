@@ -119,17 +119,24 @@ const rules = computed(() => ({
 }))
 
 const startRules = computed(() => {
-  const rules: unknown[] = [(value: unknown) => !!value || 'Requerido.']
+  const rules: (
+    | ((value: unknown) => boolean | string)
+    | ((value: string) => boolean | string)
+  )[] = [(value: unknown) => !!value || 'Requerido.']
   if (endTime.value < startTime.value) {
     rules.push(
-      (value: string) => value < endTime.value || 'Tiene que ser menor que el fin',
+      (value: string) =>
+        value < endTime.value || 'Tiene que ser menor que el fin',
     )
   }
   return rules
 })
 
 const endRules = computed(() => {
-  const rules: unknown[] = [(value: unknown) => !!value || 'Requerido.']
+  const rules: (
+    | ((value: unknown) => boolean | string)
+    | ((value: string) => boolean | string)
+  )[] = [(value: unknown) => !!value || 'Requerido.']
   if (startTime.value > endTime.value) {
     rules.push(
       (value: string) =>
