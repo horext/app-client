@@ -3,7 +3,7 @@ import { weekdaySchema } from './common.schema'
 import {
   EventCategories,
   ScheduleCategory,
-} from '../constants/categories.constant'
+} from '../models/categories.model'
 
 const subjectScheduleSchema = z.array(
   z.object({
@@ -56,9 +56,7 @@ const eventSchedule = z.object({
   description: z.string().optional(),
   location: z.string().optional(),
   color: z.string(),
-  category: z
-    .literal(EventCategories.COURSE)
-    .or(z.literal(EventCategories.MY_EVENT)),
+  category: z.nativeEnum(EventCategories),
   type: z.string(),
 })
 

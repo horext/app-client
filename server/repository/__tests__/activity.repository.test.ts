@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ObjectId } from 'mongodb'
 import { ActivityRepository } from '../activity.repository'
 import type { Collection, Db, FindCursor } from 'mongodb'
-import { Weekday } from '~/server/constants/weekday.constant'
+import { Weekday } from '~/server/models/weekday.model'
 import type {
   IActivity,
   IBaseActivity,

@@ -1,4 +1,4 @@
-export const enum Weekday {
+export enum Weekday {
   Sunday = 0,
   Monday = 1,
   Tuesday = 2,
