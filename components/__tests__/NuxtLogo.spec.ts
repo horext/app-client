@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { mount } from '@vue/test-utils'
 import NuxtLogo from '@/components/NuxtLogo.vue'
-import { describe, expect, it, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 describe('NuxtLogo', () => {
   test('is a Vue instance', () => {
