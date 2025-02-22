@@ -122,7 +122,7 @@ describe('createLazySingleton', () => {
                 const instance = await getInstance(2);
                 console.timeLog('⏳ Delayed Instance', 'Received: { value: 2 }');
                 resolve(instance);
-            }, 200);
+            }, 150);
         });
         const getInstance = createLazySingleton(creator);
 
