@@ -3,6 +3,6 @@ export const enum EventCategories {
   MY_EVENT = 'MY_EVENT',
 }
 export const enum ScheduleCategory {
-  GENARATED = 'GENARATED',
+  GENERATED = 'GENERATED',
   FAVORITE = 'FAVORITE',
 }

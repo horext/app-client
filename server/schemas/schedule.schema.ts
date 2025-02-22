@@ -63,7 +63,7 @@ const eventSchedule = z.object({
 })
 
 export const scheduleCategoryCodeSchema = z
-  .literal(ScheduleCategory.GENARATED)
+  .literal(ScheduleCategory.GENERATED)
   .or(z.literal(ScheduleCategory.FAVORITE))
 
 export const scheduleSchema = z.object({
