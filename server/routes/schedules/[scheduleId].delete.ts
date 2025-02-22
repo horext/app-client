@@ -3,10 +3,10 @@ import { useScheduleRepository } from '~/server/provider/schedule.repository.pro
 export default defineEventHandler({
   onRequest: authorizeEventRequest,
   handler: async (event) => {
-    const { id } = getRouterParams(event)
+    const { scheduleId } = getRouterParams(event)
     const scheduleRepository = await useScheduleRepository(event)
 
-    await scheduleRepository.deleteById(id)
+    await scheduleRepository.deleteById(scheduleId)
 
     return {
       message: 'Schedule deleted successfully',
