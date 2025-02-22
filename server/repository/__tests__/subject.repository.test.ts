@@ -29,86 +29,21 @@ describe('SubjectRepository', () => {
         subjectRepository = new SubjectRepository(db)
     })
 
-    describe('findAll', () => {
-        it('should return all subjects for a user', async () => {
-            const userId = 'user123'
-            const subjects = [
-                {
-                    _id: new ObjectId(),
-                    userId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    course: {
-                        id: '',
-                        name: '',
-                    },
-                    credits: 0,
-                    cycle: 0,
-                    id: 1,
-                    studyPlan: {
-                        id: 0,
-                        fromDate: '',
-                        code: '',
-                        organizationUnit: {
-                            id: 0,
-                        },
-                    },
-                    type: {
-                        id: 0,
-                        name: '',
-                        code: '',
-                    },
-                },
-                {
-                    _id: new ObjectId(),
-                    userId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    course: {
-                        id: '',
-                        name: '',
-                    },
-                    credits: 0,
-                    cycle: 0,
-                    id: 1,
-                    studyPlan: {
-                        id: 0,
-                        fromDate: '',
-                        code: '',
-                        organizationUnit: {
-                            id: 0,
-                        },
-                    },
-                    type: {
-                        id: 0,
-                        name: '',
-                        code: '',
-                    },
-                },
-            ] satisfies WithId<ISubject>[]
-            mockFind.toArray.mockResolvedValue(subjects)
-
-            const result = await subjectRepository.findAll(userId)
-
-            expect(result).toEqual(subjects)
-            expect(collection.find).toHaveBeenCalledWith({ userId })
-        })
-    })
-
-    describe('create', () => {
-        it('should create a new subject', async () => {
-            const userId = 'user123'
-            const subject: IBaseSubject = {
-                id: 0,
+    it('should return all subjects for a user', async () => {
+        const userId = 'user123'
+        const subjects = [
+            {
+                _id: new ObjectId(),
+                userId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
                 course: {
                     id: '',
                     name: '',
                 },
-                type: {
-                    id: 0,
-                    name: '',
-                    code: '',
-                },
+                credits: 0,
+                cycle: 0,
+                id: 1,
                 studyPlan: {
                     id: 0,
                     fromDate: '',
@@ -117,62 +52,121 @@ describe('SubjectRepository', () => {
                         id: 0,
                     },
                 },
-                credits: 0,
-                cycle: null,
-            }
-            const createdSubject: ISubject = {
-                ...subject,
+                type: {
+                    id: 0,
+                    name: '',
+                    code: '',
+                },
+            },
+            {
+                _id: new ObjectId(),
                 userId,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            }
-            collection.insertOne.mockResolvedValue({
-                insertedId: new ObjectId(),
-                acknowledged: false,
-            })
+                course: {
+                    id: '',
+                    name: '',
+                },
+                credits: 0,
+                cycle: 0,
+                id: 1,
+                studyPlan: {
+                    id: 0,
+                    fromDate: '',
+                    code: '',
+                    organizationUnit: {
+                        id: 0,
+                    },
+                },
+                type: {
+                    id: 0,
+                    name: '',
+                    code: '',
+                },
+            },
+        ] satisfies WithId<ISubject>[]
+        mockFind.toArray.mockResolvedValue(subjects)
 
-            const result = await subjectRepository.create(subject, userId)
+        const result = await subjectRepository.findAll(userId)
 
-            expect(result).toEqual(createdSubject)
-            expect(collection.insertOne).toHaveBeenCalledWith(createdSubject)
-        })
+        expect(result).toEqual(subjects)
+        expect(collection.find).toHaveBeenCalledWith({ userId })
     })
 
-    describe('deleteById', () => {
-        it('should return true if the subject was deleted', async () => {
-            const userId = 'user123'
-            const id = new ObjectId().toString()
-            collection.deleteOne.mockResolvedValue({
-                deletedCount: 1,
-                acknowledged: false,
-            })
-
-            const deleted = await subjectRepository.deleteById(id, userId)
-
-            expect(collection.deleteOne).toHaveBeenCalledWith({
-                _id: new ObjectId(id),
-                userId,
-            })
-
-            expect(deleted).toBe(true)
+    it('should create a new subject', async () => {
+        const userId = 'user123'
+        const subject: IBaseSubject = {
+            id: 0,
+            course: {
+                id: '',
+                name: '',
+            },
+            type: {
+                id: 0,
+                name: '',
+                code: '',
+            },
+            studyPlan: {
+                id: 0,
+                fromDate: '',
+                code: '',
+                organizationUnit: {
+                    id: 0,
+                },
+            },
+            credits: 0,
+            cycle: null,
+        }
+        const createdSubject: ISubject = {
+            ...subject,
+            userId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        }
+        collection.insertOne.mockResolvedValue({
+            insertedId: new ObjectId(),
+            acknowledged: false,
         })
 
-        it('should return false if the subject was not found', async () => {
-            const userId = 'user123'
-            const id = new ObjectId().toString()
-            collection.deleteOne.mockResolvedValue({
-                deletedCount: 0,
-                acknowledged: false,
-            })
+        const result = await subjectRepository.create(subject, userId)
 
-            const deleted = await subjectRepository.deleteById(id, userId)
+        expect(result).toEqual(createdSubject)
+        expect(collection.insertOne).toHaveBeenCalledWith(createdSubject)
+    })
 
-            expect(collection.deleteOne).toHaveBeenCalledWith({
-                _id: new ObjectId(id),
-                userId,
-            })
-
-            expect(deleted).toBe(false)
+    it('should return true if the subject was deleted', async () => {
+        const userId = 'user123'
+        const id = new ObjectId().toString()
+        collection.deleteOne.mockResolvedValue({
+            deletedCount: 1,
+            acknowledged: false,
         })
+
+        const deleted = await subjectRepository.deleteById(id, userId)
+
+        expect(collection.deleteOne).toHaveBeenCalledWith({
+            _id: new ObjectId(id),
+            userId,
+        })
+
+        expect(deleted).toBe(true)
+    })
+
+    it('should return false if the subject was not found', async () => {
+        const userId = 'user123'
+        const id = new ObjectId().toString()
+        collection.deleteOne.mockResolvedValue({
+            deletedCount: 0,
+            acknowledged: false,
+        })
+
+        const deleted = await subjectRepository.deleteById(id, userId)
+
+        expect(collection.deleteOne).toHaveBeenCalledWith({
+            _id: new ObjectId(id),
+            userId,
+        })
+
+        expect(deleted).toBe(false)
     })
 })
