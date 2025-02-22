@@ -17,8 +17,7 @@ export type ScheduleOptions = {
   crossPractices?: boolean
 }
 
-export interface ISubjectEntry
-  extends Pick<ISelectedSubject, 'id' | 'schedules' | 'course'> {}
+export type ISubjectEntry = Pick<ISelectedSubject, 'id' | 'schedules' | 'course'>
 
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
