@@ -38,6 +38,6 @@ defineProps<{
 }>()
 
 defineEmits<{
-  (event: 'download:pdf'| 'download:image', value: MouseEvent): void
+  (event: 'download:pdf' | 'download:image', value: MouseEvent): void
 }>()
 </script>
