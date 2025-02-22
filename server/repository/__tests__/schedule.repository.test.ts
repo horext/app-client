@@ -1,8 +1,8 @@
 import type { Mocked } from 'vitest';
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { type Db, type Collection, type FindCursor, ObjectId } from 'mongodb';
-import type { ISchedule, IBaseSchedule, ScheduleCategory } from './schedule.repository';
-import { ScheduleRepository } from './schedule.repository';
+import type { ISchedule, IBaseSchedule, ScheduleCategory } from '../schedule.repository';
+import { ScheduleRepository } from '../schedule.repository';
 
 describe('ScheduleRepository', () => {
     let db: Mocked<Pick<Db, 'collection'>>

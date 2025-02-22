@@ -2,8 +2,8 @@ import type { Mocked } from 'vitest'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { Db, Collection, FindCursor, WithId } from 'mongodb'
 import { ObjectId } from 'mongodb'
-import type { ISubject } from './subject.repository'
-import { SubjectRepository } from './subject.repository'
+import type { ISubject } from '../subject.repository'
+import { SubjectRepository } from '../subject.repository'
 import type { ISubject as IBaseSubject } from '~/interfaces/subject'
 
 describe('SubjectRepository', () => {
