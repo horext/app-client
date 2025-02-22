@@ -5,7 +5,7 @@ import {
   authorizeEventRequest,
   getAuthenticatedUser,
 } from '~/server/utils/auth'
-import { readValidatedBody, getValidatedRouterParams } from 'h3'
+import { readValidatedBody, getValidatedRouterParams, defineEventHandler } from 'h3'
 
 export default defineEventHandler({
   onRequest: authorizeEventRequest,
