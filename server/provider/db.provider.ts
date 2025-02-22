@@ -6,9 +6,9 @@ import { createLazySingleton } from './provider'
 
 export const useMongoDB = createLazySingleton(
   async (event: H3Event<EventHandlerRequest>): Promise<Db> => {
-    const { db: dbConfig } = useRuntimeConfig(event)
+    const { mongodb: dbConfig } = useRuntimeConfig(event)
     const client = new MongoClient(dbConfig.uri)
     await client.connect()
-    return client.db(dbConfig.name)
+    return client.db(dbConfig.dbName)
   },
 )
