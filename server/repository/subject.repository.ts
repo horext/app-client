@@ -1,12 +1,7 @@
 import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
 import type { ISubject as IBaseSubject } from '~/interfaces/subject'
-
-export interface ISubject extends IBaseSubject {
-  userId: string
-  createdAt: Date
-  updatedAt: Date
-}
+import type { ISubject } from '../interfaces/subject.interface'
 
 export interface ISubjectRepository {
   findAll(userId: string): Promise<ISubject[]>
