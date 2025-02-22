@@ -1,6 +1,10 @@
 import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
-import type { ISchedule, ScheduleCategory, IBaseSchedule } from '../interfaces/schedule.interface'
+import type {
+  ISchedule,
+  ScheduleCategory,
+  IBaseSchedule,
+} from '../interfaces/schedule.interface'
 
 export interface IScheduleRepository {
   findAll(userId: string): Promise<ISchedule[]>

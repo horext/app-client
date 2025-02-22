@@ -13,7 +13,11 @@ export default defineEventHandler({
     const user = getAuthenticatedUser(event)
     const activityRepository = await useActivityRepository(event)
 
-    const result = await activityRepository.updateById(activityId, body, user.id)
+    const result = await activityRepository.updateById(
+      activityId,
+      body,
+      user.id,
+    )
 
     if (!result) {
       return {

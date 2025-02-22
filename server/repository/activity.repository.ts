@@ -3,7 +3,11 @@ import { ObjectId } from 'mongodb'
 import type { IBaseActivity, IActivity } from '../interfaces/activity.interface'
 
 export interface IActivityRepository {
-  updateById(activityId: string, body: IBaseActivity, userId: string): Promise<IActivity | null>
+  updateById(
+    activityId: string,
+    body: IBaseActivity,
+    userId: string,
+  ): Promise<IActivity | null>
   findAll(userId: string): Promise<IActivity[]>
   create(activity: IBaseActivity, userId: string): Promise<IActivity>
   deleteById(id: string, userId: string): Promise<boolean>
@@ -15,7 +19,6 @@ export class ActivityRepository implements IActivityRepository {
   constructor(private client: Pick<Db, 'collection'>) {
     this.collection = this.client.collection(this.collectionName)
   }
-
 
   findAll(userId: string): Promise<IActivity[]> {
     return this.collection.find({ userId }).toArray()
@@ -42,7 +45,11 @@ export class ActivityRepository implements IActivityRepository {
     return result.deletedCount > 0
   }
 
-  updateById(activityId: string, body: IBaseActivity, userId: string): Promise<IActivity | null> {
+  updateById(
+    activityId: string,
+    body: IBaseActivity,
+    userId: string,
+  ): Promise<IActivity | null> {
     const data = {
       ...body,
       updatedAt: new Date(),
@@ -56,6 +63,5 @@ export class ActivityRepository implements IActivityRepository {
       { $set: data },
       { returnDocument: 'after' },
     )
-
   }
 }

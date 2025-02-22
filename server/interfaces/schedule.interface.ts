@@ -1,14 +1,13 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule';
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-
-export type ScheduleCategory = 'GENARATED' | 'FAVORITE';
+export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
 
 export interface IBaseSchedule extends IScheduleGenerate {
-  categories: ScheduleCategory[];
+  categories: ScheduleCategory[]
 }
 
 export interface ISchedule extends IBaseSchedule {
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  userId: string
+  createdAt: Date
+  updatedAt: Date
 }
