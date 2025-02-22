@@ -1,11 +1,17 @@
-import type { Collection, Db} from 'mongodb';
+import type { Collection, Db } from 'mongodb';
 import { ObjectId } from 'mongodb'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export type ScheduleCategory = 'GENARATED' | 'FAVORITE'
 
-export interface ISchedule extends IScheduleGenerate {
+export interface IBaseSchedule extends IScheduleGenerate {
   categories: ScheduleCategory[]
+}
+
+export interface ISchedule extends IBaseSchedule {
+  userId: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface IScheduleRepository {
@@ -14,10 +20,10 @@ export interface IScheduleRepository {
     category: ScheduleCategory,
     userId: string,
   ): Promise<ISchedule[]>
-  create(schedule: ISchedule, userId: string): Promise<ISchedule>
+  create(schedule: IBaseSchedule, userId: string): Promise<ISchedule>
   partialUpdateById(
     id: string,
-    schedule: Partial<ISchedule>,
+    schedule: Partial<IBaseSchedule>,
     userId: string,
   ): Promise<ISchedule>
   deleteById(id: string, userId: string): Promise<void>
@@ -26,7 +32,7 @@ export interface IScheduleRepository {
 export class ScheduleRepository implements IScheduleRepository {
   private collectionName = 'schedules'
   private collection: Collection<
-    ISchedule & { createdAt: Date; updatedAt: Date }
+    ISchedule
   >
   constructor(private client: Db) {
     this.collection = this.client.collection(this.collectionName)
@@ -40,15 +46,15 @@ export class ScheduleRepository implements IScheduleRepository {
     return this.collection.find({ categories: category }).toArray()
   }
 
-  async create(schedule: ISchedule): Promise<ISchedule> {
-    await this.collection.insertOne({
+  async create(schedule: IBaseSchedule, userId: string): Promise<ISchedule> {
+    const data = {
       ...schedule,
       createdAt: new Date(),
       updatedAt: new Date(),
-    })
-    return {
-      ...schedule,
+      userId,
     }
+    await this.collection.insertOne(data)
+    return data
   }
 
   async deleteById(id: string, userId: string): Promise<void> {
@@ -67,7 +73,7 @@ export class ScheduleRepository implements IScheduleRepository {
 
   async partialUpdateById(
     id: string,
-    schedule: Partial<ISchedule>,
+    schedule: Partial<IBaseSchedule>,
     userId: string,
   ): Promise<ISchedule> {
     const result = await this.collection.findOneAndUpdate(
