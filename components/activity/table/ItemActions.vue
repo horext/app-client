@@ -35,7 +35,6 @@
 import { mdiPencil, mdiDelete } from '@mdi/js'
 
 const emit = defineEmits<{
-  (type: 'click:edit', item: MouseEvent): void
-  (type: 'click:delete', item: MouseEvent): void
+  (type: 'click:edit' | 'click:delete', item: MouseEvent): void
 }>()
 </script>

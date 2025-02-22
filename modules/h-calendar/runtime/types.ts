@@ -1,4 +1,4 @@
-import type { Weekdays } from "./constants/week"
+import type { Weekdays } from './constants/week'
 
 export interface ICalendarEvent {
   id: string

@@ -7,7 +7,6 @@ import { createVuetify } from 'vuetify'
 const vuetify = createVuetify()
 
 describe('ItemActions', () => {
-
   const mountComponent = () => {
     return mount(ItemActions, {
       global: {

@@ -61,7 +61,10 @@ const selectedEvent = ref<IScheduleCalendarEvent | null>(null)
 const selectedElement = ref<HTMLElement | null>(null)
 const selectedOpen = ref(false)
 
-const showEvent = ({ nativeEvent, event }: IEventEmitData<IScheduleCalendarEvent>) => {
+const showEvent = ({
+  nativeEvent,
+  event,
+}: IEventEmitData<IScheduleCalendarEvent>) => {
   const open = () => {
     selectedEvent.value = event
     selectedElement.value = nativeEvent.target as HTMLElement

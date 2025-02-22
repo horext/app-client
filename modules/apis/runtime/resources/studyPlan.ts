@@ -1,6 +1,5 @@
 import { BaseApi } from './base'
-import type { IStudyPlan } from '~/interfaces/subject'
-import type { ISubjectStudyPlan } from '~/interfaces/subject'
+import type { IStudyPlan, ISubjectStudyPlan } from '~/interfaces/subject'
 
 export interface IStudyPlanApi {
   getAll(): Promise<IStudyPlan[]>

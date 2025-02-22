@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
 import GeneratorActions from '../GeneratorActions.vue'
 import { describe, expect, it } from 'vitest'
-import { mdiHelpCircle, mdiUpdate } from '@mdi/js'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VTextField } from 'vuetify/components/VTextField'
 import { VIcon } from 'vuetify/components/VIcon'

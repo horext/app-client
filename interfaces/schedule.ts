@@ -1,7 +1,7 @@
 import type { IEvent } from './event'
 import type { ISubject, ISubjectSchedule } from './subject'
 
-export interface IScheduleSubjectGenerate  extends ISubjectSchedule{
+export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: Pick<ISubject, 'id' | 'course'>
 }
 

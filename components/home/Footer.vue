@@ -4,7 +4,7 @@
       <v-row dense>
         <v-col cols="12" md="6">
           <v-row justify-md="start" justify="center" dense>
-            <v-col v-for="(s, i) in social" :key="s.name" cols="auto">
+            <v-col v-for="s in social" :key="s.name" cols="auto">
               <a class="px-5 py-4" :href="s.link" v-text="s.name" />
             </v-col>
           </v-row>

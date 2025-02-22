@@ -4,7 +4,7 @@ import type {
   IGoogleCalendarListPayload,
 } from '~/interfaces/google/calendar'
 
-import { CalendarEvent } from '~/models/google'
+import type { CalendarEvent } from '~/models/google'
 
 export const useGoogleOAuth2 = () => {
   const { $script } = useGoogleAccounts()
@@ -70,8 +70,10 @@ export const useGoogleOAuth2 = () => {
         getToken()
       }
       if (accessToken) {
-        const headers = options?.headers ? new Headers(options.headers) : new Headers();
-        headers.set("Authorization", `Bearer ${accessToken}`);
+        const headers = options?.headers
+          ? new Headers(options.headers)
+          : new Headers()
+        headers.set('Authorization', `Bearer ${accessToken}`)
       }
     },
   })

@@ -8,7 +8,12 @@
     </v-col>
     <v-col cols="12" md="6">
       <v-responsive>
-        <LottieRender :animation-data="AnimationData" loop autoplay renderer="svg" />
+        <LottieRender
+          :animation-data="AnimationData"
+          loop
+          autoplay
+          renderer="svg"
+        />
       </v-responsive>
     </v-col>
   </v-row>

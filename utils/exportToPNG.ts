@@ -1,8 +1,17 @@
 import html2canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 
+export interface ExportToCanvasOptions {
+  logging?: boolean
+  scrollX?: number
+  scrollY?: number
+  windowWidth?: number
+  width?: number
+  removeContainer?: boolean
+}
+
 export const exportToCanvas = async function (element: HTMLElement) {
-  let options: any = {
+  let options: ExportToCanvasOptions = {
     logging: true,
     scrollX: 0,
     scrollY: 0,

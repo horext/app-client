@@ -80,12 +80,16 @@ const props = withDefaults(
 )
 
 defineEmits<{
-  (key: 'click:event', value: IEventEmitData<T>): void
-  (key: 'mouseenter:event', value: IEventEmitData<T>): void
-  (key: 'mouseleave:event', value: IEventEmitData<T>): void
-  (key: 'mousemove:event', value: IEventEmitData<T>): void
-  (key: 'mousedown:event', value: IEventEmitData<T>): void
-  (key: 'dblclick:event', value: IEventEmitData<T>): void
+  (
+    key:
+      | 'click:event'
+      | 'mouseenter:event'
+      | 'mouseleave:event'
+      | 'mousemove:event'
+      | 'mousedown:event'
+      | 'dblclick:event',
+    value: IEventEmitData<T>,
+  ): void
 }>()
 
 const {
@@ -130,7 +134,7 @@ const internalDays = computed(() => {
   const _weekdays = weekdays.value
   return _weekdays.map((day) => ({
     id: day,
-    weekDay: day % 7 as Weekdays,
+    weekDay: (day % 7) as Weekdays,
     name: WEEKDAY_NAMES[day % 7],
   }))
 })

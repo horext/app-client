@@ -1,4 +1,4 @@
-import { config, mount, shallowMount } from '@vue/test-utils'
+import { config, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
 import ItemSectionList from '../ItemSectionList.vue'
 import { getSectionColor } from '~/utils/color'
