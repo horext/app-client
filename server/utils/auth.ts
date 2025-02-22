@@ -1,6 +1,6 @@
 import type { _RequestMiddleware, EventHandlerRequest, H3Event } from 'h3'
 import { useJwtClient } from '../provider/jwt.client.provider'
-import { JwtPayload } from 'jsonwebtoken'
+import type { JwtPayload } from 'jsonwebtoken'
 
 export const AUTHORIZATION_HEADER = 'Authorization'
 export const AUTHORIZATION_PATTERN = new RegExp(
@@ -30,9 +30,10 @@ export const authorizeEventRequest: _RequestMiddleware<
     const payload = await client.verify(token)
 
     event.context.user = payload
-  } catch (e) {
+  } catch (e: unknown) {
     throw createError({
       status: 401,
+      cause: e,
     })
   }
 }
