@@ -2,6 +2,8 @@ import type { Collection, Db } from 'mongodb'
 import { ObjectId } from 'mongodb'
 import type { IBaseEvent as IBaseActivity } from '~/interfaces/event'
 
+export { IBaseActivity }
+
 export interface IActivity extends IBaseActivity {
   userId: string
   createdAt: Date
