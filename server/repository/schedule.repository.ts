@@ -11,6 +11,7 @@ export interface IScheduleRepository {
     findAll(): Promise<ISchedule[]>
     findAllByCategory(category: ScheduleCategory): Promise<ISchedule[]>
     create(schedule: ISchedule): Promise<ISchedule>
+    partialUpdateById(id: string, schedule: Partial<ISchedule>): Promise<ISchedule>
     deleteById(id: string): Promise<void>
 }
 
@@ -49,5 +50,26 @@ export class ScheduleRepository implements IScheduleRepository {
                 status: 404
             })
         }
+    }
+
+    async partialUpdateById(id: string, schedule: Partial<ISchedule>): Promise<ISchedule> {
+        const result = await this.collection.findOneAndUpdate({ _id: new ObjectId(id) }, {
+            $set: {
+                ...schedule,
+                updatedAt: new Date(),
+            }
+        }, {
+            returnDocument: 'after'
+        })
+
+        if (!result) {
+            throw createError({
+                message: 'Schedule not found',
+                status: 404
+            })
+        }
+
+
+        return result
     }
 }
