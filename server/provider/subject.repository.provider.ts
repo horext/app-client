@@ -2,14 +2,12 @@ import { ISubjectRepository, SubjectRepository } from "../repository/subject.rep
 import { useMongoDB } from "./db.provider"
 import type { H3Event } from "h3"
 import type { EventHandlerRequest } from 'h3'
-let subjectRepositoryInstance: SubjectRepository | null = null
+import { createLazySingleton } from "./provider"
 
-export async function useSubjectRepository(event: H3Event<EventHandlerRequest>): Promise<ISubjectRepository> {
-    if (subjectRepositoryInstance) {
-        return subjectRepositoryInstance
+export const useSubjectRepository = createLazySingleton(
+    async (event: H3Event<EventHandlerRequest>): Promise<ISubjectRepository> => {
+        const db = await useMongoDB(event)
+        const subjectRepository = new SubjectRepository(db)
+        return subjectRepository
     }
-    const db = await useMongoDB(event)
-    const subjectRepository = new SubjectRepository(db)
-    subjectRepositoryInstance = subjectRepository
-    return subjectRepository
-}
+)
