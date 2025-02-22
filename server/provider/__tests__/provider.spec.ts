@@ -99,13 +99,15 @@ describe('createLazySingleton', () => {
     it('should return the same instance when called after resolve the promise', async () => {
         let callCount = 0;
         const creator = async (ctx: number) => {
+            console.log('creator', ctx);
             const result = await new Promise<{ value: number; }>((resolve) => {
                 setTimeout(() => {
+                    console.log('resolve', ctx);
                     callCount++;
                     resolve({ value: ctx });
                 }, 300);
             });
-
+            console.log('result', result);
             return result;
         };
 
