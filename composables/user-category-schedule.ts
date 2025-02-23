@@ -6,7 +6,7 @@ import type {
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
-  const storage = useLocalStorage<IScheduleGenerate[]>()
+  const storage = useLocalStorage<IScheduleGenerate[]>('user')
   const configStore = useUserConfigStore()
   const { schedules } = storeToRefs(configStore)
 
@@ -20,7 +20,7 @@ export const useCategorySchedules = (
       categories: [categoryCode],
     })
     schedules.value = updatedSchedules
-    await storage.setItem('mySchedules', updatedSchedules)
+    await storage.setItem('schedules', updatedSchedules)
   }
 
   async function deleteScheduleFromCategoryById(
