@@ -3,6 +3,8 @@ import type {
   IScheduleGenerate,
 } from '~/interfaces/schedule'
 
+export const STORE_SCHEDULES = 'schedules'
+
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
@@ -20,7 +22,7 @@ export const useCategorySchedules = (
       categories: [categoryCode],
     })
     schedules.value = updatedSchedules
-    await storage.setItem('schedules', updatedSchedules)
+    await storage.setItem(STORE_SCHEDULES, updatedSchedules)
   }
 
   async function deleteScheduleFromCategoryById(
@@ -39,7 +41,7 @@ export const useCategorySchedules = (
           s.id === id ? newSchedule : s,
         )
       }
-      await storage.setItem('mySchedules', schedules.value)
+      await storage.setItem(STORE_SCHEDULES, schedules.value)
     }
   }
 
@@ -56,13 +58,13 @@ export const useCategorySchedules = (
       schedules.value = schedules.value.map((s) =>
         s.id === schedule.id ? newSchedule : s,
       )
-      await storage.setItem('mySchedules', schedules.value)
+      await storage.setItem(STORE_SCHEDULES, schedules.value)
     }
   }
 
   async function fetchCategorySchedules() {
     const data =
-      (await storage.getItem<IScheduleGenerate[]>('mySchedules')) || []
+      (await storage.getItem<IScheduleGenerate[]>(STORE_SCHEDULES)) || []
     schedules.value = data
   }
 
@@ -82,7 +84,7 @@ export const useCategorySchedules = (
           s.id === schedule.id ? newSchedule : s,
         )
       }
-      await storage.setItem('mySchedules', schedules.value)
+      await storage.setItem(STORE_SCHEDULES, schedules.value)
     }
   }
 
@@ -107,7 +109,7 @@ export const useCategorySchedules = (
       (s) => !schedules.value.find((sc) => sc.id === s.id),
     ).map((s) => ({ ...s, categories: [categoryCode] }))
     schedules.value = updatedSchedules.concat(newSchedules)
-    await storage.setItem('mySchedules', schedules.value)
+    await storage.setItem(STORE_SCHEDULES, schedules.value)
   }
   return {
     categorySchedules,
