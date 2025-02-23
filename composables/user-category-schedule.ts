@@ -88,7 +88,7 @@ export const useCategorySchedules = (
     }
   }
 
-  const uodateSchedulesFromCategory = async (
+  const updateSchedulesInCategory = async (
     incomingSchedules: IBaseScheduleGenerate[],
   ) => {
     // prevent duplicate schedules in the same category and id
@@ -118,6 +118,6 @@ export const useCategorySchedules = (
     addScheduleToCategory,
     fetchCategorySchedules,
     removeScheduleFromCategory,
-    uodateSchedulesFromCategory,
+    updateSchedulesInCategory,
   }
 }

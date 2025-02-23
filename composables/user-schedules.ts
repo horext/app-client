@@ -6,7 +6,7 @@ export const useUserSchedules = () => {
     fetchCategorySchedules: fetchSchedules,
     saveNewScheduleToCategory: addSchedule,
     deleteScheduleFromCategoryById: deleteSchedule,
-    uodateSchedulesFromCategory: updateSchedules,
+    updateSchedulesInCategory: updateSchedules,
   } = useCategorySchedules('GENERATED')
 
 
