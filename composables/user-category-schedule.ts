@@ -3,12 +3,12 @@ import type {
   IScheduleGenerate,
 } from '~/interfaces/schedule'
 
-export const STORE_SCHEDULES = 'schedules'
+export const STORE_SCHEDULES = 'my-schedules'
 
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
-  const storage = useLocalStorage<IScheduleGenerate[]>('user')
+  const storage = useLocalStorage<IScheduleGenerate[]>()
   const configStore = useUserConfigStore()
   const { schedules } = storeToRefs(configStore)
 
@@ -91,9 +91,8 @@ export const useCategorySchedules = (
   const updateSchedulesInCategory = async (
     incomingSchedules: IBaseScheduleGenerate[],
   ) => {
-    // prevent duplicate schedules in the same category and id
-    // if exists add category to the schedule if not add the schedule
-    const updatedSchedules = schedules.value.map((s) => {
+    const currentSchedules = schedules.value
+    const schedulesAddingCategory = currentSchedules.map((s) => {
       const foundSchedule = incomingSchedules.find((sc) => sc.id === s.id)
       if (foundSchedule) {
         if (!s.categories.includes(categoryCode)) {
@@ -105,11 +104,12 @@ export const useCategorySchedules = (
       }
       return s
     })
-    const newSchedules = incomingSchedules.filter(
-      (s) => !schedules.value.find((sc) => sc.id === s.id),
+    const upcomingSchedules = incomingSchedules.filter(
+      (s) => !currentSchedules.find((sc) => sc.id === s.id),
     ).map((s) => ({ ...s, categories: [categoryCode] }))
-    schedules.value = updatedSchedules.concat(newSchedules)
-    await storage.setItem(STORE_SCHEDULES, schedules.value)
+    const consolidatedSchedules = schedulesAddingCategory.concat(upcomingSchedules)
+    await storage.setItem(STORE_SCHEDULES, consolidatedSchedules)
+    schedules.value = consolidatedSchedules
   }
   return {
     categorySchedules,
