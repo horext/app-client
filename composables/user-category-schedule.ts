@@ -5,7 +5,7 @@ import type {
 
 export const STORE_SCHEDULES = 'my-schedules'
 
-export function processIncomingSchedules(
+export function updateAndCategorizeSchedules(
   incomingSchedules: IBaseScheduleGenerate[],
   currentSchedules: IScheduleGenerate[],
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -206,7 +206,7 @@ export const useCategorySchedules = (
   const updateSchedulesInCategory = async (
     incomingSchedules: IBaseScheduleGenerate[],
   ) => {
-    const consolidatedSchedules = processIncomingSchedules(
+    const consolidatedSchedules = updateAndCategorizeSchedules(
       incomingSchedules,
       schedules.value,
       categoryCode,

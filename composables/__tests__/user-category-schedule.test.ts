@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { processIncomingSchedules } from '../user-category-schedule'
+import { updateAndCategorizeSchedules } from '../user-category-schedule'
 import type {
     IBaseScheduleGenerate,
     IScheduleGenerate,
@@ -27,7 +27,7 @@ describe('processIncomingSchedules', () => {
         ]
         const currentSchedules: IScheduleGenerate[] = []
 
-        const result = processIncomingSchedules(
+        const result = updateAndCategorizeSchedules(
             incomingSchedules,
             currentSchedules,
             categoryCode,
@@ -74,7 +74,7 @@ describe('processIncomingSchedules', () => {
             },
         ]
 
-        const result = processIncomingSchedules(
+        const result = updateAndCategorizeSchedules(
             incomingSchedules,
             currentSchedules,
             categoryCode,
@@ -113,7 +113,7 @@ describe('processIncomingSchedules', () => {
             },
         ]
 
-        const result = processIncomingSchedules(
+        const result = updateAndCategorizeSchedules(
             incomingSchedules,
             currentSchedules,
             categoryCode,
@@ -144,7 +144,7 @@ describe('processIncomingSchedules', () => {
             },
         ]
 
-        const result = processIncomingSchedules(
+        const result = updateAndCategorizeSchedules(
             incomingSchedules,
             currentSchedules,
             categoryCode,
