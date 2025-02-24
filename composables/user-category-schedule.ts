@@ -139,15 +139,15 @@ export const useCategorySchedules = (
         categories: schedule.categories.filter((c) => c !== categoryCode),
       }
       if (newSchedule.categories.length === 0) {
-        updatedSchedules= currentSchedules.filter((s) => s.id !== id)
+        updatedSchedules = currentSchedules.filter((s) => s.id !== id)
       } else {
         updatedSchedules = currentSchedules.map((s) =>
           s.id === id ? newSchedule : s,
         )
       }
-      await storage.setItem(STORE_SCHEDULES, updatedSchedules)
-      schedules.value = updatedSchedules
     }
+    await storage.setItem(STORE_SCHEDULES, updatedSchedules)
+    schedules.value = updatedSchedules
   }
 
   const addScheduleToCategory = async (schedule: IBaseScheduleGenerate) => {
@@ -184,9 +184,9 @@ export const useCategorySchedules = (
           s.id === schedule.id ? newSchedule : s,
         )
       }
-      await storage.setItem(STORE_SCHEDULES, updatedSchedules)
-      schedules.value = updatedSchedules
     }
+    await storage.setItem(STORE_SCHEDULES, updatedSchedules)
+    schedules.value = updatedSchedules
   }
 
   const updateSchedulesInCategory = async (
