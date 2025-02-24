@@ -68,7 +68,7 @@ export function processIncomingSchedules(
   return consolidatedSchedules
 }
 
-function mergeScheduleWithCategory(
+function appendScheduleToCategory(
   schedules: IScheduleGenerate[],
   schedule: IBaseScheduleGenerate,
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -86,7 +86,7 @@ function mergeScheduleWithNewCategory(
 ) {
   const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
   if (!foundSchedule) {
-    return mergeScheduleWithCategory(currentSchedules, schedule, categoryCode)
+    return appendScheduleToCategory(currentSchedules, schedule, categoryCode)
   }
   if (!foundSchedule.categories.includes(categoryCode)) {
     const newSchedule = {
@@ -154,7 +154,7 @@ export const useCategorySchedules = (
   )
 
   async function saveNewScheduleToCategory(schedule: IBaseScheduleGenerate) {
-    const updatedSchedules = mergeScheduleWithCategory(
+    const updatedSchedules = appendScheduleToCategory(
       schedules.value,
       schedule,
       categoryCode,
