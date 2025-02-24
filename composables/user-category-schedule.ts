@@ -79,7 +79,6 @@ function mergeScheduleWithCategory(
   })
 }
 
-
 function mergeScheduleWithNewCategory(
   currentSchedules: IScheduleGenerate[],
   schedule: IBaseScheduleGenerate,
@@ -87,24 +86,17 @@ function mergeScheduleWithNewCategory(
 ) {
   const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
   if (!foundSchedule) {
-    return mergeScheduleWithCategory(
-      currentSchedules,
-      schedule,
-      categoryCode,
-    )
+    return mergeScheduleWithCategory(currentSchedules, schedule, categoryCode)
   }
   if (!foundSchedule.categories.includes(categoryCode)) {
     const newSchedule = {
       ...foundSchedule,
       categories: foundSchedule.categories.concat(categoryCode),
     }
-    return currentSchedules.map((s) =>
-      s.id === schedule.id ? newSchedule : s,
-    )
+    return currentSchedules.map((s) => (s.id === schedule.id ? newSchedule : s))
   }
   return currentSchedules
 }
-
 
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -169,22 +161,11 @@ export const useCategorySchedules = (
   const removeScheduleFromCategory = async (
     schedule: IBaseScheduleGenerate,
   ) => {
-    const currentSchedules = schedules.value
-    let updatedSchedules = currentSchedules
-    const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
-    if (foundSchedule && foundSchedule.categories.includes(categoryCode)) {
-      const newSchedule = {
-        ...foundSchedule,
-        categories: foundSchedule.categories.filter((c) => c !== categoryCode),
-      }
-      if (newSchedule.categories.length === 0) {
-        updatedSchedules = currentSchedules.filter((s) => s.id !== schedule.id)
-      } else {
-        updatedSchedules = currentSchedules.map((s) =>
-          s.id === schedule.id ? newSchedule : s,
-        )
-      }
-    }
+    const updatedSchedules = removeCategoryFromSchedule(
+      schedules.value,
+      schedule,
+      categoryCode,
+    )
     await storage.setItem(STORE_SCHEDULES, updatedSchedules)
     schedules.value = updatedSchedules
   }
@@ -211,4 +192,26 @@ export const useCategorySchedules = (
     removeScheduleFromCategory,
     updateSchedulesInCategory,
   }
+}
+
+function removeCategoryFromSchedule(
+  currentSchedules: IScheduleGenerate[],
+  schedule: IBaseScheduleGenerate,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
+  if (foundSchedule && foundSchedule.categories.includes(categoryCode)) {
+    const newSchedule = {
+      ...foundSchedule,
+      categories: foundSchedule.categories.filter((c) => c !== categoryCode),
+    }
+    if (newSchedule.categories.length === 0) {
+      return currentSchedules.filter((s) => s.id !== schedule.id)
+    } else {
+      return currentSchedules.map((s) =>
+        s.id === schedule.id ? newSchedule : s,
+      )
+    }
+  }
+  return currentSchedules
 }
