@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { processIncomingSchedules } from './user-category-schedule'
+import { processIncomingSchedules } from '../user-category-schedule'
 import type {
     IBaseScheduleGenerate,
     IScheduleGenerate,
