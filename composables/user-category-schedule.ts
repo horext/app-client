@@ -68,6 +68,14 @@ export function processIncomingSchedules(
   return consolidatedSchedules
 }
 
+function mergeScheduleWithCategory(schedules: IScheduleGenerate[], schedule: IBaseScheduleGenerate, categoryCode: 'GENERATED' | 'FAVORITE') {
+  return schedules.concat({
+    ...schedule,
+    categories: [categoryCode],
+  })
+}
+
+
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
@@ -80,10 +88,7 @@ export const useCategorySchedules = (
   )
 
   async function saveNewScheduleToCategory(schedule: IBaseScheduleGenerate) {
-    const updatedSchedules = schedules.value.concat({
-      ...schedule,
-      categories: [categoryCode],
-    })
+    const updatedSchedules = mergeScheduleWithCategory(schedules.value, schedule, categoryCode)
     schedules.value = updatedSchedules
     await storage.setItem(STORE_SCHEDULES, updatedSchedules)
   }
