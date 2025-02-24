@@ -122,22 +122,11 @@ export const useCategorySchedules = (
   async function deleteScheduleFromCategoryById(
     id: IBaseScheduleGenerate['id'],
   ) {
-    const currentSchedules = schedules.value
-    let updatedSchedules = currentSchedules
-    const schedule = currentSchedules.find((s) => s.id === id)
-    if (schedule && schedule.categories.includes(categoryCode)) {
-      const newSchedule = {
-        ...schedule,
-        categories: schedule.categories.filter((c) => c !== categoryCode),
-      }
-      if (newSchedule.categories.length === 0) {
-        updatedSchedules = currentSchedules.filter((s) => s.id !== id)
-      } else {
-        updatedSchedules = currentSchedules.map((s) =>
-          s.id === id ? newSchedule : s,
-        )
-      }
-    }
+    const updatedSchedules = excludeCategoryFromSchedule(
+      schedules.value,
+      id,
+      categoryCode,
+    )
     await storage.setItem(STORE_SCHEDULES, updatedSchedules)
     schedules.value = updatedSchedules
   }
@@ -192,6 +181,28 @@ export const useCategorySchedules = (
     removeScheduleFromCategory,
     updateSchedulesInCategory,
   }
+}
+
+function excludeCategoryFromSchedule(
+  currentSchedules: IScheduleGenerate[],
+  id: string,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const schedule = currentSchedules.find((s) => s.id === id)
+  if (schedule && schedule.categories.includes(categoryCode)) {
+    const newSchedule = {
+      ...schedule,
+      categories: schedule.categories.filter((c) => c !== categoryCode),
+    }
+    if (newSchedule.categories.length === 0) {
+      return  currentSchedules.filter((s) => s.id !== id)
+    } else {
+      return currentSchedules.map((s) =>
+        s.id === id ? newSchedule : s,
+      )
+    }
+  }
+  return currentSchedules
 }
 
 function removeCategoryFromSchedule(
