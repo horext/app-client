@@ -5,6 +5,69 @@ import type {
 
 export const STORE_SCHEDULES = 'my-schedules'
 
+export function processIncomingSchedules(
+  incomingSchedules: IBaseScheduleGenerate[],
+  currentSchedules: IScheduleGenerate[],
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const incomingSchedulesMap = new Map(
+    incomingSchedules.map((schedule) => [schedule.id, schedule]),
+  )
+
+  // Single pass through current schedules
+  const generatedSchedules = new Map<
+    IScheduleGenerate['id'],
+    IScheduleGenerate
+  >()
+
+  // Process existing schedules
+  for (const schedule of currentSchedules) {
+    const incomingSchedule = incomingSchedulesMap.get(schedule.id)
+    const hasCategory = schedule.categories.includes(categoryCode)
+
+    if (incomingSchedule) {
+      // Schedule exists in incoming and current
+      if (!hasCategory) {
+        // Add category if not present
+        generatedSchedules.set(schedule.id, {
+          ...schedule,
+          categories: [...schedule.categories, categoryCode],
+        })
+      } else {
+        // Keep unchanged
+        generatedSchedules.set(schedule.id, schedule)
+      }
+      // Remove from incoming map to track new schedules
+      incomingSchedulesMap.delete(schedule.id)
+    } else if (hasCategory) {
+      // Schedule only in current with category
+      const newCategories = schedule.categories.filter(
+        (c) => c !== categoryCode,
+      )
+      if (newCategories.length > 0) {
+        generatedSchedules.set(schedule.id, {
+          ...schedule,
+          categories: newCategories,
+        })
+      }
+    } else {
+      // Keep unchanged
+      generatedSchedules.set(schedule.id, schedule)
+    }
+  }
+
+  // Add remaining new schedules
+  for (const [, schedule] of incomingSchedulesMap) {
+    generatedSchedules.set(schedule.id, {
+      ...schedule,
+      categories: [categoryCode],
+    })
+  }
+
+  const consolidatedSchedules = Array.from(generatedSchedules.values())
+  return consolidatedSchedules
+}
+
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
@@ -91,59 +154,11 @@ export const useCategorySchedules = (
   const updateSchedulesInCategory = async (
     incomingSchedules: IBaseScheduleGenerate[],
   ) => {
-    const currentSchedules = schedules.value
-
-    // Use Map instead of Set for O(1) lookups with direct schedule access
-    const incomingSchedulesMap = new Map(
-      incomingSchedules.map(schedule => [schedule.id, schedule])
+    const consolidatedSchedules = processIncomingSchedules(
+      incomingSchedules,
+      schedules.value,
+      categoryCode,
     )
-
-    // Single pass through current schedules
-    const generatedSchedules = new Map<IScheduleGenerate['id'], IScheduleGenerate>()
-
-    // Process existing schedules
-    for (const schedule of currentSchedules) {
-      const incomingSchedule = incomingSchedulesMap.get(schedule.id)
-      const hasCategory = schedule.categories.includes(categoryCode)
-
-      if (incomingSchedule) {
-        // Schedule exists in incoming and current
-        if (!hasCategory) {
-          // Add category if not present
-          generatedSchedules.set(schedule.id, {
-            ...schedule,
-            categories: [...schedule.categories, categoryCode]
-          })
-        } else {
-          // Keep unchanged
-          generatedSchedules.set(schedule.id, schedule)
-        }
-        // Remove from incoming map to track new schedules
-        incomingSchedulesMap.delete(schedule.id)
-      } else if (hasCategory) {
-        // Schedule only in current with category
-        const newCategories = schedule.categories.filter(c => c !== categoryCode)
-        if (newCategories.length > 0) {
-          generatedSchedules.set(schedule.id, {
-            ...schedule,
-            categories: newCategories
-          })
-        }
-      } else {
-        // Keep unchanged
-        generatedSchedules.set(schedule.id, schedule)
-      }
-    }
-
-    // Add remaining new schedules
-    for (const [, schedule] of incomingSchedulesMap) {
-      generatedSchedules.set(schedule.id, {
-        ...schedule,
-        categories: [categoryCode]
-      })
-    }
-
-    const consolidatedSchedules = Array.from(generatedSchedules.values())
 
     // Batch update storage and state
     await storage.setItem(STORE_SCHEDULES, consolidatedSchedules)
