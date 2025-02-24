@@ -68,7 +68,7 @@ export function updateAndCategorizeSchedules(
   return consolidatedSchedules
 }
 
-function appendScheduleToCategory(
+export function appendScheduleToCategory(
   schedules: IScheduleGenerate[],
   schedule: IBaseScheduleGenerate,
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -79,7 +79,7 @@ function appendScheduleToCategory(
   })
 }
 
-function mergeScheduleWithNewCategory(
+export function mergeScheduleWithNewCategory(
   currentSchedules: IScheduleGenerate[],
   schedule: IBaseScheduleGenerate,
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -98,7 +98,7 @@ function mergeScheduleWithNewCategory(
   return currentSchedules
 }
 
-function excludeCategoryFromSchedule(
+export function excludeCategoryFromSchedule(
   currentSchedules: IScheduleGenerate[],
   id: string,
   categoryCode: 'GENERATED' | 'FAVORITE',
@@ -120,7 +120,7 @@ function excludeCategoryFromSchedule(
   return currentSchedules
 }
 
-function removeCategoryFromSchedule(
+export function removeCategoryFromSchedule(
   currentSchedules: IScheduleGenerate[],
   schedule: IBaseScheduleGenerate,
   categoryCode: 'GENERATED' | 'FAVORITE',
