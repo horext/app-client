@@ -114,20 +114,22 @@ export const useCategorySchedules = (
   }
 
   const addScheduleToCategory = async (schedule: IBaseScheduleGenerate) => {
-    const foundSchedule = schedules.value.find((s) => s.id === schedule.id)
+    const currentSchedules = schedules.value
+    let updatedSchedules: IScheduleGenerate[] = currentSchedules
+    const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
     if (!foundSchedule) {
-      return await saveNewScheduleToCategory(schedule)
-    }
-    if (!foundSchedule.categories.includes(categoryCode)) {
+      updatedSchedules = mergeScheduleWithCategory(currentSchedules, schedule, categoryCode)
+    } else if (!foundSchedule.categories.includes(categoryCode)) {
       const newSchedule = {
         ...foundSchedule,
         categories: foundSchedule.categories.concat(categoryCode),
       }
-      schedules.value = schedules.value.map((s) =>
+      updatedSchedules = currentSchedules.map((s) =>
         s.id === schedule.id ? newSchedule : s,
       )
-      await storage.setItem(STORE_SCHEDULES, schedules.value)
     }
+    schedules.value = updatedSchedules
+    await storage.setItem(STORE_SCHEDULES, updatedSchedules)
   }
 
   async function fetchSchedules() {
