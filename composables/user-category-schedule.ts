@@ -130,20 +130,23 @@ export const useCategorySchedules = (
   async function deleteScheduleFromCategoryById(
     id: IBaseScheduleGenerate['id'],
   ) {
-    const schedule = schedules.value.find((s) => s.id === id)
+    const currentSchedules = schedules.value
+    let updatedSchedules = currentSchedules
+    const schedule = currentSchedules.find((s) => s.id === id)
     if (schedule && schedule.categories.includes(categoryCode)) {
       const newSchedule = {
         ...schedule,
         categories: schedule.categories.filter((c) => c !== categoryCode),
       }
       if (newSchedule.categories.length === 0) {
-        schedules.value = schedules.value.filter((s) => s.id !== id)
+        updatedSchedules= currentSchedules.filter((s) => s.id !== id)
       } else {
-        schedules.value = schedules.value.map((s) =>
+        updatedSchedules = currentSchedules.map((s) =>
           s.id === id ? newSchedule : s,
         )
       }
-      await storage.setItem(STORE_SCHEDULES, schedules.value)
+      await storage.setItem(STORE_SCHEDULES, updatedSchedules)
+      schedules.value = updatedSchedules
     }
   }
 
