@@ -169,20 +169,23 @@ export const useCategorySchedules = (
   const removeScheduleFromCategory = async (
     schedule: IBaseScheduleGenerate,
   ) => {
-    const foundSchedule = schedules.value.find((s) => s.id === schedule.id)
+    const currentSchedules = schedules.value
+    let updatedSchedules = currentSchedules
+    const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
     if (foundSchedule && foundSchedule.categories.includes(categoryCode)) {
       const newSchedule = {
         ...foundSchedule,
         categories: foundSchedule.categories.filter((c) => c !== categoryCode),
       }
       if (newSchedule.categories.length === 0) {
-        schedules.value = schedules.value.filter((s) => s.id !== schedule.id)
+        updatedSchedules = currentSchedules.filter((s) => s.id !== schedule.id)
       } else {
-        schedules.value = schedules.value.map((s) =>
+        updatedSchedules = currentSchedules.map((s) =>
           s.id === schedule.id ? newSchedule : s,
         )
       }
-      await storage.setItem(STORE_SCHEDULES, schedules.value)
+      await storage.setItem(STORE_SCHEDULES, updatedSchedules)
+      schedules.value = updatedSchedules
     }
   }
 
