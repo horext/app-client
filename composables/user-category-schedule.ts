@@ -98,6 +98,50 @@ function mergeScheduleWithNewCategory(
   return currentSchedules
 }
 
+function excludeCategoryFromSchedule(
+  currentSchedules: IScheduleGenerate[],
+  id: string,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const schedule = currentSchedules.find((s) => s.id === id)
+  if (schedule && schedule.categories.includes(categoryCode)) {
+    const newSchedule = {
+      ...schedule,
+      categories: schedule.categories.filter((c) => c !== categoryCode),
+    }
+    if (newSchedule.categories.length === 0) {
+      return currentSchedules.filter((s) => s.id !== id)
+    } else {
+      return currentSchedules.map((s) =>
+        s.id === id ? newSchedule : s,
+      )
+    }
+  }
+  return currentSchedules
+}
+
+function removeCategoryFromSchedule(
+  currentSchedules: IScheduleGenerate[],
+  schedule: IBaseScheduleGenerate,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
+  if (foundSchedule && foundSchedule.categories.includes(categoryCode)) {
+    const newSchedule = {
+      ...foundSchedule,
+      categories: foundSchedule.categories.filter((c) => c !== categoryCode),
+    }
+    if (newSchedule.categories.length === 0) {
+      return currentSchedules.filter((s) => s.id !== schedule.id)
+    } else {
+      return currentSchedules.map((s) =>
+        s.id === schedule.id ? newSchedule : s,
+      )
+    }
+  }
+  return currentSchedules
+}
+
 export const useCategorySchedules = (
   categoryCode: 'GENERATED' | 'FAVORITE',
 ) => {
@@ -181,48 +225,4 @@ export const useCategorySchedules = (
     removeScheduleFromCategory,
     updateSchedulesInCategory,
   }
-}
-
-function excludeCategoryFromSchedule(
-  currentSchedules: IScheduleGenerate[],
-  id: string,
-  categoryCode: 'GENERATED' | 'FAVORITE',
-) {
-  const schedule = currentSchedules.find((s) => s.id === id)
-  if (schedule && schedule.categories.includes(categoryCode)) {
-    const newSchedule = {
-      ...schedule,
-      categories: schedule.categories.filter((c) => c !== categoryCode),
-    }
-    if (newSchedule.categories.length === 0) {
-      return  currentSchedules.filter((s) => s.id !== id)
-    } else {
-      return currentSchedules.map((s) =>
-        s.id === id ? newSchedule : s,
-      )
-    }
-  }
-  return currentSchedules
-}
-
-function removeCategoryFromSchedule(
-  currentSchedules: IScheduleGenerate[],
-  schedule: IBaseScheduleGenerate,
-  categoryCode: 'GENERATED' | 'FAVORITE',
-) {
-  const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
-  if (foundSchedule && foundSchedule.categories.includes(categoryCode)) {
-    const newSchedule = {
-      ...foundSchedule,
-      categories: foundSchedule.categories.filter((c) => c !== categoryCode),
-    }
-    if (newSchedule.categories.length === 0) {
-      return currentSchedules.filter((s) => s.id !== schedule.id)
-    } else {
-      return currentSchedules.map((s) =>
-        s.id === schedule.id ? newSchedule : s,
-      )
-    }
-  }
-  return currentSchedules
 }
