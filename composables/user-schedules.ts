@@ -3,7 +3,7 @@ import { useCategorySchedules } from './user-category-schedule'
 export const useUserSchedules = () => {
   const {
     categorySchedules: schedules,
-    fetchCategorySchedules: fetchSchedules,
+    fetchSchedules: fetchSchedules,
     saveNewScheduleToCategory: addSchedule,
     deleteScheduleFromCategoryById: deleteSchedule,
     updateSchedulesInCategory: updateSchedules,

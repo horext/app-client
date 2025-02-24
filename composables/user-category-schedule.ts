@@ -125,7 +125,7 @@ export const useCategorySchedules = (
     }
   }
 
-  async function fetchCategorySchedules() {
+  async function fetchSchedules() {
     const data =
       (await storage.getItem<IScheduleGenerate[]>(STORE_SCHEDULES)) || []
     schedules.value = data
@@ -169,7 +169,7 @@ export const useCategorySchedules = (
     saveNewScheduleToCategory,
     deleteScheduleFromCategoryById,
     addScheduleToCategory,
-    fetchCategorySchedules,
+    fetchSchedules: fetchSchedules,
     removeScheduleFromCategory,
     updateSchedulesInCategory,
   }

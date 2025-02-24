@@ -6,7 +6,7 @@ export const useUserFavoriteSchedules = () => {
     saveNewScheduleToCategory: saveNewFavoriteSchedule,
     deleteScheduleFromCategoryById: deleteFavoriteScheduleById,
     addScheduleToCategory: addFavoriteSchedule,
-    fetchCategorySchedules: fetchFavoritesSchedules,
+    fetchSchedules: fetchFavoritesSchedules,
     removeScheduleFromCategory: removeFavoriteSchedule,
   } = useCategorySchedules('FAVORITE')
 
