@@ -68,11 +68,41 @@ export function processIncomingSchedules(
   return consolidatedSchedules
 }
 
-function mergeScheduleWithCategory(schedules: IScheduleGenerate[], schedule: IBaseScheduleGenerate, categoryCode: 'GENERATED' | 'FAVORITE') {
+function mergeScheduleWithCategory(
+  schedules: IScheduleGenerate[],
+  schedule: IBaseScheduleGenerate,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
   return schedules.concat({
     ...schedule,
     categories: [categoryCode],
   })
+}
+
+
+function mergeScheduleWithNewCategory(
+  currentSchedules: IScheduleGenerate[],
+  schedule: IBaseScheduleGenerate,
+  categoryCode: 'GENERATED' | 'FAVORITE',
+) {
+  const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
+  if (!foundSchedule) {
+    return mergeScheduleWithCategory(
+      currentSchedules,
+      schedule,
+      categoryCode,
+    )
+  }
+  if (!foundSchedule.categories.includes(categoryCode)) {
+    const newSchedule = {
+      ...foundSchedule,
+      categories: foundSchedule.categories.concat(categoryCode),
+    }
+    return currentSchedules.map((s) =>
+      s.id === schedule.id ? newSchedule : s,
+    )
+  }
+  return currentSchedules
 }
 
 
@@ -88,7 +118,11 @@ export const useCategorySchedules = (
   )
 
   async function saveNewScheduleToCategory(schedule: IBaseScheduleGenerate) {
-    const updatedSchedules = mergeScheduleWithCategory(schedules.value, schedule, categoryCode)
+    const updatedSchedules = mergeScheduleWithCategory(
+      schedules.value,
+      schedule,
+      categoryCode,
+    )
     schedules.value = updatedSchedules
     await storage.setItem(STORE_SCHEDULES, updatedSchedules)
   }
@@ -114,20 +148,11 @@ export const useCategorySchedules = (
   }
 
   const addScheduleToCategory = async (schedule: IBaseScheduleGenerate) => {
-    const currentSchedules = schedules.value
-    let updatedSchedules: IScheduleGenerate[] = currentSchedules
-    const foundSchedule = currentSchedules.find((s) => s.id === schedule.id)
-    if (!foundSchedule) {
-      updatedSchedules = mergeScheduleWithCategory(currentSchedules, schedule, categoryCode)
-    } else if (!foundSchedule.categories.includes(categoryCode)) {
-      const newSchedule = {
-        ...foundSchedule,
-        categories: foundSchedule.categories.concat(categoryCode),
-      }
-      updatedSchedules = currentSchedules.map((s) =>
-        s.id === schedule.id ? newSchedule : s,
-      )
-    }
+    const updatedSchedules = mergeScheduleWithNewCategory(
+      schedules.value,
+      schedule,
+      categoryCode,
+    )
     schedules.value = updatedSchedules
     await storage.setItem(STORE_SCHEDULES, updatedSchedules)
   }
