@@ -24,7 +24,7 @@
     "@nuxt/image": "^1.9.0",
     "@pinia/nuxt": "0.10.1",
     "@vueuse/core": "^12.5.0",
-    "@vueuse/nuxt": "^12.5.0",
+    "@vueuse/nuxt": "^12.8.2",
     "google-auth-library": "^9.15.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.0",
