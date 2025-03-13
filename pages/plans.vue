@@ -32,9 +32,7 @@ prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
         {{ plan.code }}
       </v-tab>
     </v-tabs>
-    <v-tabs-window>
-      <NuxtPage />
-    </v-tabs-window>
+    <NuxtPage />
   </v-container>
 </template>
 
