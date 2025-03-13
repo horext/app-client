@@ -19,7 +19,7 @@ prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
 <template>
   <v-container>
     Planes de estudio
-    <v-tabs>
+    <v-tabs :model-value="null">
       <v-tab
         v-for="plan in data"
         :key="plan.id"
