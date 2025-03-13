@@ -99,6 +99,9 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
+      '@unhead/schema':
+        specifier: ^1.11.20
+        version: 1.11.20
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
         version: 5.2.1(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.85.1)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
@@ -1386,6 +1389,9 @@ packages:
   '@typescript-eslint/visitor-keys@8.26.0':
     resolution: {integrity: sha512-2z8JQJWAzPdDd51dRQ/oqIJxe99/hoLIqmf8RMCAJQtYDc535W/Jt2+RTP4bP0aKeBG1F65yjIZuczOXCmbWwg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@unhead/schema@1.11.20':
+    resolution: {integrity: sha512-0zWykKAaJdm+/Y7yi/Yds20PrUK7XabLe9c3IRcjnwYmSWY6z0Cr19VIs3ozCj8P+GhR+/TI2mwtGlueCEYouA==}
 
   '@unhead/vue@2.0.0-rc.10':
     resolution: {integrity: sha512-GYsYZQsS72RvfSDmioyTQDMXD7uuTH1c8XDDVAAnAQEK7eJqRhMclSp3sBCnvwupJtqEbu77YWmXgRk+P6dMSw==}
@@ -5093,6 +5099,9 @@ packages:
     resolution: {integrity: sha512-y1aNsEeoLXnWb6pI9TvfNPIxySyo4Un3OGxKn7rsNj8+tgSquzXEWkzfA5y6gU0fvzmQgvx3JBn/p51qQ8Xg9A==}
     engines: {node: '>=18'}
 
+  zhead@2.2.4:
+    resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
+
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
@@ -6475,6 +6484,11 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.26.0
       eslint-visitor-keys: 4.2.0
+
+  '@unhead/schema@1.11.20':
+    dependencies:
+      hookable: 5.5.3
+      zhead: 2.2.4
 
   '@unhead/vue@2.0.0-rc.10(vue@3.5.13(typescript@5.8.2))':
     dependencies:
@@ -10854,6 +10868,8 @@ snapshots:
       '@speed-highlight/core': 1.2.7
       cookie: 1.0.2
       youch-core: 0.3.2
+
+  zhead@2.2.4: {}
 
   zip-stream@6.0.1:
     dependencies:
