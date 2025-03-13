@@ -27,7 +27,7 @@ prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
           name: 'plans-planId',
           params: { planId: plan.id },
         }"
-        nuxt-link
+        nuxt
       >
         {{ plan.code }}
       </v-tab>
