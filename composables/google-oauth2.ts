@@ -7,7 +7,7 @@ import type {
 import type { CalendarEvent } from '~/models/google'
 
 export const useGoogleOAuth2 = () => {
-  const { $script } = useGoogleAccounts()
+  const { onLoaded, proxy } = useGoogleAccounts()
   const config = useRuntimeConfig()
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
@@ -35,9 +35,8 @@ export const useGoogleOAuth2 = () => {
       isPendingClient.value = false
     }
   }
-  onMounted(() => {
-    $script.then(loadClient)
-  })
+
+  onLoaded(loadClient)
 
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
