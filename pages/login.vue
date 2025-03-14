@@ -62,7 +62,7 @@ const initGoogle = async () => {
   }
 }
 
-onLoaded((initGoogle)
+onLoaded(initGoogle)
 
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
