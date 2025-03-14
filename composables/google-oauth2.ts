@@ -50,10 +50,10 @@ export const useGoogleOAuth2 = () => {
     isPendingToken.value = false
   }
 
-  const getToken = async () => {
+  const getToken = () => {
     tokenClient.value?.requestAccessToken()
   }
-  const revokeToken = async (
+  const revokeToken = (
     tokenResponse: google.accounts.oauth2.TokenResponse,
   ) => {
     google.accounts.oauth2.revoke(tokenResponse.access_token, () => {
