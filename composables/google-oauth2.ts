@@ -41,13 +41,15 @@ export const useGoogleOAuth2 = () => {
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
   )
-  async function handleTokenResponse(
+
+  const handleTokenResponse = (
     response: google.accounts.oauth2.TokenResponse,
-  ) {
+  ) => {
     tokenResponse.value = response
     expiresAt.value = Number(response.expires_in) * 1000 + Date.now()
     isPendingToken.value = false
   }
+
   const getToken = async () => {
     tokenClient.value?.requestAccessToken()
   }
