@@ -7,7 +7,7 @@ import type {
 import type { CalendarEvent } from '~/models/google'
 
 export const useGoogleOAuth2 = () => {
-  const { $script } = useGoogleAccounts()
+  const { onLoaded } = useGoogleAccounts()
   const config = useRuntimeConfig()
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
@@ -35,24 +35,25 @@ export const useGoogleOAuth2 = () => {
       isPendingClient.value = false
     }
   }
-  onMounted(() => {
-    $script.then(loadClient)
-  })
+
+  onLoaded(loadClient)
 
   const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
     null,
   )
-  async function handleTokenResponse(
+
+  const handleTokenResponse = (
     response: google.accounts.oauth2.TokenResponse,
-  ) {
+  ) => {
     tokenResponse.value = response
     expiresAt.value = Number(response.expires_in) * 1000 + Date.now()
     isPendingToken.value = false
   }
-  const getToken = async () => {
+
+  const getToken = () => {
     tokenClient.value?.requestAccessToken()
   }
-  const revokeToken = async (
+  const revokeToken = (
     tokenResponse: google.accounts.oauth2.TokenResponse,
   ) => {
     google.accounts.oauth2.revoke(tokenResponse.access_token, () => {
@@ -70,10 +71,9 @@ export const useGoogleOAuth2 = () => {
         getToken()
       }
       if (accessToken) {
-        const headers = options?.headers
-          ? new Headers(options.headers)
-          : new Headers()
-        headers.set('Authorization', `Bearer ${accessToken}`)
+        options.headers.set('Authorization', `Bearer ${accessToken}`)
+      } else {
+        console.warn('No access token')
       }
     },
   })

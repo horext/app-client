@@ -37,7 +37,7 @@ useSeoMeta({
   title: 'Inicio de Sesión',
 })
 
-const { $script } = useGoogleAccounts()
+const { onLoaded } = useGoogleAccounts()
 
 const {
   public: { gsi },
@@ -62,9 +62,7 @@ const initGoogle = async () => {
   }
 }
 
-onMounted(() => {
-  $script.then(initGoogle)
-})
+onLoaded(initGoogle)
 
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
