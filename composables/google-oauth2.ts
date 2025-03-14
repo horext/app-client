@@ -7,7 +7,7 @@ import type {
 import type { CalendarEvent } from '~/models/google'
 
 export const useGoogleOAuth2 = () => {
-  const { onLoaded, proxy } = useGoogleAccounts()
+  const { onLoaded } = useGoogleAccounts()
   const config = useRuntimeConfig()
 
   const tokenClient = ref<google.accounts.oauth2.TokenClient>()
@@ -71,10 +71,9 @@ export const useGoogleOAuth2 = () => {
         getToken()
       }
       if (accessToken) {
-        const headers = options?.headers
-          ? new Headers(options.headers)
-          : new Headers()
-        headers.set('Authorization', `Bearer ${accessToken}`)
+        options.headers.set('Authorization', `Bearer ${accessToken}`)
+      } else {
+        console.warn('No access token')
       }
     },
   })
