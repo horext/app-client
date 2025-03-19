@@ -62,7 +62,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^10.0.0",
     "happy-dom": "^17.4.4",
-    "nitropack": "^2.11.2",
+    "nitropack": "^2.11.7",
     "nuxt": "^3.16.0",
     "nuxt-gtag": "^3.0.2",
     "playwright-core": "^1.51.1",
