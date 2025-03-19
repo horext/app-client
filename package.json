@@ -28,7 +28,7 @@
     "@vueuse/nuxt": "^13.0.0",
     "google-auth-library": "^9.15.1",
     "html2canvas": "^1.4.1",
-    "jspdf": "^3.0.0",
+    "jspdf": "^3.0.1",
     "lottie-web": "^5.12.2",
     "luxon": "^3.5.0",
     "ofetch": "^1.4.1",
