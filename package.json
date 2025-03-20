@@ -67,7 +67,7 @@
     "nuxt-gtag": "^3.0.2",
     "playwright-core": "^1.51.1",
     "prettier": "^3.5.3",
-    "sass": "^1.85.1",
+    "sass": "^1.86.0",
     "typescript": "^5.7.3",
     "vitest": "^3.0.8",
     "vue-tsc": "2.2.8"
