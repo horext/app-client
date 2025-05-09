@@ -88,8 +88,8 @@ importers:
         specifier: ^3.17.2
         version: 3.17.2(@types/node@22.15.3)(@vue/test-utils@2.4.6)(happy-dom@17.4.4)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.52.0)(sass@1.86.3)(terser@5.39.0)(typescript@5.8.3)(vitest@3.0.8(@types/node@22.15.3)(happy-dom@17.4.4)(jiti@2.4.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1)
       '@types/google.accounts':
-        specifier: ^0.0.15
-        version: 0.0.15
+        specifier: ^0.0.16
+        version: 0.0.16
       '@types/luxon':
         specifier: ^3.6.0
         version: 3.6.0
@@ -1376,8 +1376,8 @@ packages:
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
-  '@types/google.accounts@0.0.15':
-    resolution: {integrity: sha512-NiydIuJzwdpnWNqTPOeDzGXhzz46Ll6T4rN3YWSm9Zfx/8ZfbwFbzyPSw1Tkz4uE3gQiU+fRj4KvBVUuHmk+KQ==}
+  '@types/google.accounts@0.0.16':
+    resolution: {integrity: sha512-llwLXm6qVFMrY31VNyGe87pyRU36J5/Z+NF1+hMraPjxYPdjjw953JozeG+/+tbjzlFkmd/gIzXAK7hyJ8ukqA==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -7231,7 +7231,7 @@ snapshots:
 
   '@types/estree@1.0.7': {}
 
-  '@types/google.accounts@0.0.15': {}
+  '@types/google.accounts@0.0.16': {}
 
   '@types/json-schema@7.0.15': {}
 
