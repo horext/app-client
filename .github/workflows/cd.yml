@@ -44,6 +44,9 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+      packages: write
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
     steps:
@@ -99,6 +102,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: release
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
     env:
       PROJECT_FOLDER: ${{ github.repository}}/${{ github.ref_name }}
       DOCKER_COMPOSE_TEMPLATE_PATH: deploy/docker-compose.yml
