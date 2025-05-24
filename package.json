@@ -23,7 +23,7 @@
     "@mdi/font": "^7.4.47",
     "@nuxt/image": "^1.10.0",
     "@pinia/nuxt": "0.11.0",
-    "@unhead/vue": "~2.0.5",
+    "@unhead/vue": "~2.0.10",
     "@vueuse/core": "^13.2.0",
     "@vueuse/nuxt": "^13.0.0",
     "google-auth-library": "^9.15.1",
