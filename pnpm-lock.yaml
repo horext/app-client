@@ -100,8 +100,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       '@unhead/schema':
-        specifier: ^2.0.9
-        version: 2.0.9
+        specifier: ^2.0.10
+        version: 2.0.10
       '@vitejs/plugin-vue':
         specifier: ^5.2.4
         version: 5.2.4(vite@6.3.4(@types/node@22.15.3)(jiti@2.4.2)(sass@1.89.2)(terser@5.39.0)(yaml@2.8.0))(vue@3.5.13(typescript@5.8.3))
@@ -1805,8 +1805,8 @@ packages:
     resolution: {integrity: sha512-ar0tjQfObzhSaW3C3QNmTc5ofj0hDoNQ5XWrCy6zDyabdr0TWhCkClp+rywGNj/odAFBVzzJrK4tEq5M4Hmu4w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@unhead/schema@2.0.9':
-    resolution: {integrity: sha512-FIhYqtlI3AjgxYdpTATnKQ8cJL5YiBBe+WsP9WOrbcc5K46Lf/5+jY4yXkjdrQfg4yULyqbXBprqfeGfAroU3g==}
+  '@unhead/schema@2.0.10':
+    resolution: {integrity: sha512-BBwA1tpraEMLRIXVsDXHXElPILH9aSFmDGjyVPKqsMzgfMwLFSTt0BOdfOH8xZFB6k5G79638O5Z+zJ3mnrVcA==}
 
   '@unhead/vue@2.0.5':
     resolution: {integrity: sha512-csjNmBHvJGzSestlpApOpgxqaTdXSN2zwNIPFuWB+C4rtLX4x3+Tm7C5rQwU0iYy3CNJGjJT9cCcSyV55Jg4EQ==}
@@ -8188,7 +8188,7 @@ snapshots:
       '@typescript-eslint/types': 8.32.1
       eslint-visitor-keys: 4.2.0
 
-  '@unhead/schema@2.0.9': {}
+  '@unhead/schema@2.0.10': {}
 
   '@unhead/vue@2.0.5(vue@3.5.13(typescript@5.8.3))':
     dependencies:
