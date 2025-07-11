@@ -136,8 +136,8 @@ importers:
         specifier: ^3.17.6
         version: 3.17.6(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@24.0.13)(@vue/compiler-sfc@3.5.17)(db0@0.3.2)(eslint@9.25.1(jiti@2.4.2))(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.44.1)(sass@1.89.2)(terser@5.39.0)(typescript@5.8.3)(vite@6.3.5(@types/node@24.0.13)(jiti@2.4.2)(sass@1.89.2)(terser@5.39.0)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(yaml@2.8.0)
       nuxt-gtag:
-        specifier: ^3.0.2
-        version: 3.0.2(magicast@0.3.5)
+        specifier: ^3.0.3
+        version: 3.0.3(magicast@0.3.5)
       playwright-core:
         specifier: ^1.52.0
         version: 1.52.0
@@ -4755,8 +4755,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuxt-gtag@3.0.2:
-    resolution: {integrity: sha512-0Spu/rffPxW7REebkjE22qQOuVZIQuyIuvd61InDdJU+d+gRIqWhrUuKBWdk43N/J1elj+cTK2kEdk5FQX7vdQ==}
+  nuxt-gtag@3.0.3:
+    resolution: {integrity: sha512-1XZc9I3DiF2GC07P7uQOlGN4v1cbnLwWHaQUIlayp4pg0h7wOrna5Nl733/2rXq7ktPL3fT8NBJR7OsV9BtJRA==}
 
   nuxt@3.17.6:
     resolution: {integrity: sha512-kOsoJk7YvlcUChJXhCrVP18zRWKquUdrZSoJX8bCcQ54OhFOr4s2VhsxnbJVP7AtCiBSLbKuQt6ZBO7lE159Aw==}
@@ -7204,7 +7204,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.7.2
+      semver: 7.7.1
       tar: 6.2.1
     transitivePeerDependencies:
       - encoding
@@ -7217,7 +7217,7 @@ snapshots:
       https-proxy-agent: 7.0.6
       node-fetch: 2.7.0
       nopt: 8.1.0
-      semver: 7.7.2
+      semver: 7.7.1
       tar: 7.4.3
     transitivePeerDependencies:
       - encoding
@@ -7394,7 +7394,7 @@ snapshots:
       precinct: 11.0.5
       require-package-name: 2.0.1
       resolve: 2.0.0-next.5
-      semver: 7.7.2
+      semver: 7.7.1
       tmp-promise: 3.0.3
       toml: 3.0.0
       unixify: 1.0.0
@@ -8628,7 +8628,7 @@ snapshots:
       debug: 4.4.1
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.1
       tsutils: 3.21.0(typescript@5.8.3)
     optionalDependencies:
       typescript: 5.8.3
@@ -10941,7 +10941,7 @@ snapshots:
   giget@2.0.0:
     dependencies:
       citty: 0.1.6
-      consola: 3.4.2
+      consola: 3.4.0
       defu: 6.1.4
       node-fetch-native: 1.6.6
       nypm: 0.6.0
@@ -12065,7 +12065,7 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.2
+      semver: 7.7.1
       validate-npm-package-license: 3.0.4
 
   normalize-path@2.1.1:
@@ -12096,12 +12096,12 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-gtag@3.0.2(magicast@0.3.5):
+  nuxt-gtag@3.0.3(magicast@0.3.5):
     dependencies:
-      '@nuxt/kit': 3.16.0(magicast@0.3.5)
+      '@nuxt/kit': 3.17.6(magicast@0.3.5)
       defu: 6.1.4
-      pathe: 1.1.2
-      ufo: 1.6.0
+      pathe: 2.0.3
+      ufo: 1.6.1
     transitivePeerDependencies:
       - magicast
 
@@ -12774,7 +12774,7 @@ snapshots:
   rc9@2.1.2:
     dependencies:
       defu: 6.1.4
-      destr: 2.0.5
+      destr: 2.0.3
 
   rc@1.2.8:
     dependencies:
@@ -14060,7 +14060,7 @@ snapshots:
 
   vue-bundle-renderer@2.1.1:
     dependencies:
-      ufo: 1.6.1
+      ufo: 1.6.0
 
   vue-component-type-helpers@2.2.8: {}
 
