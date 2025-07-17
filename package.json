@@ -61,7 +61,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^10.1.0",
-    "happy-dom": "^17.4.4",
+    "happy-dom": "^17.6.3",
     "nitropack": "^2.12.0",
     "nuxt": "^3.17.6",
     "nuxt-gtag": "^3.0.3",
