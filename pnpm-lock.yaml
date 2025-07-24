@@ -66,8 +66,8 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.18(typescript@5.8.3))
       vuetify:
-        specifier: ^3.8.6
-        version: 3.8.6(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3))
+        specifier: ^3.9.2
+        version: 3.9.2(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3))
     devDependencies:
       '@mdi/js':
         specifier: ^7.4.47
@@ -5833,8 +5833,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.8.6:
-    resolution: {integrity: sha512-WU7BrS0rKtewaU1e0SjJmUVc23k1Y9L5+aJdSmezAYlxYbHprlFVYeZZvwj1kA9xrPE8MGguvMQgePSxxD/l2w==}
+  vuetify@3.9.2:
+    resolution: {integrity: sha512-Pax7YCgbE5SArY8CDM0A9dTVHnG1oU79eIBA+FEEg3dDFV7bc+0AppJJLfG2+aoaBlJf2UH7tOCflJ/U23YU1Q==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -12769,7 +12769,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  vuetify@3.8.6(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3)):
+  vuetify@3.9.2(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3)):
     dependencies:
       vue: 3.5.18(typescript@5.8.3)
     optionalDependencies:
