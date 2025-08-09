@@ -22,8 +22,8 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@nuxt/image": "^1.10.0",
-    "@pinia/nuxt": "0.11.0",
-    "@unhead/vue": "~2.0.12",
+    "@pinia/nuxt": "^0.11.0",
+    "@unhead/vue": "^2.0.14",
     "@vueuse/core": "^13.5.0",
     "@vueuse/nuxt": "^13.5.0",
     "google-auth-library": "^10.1.0",
