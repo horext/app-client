@@ -15,6 +15,12 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       VIRTUAL_HOST: ${VIRTUAL_HOST}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
+      - "traefik.http.routers.ssr-client.entrypoints=websecure"
+      - "traefik.http.routers.ssr-client.tls.certresolver=le"
+      - "traefik.http.services.ssr-client.loadbalancer.server.port=${NUXT_PORT}"
     ports:
       - ${NUXT_PORT}
     networks:
