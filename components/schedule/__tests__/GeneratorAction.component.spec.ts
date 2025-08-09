@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import GeneratorActions from '../GeneratorActions.vue'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VTextField } from 'vuetify/components/VTextField'
 import { VIcon } from 'vuetify/components/VIcon'
@@ -8,7 +8,7 @@ import { VCardText } from 'vuetify/components/VCard'
 import { createVuetify } from 'vuetify'
 
 const vuetify = createVuetify()
-
+vi.stubGlobal('visualViewport', new EventTarget())
 describe('GeneratorActions.vue', () => {
   it('renders the component correctly', () => {
     const wrapper = mount(GeneratorActions, {
