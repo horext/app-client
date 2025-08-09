@@ -27,14 +27,14 @@ FROM node:22-alpine AS production
 
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/src/app/.output .output
+COPY --from=build /usr/src/app/.output .
 
 ENV HOST=0.0.0.0
 ENV PORT=5000
 
 EXPOSE 5000
 
-CMD [ "node", ".output/server/index.mjs" ]
+CMD [ "node", "server/index.mjs" ]
 
 
 
