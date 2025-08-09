@@ -24,7 +24,7 @@ services:
     ports:
       - ${NUXT_PORT}
     networks:
-      - letsencrypt
+      - proxy
 networks:
   letsencrypt:
     name: letsencrypt
