@@ -50,6 +50,9 @@ importers:
       ufo:
         specifier: ^1.6.0
         version: 1.6.1
+      unhead:
+        specifier: ^2.0.14
+        version: 2.0.14
       unstorage:
         specifier: ^1.16.1
         version: 1.16.1(@netlify/blobs@9.1.2)(db0@0.3.2)(ioredis@5.7.0)
