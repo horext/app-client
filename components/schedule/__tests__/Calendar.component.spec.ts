@@ -8,6 +8,7 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { VMenu } from 'vuetify/components'
 
 const vuetify = createVuetify()
+vi.stubGlobal('visualViewport', new EventTarget())
 describe('Schedule Calendar', () => {
   const scheduleMock: IScheduleGenerate = {
     events: [
