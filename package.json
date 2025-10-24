@@ -26,7 +26,7 @@
     "@unhead/vue": "^2.0.14",
     "@vueuse/core": "^13.5.0",
     "@vueuse/nuxt": "^13.5.0",
-    "google-auth-library": "^10.1.0",
+    "google-auth-library": "^10.4.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.2",
     "lottie-web": "^5.13.0",
