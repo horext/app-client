@@ -1,6 +1,6 @@
 import { config, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import ItemSectionList from '../ItemSectionList.vue'
+import ItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import { getSectionColor } from '~/utils/color'
 import { VChip } from 'vuetify/components/VChip'
 

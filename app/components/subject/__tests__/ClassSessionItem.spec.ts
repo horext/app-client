@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import ClassSessionItem from '@/components/subject/ClassSessionItem.vue'
+import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import type { ISession } from '~/interfaces/subject'
 
 describe('ClassSessionItem', () => {

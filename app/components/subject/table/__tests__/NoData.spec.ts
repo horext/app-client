@@ -1,6 +1,6 @@
 import { config, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, afterAll, beforeAll, vi } from 'vitest'
-import NoData from '../NoData.vue'
+import NoData from '~/components/subject/table/NoData.vue'
 import LottieRender from '~/components/LottieRender.vue'
 
 vi.mock('lottie-web', () => ({

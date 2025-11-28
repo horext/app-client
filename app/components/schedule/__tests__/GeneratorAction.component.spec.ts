@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import GeneratorActions from '../GeneratorActions.vue'
+import GeneratorActions from '~/components/schedule/GeneratorActions.vue'
 import { describe, expect, it, vi } from 'vitest'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VTextField } from 'vuetify/components/VTextField'

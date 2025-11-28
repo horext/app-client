@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import ItemActions from '../ItemActions.vue'
+import ItemActions from '~/components/activity/table/ItemActions.vue'
 import { describe, it, expect } from 'vitest'
 import { VBtn } from 'vuetify/components/VBtn'
 import { createVuetify } from 'vuetify'

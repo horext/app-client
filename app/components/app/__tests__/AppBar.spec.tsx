@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import AppBar from '../Bar.vue'
+import AppBar from '~/components/app/Bar.vue'
 import { describe, it, expect, vi } from 'vitest'
 import { VAppBarNavIcon, VLayout } from 'vuetify/components'
 import { createVuetify } from 'vuetify'

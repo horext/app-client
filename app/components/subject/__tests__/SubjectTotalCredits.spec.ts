@@ -1,6 +1,6 @@
 import { config, shallowMount } from '@vue/test-utils'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import TotalCredits from '../TotalCredits.vue'
+import TotalCredits from '~/components/subject/TotalCredits.vue'
 
 describe('TotalCredits', () => {
   beforeAll(() => {

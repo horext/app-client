@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import Mode from '../Mode.vue'
+import Mode from '~/components/schedule/Mode.vue'
 import { describe, it, expect } from 'vitest'
 import { ViewMode } from '~/models/ViewMode'
 import { createVuetify } from 'vuetify'
