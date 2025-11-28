@@ -135,7 +135,7 @@ const internalDays = computed(() => {
   return _weekdays.map((day) => ({
     id: day,
     weekDay: (day % 7) as Weekdays,
-    name: WEEKDAY_NAMES[day % 7],
+    name: WEEKDAY_NAMES[day % 7] ?? '',
   }))
 })
 

@@ -309,7 +309,7 @@ async function eventRequest(event: IEvent): Promise<CalendarEvent> {
     throw new Error('No se ha seleccionado un calendario')
   }
   return await createEvent(
-    selected.value.id,
+    selected.value.id!,
     new CalendarEvent(
       event,
       notifications.value,

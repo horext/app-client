@@ -72,13 +72,13 @@ const toggleSubjectSelection = (id: number) => {
 
 const handleSelectAll = (cycle: number) => {
   const subjects = groupedSubjects.value[cycle]
-  const ids = subjects.map((s) => s.id)
+  const ids = subjects?.map((s) => s.id) ?? []
   selectedSubjectIds.value = [...selectedSubjectIds.value, ...ids]
 }
 
 const handleUnselectAll = (cycle: number) => {
   const subjects = groupedSubjects.value[cycle]
-  const ids = subjects?.map((s) => s.id)
+  const ids = subjects?.map((s) => s.id) ?? []
   selectedSubjectIds.value = selectedSubjectIds.value.filter(
     (id) => !ids.includes(id),
   )

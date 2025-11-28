@@ -106,11 +106,13 @@ onMounted(async () => {
 })
 
 const addFavoriteCurrentSchedule = () => {
-  const index = isFavorite(schedules.value[0])
+  const currentSchedule = schedules.value[0]
+  if (!currentSchedule) return
+  const index = isFavorite(currentSchedule)
   if (index >= 0) {
-    deleteFavoriteScheduleById(schedules.value[0].id)
+    deleteFavoriteScheduleById(currentSchedule.id)
   } else {
-    saveNewFavoriteSchedule(schedules.value[0])
+    saveNewFavoriteSchedule(currentSchedule)
   }
 }
 

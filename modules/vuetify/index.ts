@@ -37,12 +37,14 @@ export default defineNuxtModule<ModuleOptions>({
       }
     > = importMap.components
     for (const component in componentsMap) {
+      const componentData = componentsMap[component]
+      if (!componentData) continue
       addComponent({
         name: component,
         export: component,
         filePath:
           'vuetify/' +
-          componentsMap[component].from.replace(/\/index\.mjs$/, ''),
+          componentData.from.replace(/\/index\.mjs$/, ''),
       })
     }
 

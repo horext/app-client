@@ -44,11 +44,13 @@ export function getSchedules(
   const baseEvents = myEvents.map(Event.buildFrom)
 
   const advanceIndex = (i: number) => {
-    if (i >= 0 && indexSchedules[i] === subjects[i].schedules.length - 1) {
+    const subject = subjects[i]
+    const currentIndex = indexSchedules[i]
+    if (i >= 0 && subject && currentIndex !== undefined && currentIndex === subject.schedules.length - 1) {
       indexSchedules[i] = 0
       advanceIndex(i - 1)
-    } else {
-      indexSchedules[i]++
+    } else if (i >= 0 && currentIndex !== undefined) {
+      indexSchedules[i] = currentIndex + 1
     }
   }
 
@@ -64,14 +66,18 @@ export function getSchedules(
     const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subject = subjects[j]
-      const schedule = subject.schedules[indexSchedules[j]]
+      if (!subject) continue
+      const scheduleIndex = indexSchedules[j]
+      if (scheduleIndex === undefined) continue
+      const schedule = subject.schedules[scheduleIndex]
+      if (!schedule) continue
       scheduleSubjects.push({
         ...schedule,
         subject,
       })
     }
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      scheduleToEvent(c, EVENT_COLORS[index]),
+      scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
     )
     // calculating crossing
     let crossingCombination = 0
@@ -156,7 +162,7 @@ export function getSchedules(
         schedule: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects
-          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index]))
+          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'))
           .flat()
           .concat(baseEvents),
       })

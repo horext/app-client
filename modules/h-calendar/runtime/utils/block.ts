@@ -13,10 +13,12 @@ export const extractBlocks = <T extends ICalendarEvent>(events: T[]) => {
   for (let i = 0; i < internalEvents.length; i++) {
     if (visited.has(i)) continue
     const event = events[i]
+    if (!event) continue
     const group: T[] = [event]
     for (let j = i + 1; j < internalEvents.length; j++) {
       const nextEvent = events[j]
       if (
+        nextEvent &&
         event.start < nextEvent.end &&
         event.end > nextEvent.start &&
         !visited.has(j)

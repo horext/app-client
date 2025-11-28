@@ -89,7 +89,7 @@ const {
   internalWidth,
 } = toRefs(props)
 
-const startIntervalHour = computed(() => parseInt(hours.value[0]))
+const startIntervalHour = computed(() => parseInt(hours.value[0] ?? '0'))
 
 const intervalMinuteHeight = computed(() => {
   const totalHeight = dayContainer.value?.offsetHeight ?? 0
