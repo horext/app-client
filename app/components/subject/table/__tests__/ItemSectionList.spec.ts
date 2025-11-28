@@ -45,7 +45,7 @@ describe('ItemSectionList', () => {
     const chips = wrapper.findAllComponents(VChip)
 
     chips.forEach((chip, index) => {
-      const expectedColor = getSectionColor(schedules[index].section.id)
+      const expectedColor = getSectionColor(schedules[index]?.section.id)
       expect(chip.props('color')).toBe(expectedColor)
     })
   })
@@ -66,7 +66,7 @@ describe('ItemSectionList', () => {
     const chips = wrapper.findAllComponents(VChip)
 
     chips.forEach((chip, index) => {
-      const expectedText = schedules[index].section.id
+      const expectedText = schedules[index]?.section.id
       expect(chip.text()).toBe(expectedText)
     })
   })

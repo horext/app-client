@@ -20,16 +20,16 @@ export function scheduleToEvent(
     const course = schedule.subject.course
     const section = schedule.section.id
     const event = new Event(
-      sessions[i].day,
-      sessions[i].startTime,
-      sessions[i].endTime,
+      sessions[i]?.day!,
+      sessions[i]?.startTime!,
+      sessions[i]?.endTime!,
       course.id + ' ' + section + ' - ' + course.name,
       ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
       sessions[i]?.classroom?.code,
       color,
-      sessions[i].type.code,
+      sessions[i]?.type.code!,
       'COURSE',
-      String(sessions[i].id),
+      String(sessions[i]?.id),
     )
     events.push(event)
   }

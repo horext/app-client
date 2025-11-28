@@ -36,6 +36,6 @@ describe('ScheduleMode', () => {
     const radioGroup = wrapper.findComponent(VRadioGroup)
     radioGroup.vm.$emit('update:modelValue', newMode)
     expect(wrapper.emitted('update:mode')).toBeTruthy()
-    expect(wrapper.emitted('update:mode')?.[0][0]).toBe(newMode)
+    expect(wrapper.emitted('update:mode')?.[0]?.[0]).toBe(newMode)
   })
 })

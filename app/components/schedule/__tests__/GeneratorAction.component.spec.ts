@@ -54,7 +54,7 @@ describe('GeneratorActions.vue', () => {
     const input = wrapper.findComponent(VTextField).find('input')
     await input.setValue(3)
 
-    expect(wrapper.emitted()['update:crossings'][0]).toEqual([3])
+    expect(wrapper.emitted()['update:crossings']?.[0]).toEqual([3])
   })
 
   it('displays help text in v-menu', async () => {
