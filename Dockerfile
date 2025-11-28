@@ -15,7 +15,7 @@ COPY  pnpm-lock.yaml pnpm-lock.yaml
 COPY  package.json package.json
 COPY  pnpm-workspace.yaml pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile --production=false
-RUN pnpm run prepare
+RUN pnpm run postinstall
 
 COPY  . .
 
