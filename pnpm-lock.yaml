@@ -106,8 +106,8 @@ importers:
         specifier: ^2.0.14
         version: 2.0.14
       '@vitejs/plugin-vue':
-        specifier: ^6.0.0
-        version: 6.0.1(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))
+        specifier: ^6.0.2
+        version: 6.0.2(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))
       '@vitest/coverage-v8':
         specifier: ^4.0.14
         version: 4.0.14(vitest@4.0.14(@types/node@24.2.1)(happy-dom@20.0.11)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))
@@ -1524,11 +1524,11 @@ packages:
   '@poppinss/exception@1.2.2':
     resolution: {integrity: sha512-m7bpKCD4QMlFCjA/nKTs23fuvoVFoA83brRKmObCUNmi/9tVu8Ve3w4YQAnJu4q3Tjf5fr685HYIC/IA2zHRSg==}
 
-  '@rolldown/pluginutils@1.0.0-beta.29':
-    resolution: {integrity: sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==}
+  '@rolldown/pluginutils@1.0.0-beta.50':
+    resolution: {integrity: sha512-5e76wQiQVeL1ICOZVUg4LSOVYg9jyhGCin+icYozhsUzM+fHE7kddi1bdiE0jwVqTfkjba3jUFbEkoC9WkdvyA==}
 
-  '@rolldown/pluginutils@1.0.0-beta.41':
-    resolution: {integrity: sha512-ycMEPrS3StOIeb87BT3/+bu+blEtyvwQ4zmo2IcJQy0Rd1DAAhKksA0iUZ3MYSpJtjlPhg0Eo6mvVS6ggPhRbw==}
+  '@rolldown/pluginutils@1.0.0-beta.52':
+    resolution: {integrity: sha512-/L0htLJZbaZFL1g9OHOblTxbCYIGefErJjtYOwgl9ZqNx27P3L0SDfjhhHIss32gu5NWgnxuT2a2Hnnv6QGHKA==}
 
   '@rollup/plugin-alias@5.1.1':
     resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
@@ -2033,8 +2033,8 @@ packages:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
       vue: ^3.0.0
 
-  '@vitejs/plugin-vue@6.0.1':
-    resolution: {integrity: sha512-+MaE752hU0wfPFJEUAIxqw18+20euHHdxVtMvbFcOEpjEyfqXH/5DCoTHiVJ0J29EhTJdoTkjEv5YBKU9dnoTw==}
+  '@vitejs/plugin-vue@6.0.2':
+    resolution: {integrity: sha512-iHmwV3QcVGGvSC1BG5bZ4z6iwa1SOpAPWmnjOErd4Ske+lZua5K9TtAVdx0gMBClJ28DViCbSmZitjWZsWO3LA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
@@ -6870,7 +6870,7 @@ snapshots:
     dependencies:
       '@nuxt/kit': 4.2.1(magicast@0.5.1)
       '@rollup/plugin-replace': 6.0.3(rollup@4.53.3)
-      '@vitejs/plugin-vue': 6.0.1(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))
+      '@vitejs/plugin-vue': 6.0.2(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))
       '@vitejs/plugin-vue-jsx': 5.1.1(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))
       autoprefixer: 10.4.21(postcss@8.5.6)
       consola: 3.4.2
@@ -7159,9 +7159,9 @@ snapshots:
 
   '@poppinss/exception@1.2.2': {}
 
-  '@rolldown/pluginutils@1.0.0-beta.29': {}
+  '@rolldown/pluginutils@1.0.0-beta.50': {}
 
-  '@rolldown/pluginutils@1.0.0-beta.41': {}
+  '@rolldown/pluginutils@1.0.0-beta.52': {}
 
   '@rollup/plugin-alias@5.1.1(rollup@4.53.3)':
     optionalDependencies:
@@ -7649,16 +7649,16 @@ snapshots:
       '@babel/core': 7.28.4
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-typescript': 7.28.0(@babel/core@7.28.4)
-      '@rolldown/pluginutils': 1.0.0-beta.41
+      '@rolldown/pluginutils': 1.0.0-beta.52
       '@vue/babel-plugin-jsx': 1.5.0(@babel/core@7.28.4)
       vite: 7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1)
       vue: 3.5.25(typescript@5.9.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@6.0.1(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))':
+  '@vitejs/plugin-vue@6.0.2(vite@7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1))(vue@3.5.25(typescript@5.9.2))':
     dependencies:
-      '@rolldown/pluginutils': 1.0.0-beta.29
+      '@rolldown/pluginutils': 1.0.0-beta.50
       vite: 7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1)
       vue: 3.5.25(typescript@5.9.2)
 
