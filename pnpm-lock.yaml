@@ -57,8 +57,8 @@ importers:
         specifier: ^1.16.1
         version: 1.17.3(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.8.2)
       uuid:
-        specifier: ^11.0.5
-        version: 11.1.0
+        specifier: ^13.0.0
+        version: 13.0.0
       vite:
         specifier: ^7.2.4
         version: 7.2.4(@types/node@24.2.1)(jiti@2.6.1)(sass@1.90.0)(terser@5.43.1)(yaml@2.8.1)
@@ -5314,6 +5314,10 @@ packages:
 
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
     hasBin: true
 
   valibot@1.1.0:
@@ -11616,7 +11620,10 @@ snapshots:
     dependencies:
       base64-arraybuffer: 1.0.2
 
-  uuid@11.1.0: {}
+  uuid@11.1.0:
+    optional: true
+
+  uuid@13.0.0: {}
 
   valibot@1.1.0(typescript@5.9.2):
     optionalDependencies:
