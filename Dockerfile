@@ -15,9 +15,10 @@ COPY  pnpm-lock.yaml pnpm-lock.yaml
 COPY  package.json package.json
 COPY  pnpm-workspace.yaml pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile --production=false
-RUN pnpm run postinstall
 
 COPY  . .
+
+RUN pnpm run postinstall
 
 RUN NUXT_API_URL=$NUXT_API_URL \
     NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID \
