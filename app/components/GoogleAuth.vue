@@ -72,7 +72,7 @@
                 v-for="(notification, index) in notifications"
                 :id="'not-' + index"
                 :key="index"
-                v-model="notifications[index].minutes"
+                v-model="notification.minutes"
                 type="number"
                 :rules="[(a) => a > 0 || 'No permitido']"
                 variant="outlined"

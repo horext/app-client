@@ -3,14 +3,14 @@
     <v-card flat style="min-height: 100vh">
       <v-toolbar flat>
         <v-btn
-          v-if="schedules.length > 0"
+          v-if="firstSchedule"
           variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
-          <v-icon :color="isFavorite(schedules[0]) >= 0 ? 'yellow' : undefined">
+          <v-icon :color="isFavorite(firstSchedule) >= 0 ? 'yellow' : undefined">
             {{ mdiStar }}
           </v-icon>
-          <span v-if="isFavorite(schedules[0]) >= 0">
+          <span v-if="isFavorite(firstSchedule) >= 0">
             Quitar de Favoritos
           </span>
           <span v-else> Añadir a Favoritos </span>
@@ -55,6 +55,7 @@ const loading = ref(false)
 const store = useUserConfigStore()
 
 const myFavoritesSchedules = computed(() => store.favoritesSchedules)
+const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
 const { data: subjects } = useAsyncData<ISelectedSubject[]>(
