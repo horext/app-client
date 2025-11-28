@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon'
-import { v4 } from 'uuid'
 import { EVENT_COLORS } from '~/constants/event'
 import type { IEvent } from '~/interfaces/event'
 
@@ -13,7 +12,7 @@ export class EventNotification {
 }
 
 export class CalendarEvent {
-  iCalUID = 'Horext-' + v4()
+  iCalUID = 'Horext-' + crypto.randomUUID()
   summary: string
   description?: string
   location?: string

@@ -1,4 +1,3 @@
-import { v4 } from 'uuid'
 import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
 
@@ -26,7 +25,7 @@ export default class Event {
     color: string,
     type: string,
     category?: EventCategories,
-    id: string = v4(),
+    id: string = crypto.randomUUID(),
   ) {
     this.day = day
     this.startTime = startTime
@@ -98,7 +97,7 @@ export class Activity extends Event {
       event.description,
       event.location,
       event.color,
-      event.id || v4(),
+      event.id || crypto.randomUUID(),
     )
   }
 }
