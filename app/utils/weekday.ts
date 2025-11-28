@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { Weekdays } from '~/interfaces/event'
-import type { WeekdaysISO } from '~/modules/h-calendar/runtime/constants/week'
+import type { WeekdaysISO } from '~~/modules/h-calendar/runtime/constants/week'
 
 export const weekdayToDatetime = (weekday: Weekdays, time: string) => {
   const date = DateTime.fromISO(time).set({

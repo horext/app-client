@@ -34,7 +34,7 @@ import { mdiStar } from '@mdi/js'
 import {
   useClassSessionApi,
   useScheduleSubjectApi,
-} from '~/modules/apis/runtime/composables'
+} from '~~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 

@@ -32,7 +32,7 @@
 
 <script lang="ts" setup>
 import type { ISubjectStudyPlan } from '~/interfaces/subject'
-import { useStudyPlanApi } from '~/modules/apis/runtime/composables'
+import { useStudyPlanApi } from '~~/modules/apis/runtime/composables'
 import PlanSubjectCard from '../../components/plan/SubjectCard.vue'
 
 const route = useRoute()

@@ -107,7 +107,7 @@ import {
   useClassSessionApi,
   useCourseApi,
   useScheduleSubjectApi,
-} from '~/modules/apis/runtime/composables'
+} from '~~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
 import SubjectSelect from '../../components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'

@@ -26,8 +26,8 @@ import {
   SETTINGS_ROUTE,
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
-import { provideApis } from '~/modules/apis/runtime'
-import { HOURLY_LOAD_API_KEY } from '~/modules/apis/runtime/registry/keys'
+import { provideApis } from '~~/modules/apis/runtime'
+import { HOURLY_LOAD_API_KEY } from '~~/modules/apis/runtime/registry/keys'
 import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'

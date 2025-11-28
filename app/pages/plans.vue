@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { IStudyPlan } from '~/interfaces/subject'
-import { useStudyPlanApi } from '~/modules/apis/runtime/composables'
+import { useStudyPlanApi } from '~~/modules/apis/runtime/composables'
 
 definePageMeta({
   title: 'Study Plans',

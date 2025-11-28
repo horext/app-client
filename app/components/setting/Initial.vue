@@ -57,7 +57,7 @@ import {
   useFacultyApi,
   useHourlyLoadApi,
   useSpecialityApi,
-} from '~/modules/apis/runtime/composables'
+} from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
 
 const hourlyLoadApi = useHourlyLoadApi()
