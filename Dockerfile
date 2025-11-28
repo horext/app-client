@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 ARG NUXT_API_URL
 ARG NUXT_PUBLIC_GSI_CLIENT_ID
@@ -25,7 +25,7 @@ RUN NUXT_API_URL=$NUXT_API_URL \
     NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES \
     pnpm run build
 
-FROM node:22-alpine AS production
+FROM node:24-alpine AS production
 
 WORKDIR /usr/src/app
 
