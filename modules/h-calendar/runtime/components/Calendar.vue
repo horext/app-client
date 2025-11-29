@@ -17,7 +17,7 @@
         :key="day.id"
         :week-day="day.id"
         :day="day.name"
-        :events="events"
+        :event-visuals="day.visuals"
         :hours="hours"
         :interval-minutes="internalIntervalMinutes"
         :interval-height="internalIntervalHeight"
@@ -53,6 +53,7 @@ import {
 import { WEEKDAYS, WEEKDAY_NAMES, type Weekdays } from '../constants/week'
 import CalendarTime from './CalendarTime.vue'
 import CalendarDay from './CalendarDay.vue'
+import { useCalendarVisuals } from '../composables/useCalendarEvents'
 
 defineOptions({
   name: 'HCalendar',
@@ -130,13 +131,22 @@ const hours = computed(() => {
   )
 })
 
+// Use the composable for cached event visuals by weekday
+const { visualsByWeekday } = useCalendarVisuals(events, weekdays)
+
+// Pre-compute days with their visuals to avoid method calls in template
 const internalDays = computed(() => {
   const _weekdays = weekdays.value
-  return _weekdays.map((day) => ({
-    id: day,
-    weekDay: (day % 7) as Weekdays,
-    name: WEEKDAY_NAMES[day % 7] ?? '',
-  }))
+  const _visualsByWeekday = visualsByWeekday.value
+  return _weekdays.map((day) => {
+    const weekDay = (day % 7)
+    return {
+      id: day,
+      weekDay,
+      name: WEEKDAY_NAMES[weekDay] ?? '',
+      visuals: _visualsByWeekday.get(weekDay  as Weekdays) ?? [],
+    }
+  })
 })
 
 const internalWidthRem = computed(() => internalWidth.value + 'rem')

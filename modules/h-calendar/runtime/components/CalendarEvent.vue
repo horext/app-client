@@ -24,39 +24,45 @@
 </template>
 
 <script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
+import { computed } from 'vue'
 import { HOUR_IN_MINUTES } from '../constants/time'
 import type { ICalendarEvent, MouseEventTypes } from '../types'
 
 const props = defineProps<{
   event: T
-  startIntervalHour: number
-  intervalMinuteHeight: number
-  column: number
-  columnCount: number
   left: number
   width: number
+  firstHour: number
+  intervalHeight: number
+  intervalMinutes: number
 }>()
+
 const emit = defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
-const { event, startIntervalHour, intervalMinuteHeight, left, width } =
-  toRefs(props)
 
+// Self-contained position calculation - only recalculates when THIS event's props change
 const position = computed(() => {
-  const _event = event.value
-  const [startHour, startMinute] = _event.start.split(':').map(Number)
-  const [endHour, endMinute] = _event.end.split(':').map(Number)
-  const firstHour = startIntervalHour.value
-  const minuteHeight = intervalMinuteHeight.value
+  const { event, left, width, firstHour, intervalHeight, intervalMinutes } = props
+  
+  const startParts = event.start.split(':')
+  const endParts = event.end.split(':')
+  const startHour = Number(startParts[0] ?? 0)
+  const startMinute = Number(startParts[1] ?? 0)
+  const endHour = Number(endParts[0] ?? 0)
+  const endMinute = Number(endParts[1] ?? 0)
+  
+  const minuteHeight = intervalHeight / intervalMinutes
   const startMinutes = (startHour - firstHour) * HOUR_IN_MINUTES + startMinute
   const endMinutes = (endHour - firstHour) * HOUR_IN_MINUTES + endMinute
   const top = startMinutes * minuteHeight
   const height = (endMinutes - startMinutes) * minuteHeight
+  
   return {
-    top: top + 'rem',
-    height: height + 'rem',
-    left: left.value + '%',
-    width: width.value + '%',
+    top: `${top}rem`,
+    height: `${height}rem`,
+    left: `${left}%`,
+    width: `${width}%`,
   }
 })
 </script>

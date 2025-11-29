@@ -15,10 +15,9 @@ describe('CalendarEvent', () => {
     const wrapper = shallowMount(CalendarEvent, {
       props: {
         event,
-        startIntervalHour: 8,
-        intervalMinuteHeight: 0.0417, // rem per minute
-        column: 0,
-        columnCount: 1,
+        firstHour: 8,
+        intervalHeight: 2.5,
+        intervalMinutes: 60,
         left: 0,
         width: 100,
       },
@@ -39,10 +38,9 @@ describe('CalendarEvent', () => {
     const wrapper = shallowMount(CalendarEvent, {
       props: {
         event,
-        startIntervalHour: 8,
-        intervalMinuteHeight: 0.0417,
-        column: 0,
-        columnCount: 1,
+        firstHour: 8,
+        intervalHeight: 2.5,
+        intervalMinutes: 60,
         left: 0,
         width: 100,
       },

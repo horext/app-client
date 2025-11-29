@@ -10,12 +10,11 @@
       v-for="visual in eventVisuals"
       :key="visual.event.id"
       :event="visual.event"
-      :column="visual.column"
-      :column-count="visual.columnCount"
       :left="visual.left"
       :width="visual.width"
-      :interval-minute-height="intervalMinuteHeight"
-      :start-interval-hour="startIntervalHour"
+      :first-hour="firstHour"
+      :interval-height="intervalHeight"
+      :interval-minutes="intervalMinutes"
       @dblclick="
         $emit('dblclick:event', { event: visual.event, nativeEvent: $event })
       "
@@ -55,16 +54,16 @@
 <script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
 import { ref, computed, toRefs } from 'vue'
 import type { ICalendarEvent, IEventEmitData } from '../types'
+import type { CalendarEventVisual } from '../composables/useCalendarEvents'
 import Event from './CalendarEvent.vue'
 import DayHour from './CalendarDayHour.vue'
-import { extractBlocks } from '../utils/block'
 import type { Weekdays } from '../constants/week'
 
 const props = defineProps<{
   weekDay: Weekdays
   day: string
   hours: string[]
-  events: T[]
+  eventVisuals: CalendarEventVisual<T>[]
   intervalMinutes: number
   internalWidth: number
   intervalHeight: number
@@ -81,34 +80,13 @@ defineEmits<{
     event: IEventEmitData<T>,
   ): void
 }>()
-const {
-  events,
-  intervalHeight,
-  hours,
-  intervalMinutes,
-  weekDay,
-  internalWidth,
-} = toRefs(props)
+const { hours, internalWidth, intervalHeight } = toRefs(props)
 
-const startIntervalHour = computed(() => parseInt(hours.value[0] ?? '0'))
-
-const intervalMinuteHeight = computed(() => {
-  const heightPerInterval = intervalHeight.value
-  const minuteHeight = heightPerInterval / intervalMinutes.value
-  return minuteHeight
-})
-
-const weekDayEvents = computed(() => {
-  return events.value.filter((event) => event.weekDay % 7 === weekDay.value)
-})
-
-const eventVisuals = computed(() => {
-  return extractBlocks(weekDayEvents.value)
-})
+// Derive firstHour once - passed to events as stable value
+const firstHour = computed(() => parseInt(hours.value[0] ?? '0'))
 
 const dayContainer = ref<null | HTMLDivElement>(null)
 const internalWidthRem = computed(() => internalWidth.value + 'rem')
-const intervalHeightRem = computed(() => intervalHeight.value + 'rem')
 </script>
 
 <style scoped>
