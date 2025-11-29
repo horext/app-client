@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, toRefs } from 'vue'
 
 const props = defineProps<{
   hours: string[]
