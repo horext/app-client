@@ -6,48 +6,49 @@
       :hour="hour"
       :interval-height="intervalHeight"
     />
-    <template v-for="group in groupEvents">
-      <Event
-        v-for="event in group"
-        :key="event.id"
-        :event="event"
-        :events="group"
-        :interval-minute-height="intervalMinuteHeight"
-        :start-interval-hour="startIntervalHour"
-        @dblclick="
-          $emit('dblclick:event', { event: event, nativeEvent: $event })
-        "
-        @click="
-          $emit('click:event', {
-            event: event,
-            nativeEvent: $event,
-          })
-        "
-        @mousedown="
-          $emit('mousedown:event', { event: event, nativeEvent: $event })
-        "
-        @mouseenter="
-          $emit('mouseenter:event', {
-            event: event,
-            nativeEvent: $event,
-          })
-        "
-        @mouseleave="
-          $emit('mouseleave:event', {
-            event: event,
-            nativeEvent: $event,
-          })
-        "
-        @mousemove="
-          $emit('mousemove:event', {
-            event: event,
-            nativeEvent: $event,
-          })
-        "
-      >
-        <slot name="event" :event="event" />
-      </Event>
-    </template>
+    <Event
+      v-for="visual in eventVisuals"
+      :key="visual.event.id"
+      :event="visual.event"
+      :column="visual.column"
+      :column-count="visual.columnCount"
+      :left="visual.left"
+      :width="visual.width"
+      :interval-minute-height="intervalMinuteHeight"
+      :start-interval-hour="startIntervalHour"
+      @dblclick="
+        $emit('dblclick:event', { event: visual.event, nativeEvent: $event })
+      "
+      @click="
+        $emit('click:event', {
+          event: visual.event,
+          nativeEvent: $event,
+        })
+      "
+      @mousedown="
+        $emit('mousedown:event', { event: visual.event, nativeEvent: $event })
+      "
+      @mouseenter="
+        $emit('mouseenter:event', {
+          event: visual.event,
+          nativeEvent: $event,
+        })
+      "
+      @mouseleave="
+        $emit('mouseleave:event', {
+          event: visual.event,
+          nativeEvent: $event,
+        })
+      "
+      @mousemove="
+        $emit('mousemove:event', {
+          event: visual.event,
+          nativeEvent: $event,
+        })
+      "
+    >
+      <slot name="event" :event="visual.event" />
+    </Event>
   </div>
 </template>
 
@@ -92,9 +93,8 @@ const {
 const startIntervalHour = computed(() => parseInt(hours.value[0] ?? '0'))
 
 const intervalMinuteHeight = computed(() => {
-  const totalHeight = dayContainer.value?.offsetHeight ?? 0
-  const intervalHeight = totalHeight / hours.value.length
-  const minuteHeight = intervalHeight / intervalMinutes.value
+  const heightPerInterval = intervalHeight.value
+  const minuteHeight = heightPerInterval / intervalMinutes.value
   return minuteHeight
 })
 
@@ -102,12 +102,13 @@ const weekDayEvents = computed(() => {
   return events.value.filter((event) => event.weekDay % 7 === weekDay.value)
 })
 
-const groupEvents = computed(() => {
-  const events = weekDayEvents.value
-  return extractBlocks(events)
+const eventVisuals = computed(() => {
+  return extractBlocks(weekDayEvents.value)
 })
+
 const dayContainer = ref<null | HTMLDivElement>(null)
 const internalWidthRem = computed(() => internalWidth.value + 'rem')
+const intervalHeightRem = computed(() => intervalHeight.value + 'rem')
 </script>
 
 <style scoped>

@@ -24,7 +24,6 @@
 </template>
 
 <script lang="ts" setup generic="T extends ICalendarEvent = ICalendarEvent">
-import { WIDTH_FULL } from '../constants/event'
 import { HOUR_IN_MINUTES } from '../constants/time'
 import type { ICalendarEvent, MouseEventTypes } from '../types'
 
@@ -32,27 +31,16 @@ const props = defineProps<{
   event: T
   startIntervalHour: number
   intervalMinuteHeight: number
-  events: ICalendarEvent[]
+  column: number
+  columnCount: number
+  left: number
+  width: number
 }>()
 const emit = defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
-const { event, startIntervalHour, intervalMinuteHeight, events } = toRefs(props)
-
-const collisionIndex = computed(() => {
-  const _collisions = events.value
-  return _collisions.indexOf(event.value)
-})
-
-const width = computed(() => {
-  const _collisions = events.value
-  return WIDTH_FULL / _collisions.length
-})
-
-const right = computed(() => {
-  const index = collisionIndex.value
-  return WIDTH_FULL - (index + 1) * width.value
-})
+const { event, startIntervalHour, intervalMinuteHeight, left, width } =
+  toRefs(props)
 
 const position = computed(() => {
   const _event = event.value
@@ -63,13 +51,11 @@ const position = computed(() => {
   const startMinutes = (startHour - firstHour) * HOUR_IN_MINUTES + startMinute
   const endMinutes = (endHour - firstHour) * HOUR_IN_MINUTES + endMinute
   const top = startMinutes * minuteHeight
-  const bottom = endMinutes * minuteHeight
-  const height = bottom - top
+  const height = (endMinutes - startMinutes) * minuteHeight
   return {
-    top: top + 'px',
-    height: height + 'px',
-    right: right.value + '%',
-    bottom: bottom + 'px',
+    top: top + 'rem',
+    height: height + 'rem',
+    left: left.value + '%',
     width: width.value + '%',
   }
 })
@@ -94,7 +80,7 @@ const position = computed(() => {
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
-  line-height: 18px; /* 150% */
+  line-height: 18px;
 }
 
 .event-time {
@@ -103,7 +89,7 @@ const position = computed(() => {
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 18px; /* 150% */
+  line-height: 18px;
 }
 
 .h-calendar-event-timed {
