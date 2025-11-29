@@ -41,20 +41,41 @@ const emit = defineEmits<{
   (key: MouseEventTypes, value: MouseEvent): void
 }>()
 
-// Self-contained position calculation - only recalculates when THIS event's props change
+/**
+ * Parse time string to hours and minutes.
+ * Memoized per event - only recalculates when event.start/end changes.
+ */
+const parsedStart = computed(() => {
+  const parts = props.event.start.split(':')
+  return {
+    hour: Number(parts[0] ?? 0),
+    minute: Number(parts[1] ?? 0),
+  }
+})
+
+const parsedEnd = computed(() => {
+  const parts = props.event.end.split(':')
+  return {
+    hour: Number(parts[0] ?? 0),
+    minute: Number(parts[1] ?? 0),
+  }
+})
+
+/**
+ * Self-contained position calculation.
+ * Uses cached parsed times for efficiency.
+ * Only recalculates when:
+ * - event.start/end changes (via parsedStart/parsedEnd)
+ * - layout props change (left, width, firstHour, intervalHeight, intervalMinutes)
+ */
 const position = computed(() => {
-  const { event, left, width, firstHour, intervalHeight, intervalMinutes } = props
-  
-  const startParts = event.start.split(':')
-  const endParts = event.end.split(':')
-  const startHour = Number(startParts[0] ?? 0)
-  const startMinute = Number(startParts[1] ?? 0)
-  const endHour = Number(endParts[0] ?? 0)
-  const endMinute = Number(endParts[1] ?? 0)
+  const { left, width, firstHour, intervalHeight, intervalMinutes } = props
+  const start = parsedStart.value
+  const end = parsedEnd.value
   
   const minuteHeight = intervalHeight / intervalMinutes
-  const startMinutes = (startHour - firstHour) * HOUR_IN_MINUTES + startMinute
-  const endMinutes = (endHour - firstHour) * HOUR_IN_MINUTES + endMinute
+  const startMinutes = (start.hour - firstHour) * HOUR_IN_MINUTES + start.minute
+  const endMinutes = (end.hour - firstHour) * HOUR_IN_MINUTES + end.minute
   const top = startMinutes * minuteHeight
   const height = (endMinutes - startMinutes) * minuteHeight
   

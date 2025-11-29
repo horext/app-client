@@ -68,6 +68,7 @@ const props = defineProps<{
   internalWidth: number
   intervalHeight: number
 }>()
+
 defineEmits<{
   (
     key:
@@ -80,9 +81,9 @@ defineEmits<{
     event: IEventEmitData<T>,
   ): void
 }>()
-const { hours, internalWidth, intervalHeight } = toRefs(props)
 
-// Derive firstHour once - passed to events as stable value
+const { hours, internalWidth, intervalHeight, intervalMinutes } = toRefs(props)
+
 const firstHour = computed(() => parseInt(hours.value[0] ?? '0'))
 
 const dayContainer = ref<null | HTMLDivElement>(null)
