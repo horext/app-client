@@ -52,7 +52,7 @@
     "@types/google.accounts": "^0.0.18",
     "@types/luxon": "^3.7.0",
     "@types/node": "^24.10.1",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "@unhead/schema": "^2.0.19",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vitest/coverage-v8": "^4.0.14",
