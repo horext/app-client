@@ -69,8 +69,8 @@ importers:
         specifier: ^4.5.1
         version: 4.6.3(vue@3.5.25(typescript@5.9.2))
       vuetify:
-        specifier: ^3.11.0
-        version: 3.11.0(typescript@5.9.2)(vue@3.5.25(typescript@5.9.2))
+        specifier: ^3.11.3
+        version: 3.11.3(typescript@5.9.2)(vue@3.5.25(typescript@5.9.2))
     devDependencies:
       '@mdi/js':
         specifier: ^7.4.47
@@ -944,8 +944,8 @@ packages:
     resolution: {integrity: sha512-5XUvZuffe3KetyhbWwd4n2ktd7wraocCYw10tlM+/u/95iAz29GjNiuNxbCD1T6Bn1MyGc4QLVNKOWhzJkVFAw==}
     engines: {node: ^14.16.0 || >=16.0.0}
 
-  '@netlify/open-api@2.44.0':
-    resolution: {integrity: sha512-boKEIFvXXITHTNTZgy+PebDpzhTiGYEn4jbXW9hiF/iYgIFHTdvbqiCWQpK0Pr2CUGYWeqMSUnZgfRUFDu7M6Q==}
+  '@netlify/open-api@2.45.0':
+    resolution: {integrity: sha512-kLysr2N8HQi0qoEq04vpRvrE/fSnZaXJYf1bVxKre2lLaM1RSm05hqDswKTgxM601pZf9h1i1Ea3L4DZNgHb5w==}
     engines: {node: '>=14.8.0'}
 
   '@netlify/runtime-utils@1.3.1':
@@ -5377,8 +5377,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.11.0:
-    resolution: {integrity: sha512-ITGeT3uaTIwI2SdyTvtE45tY6FlS2oWklfLU47s2K0ZHnu1it35p9lz8oE15Id8ThtKyQojQGobMkN+korheEw==}
+  vuetify@3.11.3:
+    resolution: {integrity: sha512-sZe/2f143cbqtJupkynOGOHxgn+YjRrXIj0atZlBECbOr4nZPCmSdukPSbudb0wU3fQpUjlaTGx0m4vIBPQqGQ==}
     peerDependencies:
       typescript: '>=4.7'
       vite-plugin-vuetify: '>=2.1.0'
@@ -6225,7 +6225,7 @@ snapshots:
       write-file-atomic: 6.0.0
     optional: true
 
-  '@netlify/open-api@2.44.0':
+  '@netlify/open-api@2.45.0':
     optional: true
 
   '@netlify/runtime-utils@1.3.1':
@@ -9660,7 +9660,7 @@ snapshots:
 
   netlify@13.3.5:
     dependencies:
-      '@netlify/open-api': 2.44.0
+      '@netlify/open-api': 2.45.0
       lodash-es: 4.17.21
       micro-api-client: 3.3.0
       node-fetch: 3.3.2
@@ -11442,7 +11442,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  vuetify@3.11.0(typescript@5.9.2)(vue@3.5.25(typescript@5.9.2)):
+  vuetify@3.11.3(typescript@5.9.2)(vue@3.5.25(typescript@5.9.2)):
     dependencies:
       vue: 3.5.25(typescript@5.9.2)
     optionalDependencies:
