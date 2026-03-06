@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" class="text-h4 text-center">
+    <v-col cols="12" class="text-headline-large text-center">
       Agrega tus horarios favoritos
     </v-col>
     <v-col ref="bm" cols="12" />

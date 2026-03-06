@@ -1,7 +1,7 @@
 <template>
   <v-card :loading="loading">
     <v-card-title>
-      <span class="text-h5">{{ title }}</span>
+      <span class="text-headline-medium">{{ title }}</span>
     </v-card-title>
     <v-card-text>
       <ScheduleSubjectList

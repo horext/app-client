@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="internalValue" max-width="600px" persistent>
     <v-card>
-      <v-card-title class="text-h5">
+      <v-card-title class="text-headline-medium">
         <slot name="title">
           <v-icon color="red">{{ mdiAlertCircle }}</v-icon>
           {{ title }}

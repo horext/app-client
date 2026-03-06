@@ -1,14 +1,14 @@
 <template>
   <v-dialog v-model="internalValue" max-width="500px">
     <v-card>
-      <v-card-title class="text-h5">
+      <v-card-title class="text-headline-medium">
         <slot name="title">
           <v-icon left>{{ mdiAlertCircle }}</v-icon>
           {{ title }}
         </slot>
       </v-card-title>
       <v-divider class="mb-4"></v-divider>
-      <v-card-text class="text-h6"> <slot></slot> </v-card-text>
+      <v-card-text class="text-headline-small"> <slot></slot> </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn

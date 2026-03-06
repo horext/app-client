@@ -25,16 +25,16 @@
   >
     <template #selection="{ item }">
       <v-list-item
-        v-if="item.raw"
-        :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+        v-if="item"
+        :title="`${item?.course?.id} - ${item?.course?.name}`"
+        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name}`"
       />
     </template>
     <template #item="{ props, item }">
       <v-list-item
         v-bind="props"
-        :title="`${item?.raw?.course?.id} - ${item?.raw?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.raw?.cycle} | ${item?.raw?.type?.name}`"
+        :title="`${item?.course?.id} - ${item?.course?.name}`"
+        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name}`"
       />
     </template>
     <template #append>

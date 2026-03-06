@@ -1,7 +1,7 @@
 <template>
   <v-app-bar id="home-app-bar" elevation="1" height="64">
     <vuetify-logo style="max-width: 48px" />
-    <v-toolbar-title class="text-h6"> Horext </v-toolbar-title>
+    <v-toolbar-title class="text-headline-small"> Horext </v-toolbar-title>
     <v-spacer />
     <v-btn icon aria-label="Cambiar modo" @click="invertMode">
       <v-icon>{{ mdiBrightness6 }}</v-icon>
@@ -67,5 +67,4 @@ const invertMode = () => {
   .v-tab
     width: fit-content
     &::before
-      display: none
-</style>
+      display: none</style>

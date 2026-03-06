@@ -4,7 +4,7 @@
       <v-checkbox
         :id="section"
         v-model="valueSync"
-        class="text-caption"
+        class="text-body-small"
         density="compact"
         :label="section"
         :value="schedule"

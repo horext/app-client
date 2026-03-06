@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="d-flex">
-      <span class="text-h6 font-weight-bold">Compartir</span>
+      <span class="text-headline-small font-weight-bold">Compartir</span>
       <v-spacer />
       <v-btn
         class="mx-0"

@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center" justify="end" class="pa-2">
+  <v-row class="pa-2 align-center justify-end">
     <v-col cols="auto">
       <v-chip color="green" label>
         Total de créditos: {{ totalCredits }}
