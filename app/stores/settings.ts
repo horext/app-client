@@ -12,7 +12,7 @@ export const useSettingsStore = defineStore('settings', () => {
     },
 
     set(val) {
-      theme.global.name.value = val ? 'dark' : 'light'
+      theme.change(val ? 'dark' : 'light')
     },
   })
   onMounted(async () => {
