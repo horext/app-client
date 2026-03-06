@@ -14,8 +14,6 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pnpm install",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -23,8 +21,13 @@
 				"vitest.explorer"
 			]
 		}
-	}
-
+	},
+	"mounts": [
+		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,consistency=cached"
+	],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "pnpm install",
+	"postStartCommand": "git config --global user.signingkey ~/.ssh/id_ed25519.pub || true"
 	// Configure tool-specific properties.
 	// "customizations": {},
 
