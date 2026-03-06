@@ -1,5 +1,5 @@
 <template>
-  <v-row dense>
+  <v-row density="comfortable">
     <v-col cols="12">
       <v-data-table
         :headers="headers"

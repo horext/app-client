@@ -12,7 +12,7 @@
       </v-toolbar>
       <v-divider />
       <v-sheet flat class="pa-2">
-        <v-row dense>
+        <v-row density="comfortable">
           <v-col cols="12">
             <SubjectSelect
               v-model="selectedSubject"
@@ -26,7 +26,7 @@
         </v-row>
         <v-dialog
           v-model="dialog"
-          dense
+          density="comfortable"
           max-width="800"
           @click:outside="close"
           @keydown.esc="close"

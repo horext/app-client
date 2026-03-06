@@ -1,16 +1,16 @@
 <template>
   <v-footer>
     <v-container>
-      <v-row dense>
+      <v-row density="comfortable">
         <v-col cols="12" md="6">
-          <v-row justify-md="start" justify="center" dense>
+          <v-row justify-md="start" justify="center" density="comfortable">
             <v-col v-for="s in social" :key="s.name" cols="auto">
               <a class="px-5 py-4" :href="s.link" v-text="s.name" />
             </v-col>
           </v-row>
         </v-col>
         <v-col class="text-center text-md-right" cols="12" md="6">
-          <v-row justify-md="end" justify="center" dense>
+          <v-row justify-md="end" justify="center" density="comfortable">
             <v-col cols="auto">
               <nuxt-link class="px-5 py-4" to="/security">
                 Seguridad

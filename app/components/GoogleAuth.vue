@@ -113,7 +113,7 @@
           <v-alert
             v-if="calendarListStatus === 'error'"
             type="error"
-            dense
+            density="comfortable"
             dismissible
           >
             Ha ocurrido un error al obtener la lista de calendarios
@@ -121,7 +121,7 @@
           <v-alert
             v-if="exportEventToGCalendarStatus === 'error'"
             type="error"
-            dense
+            density="comfortable"
             dismissible
           >
             <div>Ha ocurrido un error al exportar los eventos.</div>

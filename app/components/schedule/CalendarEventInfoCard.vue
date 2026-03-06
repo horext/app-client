@@ -1,6 +1,6 @@
 <template>
   <v-card density="compact" class="text-body-small" max-width="400">
-    <v-toolbar dense :color="selectedEvent.color">
+    <v-toolbar density="comfortable" :color="selectedEvent.color">
       <v-btn icon>
         <v-icon>{{ mdiInformation }}</v-icon>
       </v-btn>

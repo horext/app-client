@@ -1,5 +1,5 @@
 <template>
-  <v-table class="schedule-table" dense>
+  <v-table class="schedule-table" density="comfortable">
     <thead>
       <tr>
         <th class="text-left">Sección</th>

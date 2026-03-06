@@ -1,5 +1,5 @@
 <template>
-  <v-table dense>
+  <v-table density="comfortable">
     <template #default>
       <thead>
         <tr>
