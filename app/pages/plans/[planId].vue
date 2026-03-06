@@ -1,17 +1,17 @@
 <template>
   <v-container class="study-plan">
-    <div v-for="(ss, cycle) in groupedSubjects" :key="cycle" class="cycle">
+    <div v-for="(ss, cycle) of groupedSubjects" :key="cycle" class="cycle">
       <div class="d-flex justify-space-between align-center">
-        <h2 v-if="cycle === -1">Otros</h2>
+        <h2 v-if="Number(cycle) === -1">Otros</h2>
         <h2 v-else>Ciclo {{ cycle }}</h2>
         <div
-          v-if="cycle !== -1"
+          v-if="Number(cycle) !== -1"
           class="d-flex justify-space-between align-center ga-4"
         >
-          <v-btn variant="outlined" @click="handleSelectAll(cycle)">
+          <v-btn variant="outlined" @click="handleSelectAll(Number(cycle))">
             Seleccionar todos
           </v-btn>
-          <v-btn variant="outlined" @click="handleUnselectAll(cycle)">
+          <v-btn variant="outlined" @click="handleUnselectAll(Number(cycle))">
             Deseleccionar todos
           </v-btn>
         </div>
