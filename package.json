@@ -51,7 +51,7 @@
     "@nuxt/test-utils": "^4.0.0",
     "@types/google.accounts": "^0.0.18",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^24.11.2",
+    "@types/node": "^25.3.5",
     "@types/uuid": "^11.0.0",
     "@unhead/schema": "^2.1.10",
     "@vitejs/plugin-vue": "^6.0.4",
