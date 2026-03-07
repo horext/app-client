@@ -181,6 +181,7 @@ const {
     default: () => [],
     watch: [hourlyLoadId],
     immediate: false,
+    server: false,
   },
 )
 

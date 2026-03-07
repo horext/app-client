@@ -124,6 +124,7 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   {
     watch: [internalFacultyId],
     immediate: false,
+    server: false,
   },
 )
 

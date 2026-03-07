@@ -225,6 +225,7 @@ const { execute: handleSignOutClick, status: signOutStatus } = useAsyncData(
   },
   {
     immediate: false,
+    server: false,
   },
 )
 
@@ -297,6 +298,7 @@ const {
   },
   {
     immediate: false,
+    server: false,
   },
 )
 
@@ -333,6 +335,7 @@ const {
   },
   {
     immediate: false,
+    server: false,
     default: () => [],
   },
 )
