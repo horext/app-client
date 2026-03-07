@@ -57,7 +57,7 @@ async function fetchHourlyLoad(faculty: IOrganization) {
   }
 }
 
-await useAsyncData(async () => {
+const { data: init } = await useAsyncData(async () => {
   try {
     const [_, faculty] = await Promise.all([
       store.fetchFirstEntry(),
@@ -72,6 +72,10 @@ await useAsyncData(async () => {
     console.error(e)
     return false
   }
+})
+
+onMounted(() => {
+  console.log('App initialization complete:', init.value)
 })
 
 const { fetchSubjects } = useUserSubjects()
