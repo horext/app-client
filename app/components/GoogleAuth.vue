@@ -222,6 +222,7 @@ const { execute: handleSignOutClick, status: signOutStatus } = useAsyncData(
   async () => {
     await signOut()
     dialogCalendarSync.value = false
+    return true
   },
   {
     immediate: false,
