@@ -9,60 +9,76 @@
       class="hero-section"
       cover
       alt="Cover background"
-      gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+      gradient="to bottom, rgba(10,25,60,.88), rgba(20,45,110,.78)"
     >
       <v-container class="fill-height">
-        <v-row align="center" class="text-white mx-auto" justify="center">
-          <v-col class="text-white text-center" cols="12">
+        <v-row align="center" justify="center">
+          <v-col cols="12" md="8" class="text-white text-center">
+            <v-chip
+              color="primary"
+              variant="tonal"
+              size="small"
+              class="mb-6 font-weight-medium"
+            >
+              <v-icon start size="small">{{ mdiStar }}</v-icon>
+              Herramienta para estudiantes UNI
+            </v-chip>
+
             <h1 class="mb-4">
-              <span class="font-weight-light text-h5 text-md-h4 text-lg-h3">
+              <span class="font-weight-light text-h5 text-md-h4 d-block mb-1">
                 Genera tu horario perfecto con
               </span>
-              <br />
-              <span class="font-weight-black text-h3 text-md-h2 text-lg-h1 text-primary">
+              <span class="font-weight-black text-h2 text-md-h1 text-primary">
                 Horext
               </span>
             </h1>
-            <p class="text-h6 text-md-h5 font-weight-light mb-6 mx-auto hero-subtitle">
-              La herramienta inteligente que crea automáticamente combinaciones
-              de horarios sin cruces para tus clases
+
+            <p class="text-h6 font-weight-light mb-8 mx-auto hero-subtitle">
+              Crea automáticamente combinaciones de horarios sin cruces
+              para tus clases universitarias
             </p>
-          </v-col>
-          <v-col class="text-center" cols="12">
-            <v-btn
-              class="font-weight-bold mr-2 mb-2"
-              color="primary"
-              size="large"
-              to="/generator"
-            >
-              <v-icon start>{{ mdiCalendarClock }}</v-icon>
-              Generar mis horarios
-            </v-btn>
-            <v-btn
-              class="font-weight-bold mb-2"
-              variant="outlined"
-              theme="dark"
-              size="large"
-              to="/about"
-            >
-              <v-icon start>{{ mdiInformationOutline }}</v-icon>
-              Conocer más
-            </v-btn>
+
+            <div class="d-flex flex-wrap justify-center ga-3">
+              <v-btn
+                color="primary"
+                size="x-large"
+                variant="flat"
+                rounded="lg"
+                to="/generator"
+                class="font-weight-bold px-8"
+              >
+                <v-icon start>{{ mdiCalendarClock }}</v-icon>
+                Generar mis horarios
+              </v-btn>
+              <v-btn
+                variant="outlined"
+                theme="dark"
+                size="x-large"
+                rounded="lg"
+                to="/about"
+                class="font-weight-bold px-8"
+              >
+                <v-icon start>{{ mdiInformationOutline }}</v-icon>
+                Conocer más
+              </v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>
     </v-img>
 
     <!-- Features Section -->
-    <v-container class="features-section py-16">
-      <v-row justify="center" class="mb-8">
-        <v-col cols="12" class="text-center">
-          <h2 class="text-h4 text-md-h3 font-weight-bold mb-4">
+    <v-container class="py-16">
+      <v-row justify="center" class="mb-12">
+        <v-col cols="12" md="7" class="text-center">
+          <p class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2">
+            Características
+          </p>
+          <h2 class="text-h4 text-md-h3 font-weight-bold mb-3">
             ¿Por qué usar Horext?
           </h2>
-          <p class="text-body-1 text-medium-emphasis mx-auto" style="max-width: 600px;">
+          <p class="text-body-1 text-medium-emphasis">
             Optimiza tu tiempo y olvídate de los cruces de horario.
-            Nuestra herramienta te ayuda a organizar tus clases de manera eficiente.
           </p>
         </v-col>
       </v-row>
@@ -75,15 +91,17 @@
           sm="6"
           md="4"
         >
-          <v-card class="feature-card h-100 pa-6" variant="outlined" hover>
-            <div class="text-center">
-              <v-avatar :color="feature.color" size="64" class="mb-4">
-                <v-icon size="32" color="white">{{ feature.icon }}</v-icon>
+          <v-card class="feature-card h-100 pa-5" border hover>
+            <div class="d-flex align-start ga-4">
+              <v-avatar :color="feature.color" size="48" rounded="lg" class="flex-shrink-0">
+                <v-icon size="22" color="white">{{ feature.icon }}</v-icon>
               </v-avatar>
-              <h3 class="text-h6 font-weight-bold mb-2">{{ feature.title }}</h3>
-              <p class="text-body-2 text-medium-emphasis">
-                {{ feature.description }}
-              </p>
+              <div>
+                <h3 class="text-subtitle-1 font-weight-bold mb-1">{{ feature.title }}</h3>
+                <p class="text-body-2 text-medium-emphasis mb-0">
+                  {{ feature.description }}
+                </p>
+              </div>
             </div>
           </v-card>
         </v-col>
@@ -93,9 +111,12 @@
     <!-- How it works Section -->
     <div class="how-it-works-section py-16">
       <v-container>
-        <v-row justify="center" class="mb-8">
-          <v-col cols="12" class="text-center">
-            <h2 class="text-h4 text-md-h3 font-weight-bold mb-4">
+        <v-row justify="center" class="mb-12">
+          <v-col cols="12" md="7" class="text-center">
+            <p class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2">
+              Proceso
+            </p>
+            <h2 class="text-h4 text-md-h3 font-weight-bold mb-3">
               ¿Cómo funciona?
             </h2>
             <p class="text-body-1 text-medium-emphasis">
@@ -111,10 +132,12 @@
             cols="12"
             md="4"
           >
-            <div class="text-center step-item">
-              <v-avatar color="primary" size="48" class="mb-4">
-                <span class="text-h6 font-weight-bold text-white">{{ index + 1 }}</span>
-              </v-avatar>
+            <div class="step-item text-center pa-4">
+              <div class="step-number-wrap mb-5">
+                <v-avatar color="primary" size="64">
+                  <span class="text-h5 font-weight-black text-white">{{ index + 1 }}</span>
+                </v-avatar>
+              </div>
               <h3 class="text-h6 font-weight-bold mb-2">{{ step.title }}</h3>
               <p class="text-body-2 text-medium-emphasis">
                 {{ step.description }}
@@ -126,24 +149,25 @@
     </div>
 
     <!-- CTA Section -->
-    <v-container class="cta-section py-16">
+    <v-container class="py-16">
       <v-row justify="center">
-        <v-col cols="12" md="8" class="text-center">
-          <v-card class="cta-card pa-8" color="primary" variant="flat">
+        <v-col cols="12" md="9" class="text-center">
+          <v-card class="cta-card pa-10 pa-md-14" color="primary" rounded="xl" variant="flat">
             <h2 class="text-h4 text-md-h3 font-weight-bold mb-4 text-white">
               ¿Listo para organizar tu semestre?
             </h2>
-            <p class="text-h6 font-weight-light mb-6 text-white">
+            <p class="text-h6 font-weight-light mb-8 text-white" style="opacity: 0.9;">
               Comienza ahora y genera tu horario ideal en minutos
             </p>
             <v-btn
               color="white"
               size="x-large"
-              class="font-weight-bold"
+              rounded="lg"
+              class="font-weight-bold px-10"
               to="/generator"
             >
               <v-icon start>{{ mdiRocketLaunchOutline }}</v-icon>
-              Comenzar ahora - ¡Es gratis!
+              Comenzar ahora
             </v-btn>
           </v-card>
         </v-col>
@@ -151,7 +175,7 @@
     </v-container>
 
     <!-- Footer Info -->
-    <v-container class="py-8">
+    <v-container class="pb-10">
       <v-row justify="center">
         <v-col cols="12" class="text-center">
           <p class="text-body-2 text-medium-emphasis">
@@ -175,8 +199,6 @@ import {
   mdiStar,
   mdiDownload,
   mdiGoogleCirclesExtended,
-  mdiShareVariant,
-  mdiLightningBolt,
 } from '@mdi/js'
 
 const img = useImage()
@@ -240,20 +262,6 @@ const features = [
       'Exporta tu horario directamente a Google Calendar con notificaciones personalizadas.',
     color: 'error',
   },
-  {
-    icon: mdiShareVariant,
-    title: 'Comparte fácilmente',
-    description:
-      'Comparte tu horario con amigos por WhatsApp, Facebook, Twitter o Telegram.',
-    color: 'purple',
-  },
-  {
-    icon: mdiLightningBolt,
-    title: 'Rápido y Eficiente',
-    description:
-      'Procesamiento en segundo plano que genera cientos de combinaciones en segundos.',
-    color: 'orange',
-  },
 ]
 
 const steps = [
@@ -285,33 +293,33 @@ const steps = [
 }
 
 .hero-subtitle {
-  max-width: 600px;
-  opacity: 0.9;
+  max-width: 620px;
+  opacity: 0.92;
 }
 
-.features-section {
-  background: rgba(var(--v-theme-surface-variant), 0.3);
+.section-label {
+  letter-spacing: 0.1em;
 }
 
 .feature-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 16px;
+  transition: transform 0.25s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
 .how-it-works-section {
-  background: rgb(var(--v-theme-surface));
+  background: rgba(var(--v-theme-surface-variant), 0.3);
 }
 
 .step-item {
   position: relative;
 }
 
-.cta-card {
-  border-radius: 24px;
+.step-number-wrap {
+  display: flex;
+  justify-content: center;
 }
 
 @media (max-width: 600px) {
