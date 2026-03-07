@@ -63,7 +63,6 @@ export default defineNuxtConfig({
   routeRules: {
     '/generator/**': {
       ssr: false,
-      prerender: true,
     },
     '/login': {
       prerender: true,
