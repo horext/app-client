@@ -57,7 +57,7 @@ async function fetchHourlyLoad(faculty: IOrganization) {
   }
 }
 
-const { data: init } = await useAsyncData(async () => {
+const { data: init } = await useAsyncData('initData', async () => {
   try {
     const [_, faculty] = await Promise.all([
       store.fetchFirstEntry(),
@@ -67,10 +67,14 @@ const { data: init } = await useAsyncData(async () => {
     if (faculty) {
       await fetchHourlyLoad(faculty)
     }
-    return true
+    return {
+      success: true,
+    }
   } catch (e) {
     console.error(e)
-    return false
+    return {
+      success: false,
+    }
   }
 })
 
