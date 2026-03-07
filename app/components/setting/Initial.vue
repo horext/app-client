@@ -92,6 +92,7 @@ watch(hourlyLoad, (value) => {
 
 const internalFacultyId = computed(() => internalFaculty.value?.id)
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
+  'setting-specialities',
   async () => {
     if (!internalFacultyId.value) {
       return []
@@ -112,6 +113,7 @@ watch(specialities, (value) => {
 })
 
 const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
+  'setting-last-hourly-load',
   async () => {
     if (!internalFacultyId.value) {
       return undefined
@@ -133,7 +135,7 @@ watch(lastHourlyLoad, (value) => {
 
 const { data: faculties, pending: loadingFaculties } = useAsyncData<
   IOrganization[]
->(() => facultyApi.getAll(), {
+>('setting-faculties', () => facultyApi.getAll(), {
   default: () => [],
 })
 

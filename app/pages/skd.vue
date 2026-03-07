@@ -59,6 +59,7 @@ const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
 const { data: subjects } = useAsyncData<ISelectedSubject[]>(
+  'skd-subjects',
   async () => {
     const encodedQuery = route.query.q
     if (!encodedQuery) return []

@@ -42,6 +42,7 @@ const planId = computed(() => Number(route.params.planId))
 const studyPlanApi = useStudyPlanApi()
 
 const { data: subjects } = useAsyncData(
+  () => `plans-subjects-${planId.value}`,
   () => studyPlanApi.getSubjectsByStudyPlanId(planId.value),
   {
     default: () => [],

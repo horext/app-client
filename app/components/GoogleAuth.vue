@@ -218,6 +218,7 @@ const selected = ref<IGoogleCalendarItem | null>(null)
  *  Sign out the user upon button click.
  */
 const { execute: handleSignOutClick, status: signOutStatus } = useAsyncData(
+  'google-auth-sign-out',
   async () => {
     await signOut()
     dialogCalendarSync.value = false
@@ -280,6 +281,7 @@ const {
     }
   }
 >(
+  'google-auth-export-calendar',
   async () => {
     if (!form.value) return
     const { valid } = await form.value.validate()
@@ -324,6 +326,7 @@ const {
   data: calendarList,
   status: calendarListStatus,
 } = useAsyncData(
+  'google-auth-calendar-list',
   async () => {
     const response = await fetchCalendars()
     return response.items

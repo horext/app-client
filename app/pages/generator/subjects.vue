@@ -153,6 +153,7 @@ const {
   status: statusSchedules,
   execute: fetchSchedules,
 } = useAsyncData<ISubjectSchedule[]>(
+  'generator-subject-schedules',
   async () => {
     const _hourlyLoadId = hourlyLoadId.value
     const subject = selectedSubject.value
