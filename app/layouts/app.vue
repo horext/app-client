@@ -32,7 +32,6 @@ import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
-import { tr } from 'vuetify/locale'
 
 const apis = provideApis()
 
