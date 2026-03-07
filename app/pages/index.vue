@@ -11,7 +11,7 @@
       alt="Cover background"
       gradient="to bottom, rgba(10,25,60,.88), rgba(20,45,110,.78)"
     >
-      <v-container class="fill-height">
+      <v-container>
         <v-row align="center" justify="center">
           <v-col cols="12" md="8" class="text-white text-center">
             <v-chip
@@ -34,8 +34,8 @@
             </h1>
 
             <p class="text-h6 font-weight-light mb-8 mx-auto hero-subtitle">
-              Crea automáticamente combinaciones de horarios sin cruces
-              para tus clases universitarias
+              Crea automáticamente combinaciones de horarios sin cruces para tus
+              clases universitarias
             </p>
 
             <div class="d-flex flex-wrap justify-center ga-3">
@@ -71,7 +71,9 @@
     <v-container class="py-16">
       <v-row justify="center" class="mb-12">
         <v-col cols="12" md="7" class="text-center">
-          <p class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2">
+          <p
+            class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2"
+          >
             Características
           </p>
           <h2 class="text-h4 text-md-h3 font-weight-bold mb-3">
@@ -93,11 +95,18 @@
         >
           <v-card class="feature-card h-100 pa-5" border hover>
             <div class="d-flex align-start ga-4">
-              <v-avatar :color="feature.color" size="48" rounded="lg" class="flex-shrink-0">
+              <v-avatar
+                :color="feature.color"
+                size="48"
+                rounded="lg"
+                class="flex-shrink-0"
+              >
                 <v-icon size="22" color="white">{{ feature.icon }}</v-icon>
               </v-avatar>
               <div>
-                <h3 class="text-subtitle-1 font-weight-bold mb-1">{{ feature.title }}</h3>
+                <h3 class="text-subtitle-1 font-weight-bold mb-1">
+                  {{ feature.title }}
+                </h3>
                 <p class="text-body-2 text-medium-emphasis mb-0">
                   {{ feature.description }}
                 </p>
@@ -113,7 +122,9 @@
       <v-container>
         <v-row justify="center" class="mb-12">
           <v-col cols="12" md="7" class="text-center">
-            <p class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2">
+            <p
+              class="text-primary font-weight-medium text-uppercase text-caption section-label mb-2"
+            >
               Proceso
             </p>
             <h2 class="text-h4 text-md-h3 font-weight-bold mb-3">
@@ -135,7 +146,9 @@
             <div class="step-item text-center pa-4">
               <div class="step-number-wrap mb-5">
                 <v-avatar color="primary" size="64">
-                  <span class="text-h5 font-weight-black text-white">{{ index + 1 }}</span>
+                  <span class="text-h5 font-weight-black text-white">{{
+                    index + 1
+                  }}</span>
                 </v-avatar>
               </div>
               <h3 class="text-h6 font-weight-bold mb-2">{{ step.title }}</h3>
@@ -152,11 +165,19 @@
     <v-container class="py-16">
       <v-row justify="center">
         <v-col cols="12" md="9" class="text-center">
-          <v-card class="cta-card pa-10 pa-md-14" color="primary" rounded="xl" variant="flat">
+          <v-card
+            class="cta-card pa-10 pa-md-14"
+            color="primary"
+            rounded="xl"
+            variant="flat"
+          >
             <h2 class="text-h4 text-md-h3 font-weight-bold mb-4 text-white">
               ¿Listo para organizar tu semestre?
             </h2>
-            <p class="text-h6 font-weight-light mb-8 text-white" style="opacity: 0.9;">
+            <p
+              class="text-h6 font-weight-light mb-8 text-white"
+              style="opacity: 0.9"
+            >
               Comienza ahora y genera tu horario ideal en minutos
             </p>
             <v-btn
