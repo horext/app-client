@@ -200,7 +200,7 @@
       <v-row justify="center">
         <v-col cols="12" class="text-center">
           <p class="text-body-2 text-medium-emphasis">
-            Desarrollado con ❤️ para estudiantes de la
+            Desarrollado con 🧠 para estudiantes de la
             <strong>Universidad Nacional de Ingeniería</strong>
           </p>
         </v-col>
