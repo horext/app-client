@@ -32,6 +32,7 @@ import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
+import { tr } from 'vuetify/locale'
 
 const apis = provideApis()
 
@@ -57,16 +58,20 @@ async function fetchHourlyLoad(faculty: IOrganization) {
 }
 
 await useAsyncData(async () => {
-  const [_, faculty] = await Promise.all([
-    store.fetchFirstEntry(),
-    store.fetchFaculty(),
-    store.fetchSpeciality(),
-  ])
-  if (faculty) {
-    await fetchHourlyLoad(faculty)
+  try {
+    const [_, faculty] = await Promise.all([
+      store.fetchFirstEntry(),
+      store.fetchFaculty(),
+      store.fetchSpeciality(),
+    ])
+    if (faculty) {
+      await fetchHourlyLoad(faculty)
+    }
+    return true
+  } catch (e) {
+    console.error(e)
+    return false
   }
-
-  return true
 })
 
 const { fetchSubjects } = useUserSubjects()
