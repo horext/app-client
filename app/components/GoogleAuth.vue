@@ -155,7 +155,7 @@
             variant="text"
             color="success"
             :loading="signOutStatus === 'pending'"
-            @click="handleSignOutClick()"
+            @click="handleSignOutClick"
           >
             Cerrar Sesión
           </v-btn>
