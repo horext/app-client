@@ -56,7 +56,7 @@ async function fetchHourlyLoad(faculty: IOrganization) {
   }
 }
 
-await useAsyncData('initData', async () => {
+await useAsyncData(async () => {
   const [_, faculty] = await Promise.all([
     store.fetchFirstEntry(),
     store.fetchFaculty(),
