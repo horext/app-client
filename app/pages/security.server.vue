@@ -1,45 +1,60 @@
 <template>
   <v-container>
     <h1>Política de seguridad de Horext</h1>
-    <div>Ultima revisión: 04 de marzo de 2022</div>
+    <div>Ultima revisión: 08 de marzo de 2026</div>
     <p>
       Horext es una aplicación web que permite a los usuarios generar horarios
-      de clases de forma rápida y sencilla, nuestros usuarios confían en
+      de clases de forma rápida y sencilla. Nuestros usuarios confían en
       nosotros para mantener sus datos seguros, privados y disponibles siempre
-      que los necesiten. Nos tomamos esa responsabilidad en serio. En Horext,
-      mantenemos un sistema de seguridad que: Previene todo acceso no
-      autorizado; Admite el monitoreo continuo de posibles vulnerabilidades; y
-      Adopta mejoras continuas y proactivas para estar al tanto de las últimas
-      amenazas y herramientas de seguridad.
+      que los necesiten.
     </p>
+
     <h2>Acceso a la cuenta</h2>
     <p class="text">
-      Verificamos el acceso a la cuenta a través de la autenticación basada en
-      la autenticación de cuentas de Google a través de OAuth 2.0.
-      Alternativamente, OAuth proporciona una forma sencilla de crear y acceder
-      a su cuenta sin que Horext necesite acceder o almacenar sus credenciales
-      de inicio de sesión de Google.
+      Verificamos el acceso a la cuenta a través de Google Sign-In (OpenID
+      Connect). Horext no almacena ni tiene acceso a tus credenciales de Google.
+      La autenticación es gestionada directamente por Google.
     </p>
+
+    <h2>Permisos de Google solicitados</h2>
+    <p class="text">
+      Para la función de exportar horarios a Google Calendar, Horext solicita
+      los siguientes permisos sensibles (no restringidos):
+    </p>
+    <ul>
+      <li>
+        <strong>calendar.app.created</strong>: Crear y administrar calendarios
+        secundarios creados por Horext.
+      </li>
+      <li>
+        <strong>calendar.calendarlist.readonly</strong>: Consultar la lista de
+        calendarios del usuario.
+      </li>
+      <li>
+        <strong>calendar.events</strong>: Crear eventos en el calendario que el
+        usuario seleccione.
+      </li>
+    </ul>
+    <p>
+      El uso de estos permisos cumple con la
+      <a
+        href="https://developers.google.com/terms/api-services-user-data-policy"
+        target="_blank"
+        >Política de datos de usuario de los servicios de API de Google</a
+      >, incluyendo los requisitos de uso limitado. Los tokens de acceso no se
+      almacenan de forma persistente en servidores de Horext.
+    </p>
+
     <h2>Uso de los datos de los usuarios</h2>
     <p class="text">
-      Los únicos datos del usuario recibidos son: nombre, correo electrónico y
-      foto de perfil. Estos se guardarán y se volverán a mostrar al usuario. El
-      correo electrónico se utilizará para identificar al usuario. El nombre y
-      la imagen de perfil se utilizarán como el nombre y la imagen de perfil de
-      su cuenta en la aplicación de Horext.
+      Los únicos datos personales recibidos son: nombre, correo electrónico y
+      foto de perfil, obtenidos a través de Google Sign-In. Estos se usan
+      únicamente para identificar al usuario dentro de la sesión activa.
     </p>
-    <h2>Divulgación de uso limitado de Google OAuth2</h2>
-    <p>
-      Esta aplicación solicita alcances restringidos, el uso de la información
-      recibida de las API de Google por parte de la aplicación Horext cumplirá
-      con la Política de datos de usuario de los servicios API de Google,
-      incluidos los requisitos de uso limitado.
-    </p>
+
     <h2>Privacidad de datos</h2>
     <p>
-      Nuestra prioridad es ser transparentes en la forma en que recopilamos,
-      usamos y manejamos su información cuando utiliza nuestro sitio web y
-      nuestro software. Consulte nuestra
+      Consulte nuestra
       <nuxt-link to="/privacy"> política de privacidad </nuxt-link>
       completa para obtener más detalles.
     </p>
