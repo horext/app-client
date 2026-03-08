@@ -60,13 +60,18 @@ async function handleCredentialResponse(
   setUser(result.body)
   await navigateTo('/generator')
 }
+
+const initialized = ref(false)
+
 const initGoogle = async () => {
+  if (initialized.value || !googleButton.value) return
+  initialized.value = true
   try {
     google.accounts.id.initialize({
       client_id: gsi.clientId,
       callback: handleCredentialResponse,
     })
-    google.accounts.id.renderButton(googleButton.value!, {
+    google.accounts.id.renderButton(googleButton.value, {
       theme: 'filled_blue',
       size: 'large',
       type: 'standard',
@@ -74,9 +79,16 @@ const initGoogle = async () => {
     google.accounts.id.prompt()
   } catch (error) {
     console.error('Error loading Google script', error)
+    initialized.value = false
   }
 }
 
 onLoaded(initGoogle)
+
+onMounted(async () => {
+  if (window.google) {
+    initGoogle()
+  }
+})
 
 </script>

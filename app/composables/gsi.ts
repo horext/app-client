@@ -21,6 +21,7 @@ export function useGoogleAccounts() {
     },
     {
       use: () => ({ google: window.google }),
+      trigger: 'onNuxtReady',
     },
   )
 }
