@@ -17,13 +17,15 @@ export default defineEventHandler(async (event) => {
   }
   const userid = payload['sub']
   const domain = payload['hd']
-  if (domain !== 'yourdomain.com') {
-    throw new Error('Invalid domain')
-  }
+  const isUniversityEmail = domain === 'uni.edu.pe'
   if (userid) {
     return {
       body: {
         status: 'ok',
+        email: payload['email'],
+        name: payload['name'],
+        picture: payload['picture'],
+        isUniversityEmail,
       },
     }
   } else {
