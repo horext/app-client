@@ -1,54 +1,147 @@
 <template>
   <v-container>
     <h1>Política de privacidad de Horext</h1>
-    <div>Ultima revisión: 04 de febrero de 2021</div>
+    <div>Ultima revisión: 08 de marzo de 2026</div>
     <br />
-    <h2>Integración de servicios de terceros</h2>
+
+    <h2>Información que recopilamos</h2>
     <div class="text">
-      Horext permite integrar y crear comandos para varios servicios de terceros
-      en línea (como se detalla en "servicios de terceros"). Para aprovechar
-      estas funcionalidades, es posible que deba autenticarse, registrarse o
-      iniciar sesión en servicios de terceros a través del Servicio o en los
-      sitios web de sus respectivos proveedores. Cuando habilita la vinculación
-      o inicia sesión en servicios de terceros a través del Servicio,
-      recopilaremos la información relevante necesaria para permitir que el
-      Servicio acceda a ese Servicio de terceros y sus datos y contenido
-      incluidos en ese Servicio de terceros ("Credenciales de inicio de sesión
-      "). Almacenamos sus Credenciales de inicio de sesión el tiempo suficiente
-      para permitir la vinculación al Servicio de terceros.
-      <br />
-      Cuando habilita el Servicio para vincular contenido y datos entre
-      servicios de Terceros, los servicios de Terceros nos proporcionarán acceso
-      a cierta información que puede haber proporcionado a los servicios de
-      Terceros, y usaremos, almacenaremos y divulgaremos tal información de
-      acuerdo con esta Política de privacidad y las reglas que establezca para
-      gobernar el enlace. Además, puede utilizar el Servicio para compartir
-      contenido y Datos personales entre los servicios de terceros que integra
-      con el Servicio. Recuerde que la forma en que los servicios de terceros
-      utilizan, almacenan y divulgan su información se rige por las políticas de
-      dichos servicios de terceros, y Horext no tendrá responsabilidad alguna
-      por las prácticas de privacidad u otras acciones de los servicios de
-      terceros. que puede estar habilitado dentro del Servicio.
-      <br />
-      Podemos retener cierta información personal no identificable relacionada
-      con los datos o el contenido vinculado entre los servicios de terceros
-      (por ejemplo, la fecha de envío, la configuración del enlace, los nombres
-      de los servicios de terceros), con el fin de mejorar nuestros servicios y
-      como se describe a continuación en la sección "Datos personales
-      agregados".
+      Cuando inicias sesión con Google, recopilamos los siguientes datos
+      proporcionados por tu cuenta de Google:
+      <ul>
+        <li>Nombre completo</li>
+        <li>Dirección de correo electrónico</li>
+        <li>Foto de perfil</li>
+      </ul>
+      Esta información se usa únicamente para identificarte dentro de la
+      aplicación y personalizar tu experiencia. No recopilamos ni almacenamos
+      contraseñas.
     </div>
     <br />
-    <h2>Servicios de terceros</h2>
-    <div>
-      Actualmente se ocupan los siguientes servicios con terceros
+
+    <h2>Cómo usamos tu información</h2>
+    <div class="text">
+      Los datos recopilados se usan exclusivamente para:
+      <ul>
+        <li>Autenticar tu identidad al iniciar sesión.</li>
+        <li>Mostrar tu nombre y foto de perfil dentro de la aplicación.</li>
+        <li>
+          Exportar tu horario generado a Google Calendar cuando lo solicites
+          explícitamente.
+        </li>
+      </ul>
+      No usamos tu información para publicidad, análisis de terceros, ni la
+      vendemos a terceros.
+    </div>
+    <br />
+
+    <h2>Acceso a Google Calendar</h2>
+    <div class="text">
+      Cuando usas la función de exportar a Google Calendar, Horext solicita
+      acceso a tu cuenta de Google Calendar con los siguientes permisos:
       <ul>
         <li>
-          Integración con Google Calendar para exportar tus horarios preferidos
+          <strong>calendar.app.created</strong>: Para crear un calendario
+          secundario de Horext y agregar, modificar o eliminar eventos en él.
+        </li>
+        <li>
+          <strong>calendar.calendarlist.readonly</strong>: Para consultar la
+          lista de calendarios disponibles en tu cuenta.
+        </li>
+        <li>
+          <strong>calendar.events</strong>: Para crear eventos en el calendario
+          que selecciones, incluyendo tu calendario principal.
+        </li>
+      </ul>
+      El uso de la información obtenida a través de las API de Google cumple con
+      la
+      <a
+        href="https://developers.google.com/terms/api-services-user-data-policy"
+        target="_blank"
+        >Política de datos de usuario de los servicios de API de Google</a
+      >, incluyendo los requisitos de uso limitado. Horext accede a los datos de
+      Google Calendar únicamente para realizar las acciones que el usuario
+      solicita explícitamente y no almacena tokens de acceso de forma
+      persistente.
+    </div>
+    <br />
+
+    <h2>Análisis de uso (Google Analytics 4)</h2>
+    <div class="text">
+      Horext utiliza Google Analytics 4 (GA4) para recopilar datos anónimos
+      sobre el uso de la aplicación, como páginas visitadas, tiempo de sesión y
+      eventos de interacción. Esta información se usa exclusivamente para
+      mejorar la experiencia del usuario y no se vincula a datos personales
+      identificables.
+      <br /><br />
+      GA4 puede recopilar automáticamente datos como dirección IP (anonimizada),
+      tipo de dispositivo y navegador. Esta aplicación opera bajo la legislación
+      peruana de protección de datos (<strong>Ley N.° 29733</strong>) y no está
+      sujeta al RGPD europeo. No se muestra un banner de cookies obligatorio,
+      ya que la normativa aplicable no lo exige.
+      <br /><br />
+      Puedes optar por no participar en GA4 instalando el
+      <a
+        href="https://tools.google.com/dlpage/gaoptout"
+        target="_blank"
+        >complemento de inhabilitación de Google Analytics</a
+      >.
+    </div>
+    <br />
+    <div class="text">
+      Los datos de sesión (nombre, correo, foto) se mantienen durante la sesión
+      activa del usuario. No se almacenan en bases de datos externas de forma
+      permanente. Los horarios generados se guardan localmente en el navegador
+      del usuario (localStorage).
+    </div>
+    <br />
+
+    <h2>Compartir información con terceros</h2>
+    <div class="text">
+      Horext no vende, alquila ni comparte tu información personal con terceros,
+      excepto cuando es estrictamente necesario para proveer el servicio (por
+      ejemplo, la comunicación con las API de Google Calendar).
+    </div>
+    <br />
+
+    <h2>Tus derechos</h2>
+    <div class="text">
+      Puedes revocar el acceso de Horext a tu cuenta de Google en cualquier
+      momento desde
+      <a href="https://myaccount.google.com/permissions" target="_blank"
+        >Permisos de tu cuenta de Google</a
+      >. Al revocar el acceso, Horext dejará de tener acceso a tu información de
+      Google.
+    </div>
+    <br />
+
+    <h2>Servicios de terceros</h2>
+    <div>
+      Actualmente se integran los siguientes servicios de terceros:
+      <ul>
+        <li>
+          <strong>Google Sign-In</strong>: Para autenticación de usuarios.
+        </li>
+        <li>
+          <strong>Google Calendar API</strong>: Para exportar horarios
+          generados.
+        </li>
+        <li>
+          <strong>Google Analytics 4</strong>: Para análisis anónimo de uso de
+          la aplicación.
         </li>
       </ul>
     </div>
-    <h2>Recopilación de datos</h2>
-    <div>Actualmente no se realiza la recopilación de datos</div>
+    <br />
+
+    <h2>Contacto</h2>
+    <div>
+      Si tienes preguntas sobre esta política de privacidad, puedes contactarnos
+      en:
+      <a href="https://github.com/horext/app-client/issues" target="_blank"
+        >github.com/horext/app-client/issues</a
+      >
+    </div>
   </v-container>
 </template>
 

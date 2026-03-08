@@ -203,6 +203,28 @@
             Desarrollado con 🧠 para estudiantes de la
             <strong>Universidad Nacional de Ingeniería</strong>
           </p>
+          <div class="d-flex justify-center flex-wrap ga-2 mt-3">
+            <nuxt-link
+              to="/privacy"
+              class="text-body-2 text-medium-emphasis text-decoration-none"
+            >
+              Política de Privacidad
+            </nuxt-link>
+            <span class="text-medium-emphasis text-body-2">·</span>
+            <nuxt-link
+              to="/terms"
+              class="text-body-2 text-medium-emphasis text-decoration-none"
+            >
+              Términos de servicio
+            </nuxt-link>
+            <span class="text-medium-emphasis text-body-2">·</span>
+            <nuxt-link
+              to="/security"
+              class="text-body-2 text-medium-emphasis text-decoration-none"
+            >
+              Seguridad
+            </nuxt-link>
+          </div>
         </v-col>
       </v-row>
     </v-container>
