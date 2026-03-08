@@ -9,38 +9,8 @@ import type { CalendarEvent } from '~/models/google'
 export const useGoogleOAuth2 = () => {
   const { onLoaded } = useGoogleAccounts()
   const config = useRuntimeConfig()
-
-  const tokenClient = ref<google.accounts.oauth2.TokenClient>()
-
-  const isPendingClient = ref(false)
-  const isPendingToken = ref(false)
-  const loadClient = async () => {
-    try {
-      isPendingClient.value = true
-      isPendingToken.value = true
-      const gsi = config.public.gsi
-      const client = google.accounts.oauth2.initTokenClient({
-        client_id: gsi.clientId,
-        scope: gsi.scopes,
-        callback: handleTokenResponse,
-        error_callback: () => {
-          isPendingClient.value = false
-        },
-      })
-      tokenClient.value = client
-      console.log('Google script loaded', client)
-    } catch (error) {
-      console.error('Error loading Google script', error)
-    } finally {
-      isPendingClient.value = false
-    }
-  }
-
-  onLoaded(loadClient)
-
-  const tokenResponse = shallowRef<google.accounts.oauth2.TokenResponse | null>(
-    null,
-  )
+  const store = useGoogleOAuth2Store()
+  const { tokenClient, tokenResponse, expiresAt, isPendingClient, isPendingToken, isSignedIn } = storeToRefs(store)
 
   const handleTokenResponse = (
     response: google.accounts.oauth2.TokenResponse,
@@ -50,15 +20,36 @@ export const useGoogleOAuth2 = () => {
     isPendingToken.value = false
   }
 
+  const loadClient = async () => {
+    if (tokenClient.value) return
+    isPendingClient.value = true
+    try {
+      const gsi = config.public.gsi
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: gsi.clientId,
+        scope: gsi.scopes,
+        callback: handleTokenResponse,
+        error_callback: () => {
+          isPendingToken.value = false
+        },
+      })
+      tokenClient.value = client
+    } catch (error) {
+      console.error('Error loading Google script', error)
+    } finally {
+      isPendingClient.value = false
+    }
+  }
+
   const getToken = () => {
+    isPendingToken.value = true
     tokenClient.value?.requestAccessToken()
   }
+
   const revokeToken = (
-    tokenResponse: google.accounts.oauth2.TokenResponse,
+    response: google.accounts.oauth2.TokenResponse,
   ) => {
-    google.accounts.oauth2.revoke(tokenResponse.access_token, () => {
-      console.log('Token revoked')
-    })
+    google.accounts.oauth2.revoke(response.access_token, () => {})
   }
 
   const googleApis = ofetch.create({
@@ -78,6 +69,8 @@ export const useGoogleOAuth2 = () => {
     },
   })
 
+  onLoaded(loadClient)
+
   async function fetchCalendars() {
     return await googleApis<IGoogleCalendarListPayload>(
       'calendar/v3/users/me/calendarList',
@@ -87,30 +80,18 @@ export const useGoogleOAuth2 = () => {
   async function createCalendar({
     summary,
   }: Pick<IGoogleCalendarItem, 'summary'>): Promise<IGoogleCalendarItem> {
-    const response = await googleApis<IGoogleCalendarItem>(
-      'calendar/v3/calendars',
-      {
-        method: 'POST',
-        body: { summary },
-      },
-    )
-    return response
+    return await googleApis<IGoogleCalendarItem>('calendar/v3/calendars', {
+      method: 'POST',
+      body: { summary },
+    })
   }
 
   async function createEvent(calendarId: string, event: CalendarEvent) {
-    const response = await googleApis(
-      `calendar/v3/calendars/${calendarId}/events`,
-      {
-        method: 'POST',
-        body: event.toRequest(),
-      },
-    )
-    return response
+    return await googleApis(`calendar/v3/calendars/${calendarId}/events`, {
+      method: 'POST',
+      body: event.toRequest(),
+    })
   }
-
-  const isSignedIn = computed(() => !!tokenResponse.value)
-
-  const expiresAt = ref<number | null>(null)
 
   const signOut = async () => {
     if (tokenResponse.value) {
@@ -127,8 +108,11 @@ export const useGoogleOAuth2 = () => {
     isSignedIn,
     signOut,
     tokenClient,
+    isPendingClient,
+    isPendingToken,
     fetchCalendars,
     createCalendar,
     createEvent,
   }
 }
+

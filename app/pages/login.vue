@@ -45,6 +45,21 @@ const {
 
 const googleButton = ref<HTMLElement | null>(null)
 
+const { setUser } = useUserAuthStore()
+
+async function handleCredentialResponse(
+  response: google.accounts.id.CredentialResponse,
+) {
+  const result = await $fetch<{ body: { email?: string; name?: string; picture?: string; isUniversityEmail?: boolean } }>('/auth/verify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: response,
+  })
+  setUser(result.body)
+  await navigateTo('/generator')
+}
 const initGoogle = async () => {
   try {
     google.accounts.id.initialize({
@@ -64,15 +79,4 @@ const initGoogle = async () => {
 
 onLoaded(initGoogle)
 
-async function handleCredentialResponse(
-  response: google.accounts.id.CredentialResponse,
-) {
-  await $fetch('/auth/verify', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: response,
-  })
-}
 </script>

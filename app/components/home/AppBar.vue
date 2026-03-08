@@ -21,6 +21,17 @@
       </v-tab>
     </v-tabs>
 
+    <v-btn
+      v-if="!authStore.isLoggedIn"
+      color="primary"
+      variant="flat"
+      rounded="lg"
+      size="small"
+      class="mr-2 font-weight-bold"
+      to="/login"
+    >
+      Iniciar sesión
+    </v-btn>
     <v-app-bar-nav-icon
       class="hidden-md-and-up"
       aria-label="Menu Iziquierdo"
@@ -36,6 +47,7 @@ import VuetifyLogo from '../VuetifyLogo.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
 const settingsStore = useSettingsStore()
+const authStore = useUserAuthStore()
 
 const drawer = ref(false)
 

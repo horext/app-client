@@ -21,12 +21,22 @@
             @click:export-image="downloadImage"
             @click:share="dialogShare = true"
           />
-          <GoogleAuth
-            v-if="currentSchedule"
-            :events="currentSchedule.events"
-            :end-date="endDate"
-            :start-date="startDate"
-          />
+          <template v-if="currentSchedule">
+            <GoogleCalendarConnect
+              :loading="isPendingClient"
+              @click="handleGoogleAuthClick"
+            />
+            <GoogleSignInDialog
+              v-model="dialogSignIn"
+              @signed-in="dialogSync = true"
+            />
+            <GoogleCalendarSyncDialog
+              v-model="dialogSync"
+              :events="currentSchedule.events"
+              :end-date="endDate"
+              :start-date="startDate"
+            />
+          </template>
           <v-dialog
             v-if="currentSchedule"
             v-model="dialogShare"
@@ -60,12 +70,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
+import { computed, ref, watch, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesWindow.vue'
 import ScheduleShare from '~/components/schedule/ShareCard.vue'
-import GoogleAuth from '~/components/GoogleAuth.vue'
+import GoogleCalendarConnect from '~/components/google/calendar/Connect.vue'
+import GoogleSignInDialog from '~/components/google/SignInDialog.vue'
+import GoogleCalendarSyncDialog from '~/components/google/calendar/SyncDialog.vue'
 import { ViewMode } from '~/models/ViewMode'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import ScheduleMode from './schedule/Mode.vue'
@@ -98,6 +110,15 @@ defineProps({
 })
 const store = useUserConfigStore()
 const { weekDays, hourlyLoad } = storeToRefs(store)
+const { isSignedIn, isPendingClient } = useGoogleOAuth2()
+
+function handleGoogleAuthClick() {
+  if (isSignedIn.value) {
+    dialogSync.value = true
+  } else {
+    dialogSignIn.value = true
+  }
+}
 const academicPeriodOrganizationUnit = computed(
   () => hourlyLoad.value?.academicPeriodOrganizationUnit,
 )
@@ -109,6 +130,15 @@ const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 const currentSchedule = ref<IScheduleGenerate>()
 
 const dialogShare = ref(false)
+const dialogSignIn = ref(false)
+const dialogSync = ref(false)
+
+watch(isSignedIn, (value) => {
+  if (value) {
+    dialogSignIn.value = false
+    dialogSync.value = true
+  }
+})
 
 const mode = ref(ViewMode.CALENDAR)
 
