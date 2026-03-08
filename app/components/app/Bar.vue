@@ -6,7 +6,7 @@
         @click.stop="toggleDrawer"
       />
     </template>
-    <v-row justify="center" align="center" no-gutters>
+    <v-row justify="center" align="center" density="compact">
       <v-col cols="12">
         <AppHourlyLoadInfo :hourly-load="hourlyLoad" class="pa-0" />
       </v-col>
