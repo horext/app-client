@@ -51,8 +51,8 @@ importers:
         specifier: ^1.6.3
         version: 1.6.3
       unhead:
-        specifier: ^2.1.10
-        version: 2.1.10
+        specifier: ^2.1.12
+        version: 2.1.12
       unstorage:
         specifier: ^1.17.4
         version: 1.17.4(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.10.0)
