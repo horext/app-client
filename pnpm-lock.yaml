@@ -69,8 +69,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))
       vuetify:
-        specifier: ^4.0.1
-        version: 4.0.1(typescript@5.9.3)(vue@3.5.29(typescript@5.9.3))
+        specifier: ^4.0.2
+        version: 4.0.2(typescript@5.9.3)(vue@3.5.29(typescript@5.9.3))
     devDependencies:
       '@mdi/js':
         specifier: ^7.4.47
@@ -5496,8 +5496,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@4.0.1:
-    resolution: {integrity: sha512-0z0lKd1r6KmVK4YliDb4w2k9Yk7Z83V5kxpn9z5glipIcFJEizJK+LfFBzy3G2tMxuhSZHU4DmQ4qxfpvLhjQg==}
+  vuetify@4.0.2:
+    resolution: {integrity: sha512-klgSGmfXoLajdTuuxreilzDQjp0ojzL2U5v6Z3ZbMYtpihPPXT9rkd/FxWL3dIGevnWdgaP2Kpwoz6aS/MISDA==}
     peerDependencies:
       typescript: '>=4.7'
       vite-plugin-vuetify: '>=2.1.0'
@@ -11860,7 +11860,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  vuetify@4.0.1(typescript@5.9.3)(vue@3.5.29(typescript@5.9.3)):
+  vuetify@4.0.2(typescript@5.9.3)(vue@3.5.29(typescript@5.9.3)):
     dependencies:
       vue: 3.5.29(typescript@5.9.3)
     optionalDependencies:
