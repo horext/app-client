@@ -50,7 +50,7 @@ const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =
 
 const addFavorite = async (schedule: IScheduleGenerate) => {
   showAddFavoriteMessage.value = false
-  await addFavoriteSchedule(schedule)
+  await addFavoriteSchedule(toRaw(schedule))
   showAddFavoriteMessage.value = true
 }
 
