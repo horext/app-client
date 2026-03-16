@@ -87,5 +87,11 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    externals: {
+      inline: ['unhead', '@unhead/vue'],
+    },
+  },
+
   compatibilityDate: '2024-08-18',
 })
