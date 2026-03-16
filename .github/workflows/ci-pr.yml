@@ -15,5 +15,3 @@ jobs:
   ci:
     name: CI
     uses: ./.github/workflows/ci.yml
-    with:
-      environment: ${{ github.event.pull_request.base.ref == 'main' && 'local-prod' || 'local-dev' }}

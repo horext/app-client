@@ -16,8 +16,6 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/ci.yml
-    with:
-      environment: dev
   cd:
     name: CD
     needs: ci
