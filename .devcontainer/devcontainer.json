@@ -18,7 +18,8 @@
 		"vscode": {
 			"extensions": [
 				"Vue.volar",
-				"vitest.explorer"
+				"vitest.explorer",
+				"donjayamanne.git-extension-pack"
 			]
 		}
 	},
