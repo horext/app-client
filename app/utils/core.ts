@@ -156,8 +156,10 @@ export function getSchedules(
       const scheduleSubjectIds = scheduleSubjects.map(
         (c) => c.scheduleSubject.id,
       )
+      const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
       schedules.push({
-        id: scheduleSubjectIds.join(','),
+        id: crypto.randomUUID(),
+        scheduleSubjectKey,
         scheduleSubjectIds,
         schedule: scheduleSubjects,
         crossings: crossingCombination,
