@@ -114,7 +114,7 @@ const addFavoriteCurrentSchedule = () => {
   if (index >= 0) {
     deleteFavoriteScheduleById(currentSchedule.id)
   } else {
-    saveNewFavoriteSchedule(currentSchedule)
+    saveNewFavoriteSchedule(toRaw(currentSchedule))
   }
 }
 
