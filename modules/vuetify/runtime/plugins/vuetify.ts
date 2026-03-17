@@ -1,9 +1,13 @@
 import { createVuetify } from 'vuetify'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 import { es } from 'vuetify/locale'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
+    components: {
+      VDateInput,
+    },
     ssr: {
       clientWidth: 1280,
       clientHeight: 1024,
