@@ -79,7 +79,6 @@ export function getSchedules(
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
       scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
     )
-    // calculating crossing
     let crossingCombination = 0
     let useCombination = true
     for (let j = 0; j < scheduleSubjects.length; j++) {
@@ -110,7 +109,6 @@ export function getSchedules(
               )
                 occurrences.push(occurrence)
             }
-            // if have available crossings
             if (
               crossingCombination + intersections <=
               options.crossingSubjects
