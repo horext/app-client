@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)">
+  <v-dialog :model-value="modelValue" max-width="600" @update:model-value="emit('update:modelValue', $event)">
     <v-card
       :disabled="
         calendarListStatus === 'pending' ||
@@ -13,7 +13,12 @@
       <v-card-title class="d-flex align-center ga-2">
         <v-icon>{{ mdiCalendarSync }}</v-icon>
         Exportar a Google Calendar
+        <v-spacer />
+        <v-btn :icon="mdiClose" variant="text" density="compact" @click="emit('update:modelValue', false)" />
       </v-card-title>
+      <v-card-subtitle>
+        Selecciona un calendario y el rango de fechas para exportar {{ events.length }} evento{{ events.length !== 1 ? 's' : '' }}.
+      </v-card-subtitle>
       <v-dialog v-model="dialogCreateCalendar" max-width="320">
         <CreateGoogleCalendar
           :calendar="calendarItem"
@@ -43,20 +48,30 @@
               </v-list-item>
             </template>
           </v-autocomplete>
-          <v-text-field
-            v-model="dateStart"
-            :rules="[(r) => !!r || 'Requerido']"
-            type="date"
-            label="Fecha de Inicio"
-          />
-          <v-text-field
-            v-model="dateEnd"
-            :rules="[(r) => !!r || 'Requerido']"
-            type="date"
-            label="Fecha de Fin"
-          />
+          <v-row dense>
+            <v-col cols="6">
+              <v-text-field
+                v-model="dateStart"
+                :rules="[(r) => !!r || 'Requerido']"
+                type="date"
+                label="Fecha de Inicio"
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model="dateEnd"
+                :rules="[(r) => !!r || 'Requerido']"
+                type="date"
+                label="Fecha de Fin"
+              />
+            </v-col>
+          </v-row>
           <v-form>
-            <span class="heading"> Notificaciones </span>
+            <v-divider class="mb-3" />
+            <p class="text-subtitle-2 text-medium-emphasis mb-2 d-flex align-center ga-1">
+              <v-icon :icon="mdiBell" size="small" />
+              Notificaciones
+            </p>
             <v-text-field
               v-for="(notification, index) in notifications"
               :id="'not-' + index"
@@ -106,10 +121,21 @@
           density="comfortable"
           class="mb-2"
         >
-          <strong>{{ events.length }} eventos exportados correctamente</strong>
+          <strong>{{ events.length }} evento{{ events.length !== 1 ? 's' : '' }} exportado{{ events.length !== 1 ? 's' : '' }} correctamente</strong>
           al calendario <em>{{ selected?.summary }}</em>.
-          <br />
-          <a :href="`https://calendar.google.com`" target="_blank" class="text-white">Abrir Google Calendar →</a>
+          <div class="mt-2">
+            <v-btn
+              href="https://calendar.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outlined"
+              color="white"
+              size="small"
+              :prepend-icon="mdiOpenInNew"
+            >
+              Abrir Google Calendar
+            </v-btn>
+          </div>
         </v-alert>
 
         <v-alert
@@ -134,9 +160,29 @@
       </v-card-text>
       <v-card-actions>
         <v-btn
-          :loading="progress > 0"
           variant="text"
+          color="error"
+          :prepend-icon="mdiLinkOff"
+          :loading="signOutStatus === 'pending'"
+          @click="handleSignOut"
+        >
+          Revocar acceso
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          variant="text"
+          :prepend-icon="mdiClose"
+          @click="emit('update:modelValue', false)"
+        >
+          {{ exportEventToGCalendarStatus === 'success' ? 'Cerrar' : 'Cancelar' }}
+        </v-btn>
+        <v-btn
+          :loading="progress > 0"
+          :disabled="exportEventToGCalendarStatus === 'success'"
+          variant="elevated"
+          color="primary"
           type="button"
+          :prepend-icon="mdiCalendarExport"
           @click="exportEventToGCalendar"
         >
           Exportar
@@ -153,15 +199,6 @@
             </v-progress-linear>
           </template>
         </v-btn>
-        <v-spacer />
-        <v-btn
-          variant="text"
-          color="error"
-          :loading="signOutStatus === 'pending'"
-          @click="handleSignOut"
-        >
-          Revocar acceso a Calendar
-        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -174,7 +211,7 @@ import CreateGoogleCalendar from '~/components/google/calendar/CreateDialog.vue'
 import type { IEvent } from '~/interfaces/event'
 import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
-import { mdiBell, mdiDelete, mdiPlus, mdiCalendarSync } from '@mdi/js'
+import { mdiBell, mdiDelete, mdiPlus, mdiCalendarSync, mdiCalendarExport, mdiLinkOff, mdiClose, mdiOpenInNew } from '@mdi/js'
 import { CalendarEvent, EventNotification } from '~/models/google'
 
 const props = defineProps<{
