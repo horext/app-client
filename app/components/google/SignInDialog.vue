@@ -72,7 +72,6 @@ const emit = defineEmits<{
 const { getToken, isSignedIn, isPendingToken } = useGoogleOAuth2()
 
 function handleSignIn() {
-  emit('update:modelValue', false)
   getToken()
 }
 
