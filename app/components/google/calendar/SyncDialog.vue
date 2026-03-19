@@ -125,6 +125,8 @@ import { mdiBell, mdiDelete, mdiPlus, mdiCalendarSync, mdiCalendarExport, mdiLin
 import { CalendarEvent, EventNotification } from '~/models/google'
 import { DATE_FORMAT } from '~/constants/date'
 
+defineOptions({ name: 'GoogleCalendarSyncDialog' })
+
 const props = defineProps<{
   modelValue: boolean
   startDate?: string
