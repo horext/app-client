@@ -94,6 +94,8 @@ jobs:
           cache-to: type=gha,mode=max
           file: Dockerfile
           push: true
+          build-args: |
+            NUXT_PUBLIC_API_URL=${{ vars.NUXT_API_URL }}
 
   deploy:
     name: Deploy
