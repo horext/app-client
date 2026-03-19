@@ -51,12 +51,12 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     await tx.done
   }
 
-  async getIds(list: 'generated' | 'favorites'): Promise<string[]> {
+  async getIds(list: 'generated' | 'favorites'): Promise<IScheduleGenerate['id'][]> {
     const db = await this.getDb()
     return (await db.get('meta', META_KEY[list])) ?? []
   }
 
-  async putIds(list: 'generated' | 'favorites', ids: string[]): Promise<void> {
+  async putIds(list: 'generated' | 'favorites', ids: IScheduleGenerate['id'][]): Promise<void> {
     const db = await this.getDb()
     await db.put('meta', ids, META_KEY[list])
   }

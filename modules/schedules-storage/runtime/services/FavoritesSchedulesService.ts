@@ -15,7 +15,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     await this.repo.putIds('favorites', schedules.map((s) => s.id))
   }
 
-  async saveFavoriteIds(ids: string[]): Promise<void> {
+  async saveFavoriteIds(ids: IScheduleGenerate['id'][]): Promise<void> {
     await this.repo.putIds('favorites', ids)
   }
 
@@ -27,7 +27,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     }
   }
 
-  async removeFavorite(id: string): Promise<void> {
+  async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {
     const [generatedIds, favIds] = await Promise.all([
       this.repo.getIds('generated'),
       this.repo.getIds('favorites'),

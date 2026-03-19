@@ -10,7 +10,7 @@ export interface HorextDB extends DBSchema {
     }
     meta: {
         key: 'generated:ids' | 'favorites:ids'
-        value: string[]
+        value: IScheduleGenerate['id'][]
     }
     migrations: {
         key: string

@@ -40,7 +40,7 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
     }
   }
 
-  async removeGeneratedSchedule(id: string): Promise<void> {
+  async removeGeneratedSchedule(id: IScheduleGenerate['id']): Promise<void> {
     const [generatedIds, favIds] = await Promise.all([
       this.repo.getIds('generated'),
       this.repo.getIds('favorites'),
