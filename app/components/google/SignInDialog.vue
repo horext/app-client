@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { mdiCalendarSync, mdiCalendarMultiple, mdiCalendarPlus, mdiCalendarCheck, mdiGoogle } from '@mdi/js'
 
-
+defineOptions({ name: 'GoogleSignInDialog' })
 
 defineProps<{ modelValue: boolean }>()
 
