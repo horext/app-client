@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { EVENT_COLORS } from '~/constants/event'
+import { DATE_TIME_FORMAT_SHORT, DATE_TIME_FORMAT_LONG } from '~/constants/date'
 import type { IEvent } from '~/interfaces/event'
 
 export class EventNotification {
@@ -38,7 +39,7 @@ export class CalendarEvent {
     this.description = event.description
     this.location = event.location
     const format =
-      event.startTime.length > 5 ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd hh:mm'
+      event.startTime.length > 5 ? DATE_TIME_FORMAT_LONG : DATE_TIME_FORMAT_SHORT
     this.start = {
       dateTime: DateTime.fromFormat(dateStart + ' ' + event.startTime, format)
         .set({ weekday: event.day === 0 ? 7 : event.day })

@@ -120,6 +120,7 @@ import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
 import { mdiBell, mdiDelete, mdiPlus, mdiCalendarSync, mdiCalendarExport, mdiLinkOff, mdiClose, mdiOpenInNew, mdiCalendarRange } from '@mdi/js'
 import { CalendarEvent, EventNotification } from '~/models/google'
+import { DATE_FORMAT } from '~/constants/date'
 
 const props = defineProps<{
   modelValue: boolean
@@ -141,9 +142,9 @@ const { signOut, fetchCalendars, createCalendar, createEvent, getToken } =
 function initializeSync(): [Date, Date] | [] {
   return startDate.value && endDate.value
     ? [
-      DateTime.fromISO(startDate.value).toJSDate(),
-      DateTime.fromISO(endDate.value).toJSDate(),
-    ]
+        DateTime.fromISO(startDate.value).toJSDate(),
+        DateTime.fromISO(endDate.value).toJSDate(),
+      ]
     : []
 }
 watch(
@@ -167,15 +168,21 @@ const dateRange = ref<[Date, Date] | []>(
 
 const dateStart = computed(() => {
   const start = dateRange.value[0]
+  console.log('start', start)
   return start
-    ? DateTime.fromJSDate(start).toFormat('yyyy-MM-dd')
+    ? DateTime.fromJSDate(start).toFormat(DATE_FORMAT)
     : null
 },
 )
+
+watch(dateRange, (newRange) => {
+  console.log('dateRange changed:', newRange)
+})
 const dateEnd = computed(() => {
-  const end = dateRange.value[1]
+  const end = dateRange.value[dateRange.value.length - 1]
+  console.log('end', end)
   return end
-    ? DateTime.fromJSDate(end).toFormat('yyyy-MM-dd')
+    ? DateTime.fromJSDate(end).toFormat(DATE_FORMAT)
     : null
 },
 )
