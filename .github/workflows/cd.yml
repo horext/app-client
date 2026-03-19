@@ -95,9 +95,9 @@ jobs:
           file: Dockerfile
           push: true
           build-args: |
-            NUXT_PUBLIC_API_URL=${{ secrets.NUXT_API_URL }}
-            NUXT_PUBLIC_GSI_CLIENT_ID=${{ secrets.NUXT_PUBLIC_GSI_CLIENT_ID }}
-            NUXT_PUBLIC_GSI_SCOPES=${{ secrets.NUXT_PUBLIC_GSI_SCOPES }}
+            NUXT_PUBLIC_API_URL=${{ vars.NUXT_API_URL }}
+            NUXT_PUBLIC_GSI_CLIENT_ID=${{ vars.NUXT_PUBLIC_GSI_CLIENT_ID }}
+            NUXT_PUBLIC_GSI_SCOPES=${{ vars.NUXT_PUBLIC_GSI_SCOPES }}
 
   deploy:
     name: Deploy
