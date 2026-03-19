@@ -32,9 +32,12 @@
               </v-list-item>
             </template>
           </v-autocomplete>
-          <v-date-input v-model="dateRange" label="Rango de fechas" multiple="range" prepend-icon=""
+          <v-date-input v-model="selectedStartDate" label="Fecha de inicio" prepend-icon=""
             :prepend-inner-icon="mdiCalendarRange"
-            :rules="[(r) => (Array.isArray(r) && r.length >= 2) || 'Selecciona un rango de fechas']" clearable />
+            :rules="[(r) => !!r || 'Selecciona una fecha de inicio']" clearable />
+          <v-date-input v-model="selectedEndDate" label="Fecha de fin" prepend-icon=""
+            :prepend-inner-icon="mdiCalendarRange"
+            :rules="[(r) => !!r || 'Selecciona una fecha de fin']" clearable />
           <v-form>
             <v-divider class="mb-3" />
             <p class="text-subtitle-2 text-medium-emphasis mb-2 d-flex align-center ga-1">
@@ -139,20 +142,28 @@ const { signOut, fetchCalendars, createCalendar, createEvent, getToken } =
   useGoogleOAuth2()
 
 
-function initializeSync(): [Date, Date] | [] {
-  return startDate.value && endDate.value
-    ? [
-        DateTime.fromISO(startDate.value).toJSDate(),
-        DateTime.fromISO(endDate.value).toJSDate(),
-      ]
-    : []
+const selectedStartDate = ref<Date | null>(
+  startDate.value ? DateTime.fromISO(startDate.value).toJSDate() : null
+)
+const selectedEndDate = ref<Date | null>(
+  endDate.value ? DateTime.fromISO(endDate.value).toJSDate() : null
+)
+
+function initializeSync() {
+  selectedStartDate.value = startDate.value
+    ? DateTime.fromISO(startDate.value).toJSDate()
+    : null
+  selectedEndDate.value = endDate.value
+    ? DateTime.fromISO(endDate.value).toJSDate()
+    : null
 }
+
 watch(
   modelValue,
   (open) => {
     if (open) {
       getCalendarList()
-      dateRange.value = initializeSync()
+      initializeSync()
     }
   },
 )
@@ -162,29 +173,16 @@ const calendarItem = ref<Pick<IGoogleCalendarItem, 'summary'>>({ summary: '' })
 const dialogCreateCalendar = ref(false)
 const selected = ref<IGoogleCalendarItem | null>(null)
 
-const dateRange = ref<[Date, Date] | []>(
-  initializeSync()
+const dateStart = computed(() =>
+  selectedStartDate.value
+    ? DateTime.fromJSDate(selectedStartDate.value).toFormat(DATE_FORMAT)
+    : null
 )
 
-const dateStart = computed(() => {
-  const start = dateRange.value[0]
-  console.log('start', start)
-  return start
-    ? DateTime.fromJSDate(start).toFormat(DATE_FORMAT)
+const dateEnd = computed(() =>
+  selectedEndDate.value
+    ? DateTime.fromJSDate(selectedEndDate.value).toFormat(DATE_FORMAT)
     : null
-},
-)
-
-watch(dateRange, (newRange) => {
-  console.log('dateRange changed:', newRange)
-})
-const dateEnd = computed(() => {
-  const end = dateRange.value[dateRange.value.length - 1]
-  console.log('end', end)
-  return end
-    ? DateTime.fromJSDate(end).toFormat(DATE_FORMAT)
-    : null
-},
 )
 
 const progress = ref(0)
