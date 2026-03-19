@@ -1,0 +1,94 @@
+<template>
+  <v-container>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="6">
+        <v-card>
+          <v-img>
+            <div class="d-flex justify-center">
+              <v-icon size="64">
+                {{ mdiAccount }}
+              </v-icon>
+            </div>
+          </v-img>
+          <v-card-title class="text-center">
+            <div class="headline font-weight-bold">Bienvenido a Horext</div>
+          </v-card-title>
+          <v-card-text class="text-center">
+            Si no ha iniciado sesión previamente en Horext, se creará una nueva
+            cuenta automáticamente.
+          </v-card-text>
+          <v-card-actions class="d-flex justify-center">
+            <div ref="googleButton" />
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script setup lang="ts">
+import { mdiAccount } from '@mdi/js'
+
+defineOptions({
+  name: 'LoginPage',
+})
+
+useSeoMeta({
+  title: 'Inicio de Sesión',
+})
+
+const { onLoaded } = useGoogleAccounts()
+
+const {
+  public: { gsi },
+} = useRuntimeConfig()
+
+const googleButton = ref<HTMLElement | null>(null)
+
+const { setUser } = useUserAuthStore()
+
+async function handleCredentialResponse(
+  response: google.accounts.id.CredentialResponse,
+) {
+  const result = await $fetch<{ body: { email?: string; name?: string; picture?: string; isUniversityEmail?: boolean } }>('/auth/verify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: response,
+  })
+  setUser(result.body)
+  await navigateTo('/generator')
+}
+
+const initialized = ref(false)
+
+const initGoogle = async () => {
+  if (initialized.value || !googleButton.value) return
+  initialized.value = true
+  try {
+    google.accounts.id.initialize({
+      client_id: gsi.clientId,
+      callback: handleCredentialResponse,
+    })
+    google.accounts.id.renderButton(googleButton.value, {
+      theme: 'filled_blue',
+      size: 'large',
+      type: 'standard',
+    })
+    google.accounts.id.prompt()
+  } catch (error) {
+    console.error('Error loading Google script', error)
+    initialized.value = false
+  }
+}
+
+onLoaded(initGoogle)
+
+onMounted(async () => {
+  if (window.google) {
+    initGoogle()
+  }
+})
+
+</script>

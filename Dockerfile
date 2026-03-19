@@ -1,36 +1,42 @@
-FROM node:14-alpine3.14 as build
+# syntax=docker/dockerfile:1
+
+FROM node:24-alpine AS build
+
+ARG NUXT_API_URL
+ARG NUXT_PUBLIC_GSI_CLIENT_ID
+ARG NUXT_PUBLIC_GSI_SCOPES
 
 WORKDIR /usr/src/app
 
-COPY . .
+# Install pnpm
+RUN npm install -g pnpm@10.x
+# Build
+COPY  pnpm-lock.yaml pnpm-lock.yaml
+COPY  package.json package.json
+COPY  pnpm-workspace.yaml pnpm-workspace.yaml
+RUN pnpm install --frozen-lockfile --production=false
 
-RUN yarn install \
-  --prefer-offline \
-  --non-interactive \
-  --production=false
+COPY  . .
 
-RUN yarn build
+RUN pnpm run postinstall
 
-RUN rm -rf node_modules && \
-  NODE_ENV=production yarn install \
-  --prefer-offline \
-  --pure-lockfile \
-  --non-interactive \
-  --production=true
+RUN NUXT_API_URL=$NUXT_API_URL \
+    NUXT_PUBLIC_GSI_CLIENT_ID=$NUXT_PUBLIC_GSI_CLIENT_ID \
+    NUXT_PUBLIC_GSI_SCOPES=$NUXT_PUBLIC_GSI_SCOPES \
+    pnpm run build
 
-
-FROM node:14-alpine3.14 as production
+FROM node:24-alpine AS production
 
 WORKDIR /usr/src/app
 
-COPY --from=build /usr/src/app  .
+COPY --from=build /usr/src/app/.output .
 
 ENV HOST=0.0.0.0
 ENV PORT=5000
 
 EXPOSE 5000
 
-CMD [ "yarn", "start"]
+CMD [ "node", "server/index.mjs" ]
 
 
 

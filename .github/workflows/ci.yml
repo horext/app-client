@@ -1,0 +1,41 @@
+name: CI Pipeline
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm 10.x
+        uses: pnpm/action-setup@v5
+        with:
+          version: 10.x
+  
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: "pnpm"
+  
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+       
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test:unit:ci
