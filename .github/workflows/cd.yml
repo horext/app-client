@@ -141,7 +141,7 @@ jobs:
             chmod 600 ${{ env.ENV_PATH }}
             echo "IMAGE_NAME=${{ needs.release.outputs.tags }}" >> ${{ env.ENV_PATH }}
             echo "PROJECT_NAME=${{ secrets.DOCKER_PROJECT_NAME }}" >> ${{ env.ENV_PATH }}
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin --quiet
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
             docker pull ${{ needs.release.outputs.tags }}
             docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }} up -d
             docker system prune --force
