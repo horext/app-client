@@ -49,8 +49,8 @@ export default defineNuxtConfig({
         discoveryDocs: '',
         scopes: '',
       },
+      apiUrl: '',
     },
-    apiUrl: '',
     gsi: {
       apiKey: '',
     },
