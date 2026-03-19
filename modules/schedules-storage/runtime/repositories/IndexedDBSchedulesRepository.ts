@@ -12,12 +12,12 @@ const META_KEY: Record<'generated' | 'favorites', MetaKey> = {
 export class IndexedDBSchedulesRepository implements ISchedulesRepository {
   constructor(private readonly getDb: DbFactory) {}
 
-  async getEntry(id: string): Promise<IScheduleGenerate | undefined> {
+  async getEntry(id: IScheduleGenerate['id']): Promise<IScheduleGenerate | undefined> {
     const db = await this.getDb()
     return db.get('entries', id)
   }
 
-  async getEntries(ids: string[]): Promise<IScheduleGenerate[]> {
+  async getEntries(ids: IScheduleGenerate['id'][]): Promise<IScheduleGenerate[]> {
     if (!ids.length) return []
     const db = await this.getDb()
     const tx = db.transaction('entries', 'readonly')
@@ -38,12 +38,12 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     await tx.done
   }
 
-  async deleteEntry(id: string): Promise<void> {
+  async deleteEntry(id: IScheduleGenerate['id']): Promise<void> {
     const db = await this.getDb()
     await db.delete('entries', id)
   }
 
-  async deleteEntries(ids: string[]): Promise<void> {
+  async deleteEntries(ids: IScheduleGenerate['id'][]): Promise<void> {
     if (!ids.length) return
     const db = await this.getDb()
     const tx = db.transaction('entries', 'readwrite')
