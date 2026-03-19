@@ -33,7 +33,7 @@ export const useGoogleOAuth2 = () => {
           isPendingToken.value = false
         },
       })
-      tokenClient.value = client
+      tokenClient.value = markRaw(client)
     } catch (error) {
       console.error('Error loading Google script', error)
     } finally {
