@@ -5,7 +5,7 @@ services:
       HOST: ${NUXT_HOST}
       PORT: ${NUXT_PORT}
       BASE_URL: ${BASE_URL}
-      NUXT_API_URL: ${NUXT_API_URL}
+      NUXT_PUBLIC_API_URL: ${NUXT_API_URL}
       NUXT_PUBLIC_GSI_CLIENT_ID: ${NUXT_PUBLIC_GSI_CLIENT_ID}
       NUXT_PUBLIC_GTAG_ID: ${NUXT_PUBLIC_GTAG_ID}
       NUXT_GSI_API_KEY: ${NUXT_PUBLIC_GSI_API_KEY}
@@ -15,12 +15,21 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       VIRTUAL_HOST: ${VIRTUAL_HOST}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:${NUXT_PORT}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
-      - "traefik.http.routers.ssr-client.entrypoints=websecure"
-      - "traefik.http.routers.ssr-client.tls.certresolver=le"
-      - "traefik.http.services.ssr-client.loadbalancer.server.port=${NUXT_PORT}"
+      - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
+      - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.entrypoints=websecure"
+      - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.tls.certresolver=le"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.server.port=${NUXT_PORT}"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.path=/"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.timeout=5s"
     ports:
       - ${NUXT_PORT}
     networks:

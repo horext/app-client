@@ -92,10 +92,6 @@ jobs:
           cache-to: type=gha,mode=max
           file: Dockerfile
           push: true
-          build-args: |
-            NUXT_API_URL=${{ vars.NUXT_API_URL }}
-            NUXT_PUBLIC_GSI_CLIENT_ID=${{ vars.NUXT_PUBLIC_GSI_CLIENT_ID }}
-            NUXT_PUBLIC_GSI_SCOPES=${{ vars.NUXT_PUBLIC_GSI_SCOPES }}
 
   deploy:
     name: Deploy
@@ -139,10 +135,13 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cat ${{ env.DOCKER_COMPOSE_TEMPLATE }}
+            set -e
+            DEPLOYMENT_ID=${{ github.run_number }}
             echo "${{ secrets.ENV_FILE }}" > ${{ env.ENV_PATH }}
+            chmod 600 ${{ env.ENV_PATH }}
             echo "IMAGE_NAME=${{ needs.release.outputs.tags }}" >> ${{ env.ENV_PATH }}
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
+            echo "PROJECT_NAME=${{ secrets.DOCKER_PROJECT_NAME }}" >> ${{ env.ENV_PATH }}
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin --quiet
             docker pull ${{ needs.release.outputs.tags }}
             docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }} up -d
             docker system prune --force
