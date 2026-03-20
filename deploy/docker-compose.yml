@@ -21,7 +21,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-      start_period: 5s
+      start_period: 0s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
@@ -29,8 +29,8 @@ services:
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.tls.certresolver=le"
       - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.server.port=${NUXT_PORT}"
       - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.path=/"
-      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.interval=10s"
-      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.timeout=5s"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.interval=5s"
+      - "traefik.http.services.${PROJECT_NAME:-horext-app}-ssr-client.loadbalancer.healthcheck.timeout=3s"
     ports:
       - ${NUXT_PORT}
     networks:

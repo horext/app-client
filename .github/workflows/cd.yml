@@ -164,5 +164,42 @@ jobs:
             echo "PROJECT_NAME=${{ secrets.DOCKER_PROJECT_NAME }}" >> ${{ env.ENV_PATH }}
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
             docker pull ${{ needs.release.outputs.primary_tag }}
-            docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }} up -d
+            
+            # 1. Define base command and capture OLD container ID
+            DOCKER_COMPOSE_CMD="docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }}"
+            OLD_CONTAINER_ID=$(docker ps --filter "label=com.docker.compose.service=ssr-client" --filter "label=com.docker.compose.project=${{ secrets.DOCKER_PROJECT_NAME }}" -q | head -n 1)
+            
+            # 2. Start new instance (scale to 2)
+            echo "Starting new container version..."
+            $DOCKER_COMPOSE_CMD up -d --scale ssr-client=2 --no-recreate
+
+            # 3. Wait and check health
+            echo "Checking health of the new container..."
+            HEALTHY=false
+            for i in {1..12}; do
+                STATUS=$(docker ps --filter "label=com.docker.compose.service=ssr-client" --filter "label=com.docker.compose.project=${{ secrets.DOCKER_PROJECT_NAME }}" --format "{{.Status}}")
+                if echo "$STATUS" | grep -q "healthy"; then
+                    echo "Container is healthy!"
+                    HEALTHY=true
+                    break
+                fi
+                echo "Waiting for healthcheck... (attempt $i/12)"
+                sleep 5
+            done
+
+            # 4. Finalize or Rollback
+            if [ "$HEALTHY" = true ] && [ ! -z "$OLD_CONTAINER_ID" ]; then
+                echo "Removing old container: $OLD_CONTAINER_ID"
+                docker stop $OLD_CONTAINER_ID && docker rm $OLD_CONTAINER_ID
+            fi
+            
+            $DOCKER_COMPOSE_CMD up -d --scale ssr-client=1
+
+            if [ "$HEALTHY" != true ]; then
+                echo "ERROR: New container failed healthcheck."
+                exit 1
+            fi
+
+            docker system prune --force
+
             docker system prune --force
