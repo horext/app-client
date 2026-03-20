@@ -8,7 +8,8 @@ on:
         required: true
         type: string
       service_name:
-        required: true
+        default: 'ssr-client'
+        required: false
         type: string
         description: 'Service name used to scope the deployment (e.g. ssr-client, api-server)'
     secrets:
