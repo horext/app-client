@@ -24,6 +24,7 @@ services:
       start_period: 0s
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.entrypoints=websecure"
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.tls.certresolver=le"
