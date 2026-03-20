@@ -42,4 +42,3 @@ networks:
     external: true
   horext-internal:
     name: horext-internal
-    external: true
