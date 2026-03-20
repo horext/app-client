@@ -29,6 +29,7 @@
     "google-auth-library": "^10.6.2",
     "html2canvas-pro": "^2.0.2",
     "jspdf": "^4.2.1",
+    "idb": "^8.0.3",
     "lottie-web": "^5.13.0",
     "luxon": "^3.7.2",
     "ofetch": "^1.5.1",

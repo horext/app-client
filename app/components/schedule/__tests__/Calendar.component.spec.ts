@@ -31,10 +31,11 @@ describe('Schedule Calendar', () => {
         type: '',
       },
     ],
-    id: '',
+    id: crypto.randomUUID(),
     scheduleSubjectIds: [],
     schedule: [],
     crossings: 0,
+    scheduleSubjectKey: '1,2',
   }
   it('renders correctly', () => {
     const wrapper = mount(ScheduleCalendar, {
