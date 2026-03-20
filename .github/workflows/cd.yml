@@ -7,6 +7,10 @@ on:
       environment:
         required: true
         type: string
+      service_name:
+        required: true
+        type: string
+        description: 'Service name used to scope the deployment (e.g. ssr-client, api-server)'
     secrets:
       SERVER_USER:
         required: true
@@ -28,6 +32,11 @@ on:
       description: 'Environment to deploy'
       type: environment
       required: true
+    service_name:
+      description: 'Service name (e.g. ssr-client)'
+      type: string
+      required: true
+      default: 'ssr-client'
 
 concurrency:
   group: ${{ github.ref }}
@@ -49,6 +58,7 @@ jobs:
       packages: write
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
+      primary_tag: ${{ steps.primary_tag.outputs.tag }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
@@ -81,6 +91,10 @@ jobs:
                 type=raw,value=${{ github.run_number }}
                 type=sha,format=short
           
+      - name: Extract primary tag
+        id: primary_tag
+        run: echo "tag=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" >> $GITHUB_OUTPUT
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -145,9 +159,9 @@ jobs:
             DEPLOYMENT_ID=${{ github.run_number }}
             echo "${{ secrets.ENV_FILE }}" > ${{ env.ENV_PATH }}
             chmod 600 ${{ env.ENV_PATH }}
-            echo "IMAGE_NAME=${{ needs.release.outputs.tags }}" >> ${{ env.ENV_PATH }}
+            echo "IMAGE_NAME=${{ needs.release.outputs.primary_tag }}" >> ${{ env.ENV_PATH }}
             echo "PROJECT_NAME=${{ secrets.DOCKER_PROJECT_NAME }}" >> ${{ env.ENV_PATH }}
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
-            docker pull ${{ needs.release.outputs.tags }}
+            docker pull ${{ needs.release.outputs.primary_tag }}
             docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }} up -d
             docker system prune --force
