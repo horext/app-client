@@ -17,7 +17,7 @@ services:
       VIRTUAL_HOST: ${VIRTUAL_HOST}
     stop_grace_period: 30s
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:${NUXT_PORT} || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:${NUXT_PORT} || exit 1"]
       interval: 5s
       timeout: 3s
       retries: 5
