@@ -78,6 +78,8 @@ jobs:
           tags: |
                 # set latest tag for master branch
                 type=raw,value=latest,enable=true
+                type=raw,value=${{ github.run_number }}
+                type=sha,format=short
           
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -92,6 +94,10 @@ jobs:
           cache-to: type=gha,mode=max
           file: Dockerfile
           push: true
+          build-args: |
+            NUXT_PUBLIC_API_URL=${{ vars.NUXT_API_URL }}
+            NUXT_PUBLIC_GSI_CLIENT_ID=${{ vars.NUXT_PUBLIC_GSI_CLIENT_ID }}
+            NUXT_PUBLIC_GSI_SCOPES=${{ vars.NUXT_PUBLIC_GSI_SCOPES }}
 
   deploy:
     name: Deploy
@@ -141,7 +147,7 @@ jobs:
             chmod 600 ${{ env.ENV_PATH }}
             echo "IMAGE_NAME=${{ needs.release.outputs.tags }}" >> ${{ env.ENV_PATH }}
             echo "PROJECT_NAME=${{ secrets.DOCKER_PROJECT_NAME }}" >> ${{ env.ENV_PATH }}
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin --quiet
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password-stdin
             docker pull ${{ needs.release.outputs.tags }}
             docker compose --env-file ${{ env.ENV_PATH }} -p ${{ secrets.DOCKER_PROJECT_NAME }} -f ${{ env.DOCKER_COMPOSE_TEMPLATE }} up -d
             docker system prune --force
