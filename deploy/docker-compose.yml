@@ -18,10 +18,10 @@ services:
     stop_grace_period: 30s
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:${NUXT_PORT} || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${PROJECT_NAME:-horext-app}-ssr-client.rule=Host(`${VIRTUAL_HOST}`)"
