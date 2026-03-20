@@ -15,6 +15,7 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       VIRTUAL_HOST: ${VIRTUAL_HOST}
+    stop_grace_period: 30s
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:${NUXT_PORT}"]
       interval: 10s
@@ -34,7 +35,11 @@ services:
       - ${NUXT_PORT}
     networks:
       - proxy
+      - horext-internal
 networks:
   proxy:
     name: proxy
+    external: true
+  horext-internal:
+    name: horext-internal
     external: true
