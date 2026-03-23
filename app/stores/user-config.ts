@@ -12,8 +12,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     items: {
       mySubjects: Array<ISelectedSubject>
       myCrossings: number
-      mySchedules: Array<IScheduleGenerate>
-      myFavoritesSchedules: Array<IScheduleGenerate>
       myOcurrences: Array<IIntersectionOccurrence>
       myWeekDays: Weekdays[]
     }
