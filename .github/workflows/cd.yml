@@ -201,5 +201,3 @@ jobs:
             fi
 
             docker system prune --force
-
-            docker system prune --force
