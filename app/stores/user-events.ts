@@ -3,65 +3,47 @@ import { ref } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const storage = useLocalStorage<IEvent[]>()
-  const items = ref<IEvent[]>([])
+  const service = useActivitiesService()
+  const items = ref<Array<IEvent & { id: string }>>([])
 
-  function setItems(newItems: IEvent[]) {
+  function setItems(newItems: Array<IEvent & { id: string }>) {
     items.value = newItems
   }
 
-  function addItem(item: IEvent) {
+  function saveNewItem(item: IEvent & { id: string }) {
     items.value.push(item)
-  }
-
-  function deleteItemByIndex(index: number) {
-    items.value.splice(index, 1)
-  }
-
-  function updateItemByIndex({ index, item }: { index: number; item: IEvent }) {
-    items.value = items.value.map((c, i) => (i === index ? item : c))
-  }
-
-  function saveNewItem(item: IEvent) {
-    addItem(item)
-    storage.setItem('myEvents', items.value)
+    return service.save(item)
   }
 
   function deleteItemById(id: string) {
-    const index = items.value.findIndex((s) => s.id === id)
-    deleteItemByIndex(index)
-    storage.setItem('myEvents', items.value)
+    items.value = items.value.filter((e) => e.id !== id)
+    return service.delete(id)
   }
 
-  function updateItem(item: IEvent) {
-    const index = items.value.findIndex((s) => s.id === item.id)
+  function updateItem(item: IEvent & { id: string }) {
+    const index = items.value.findIndex((e) => e.id === item.id)
     if (index >= 0) {
-      updateItemByIndex({
-        index,
-        item,
-      })
-      storage.setItem('myEvents', items.value)
+      items.value = items.value.map((e, i) => (i === index ? item : e))
+      return service.update(item)
     } else {
-      console.error(index)
+      console.error('updateItem: item not found', item.id)
+      return Promise.resolve()
     }
   }
 
-  function updateItems(items: IEvent[]) {
-    setItems(items)
-    storage.setItem('myEvents', items)
+  async function updateItems(newItems: Array<IEvent & { id: string }>) {
+    setItems(newItems)
+    await service.saveAll(newItems)
   }
 
-  const fetchItems = async () => {
-    const data = (await storage.getItem('myEvents')) || []
+  async function fetchItems() {
+    const data = await service.getAll()
     setItems(data)
   }
 
   return {
     items,
     setItems,
-    addItem,
-    deleteItemByIndex,
-    updateItemByIndex,
     saveNewItem,
     deleteItemById,
     updateItem,

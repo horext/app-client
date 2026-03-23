@@ -20,4 +20,10 @@ export const schemaMigrations: SchemaMigration[] = [
       db.createObjectStore('meta')
     },
   },
+  {
+    version: 3,
+    up(db) {
+      db.createObjectStore('activities', { keyPath: 'id' })
+    },
+  },
 ]

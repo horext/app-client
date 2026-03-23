@@ -16,6 +16,10 @@ export default defineNuxtModule({
         name: 'useFavoritesSchedulesService',
         from: resolver.resolve('runtime/composables/index'),
       },
+      {
+        name: 'useActivitiesService',
+        from: resolver.resolve('runtime/composables/index'),
+      },
     ])
 
     addPlugin({

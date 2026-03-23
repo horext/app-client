@@ -1,6 +1,7 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IEvent } from '~/interfaces/event'
 import { schemaMigrations } from './migrations/schema'
 
 export interface HorextDB extends DBSchema {
@@ -15,6 +16,10 @@ export interface HorextDB extends DBSchema {
     migrations: {
         key: string
         value: { id: string; appliedAt: string }
+    }
+    activities: {
+        key: string
+        value: IEvent & { id: string }
     }
 }
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>
