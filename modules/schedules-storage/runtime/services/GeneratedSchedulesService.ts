@@ -26,30 +26,24 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
     await Promise.all([
       this.repo.deleteEntries(orphans),
       this.repo.putEntries(schedules),
-      this.repo.putIds('generated', schedules.map((s) => s.id)),
+      this.repo.setList('generated', schedules.map((s) => s.id)),
     ])
   }
 
   async addGeneratedSchedule(schedule: IScheduleGenerate): Promise<void> {
-    const generatedIds = await this.repo.getIds('generated')
-    if (!generatedIds.includes(schedule.id)) {
+    const inList = await this.repo.isInList('generated', schedule.id)
+    if (!inList) {
       await Promise.all([
         this.repo.putEntry(schedule),
-        this.repo.putIds('generated', [...generatedIds, schedule.id]),
+        this.repo.addToList('generated', schedule.id),
       ])
     }
   }
 
   async removeGeneratedSchedule(id: IScheduleGenerate['id']): Promise<void> {
-    const [generatedIds, favIds] = await Promise.all([
-      this.repo.getIds('generated'),
-      this.repo.getIds('favorites'),
-    ])
-    await this.repo.putIds(
-      'generated',
-      generatedIds.filter((i) => i !== id),
-    )
-    if (!favIds.includes(id)) {
+    await this.repo.removeFromList('generated', id)
+    const inFav = await this.repo.isInList('favorites', id)
+    if (!inFav) {
       await this.repo.deleteEntry(id)
     }
   }

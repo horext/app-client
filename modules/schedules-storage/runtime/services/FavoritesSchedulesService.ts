@@ -11,32 +11,26 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
   }
 
   async saveFavorites(schedules: IScheduleGenerate[]): Promise<void> {
-    await Promise.all(schedules.map((s) => this.repo.putEntry(s)))
-    await this.repo.putIds('favorites', schedules.map((s) => s.id))
+    await this.repo.putEntries(schedules)
+    await this.repo.setList('favorites', schedules.map((s) => s.id))
   }
 
   async saveFavoriteIds(ids: IScheduleGenerate['id'][]): Promise<void> {
-    await this.repo.putIds('favorites', ids)
+    await this.repo.setList('favorites', ids)
   }
 
   async addFavorite(schedule: IScheduleGenerate): Promise<void> {
-    const favIds = await this.repo.getIds('favorites')
     await this.repo.putEntry(schedule)
-    if (!favIds.includes(schedule.id)) {
-      await this.repo.putIds('favorites', [...favIds, schedule.id])
+    const inList = await this.repo.isInList('favorites', schedule.id)
+    if (!inList) {
+      await this.repo.addToList('favorites', schedule.id)
     }
   }
 
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {
-    const [generatedIds, favIds] = await Promise.all([
-      this.repo.getIds('generated'),
-      this.repo.getIds('favorites'),
-    ])
-    await this.repo.putIds(
-      'favorites',
-      favIds.filter((i) => i !== id),
-    )
-    if (!generatedIds.includes(id)) {
+    await this.repo.removeFromList('favorites', id)
+    const inGenerated = await this.repo.isInList('generated', id)
+    if (!inGenerated) {
       await this.repo.deleteEntry(id)
     }
   }

@@ -16,8 +16,9 @@ export const schemaMigrations: SchemaMigration[] = [
   {
     version: 2,
     up(db) {
-      db.createObjectStore('entries', { keyPath: 'id' })
-      db.createObjectStore('meta')
+      db.createObjectStore('schedules', { keyPath: 'id' })
+      db.createObjectStore('generated', { keyPath: 'id' })
+      db.createObjectStore('favorites', { keyPath: 'id' })
     },
   },
   {

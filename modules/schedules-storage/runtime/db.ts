@@ -1,17 +1,13 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { IEvent } from '~/interfaces/event'
 import { schemaMigrations } from './migrations/schema'
 
 export interface HorextDB extends DBSchema {
-    entries: {
+    schedules: {
         key: string
         value: IScheduleGenerate
-    }
-    meta: {
-        key: 'generated:ids' | 'favorites:ids'
-        value: IScheduleGenerate['id'][]
     }
     migrations: {
         key: string
@@ -20,6 +16,14 @@ export interface HorextDB extends DBSchema {
     activities: {
         key: string
         value: IEvent & { id: string }
+    }
+    generated: {
+        key: string
+        value: { id: UUID }
+    }
+    favorites: {
+        key: string
+        value: { id: UUID }
     }
 }
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>

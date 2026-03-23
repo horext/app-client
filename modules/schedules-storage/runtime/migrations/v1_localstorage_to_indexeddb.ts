@@ -18,10 +18,10 @@ async function up({ db }: MigrationContext) {
   for (const s of [...rawSchedules, ...rawFavorites]) allById.set(s.id, s)
 
   if (allById.size > 0) {
-    const tx = db.transaction(['entries', 'meta'], 'readwrite')
-    await Promise.all([...allById.values()].map((s) => tx.objectStore('entries').put(s)))
-    await tx.objectStore('meta').put(rawSchedules.map((s) => s.id), 'generated:ids')
-    await tx.objectStore('meta').put(rawFavorites.map((s) => s.id), 'favorites:ids')
+    const tx = db.transaction(['schedules', 'generated', 'favorites'], 'readwrite')
+    await Promise.all([...allById.values()].map((s) => tx.objectStore('schedules').put(s)))
+    await Promise.all(rawSchedules.map((s) => tx.objectStore('generated').put({ id: s.id })))
+    await Promise.all(rawFavorites.map((s) => tx.objectStore('favorites').put({ id: s.id })))
     await tx.done
   }
 }
