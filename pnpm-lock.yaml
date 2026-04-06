@@ -54,8 +54,8 @@ importers:
         specifier: ^1.6.3
         version: 1.6.3
       unhead:
-        specifier: ^2.1.12
-        version: 2.1.12
+        specifier: ^2.1.13
+        version: 2.1.13
       unstorage:
         specifier: ^1.17.5
         version: 1.17.5(@netlify/blobs@9.1.2)(db0@0.3.4)(idb-keyval@6.2.2)(ioredis@5.10.1)
@@ -5384,6 +5384,9 @@ packages:
 
   unhead@2.1.12:
     resolution: {integrity: sha512-iTHdWD9ztTunOErtfUFk6Wr11BxvzumcYJ0CzaSCBUOEtg+DUZ9+gnE99i8QkLFT2q1rZD48BYYGXpOZVDLYkA==}
+
+  unhead@2.1.13:
+    resolution: {integrity: sha512-jO9M1sI6b2h/1KpIu4Jeu+ptumLmUKboRRLxys5pYHFeT+lqTzfNHbYUX9bxVDhC1FBszAGuWcUVlmvIPsah8Q==}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -11751,6 +11754,10 @@ snapshots:
   unhead@2.1.12:
     dependencies:
       hookable: 6.0.1
+
+  unhead@2.1.13:
+    dependencies:
+      hookable: 6.1.0
 
   unicorn-magic@0.1.0:
     optional: true
