@@ -54,7 +54,7 @@
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.5.0",
     "@types/uuid": "^11.0.0",
-    "@unhead/schema": "^2.1.12",
+    "@unhead/schema": "^2.1.13",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vitest/coverage-v8": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
