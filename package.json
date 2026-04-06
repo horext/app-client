@@ -52,7 +52,7 @@
     "@nuxt/test-utils": "^4.0.0",
     "@types/google.accounts": "^0.0.18",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "@types/uuid": "^11.0.0",
     "@unhead/schema": "^2.1.12",
     "@vitejs/plugin-vue": "^6.0.5",
