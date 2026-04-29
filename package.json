@@ -62,7 +62,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-nuxt": "^4.0.0",
-    "eslint-plugin-vue": "^10.8.0",
+    "eslint-plugin-vue": "^10.9.0",
     "happy-dom": "^20.9.0",
     "nitropack": "^2.13.3",
     "nuxt": "^4.4.2",
