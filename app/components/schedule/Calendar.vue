@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref, shallowRef, toRefs } from 'vue'
 import EventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
 import ScheduleEventInfo from '~/components/schedule/CalendarEventCard.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
@@ -57,8 +57,8 @@ const props = defineProps({
   },
 })
 const { schedule } = toRefs(props)
-const selectedEvent = ref<IScheduleCalendarEvent | null>(null)
-const selectedElement = ref<HTMLElement | null>(null)
+const selectedEvent = shallowRef<IScheduleCalendarEvent | null>(null)
+const selectedElement = shallowRef<HTMLElement | null>(null)
 const selectedOpen = ref(false)
 
 const showEvent = ({
@@ -85,15 +85,15 @@ const showEvent = ({
 
 const internalEvents = computed<IScheduleCalendarEvent[]>(
   () =>
-    schedule.value?.events?.map((event) => {
-      return {
+    schedule.value?.events?.map((event) =>
+      markRaw({
         ...event,
         start: event.startTime,
         end: event.endTime,
         weekDay: event.day,
         id: event.id!,
         name: event.title,
-      }
-    }) ?? [],
+      }),
+    ) ?? [],
 )
 </script>

@@ -60,7 +60,7 @@ const onChangeSchedules: WatchCallback = (newValue, oldValue) => {
     index.value = 0
   }
 }
-watch(schedules, onChangeSchedules)
+watch(schedules, onChangeSchedules, { deep: false })
 
 const onChangeSchedule: WatchCallback = (value) => {
   if (index.value >= props.schedules.length) {

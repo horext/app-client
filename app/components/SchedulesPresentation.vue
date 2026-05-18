@@ -55,7 +55,6 @@
     <v-divider />
     <schedules-list
       v-if="schedules.length > 0"
-      ref="calendar"
       v-model:current-schedule="currentSchedule"
       :schedules="schedules"
       :week-days="weekDays"
@@ -70,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type PropType } from 'vue'
+import { computed, ref, shallowRef, watch, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserConfigStore } from '~/stores/user-config'
 import SchedulesList from '~/components/SchedulesWindow.vue'
@@ -127,7 +126,7 @@ const startDate = computed(() => academicPeriodOrganizationUnit.value?.fromDate)
 
 const endDate = computed(() => academicPeriodOrganizationUnit.value?.toDate)
 
-const currentSchedule = ref<IScheduleGenerate>()
+const currentSchedule = shallowRef<IScheduleGenerate>()
 
 const dialogShare = ref(false)
 const dialogSignIn = ref(false)
@@ -141,8 +140,6 @@ watch(isSignedIn, (value) => {
 })
 
 const mode = ref(ViewMode.CALENDAR)
-
-const calendar = ref<ComponentPublicInstance | null>(null)
 
 function getCalendar(): HTMLElement | null {
   return document.getElementById('calendar')
