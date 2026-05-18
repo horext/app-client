@@ -3,6 +3,7 @@ import type {
   IGoogleCalendarItem,
   IGoogleCalendarListPayload,
 } from '~/interfaces/google/calendar'
+import { storeToRefs } from 'pinia'
 
 import type { CalendarEvent } from '~/models/google'
 
