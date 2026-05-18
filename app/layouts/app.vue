@@ -38,12 +38,10 @@ const settingsStore = useSettingsStore()
 
 const { darkMode } = storeToRefs(settingsStore)
 const store = useUserConfigStore()
-const generationStore = useGenerationStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
 
 const { subjects, favoritesSchedules } = storeToRefs(store)
-const { result } = storeToRefs(generationStore)
 const { items: events } = storeToRefs(userEventsStore)
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
@@ -67,7 +65,7 @@ await callOnce('initData', async () => {
 })
 
 const { fetchSubjects } = useUserSubjects()
-const { fetchSchedules } = useUserSchedules()
+const { fetchSchedules, mySchedules } = useUserSchedules()
 
 const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 
@@ -82,7 +80,7 @@ const items = computed(() => [
   HOME_ROUTE,
   {
     ...GENERATOR_ROUTE,
-    badge: result.value?.schedules.length ?? 0,
+    badge: mySchedules.value.length,
   },
   {
     ...FAVORITES_ROUTE,
@@ -102,7 +100,7 @@ const items = computed(() => [
 const denseItems = computed(() => [
   {
     ...GENERATOR_ROUTE,
-    badge: result.value?.schedules.length ?? 0,
+    badge: mySchedules.value.length,
   },
   {
     ...FAVORITES_ROUTE,

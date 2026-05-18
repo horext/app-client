@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
@@ -10,11 +10,6 @@ export const useGenerationStore = defineStore('generation', () => {
 
   const result = ref<IGenerationResult | null>(null)
   const history = ref<IGenerationRecord[]>([])
-
-  const latestRecord = computed<IGenerationRecord | undefined>(() => {
-    if (history.value.length === 0) return undefined
-    return history.value[history.value.length - 1]
-  })
 
   async function setResult(
     newSchedules: IScheduleGenerate[],
@@ -49,7 +44,6 @@ export const useGenerationStore = defineStore('generation', () => {
   return {
     result,
     history,
-    latestRecord,
     setResult,
     loadSaved,
     clear,
