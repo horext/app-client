@@ -1,8 +1,10 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import type { IUserProfile } from '~/interfaces/profile'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IUserPreferences } from '~/interfaces/preferences'
 import type { Weekdays } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
@@ -11,69 +13,43 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const academicConfigService = useAcademicConfigService()
   const preferencesService = usePreferencesService()
 
-  const faculty = ref<IOrganization>()
-  const speciality = ref<IOrganization>()
+  const profile = ref<IUserProfile>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
   const favoritesSchedules = ref<IScheduleGenerate[]>([])
-  const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
-  const crossings = ref(0)
-  const maxGenerationHistory = ref(5)
-  const setupCompleted = ref(false)
+  const preferences = ref<IUserPreferences>()
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
 
-  const facultyId = computed(() => {
-    return faculty.value?.id
-  })
+  const weekDays = computed(() => preferences.value?.weekDays ?? [0, 1, 2, 3, 4, 5, 6] satisfies Weekdays[])
+  const crossings = computed(() => preferences.value?.crossings ?? 0)
+  const maxGenerationHistory = computed(() => preferences.value?.maxGenerationHistory ?? 5)
 
-  const specialityId = computed(() => {
-    return speciality.value?.id
-  })
-
-  const hourlyLoadId = computed(() => {
-    return hourlyLoad?.value?.id
-  })
+  const faculty = computed(() => profile.value?.faculty)
+  const speciality = computed(() => profile.value?.speciality)
+  const setupCompleted = computed(() => profile.value?.setupCompleted ?? false)
+  const facultyId = computed(() => profile.value?.faculty.id)
+  const specialityId = computed(() => profile.value?.speciality.id)
+  const hourlyLoadId = computed(() => hourlyLoad.value?.id)
 
   async function updateFaculty(_faculty: IOrganization) {
-    faculty.value = _faculty
     await profileService.patch({ faculty: _faculty })
+    if (profile.value) profile.value = { ...profile.value, faculty: _faculty }
   }
 
   async function updateSpeciality(_speciality: IOrganization) {
-    speciality.value = _speciality
     await profileService.patch({ speciality: _speciality })
+    if (profile.value) profile.value = { ...profile.value, speciality: _speciality }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
-    setupCompleted.value = _setupCompleted
     await profileService.patch({ setupCompleted: _setupCompleted })
+    if (profile.value) profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
 
   async function updateCrossings(_crossings: number) {
-    crossings.value = _crossings
+    if (preferences.value) preferences.value = { ...preferences.value, crossings: _crossings }
     await preferencesService.patch({ crossings: _crossings })
-  }
-
-  async function fetchFaculty() {
-    const profile = await profileService.getProfile()
-    if (profile?.faculty) {
-      faculty.value = profile.faculty
-      return profile.faculty
-    }
-  }
-
-  async function fetchSpeciality() {
-    const profile = await profileService.getProfile()
-    if (profile?.speciality) {
-      speciality.value = profile.speciality
-      return profile.speciality
-    }
-  }
-
-  async function fetchCrossings() {
-    const prefs = await preferencesService.getPreferences()
-    crossings.value = prefs?.crossings ?? 0
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
@@ -102,33 +78,17 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function fetchProfile() {
-    const profile = await profileService.getProfile()
-    if (profile) {
-      faculty.value = profile.faculty
-      speciality.value = profile.speciality
-      setupCompleted.value = profile.setupCompleted
-    }
+    profile.value = await profileService.getProfile()
   }
 
-  async function initProfile() {
-    const profile = await profileService.getProfile()
-    if (!profile) return
-    faculty.value = profile.faculty
-    speciality.value = profile.speciality
-    setupCompleted.value = profile.setupCompleted
-  }
-
-  async function initAcademicConfig() {
+  async function fetchAcademicConfig() {
     const config = await academicConfigService.getAcademicConfig()
     if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
 
-  async function initPreferences() {
+  async function fetchPreferences() {
     const prefs = await preferencesService.getPreferences()
-    if (!prefs) return
-    weekDays.value = prefs.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
-    crossings.value = prefs.crossings ?? 0
-    maxGenerationHistory.value = prefs.maxGenerationHistory ?? 5
+    if (prefs) preferences.value = prefs
   }
 
   async function updateBasicSettings(
@@ -140,8 +100,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       profileService.patch({ faculty: _faculty, speciality: _speciality }),
       updateHourlyLoad(_hourlyLoad),
     ])
-    faculty.value = _faculty
-    speciality.value = _speciality
+    if (profile.value) profile.value = { ...profile.value, faculty: _faculty, speciality: _speciality }
   }
 
   async function completeSetup(
@@ -154,28 +113,23 @@ export const useUserConfigStore = defineStore('user-config', () => {
       academicConfigService.createAcademicConfig({ hourlyLoad: _hourlyLoad }),
       preferencesService.createPreferences(),
     ])
-    faculty.value = _faculty
-    speciality.value = _speciality
+    profile.value = { id: 'profile', faculty: _faculty, speciality: _speciality, setupCompleted: true }
     hourlyLoad.value = _hourlyLoad
-    setupCompleted.value = true
-  }
-
-  const fetchWeekDays = async () => {
-    const prefs = await preferencesService.getPreferences()
-    weekDays.value = prefs?.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
   }
 
   const saveWeekDays = async (data: Weekdays[]) => {
-    weekDays.value = data
+    if (preferences.value) preferences.value = { ...preferences.value, weekDays: data }
     await preferencesService.patch({ weekDays: data })
   }
 
   const updateMaxGenerationHistory = async (n: number) => {
-    maxGenerationHistory.value = n
+    if (preferences.value) preferences.value = { ...preferences.value, maxGenerationHistory: n }
     await preferencesService.patch({ maxGenerationHistory: n })
   }
 
   return {
+    profile,
+    preferences,
     crossings,
     maxGenerationHistory,
     faculty,
@@ -195,17 +149,11 @@ export const useUserConfigStore = defineStore('user-config', () => {
     updateSetupCompleted,
     updateCrossings,
     updateHourlyLoad,
-    fetchFaculty,
-    fetchSpeciality,
-    fetchHourlyLoad,
     fetchProfile,
-    initProfile,
-    initAcademicConfig,
-    initPreferences,
+    fetchAcademicConfig,
+    fetchPreferences,
     updateBasicSettings,
     completeSetup,
-    fetchCrossings,
-    fetchWeekDays,
     saveWeekDays,
     updateMaxGenerationHistory,
   }

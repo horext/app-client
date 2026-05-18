@@ -60,9 +60,9 @@ async function fetchHourlyLoad(faculty: IOrganization) {
 
 await callOnce('initData', async () => {
   try {
-    await store.initProfile()
-    await store.initAcademicConfig()
-    await store.initPreferences()
+    await store.fetchProfile()
+    await store.fetchAcademicConfig()
+    await store.fetchPreferences()
     if (store.faculty) {
       await fetchHourlyLoad(store.faculty)
     }
@@ -79,7 +79,6 @@ const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 onMounted(async () => {
   await fetchSubjects()
   await fetchSchedules()
-  await store.fetchCrossings()
   await fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
 })
