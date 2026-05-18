@@ -8,6 +8,9 @@ import {
   STUDY_PLAN_API_KEY,
 } from '../registry/keys'
 
+import type { InjectionKey } from 'vue';
+import { inject } from 'vue'
+
 export function useApi<T>(provider: InjectionKey<T>): T {
   const api = inject(provider)
   if (!api) throw new Error('No api providedr for ' + provider.description)
