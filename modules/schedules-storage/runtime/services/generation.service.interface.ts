@@ -5,7 +5,7 @@ export interface IGenerationService {
   getGenerations(): Promise<IGenerationRecord[]>
   getLatestGeneration(): Promise<IGenerationRecord | undefined>
   saveGeneration(
-    record: IGenerationRecord,
+    meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
     schedules: IScheduleGenerate[],
     maxHistory: number,
   ): Promise<void>

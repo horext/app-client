@@ -22,15 +22,8 @@ export const useGenerationStore = defineStore('generation', () => {
     newOccurrences: IIntersectionOccurrence[],
     meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
   ): Promise<void> {
-    const record: IGenerationRecord = {
-      id: crypto.randomUUID(),
-      scheduleIds: newSchedules.map((s) => s.id),
-      resultCount: newSchedules.length,
-      ...meta,
-    }
-
     await generationService.saveGeneration(
-      record,
+      meta,
       newSchedules,
       configStore.maxGenerationHistory,
     )

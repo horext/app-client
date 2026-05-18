@@ -21,10 +21,17 @@ export class GenerationService implements IGenerationService {
   }
 
   async saveGeneration(
-    record: IGenerationRecord,
+    meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
     schedules: IScheduleGenerate[],
     maxHistory: number,
   ): Promise<void> {
+    const record: IGenerationRecord = {
+      id: crypto.randomUUID(),
+      scheduleIds: schedules.map((s) => s.id),
+      resultCount: schedules.length,
+      ...meta,
+    }
+
     // 1. Persist schedule objects
     await this.schedulesRepo.putEntries(schedules)
 
