@@ -30,10 +30,6 @@ export class UserProfile {
     return this.patch({ setupCompleted })
   }
 
-  completeSetup(faculty: IOrganization | null, speciality: IOrganization | null): UserProfile {
-    return this.patch({ faculty, speciality, setupCompleted: true })
-  }
-
   toData(): IUserProfile {
     return {
       id: this.id,

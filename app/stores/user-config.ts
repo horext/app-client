@@ -135,7 +135,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.completeSetup(_faculty, _speciality),
+      profileService.patch({ faculty: _faculty, speciality: _speciality, setupCompleted: true }),
       academicConfigService.patch({ hourlyLoad: _hourlyLoad }),
     ])
     faculty.value = _faculty
