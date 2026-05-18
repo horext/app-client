@@ -5,6 +5,7 @@ import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { Weekdays } from '~/interfaces/event'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage<{
@@ -20,6 +21,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
+  const schedules = ref<IScheduleGenerate[]>([])
+  const favoritesSchedules = ref<IScheduleGenerate[]>([])
   const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
@@ -173,6 +176,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     speciality,
     hourlyLoad,
     subjects,
+    schedules,
+    favoritesSchedules,
     weekDays,
     setupCompleted,
     facultyId,
