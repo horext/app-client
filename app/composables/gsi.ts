@@ -1,5 +1,7 @@
 /// <reference types="google.accounts" />
 
+import type { UseScriptContext } from "@unhead/vue"
+
 export interface GoogleAccountsLoaderApi {
   google: {
     accounts: typeof google.accounts
@@ -11,7 +13,7 @@ declare global {
   interface Window extends GoogleAccountsLoaderApi {}
 }
 
-export function useGoogleAccounts() {
+export function useGoogleAccounts(): UseScriptContext<GoogleAccountsLoaderApi> {
   return useScript<GoogleAccountsLoaderApi>(
     {
       key: 'google-accounts',
