@@ -23,34 +23,6 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
     return this.schedulesRepo.getEntries(latest.scheduleIds)
   }
 
-  async saveGeneratedSchedules(schedules: IScheduleGenerate[]): Promise<void> {
-    const latest = await this._latestGeneration()
-    const newRecord: IGenerationRecord = {
-      id: crypto.randomUUID() as UUID,
-      generatedAt: new Date().toISOString(),
-      scheduleIds: schedules.map((s) => s.id as UUID),
-      crossingsSetting: latest?.crossingsSetting ?? 0,
-      weekDays: latest?.weekDays ?? [0, 1, 2, 3, 4, 5, 6],
-      hourlyLoadId: latest?.hourlyLoadId ?? 0,
-      resultCount: schedules.length,
-    }
-
-    const favIds = await this.schedulesRepo.getIds('favorites')
-    const favIdSet = new Set(favIds)
-    const newIdSet = new Set(newRecord.scheduleIds)
-    const orphans = (latest?.scheduleIds ?? []).filter(
-      (id) => !newIdSet.has(id) && !favIdSet.has(id),
-    )
-
-    await Promise.all([
-      this.schedulesRepo.putEntries(schedules),
-      this.generationRepo.save(newRecord),
-      orphans.length > 0
-        ? this.schedulesRepo.deleteEntries(orphans)
-        : Promise.resolve(),
-    ])
-  }
-
   async addGeneratedSchedule(schedule: IScheduleGenerate): Promise<void> {
     const latest = await this._latestGeneration()
     if (!latest || latest.scheduleIds.includes(schedule.id as UUID)) return
