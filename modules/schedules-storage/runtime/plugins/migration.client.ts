@@ -2,11 +2,10 @@ import { inject } from 'vue'
 import { SCHEDULES_DB_KEY } from '../db'
 import { migrations } from '../migrations/index'
 import type { MigrationContext } from '../migrations/types'
-import { SCHEDULES_STORAGE_PLUGIN_KEY } from './provide.client'
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:migration',
-  dependsOn: [SCHEDULES_STORAGE_PLUGIN_KEY],
+  dependsOn: ['schedules-storage:provide'],
   async setup() {
     const getDb = inject(SCHEDULES_DB_KEY)!
     const db = await getDb()
