@@ -1,7 +1,7 @@
 import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
-import type { ISchedulesRepository } from '../interfaces/schedules-repository'
-import type { IGenerationRepository } from '../interfaces/generation-repository'
-import type { IFavoritesSchedulesService } from '../interfaces/favorites-schedules-service'
+import type { ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type { IGenerationRepository } from '../repositories/generation.repository.interface'
+import type { IFavoritesSchedulesService } from './favorites-schedules.service.interface'
 
 export class FavoritesSchedulesService implements IFavoritesSchedulesService {
   constructor(

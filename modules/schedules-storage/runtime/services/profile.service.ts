@@ -1,7 +1,7 @@
 import type { IUserProfile } from '~/interfaces/profile'
 import type { IOrganization } from '~/interfaces/organization'
-import type { IProfileRepository } from '../interfaces/profile-repository'
-import type { IProfileService } from '../interfaces/profile-service'
+import type { IProfileRepository } from '../repositories/profile-repository.interface'
+import type { IProfileService } from './profile.service.interface'
 import { UserProfile } from '../domain/UserProfile'
 
 export class ProfileService implements IProfileService {

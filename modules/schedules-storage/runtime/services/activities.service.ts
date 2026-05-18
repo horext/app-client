@@ -1,6 +1,6 @@
 import type { IEvent } from '~/interfaces/event'
-import type { IActivitiesRepository } from '../interfaces/activities-repository'
-import type { IActivitiesService } from '../interfaces/activities-service'
+import type { IActivitiesRepository } from '../repositories/activities.repository.interface'
+import type { IActivitiesService } from './activities-service.interface'
 
 export class ActivitiesService implements IActivitiesService {
   constructor(private readonly repo: IActivitiesRepository) {}

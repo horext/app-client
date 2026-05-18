@@ -1,5 +1,5 @@
 import type { IGenerationRecord } from '~/interfaces/generation-record'
-import type { IGenerationRepository } from '../interfaces/generation-repository'
+import type { IGenerationRepository } from './generation.repository.interface'
 import type { DbFactory } from '../db'
 
 export class IndexedDBGenerationRepository implements IGenerationRepository {

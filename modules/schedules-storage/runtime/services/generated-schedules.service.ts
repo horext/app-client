@@ -1,8 +1,8 @@
 import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { IGenerationRecord } from '~/interfaces/generation-record'
-import type { ISchedulesRepository } from '../interfaces/schedules-repository'
-import type { IGenerationRepository } from '../interfaces/generation-repository'
-import type { IGeneratedSchedulesService } from '../interfaces/generated-schedules-service'
+import type { ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type { IGenerationRepository } from '../repositories/generation.repository.interface'
+import type { IGeneratedSchedulesService } from './generated-schedules.service.interface'
 
 export class GeneratedSchedulesService implements IGeneratedSchedulesService {
   constructor(

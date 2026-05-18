@@ -1,6 +1,6 @@
 import { toRaw } from 'vue'
 import type { IUserPreferences } from '~/interfaces/preferences'
-import type { IPreferencesRepository } from '../interfaces/preferences-repository'
+import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { DbFactory } from '../db'
 
 const PREFERENCES_KEY: IUserPreferences['id'] = 'preferences'

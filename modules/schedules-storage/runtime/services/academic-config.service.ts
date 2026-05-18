@@ -1,6 +1,6 @@
 import type { IUserAcademicConfig } from '~/interfaces/academic-config'
-import type { IAcademicConfigRepository } from '../interfaces/academic-config-repository'
-import type { IAcademicConfigService } from '../interfaces/academic-config-service'
+import type { IAcademicConfigRepository } from '../repositories/academic-config.repository.interface'
+import type { IAcademicConfigService } from './academic-config.service.interface'
 import { UserAcademicConfig } from '../domain/UserAcademicConfig'
 
 export class AcademicConfigService implements IAcademicConfigService {

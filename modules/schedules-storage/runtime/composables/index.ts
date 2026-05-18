@@ -8,13 +8,13 @@ import {
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
 } from '../keys'
-import type { IGeneratedSchedulesService } from '../interfaces/generated-schedules-service'
-import type { IFavoritesSchedulesService } from '../interfaces/favorites-schedules-service'
-import type { IActivitiesService } from '../interfaces/activities-service'
-import type { IProfileService } from '../interfaces/profile-service'
-import type { IAcademicConfigService } from '../interfaces/academic-config-service'
-import type { IPreferencesService } from '../interfaces/preferences-service'
-import type { IGenerationService } from '../interfaces/generation-service'
+import type { IGeneratedSchedulesService } from '../services/generated-schedules.service.interface'
+import type { IFavoritesSchedulesService } from '../services/favorites-schedules.service.interface'
+import type { IActivitiesService } from '../services/activities-service.interface'
+import type { IProfileService } from '../services/profile.service.interface'
+import type { IAcademicConfigService } from '../services/academic-config.service.interface'
+import type { IPreferencesService } from '../services/preferences.service.interface'
+import type { IGenerationService } from '../services/generation.service.interface'
 
 export const useGeneratedSchedulesService = (): IGeneratedSchedulesService => {
   const service = inject(GENERATED_SCHEDULES_SERVICE_KEY)

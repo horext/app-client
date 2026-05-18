@@ -1,8 +1,8 @@
 import type { IGenerationRecord } from '~/interfaces/generation-record'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { IGenerationRepository } from '../interfaces/generation-repository'
-import type { IGenerationService } from '../interfaces/generation-service'
-import type { ISchedulesRepository } from '../interfaces/schedules-repository'
+import type { IGenerationRepository } from '../repositories/generation.repository.interface'
+import type { IGenerationService } from './generation.service.interface'
+import type { ISchedulesRepository } from '../repositories/schedules-repository.interface'
 
 export class GenerationService implements IGenerationService {
   constructor(

@@ -1,6 +1,6 @@
 import { toRaw } from 'vue'
 import type { IUserProfile } from '~/interfaces/profile'
-import type { IProfileRepository } from '../interfaces/profile-repository'
+import type { IProfileRepository } from './profile-repository.interface'
 import type { DbFactory } from '../db'
 
 const PROFILE_KEY: IUserProfile['id'] = 'profile'

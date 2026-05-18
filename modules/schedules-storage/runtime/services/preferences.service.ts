@@ -1,6 +1,6 @@
 import type { IUserPreferences } from '~/interfaces/preferences'
-import type { IPreferencesRepository } from '../interfaces/preferences-repository'
-import type { IPreferencesService } from '../interfaces/preferences-service'
+import type { IPreferencesRepository } from '../repositories/preferences-repository.interface'
+import type { IPreferencesService } from './preferences.service.interface'
 import { UserPreferences } from '../domain/UserPreferences'
 
 export class PreferencesService implements IPreferencesService {

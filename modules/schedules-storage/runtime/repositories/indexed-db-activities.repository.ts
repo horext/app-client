@@ -1,6 +1,6 @@
 import { toRaw } from 'vue'
 import type { IEvent } from '~/interfaces/event'
-import type { IActivitiesRepository } from '../interfaces/activities-repository'
+import type { IActivitiesRepository } from './activities.repository.interface'
 import type { DbFactory } from '../db'
 
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
