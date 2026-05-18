@@ -2,48 +2,59 @@ import type { IUserProfile } from '~/interfaces/profile'
 import type { IOrganization } from '~/interfaces/organization'
 import type { IProfileRepository } from '../interfaces/profile-repository'
 import type { IProfileService } from '../interfaces/profile-service'
-
-const DEFAULT_PROFILE: IUserProfile = {
-  id: 'profile',
-  faculty: null,
-  speciality: null,
-  setupCompleted: false,
-}
+import { UserProfile } from '../domain/UserProfile'
 
 export class ProfileService implements IProfileService {
   constructor(private readonly repo: IProfileRepository) {}
 
+  private async _load(): Promise<UserProfile | undefined> {
+    const data = await this.repo.get()
+    return data ? UserProfile.from(data) : undefined
+  }
+
+  private async _save(profile: UserProfile): Promise<void> {
+    await this.repo.save(profile.toData())
+  }
+
   async getProfile(): Promise<IUserProfile | undefined> {
-    return this.repo.get()
+    return (await this._load())?.toData()
   }
 
   async createProfile(): Promise<IUserProfile> {
-    const existing = await this.repo.get()
-    if (existing) return existing
-    const defaultProfile = { ...DEFAULT_PROFILE }
-    await this.repo.save(defaultProfile)
-    return defaultProfile
+    const existing = await this._load()
+    if (existing) return existing.toData()
+    const profile = UserProfile.create()
+    await this._save(profile)
+    return profile.toData()
   }
 
   async patch(partial: Partial<Omit<IUserProfile, 'id'>>): Promise<void> {
-    const current = await this.repo.get()
-    if (!current) return
-    await this.repo.save({ ...current, ...partial })
+    const profile = await this._load()
+    if (!profile) return
+    await this._save(profile.patch(partial))
   }
 
   async updateFaculty(faculty: IOrganization | null): Promise<void> {
-    await this.patch({ faculty })
+    const profile = await this._load()
+    if (!profile) return
+    await this._save(profile.withFaculty(faculty))
   }
 
   async updateSpeciality(speciality: IOrganization | null): Promise<void> {
-    await this.patch({ speciality })
+    const profile = await this._load()
+    if (!profile) return
+    await this._save(profile.withSpeciality(speciality))
   }
 
   async updateSetupCompleted(setupCompleted: boolean): Promise<void> {
-    await this.patch({ setupCompleted })
+    const profile = await this._load()
+    if (!profile) return
+    await this._save(profile.withSetupCompleted(setupCompleted))
   }
 
   async completeSetup(faculty: IOrganization | null, speciality: IOrganization | null): Promise<void> {
-    await this.patch({ faculty, speciality, setupCompleted: true })
+    const profile = await this._load()
+    if (!profile) return
+    await this._save(profile.completeSetup(faculty, speciality))
   }
 }
