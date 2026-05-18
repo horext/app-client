@@ -69,14 +69,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await academicConfigService.patch({ hourlyLoad: newHourlyLoad })
   }
 
-  async function fetchHourlyLoad() {
-    const config = await academicConfigService.getAcademicConfig()
-    if (config?.hourlyLoad) {
-      hourlyLoad.value = config.hourlyLoad
-      return config.hourlyLoad
-    }
-  }
-
   async function fetchProfile() {
     profile.value = await profileService.getProfile()
   }
