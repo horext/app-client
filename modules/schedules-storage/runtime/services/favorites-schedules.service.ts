@@ -22,10 +22,6 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     )
   }
 
-  async saveFavoriteIds(ids: IScheduleGenerate['id'][]): Promise<void> {
-    await this.repo.setList('favorites', ids)
-  }
-
   async addFavorite(schedule: IScheduleGenerate): Promise<void> {
     await this.repo.putEntry(schedule)
     const inList = await this.repo.isInList('favorites', schedule.id)
