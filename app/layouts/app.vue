@@ -44,7 +44,7 @@ const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
 
 const { subjects, favoritesSchedules } = storeToRefs(store)
-const { schedules } = storeToRefs(generationStore)
+const { result } = storeToRefs(generationStore)
 const { items: events } = storeToRefs(userEventsStore)
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
@@ -87,7 +87,7 @@ const items = computed(() => [
   HOME_ROUTE,
   {
     ...GENERATOR_ROUTE,
-    badge: schedules.value.length,
+    badge: result.value?.schedules.length ?? 0,
   },
   {
     ...FAVORITES_ROUTE,
@@ -107,7 +107,7 @@ const items = computed(() => [
 const denseItems = computed(() => [
   {
     ...GENERATOR_ROUTE,
-    badge: schedules.value.length,
+    badge: result.value?.schedules.length ?? 0,
   },
   {
     ...FAVORITES_ROUTE,

@@ -4,14 +4,14 @@
     color="blue"
     title="Generados"
     empty-message="Usted no tiene horarios generados"
-    :schedules="schedules"
+    :schedules="result?.schedules ?? []"
     path="/skd"
   >
     <template #top-items-right>
       <div class="d-flex align-self-center ga-2">
         <v-toolbar-title>
           Generados
-          <v-badge color="white" :content="schedules.length" inline />
+          <v-badge color="white" :content="result?.schedules.length ?? 0" inline />
         </v-toolbar-title>
       </div>
     </template>
@@ -51,7 +51,7 @@
           </v-col>
         </v-row>
       </v-alert>
-      <occurrences-list :items="occurrences" />
+      <occurrences-list :items="result?.occurrences ?? []" />
     </template>
   </schedules-presentation>
 </template>
@@ -84,7 +84,7 @@ const {
   subjects: mySubjects,
   favoritesSchedules: myFavoritesSchedules,
 } = storeToRefs(configStore)
-const { schedules, occurrences } = storeToRefs(generationStore)
+const { result } = storeToRefs(generationStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)

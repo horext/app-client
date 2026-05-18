@@ -2,14 +2,13 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IGenerationMeta, IGenerationRecord } from '~/interfaces/generation-record'
+import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '~/interfaces/generation-record'
 
 export const useGenerationStore = defineStore('generation', () => {
   const generationService = useGenerationService()
   const configStore = useUserConfigStore()
 
-  const schedules = ref<IScheduleGenerate[]>([])
-  const occurrences = ref<IIntersectionOccurrence[]>([])
+  const result = ref<IGenerationResult | null>(null)
   const history = ref<IGenerationRecord[]>([])
 
   const latestRecord = computed<IGenerationRecord | undefined>(() => {
@@ -22,40 +21,33 @@ export const useGenerationStore = defineStore('generation', () => {
     newOccurrences: IIntersectionOccurrence[],
     meta: IGenerationMeta,
   ): Promise<void> {
-    const record = await generationService.saveGeneration(
+    const _result = await generationService.saveGeneration(
       meta,
       newSchedules,
+      newOccurrences,
       configStore.maxGenerationHistory,
     )
-
-    history.value = [...history.value, record]
-    schedules.value = newSchedules
-    occurrences.value = newOccurrences
+    history.value = await generationService.getGenerations()
+    result.value = _result
   }
 
   async function loadSaved(): Promise<void> {
-    const records = await generationService.getGenerations()
-    history.value = records
+    const [records, latest] = await Promise.all([
+      generationService.getGenerations(),
+      generationService.getLatestGeneration(),
+    ])
 
-    const latest = records[records.length - 1]
-    if (latest) {
-      schedules.value =
-        await generationService.getSchedulesForGeneration(latest)
-    } else {
-      schedules.value = []
-    }
-    occurrences.value = []
+    history.value = records
+    result.value = latest ?? null
   }
 
   function clear(): void {
-    schedules.value = []
-    occurrences.value = []
+    result.value = null
     history.value = []
   }
 
   return {
-    schedules,
-    occurrences,
+    result,
     history,
     latestRecord,
     setResult,

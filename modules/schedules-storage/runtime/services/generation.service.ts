@@ -1,4 +1,5 @@
-import type { IGenerationMeta, IGenerationRecord } from '~/interfaces/generation-record'
+import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '~/interfaces/generation-record'
+import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
@@ -15,16 +16,20 @@ export class GenerationService implements IGenerationService {
     return records.sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
   }
 
-  async getLatestGeneration(): Promise<IGenerationRecord | undefined> {
+  async getLatestGeneration(): Promise<IGenerationResult | undefined> {
     const records = await this.getGenerations()
-    return records[records.length - 1]
+    const latest = records[records.length - 1]
+    if (!latest) return undefined
+    const schedules = await this.schedulesRepo.getEntries(latest.scheduleIds)
+    return { ...latest, schedules, occurrences: [] }
   }
 
   async saveGeneration(
     meta: IGenerationMeta,
     schedules: IScheduleGenerate[],
+    occurrences: IIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IGenerationRecord> {
+  ): Promise<IGenerationResult> {
     const record: IGenerationRecord = {
       id: crypto.randomUUID(),
       scheduleIds: schedules.map((s) => s.id),
@@ -41,7 +46,7 @@ export class GenerationService implements IGenerationService {
     // 3. Trim history and clean orphaned schedules
     await this._trimAndCleanup(maxHistory)
 
-    return record
+    return { ...record, schedules, occurrences }
   }
 
   async getSchedulesForGeneration(

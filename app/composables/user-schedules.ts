@@ -2,10 +2,12 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserSchedules = () => {
   const generationStore = useGenerationStore()
-  const { schedules } = storeToRefs(generationStore)
+  const { result } = storeToRefs(generationStore)
 
   async function updateSchedules(_schedules: IScheduleGenerate[]) {
-    generationStore.schedules = _schedules
+    if (generationStore.result) {
+      generationStore.result.schedules = _schedules
+    }
   }
 
   async function fetchSchedules() {
@@ -13,7 +15,7 @@ export const useUserSchedules = () => {
   }
 
   return {
-    mySchedules: schedules,
+    mySchedules: computed(() => result.value?.schedules ?? []),
     updateSchedules,
     fetchSchedules,
   }
