@@ -48,7 +48,7 @@
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/eslint-config": "^1.15.2",
-    "@nuxt/scripts": "^0.13.2",
+    "@nuxt/scripts": "^1.1.0",
     "@nuxt/test-utils": "^4.0.0",
     "@types/google.accounts": "^0.0.18",
     "@types/luxon": "^3.7.1",
