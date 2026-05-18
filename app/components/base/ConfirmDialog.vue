@@ -43,7 +43,7 @@
 import { mdiAlertCircle } from '@mdi/js'
 const props = withDefaults(
   defineProps<{
-    modelValue: boolean
+    modelValue?: boolean
     title?: string
     confirmText?: string
     rejectText?: string

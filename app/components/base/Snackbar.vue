@@ -32,7 +32,7 @@ defineOptions({
 export type SnackbarVariant = 'success' | 'error' | 'warning' | 'info'
 const props = withDefaults(
   defineProps<{
-    modelValue: boolean
+    modelValue?: boolean
     timeout?: number
     variant?: SnackbarVariant
   }>(),

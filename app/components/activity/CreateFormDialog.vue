@@ -60,7 +60,7 @@ const _props = withDefaults(
   defineProps<{
     event: IEvent
     loading?: boolean
-    modelValue: boolean
+    modelValue?: boolean
   }>(),
   {
     modelValue: false,
