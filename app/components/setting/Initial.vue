@@ -57,8 +57,9 @@ import {
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
+import { storeToRefs } from 'pinia'
 
-const props = defineProps<{ loading?: boolean }>()
+defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
   submit: [
     faculty: IOrganization,
