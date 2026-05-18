@@ -27,8 +27,10 @@ import {
 const DB_NAME = 'horext'
 const DB_VERSION = Math.max(...schemaMigrations.map((m) => m.version))
 
+export const SCHEDULES_STORAGE_PLUGIN_KEY = 'schedules-storage:provide'
+
 export default defineNuxtPlugin({
-  name: 'schedules-storage:provide',
+  name: SCHEDULES_STORAGE_PLUGIN_KEY,
   setup(nuxtApp) {
     const dbFactory = createDbFactory(DB_NAME, DB_VERSION)
     const schedulesRepository = new IndexedDBSchedulesRepository(dbFactory)
