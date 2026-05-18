@@ -6,11 +6,13 @@ async function up({ db }: MigrationContext) {
   const faculty = readCookieJson<IOrganization>('myFaculty')
   const speciality = readCookieJson<IOrganization>('mySpeciality')
 
+  if (!faculty || !speciality) return
+
   await db.put('profile', {
     id: 'profile',
-    faculty: faculty ?? null,
-    speciality: speciality ?? null,
-    setupCompleted: faculty !== null && speciality !== null,
+    faculty,
+    speciality,
+    setupCompleted: true,
   })
 }
 

@@ -4,8 +4,8 @@ import type { IOrganization } from '~/interfaces/organization'
 export class UserProfile {
   private constructor(
     readonly id: IUserProfile['id'],
-    readonly faculty: IOrganization | null,
-    readonly speciality: IOrganization | null,
+    readonly faculty: IOrganization,
+    readonly speciality: IOrganization,
     readonly setupCompleted: boolean,
   ) {}
 
@@ -18,11 +18,11 @@ export class UserProfile {
     )
   }
 
-  withFaculty(faculty: IOrganization | null): UserProfile {
+  withFaculty(faculty: IOrganization): UserProfile {
     return this.patch({ faculty })
   }
 
-  withSpeciality(speciality: IOrganization | null): UserProfile {
+  withSpeciality(speciality: IOrganization): UserProfile {
     return this.patch({ speciality })
   }
 
@@ -39,9 +39,8 @@ export class UserProfile {
     }
   }
 
-  static create(initial?: Partial<Omit<IUserProfile, 'id'>>): UserProfile {
-    const base = new UserProfile('profile', null, null, false)
-    return initial ? base.patch(initial) : base
+  static create(initial: Omit<IUserProfile, 'id' | 'setupCompleted'> & { setupCompleted?: boolean }): UserProfile {
+    return new UserProfile('profile', initial.faculty, initial.speciality, initial.setupCompleted ?? false)
   }
 
   static from(data: IUserProfile): UserProfile {

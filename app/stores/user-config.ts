@@ -104,18 +104,18 @@ export const useUserConfigStore = defineStore('user-config', () => {
   async function fetchProfile() {
     const profile = await profileService.getProfile()
     if (profile) {
-      if (profile.faculty) faculty.value = profile.faculty
-      if (profile.speciality) speciality.value = profile.speciality
-      setupCompleted.value = profile.setupCompleted ?? false
+      faculty.value = profile.faculty
+      speciality.value = profile.speciality
+      setupCompleted.value = profile.setupCompleted
     }
   }
 
   async function initProfile() {
     const profile = await profileService.getProfile()
     if (!profile) return
-    if (profile.faculty) faculty.value = profile.faculty
-    if (profile.speciality) speciality.value = profile.speciality
-    setupCompleted.value = profile.setupCompleted ?? false
+    faculty.value = profile.faculty
+    speciality.value = profile.speciality
+    setupCompleted.value = profile.setupCompleted
   }
 
   async function initAcademicConfig() {
