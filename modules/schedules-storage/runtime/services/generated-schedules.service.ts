@@ -1,6 +1,6 @@
 import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { IGenerationRecord } from '~/interfaces/generation-record'
-import type { ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGeneratedSchedulesService } from './generated-schedules.service.interface'
 
@@ -8,6 +8,7 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
   constructor(
     private readonly generationRepo: IGenerationRepository,
     private readonly schedulesRepo: ISchedulesRepository,
+    private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
 
   private async _latestGeneration(): Promise<IGenerationRecord | undefined> {
@@ -43,7 +44,7 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
       resultCount: latest.resultCount - 1,
     })
     const [inFav, allRecords] = await Promise.all([
-      this.schedulesRepo.isInList('favorites', id),
+      this.favoritesRepo.isInList(id),
       this.generationRepo.getAll(),
     ])
     const stillReferenced = allRecords.some(

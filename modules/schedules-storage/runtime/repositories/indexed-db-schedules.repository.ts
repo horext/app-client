@@ -1,6 +1,6 @@
 import { toRaw } from 'vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { ISchedulesRepository } from './schedules-repository.interface'
+import type { ISchedulesFavoritesRepository, ISchedulesRepository } from './schedules-repository.interface'
 import type { DbFactory } from '../db'
 
 export class IndexedDBSchedulesRepository implements ISchedulesRepository {
@@ -49,43 +49,45 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     await Promise.all(ids.map((id) => tx.store.delete(id)))
     await tx.done
   }
+}
 
-  async getIds(list: 'favorites'): Promise<IScheduleGenerate['id'][]> {
+export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavoritesRepository {
+  private static FAVORITES_KEY = 'favorites' as const
+
+  constructor(private readonly getDb: DbFactory) {}
+
+  async getIds(): Promise<IScheduleGenerate['id'][]> {
     const db = await this.getDb()
-    const records = await db.getAll(list)
+    const records = await db.getAll(IndexedDBScheduleFavoritesRepository.FAVORITES_KEY)
     return records.map((r) => r.id)
   }
 
   async isInList(
-    list: 'favorites',
     id: IScheduleGenerate['id'],
   ): Promise<boolean> {
     const db = await this.getDb()
-    return (await db.get(list, id)) !== undefined
+    return (await db.get(IndexedDBScheduleFavoritesRepository.FAVORITES_KEY, id)) !== undefined
   }
 
   async addToList(
-    list: 'favorites',
     id: IScheduleGenerate['id'],
   ): Promise<void> {
     const db = await this.getDb()
-    await db.put(list, { id })
+    await db.put(IndexedDBScheduleFavoritesRepository.FAVORITES_KEY, { id })
   }
 
   async removeFromList(
-    list: 'favorites',
     id: IScheduleGenerate['id'],
   ): Promise<void> {
     const db = await this.getDb()
-    await db.delete(list, id)
+    await db.delete(IndexedDBScheduleFavoritesRepository.FAVORITES_KEY, id)
   }
 
   async setList(
-    list: 'favorites',
     ids: IScheduleGenerate['id'][],
   ): Promise<void> {
     const db = await this.getDb()
-    const tx = db.transaction(list, 'readwrite')
+    const tx = db.transaction(IndexedDBScheduleFavoritesRepository.FAVORITES_KEY, 'readwrite')
     await tx.store.clear()
     await Promise.all(ids.map((id) => tx.store.put({ id })))
     await tx.done

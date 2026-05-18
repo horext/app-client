@@ -3,12 +3,13 @@ import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
-import type { ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
 
 export class GenerationService implements IGenerationService {
   constructor(
     private readonly generationRepo: IGenerationRepository,
     private readonly schedulesRepo: ISchedulesRepository,
+    private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
 
   async getGenerations(): Promise<IGenerationRecord[]> {
@@ -72,7 +73,7 @@ export class GenerationService implements IGenerationService {
     const referencedIds = new Set(remaining.flatMap((r) => r.scheduleIds))
 
     // Also keep favorites
-    const favoriteIds = await this.schedulesRepo.getIds('favorites')
+    const favoriteIds = await this.favoritesRepo.getIds()
     for (const id of favoriteIds) referencedIds.add(id)
 
     // Collect all orphaned schedule IDs from removed records

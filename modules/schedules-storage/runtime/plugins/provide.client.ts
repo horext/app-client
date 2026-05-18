@@ -1,6 +1,6 @@
 import { createDbFactory, SCHEDULES_DB_KEY } from '../db'
 import { schemaMigrations } from '../migrations/schema'
-import { IndexedDBSchedulesRepository } from '../repositories/indexed-db-schedules.repository'
+import { IndexedDBScheduleFavoritesRepository, IndexedDBSchedulesRepository } from '../repositories/indexed-db-schedules.repository'
 import { IndexedDBActivitiesRepository } from '../repositories/indexed-db-activities.repository'
 import { IndexedDBProfileRepository } from '../repositories/indexed-db-profile.repository'
 import { IndexedDBAcademicConfigRepository } from '../repositories/indexed-db-academic-config.repository'
@@ -39,16 +39,17 @@ export default defineNuxtPlugin({
     )
     const preferencesRepository = new IndexedDBPreferencesRepository(dbFactory)
     const generationRepository = new IndexedDBGenerationRepository(dbFactory)
+    const favoritesRepository = new IndexedDBScheduleFavoritesRepository(dbFactory)
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
     nuxtApp.vueApp.provide(
       GENERATED_SCHEDULES_SERVICE_KEY,
-      new GeneratedSchedulesService(generationRepository, schedulesRepository),
+      new GeneratedSchedulesService(generationRepository, schedulesRepository, favoritesRepository),
     )
     nuxtApp.vueApp.provide(
       FAVORITES_SCHEDULES_SERVICE_KEY,
-      new FavoritesSchedulesService(schedulesRepository, generationRepository),
+      new FavoritesSchedulesService(schedulesRepository, favoritesRepository, generationRepository),
     )
     nuxtApp.vueApp.provide(
       ACTIVITIES_SERVICE_KEY,
@@ -68,7 +69,7 @@ export default defineNuxtPlugin({
     )
     nuxtApp.vueApp.provide(
       GENERATION_SERVICE_KEY,
-      new GenerationService(generationRepository, schedulesRepository),
+      new GenerationService(generationRepository, schedulesRepository, favoritesRepository),
     )
   },
 })
