@@ -17,14 +17,6 @@ export const useGenerationStore = defineStore('generation', () => {
     return history.value[history.value.length - 1]
   })
 
-  const isStale = computed<boolean>(() => {
-    if (!latestRecord.value) return false
-    const currentSubjectIds = new Set(configStore.subjects.map((s) => s.id))
-    const savedSubjectIds = latestRecord.value.subjectIds
-    if (currentSubjectIds.size !== savedSubjectIds.length) return true
-    return savedSubjectIds.some((id) => !currentSubjectIds.has(id))
-  })
-
   async function setResult(
     newSchedules: IScheduleGenerate[],
     newOccurrences: IIntersectionOccurrence[],
@@ -69,7 +61,6 @@ export const useGenerationStore = defineStore('generation', () => {
     occurrences,
     history,
     latestRecord,
-    isStale,
     setResult,
     loadSaved,
     clear,
