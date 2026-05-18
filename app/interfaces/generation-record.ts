@@ -2,11 +2,10 @@ import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './ocurrences'
 import type { IScheduleGenerate, UUID } from './schedule'
 
-export type IGenerationMeta = Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>
+export type IGenerationMeta = Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount' | 'occurrences'>
 
 export type IGenerationResult = Omit<IGenerationRecord, 'scheduleIds'> & {
   schedules: IScheduleGenerate[]
-  occurrences: IIntersectionOccurrence[]
 }
 
 export interface IGenerationRecord {
@@ -17,4 +16,5 @@ export interface IGenerationRecord {
   weekDays: Weekdays[]
   hourlyLoadId: number
   resultCount: number
+  occurrences: IIntersectionOccurrence[]
 }

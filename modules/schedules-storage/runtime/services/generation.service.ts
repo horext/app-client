@@ -21,7 +21,7 @@ export class GenerationService implements IGenerationService {
     const latest = records[records.length - 1]
     if (!latest) return undefined
     const schedules = await this.schedulesRepo.getEntries(latest.scheduleIds)
-    return { ...latest, schedules, occurrences: [] }
+    return { ...latest, schedules }
   }
 
   async saveGeneration(
@@ -34,6 +34,7 @@ export class GenerationService implements IGenerationService {
       id: crypto.randomUUID(),
       scheduleIds: schedules.map((s) => s.id),
       resultCount: schedules.length,
+      occurrences,
       ...meta,
     }
 
