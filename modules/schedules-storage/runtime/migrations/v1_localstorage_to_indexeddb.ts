@@ -30,6 +30,7 @@ async function up({ db }: MigrationContext) {
       weekDays: [0, 1, 2, 3, 4, 5, 6],
       hourlyLoadId: 0,
       resultCount: rawSchedules.length,
+      occurrences: [],
     })
   }
 }
