@@ -58,13 +58,11 @@ async function fetchHourlyLoad(faculty: IOrganization) {
 
 await callOnce('initData', async () => {
   try {
-    const [_, faculty] = await Promise.all([
-      store.fetchFirstEntry(),
-      store.fetchFaculty(),
-      store.fetchSpeciality(),
-    ])
-    if (faculty) {
-      await fetchHourlyLoad(faculty)
+    await store.initProfile()
+    await store.initAcademicConfig()
+    await store.initPreferences()
+    if (store.faculty) {
+      await fetchHourlyLoad(store.faculty)
     }
   } catch (e) {
     console.error(e)
@@ -83,7 +81,6 @@ onMounted(async () => {
   await fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
   await store.fetchMyOcurrences()
-  await store.fetchWeekDays()
 })
 const drawer = ref(true)
 const items = computed(() => [

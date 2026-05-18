@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-dialog v-model="firstEntry" max-width="600" persistent>
+    <v-dialog :model-value="!setupCompleted" max-width="600" persistent>
       <InitialSettings />
     </v-dialog>
     <base-alert-dialog v-model="isNewHourlyLoad">
@@ -33,11 +33,11 @@ useSeoMeta({
 const configStore = useUserConfigStore()
 const router = useRouter()
 
-const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
+const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad } =
   storeToRefs(configStore)
 
-watch(firstEntry, async (newValue, oldValue) => {
-  if (oldValue && !newValue) {
+watch(setupCompleted, async (newValue, oldValue) => {
+  if (!oldValue && newValue) {
     await router.push('/generator/subjects')
   }
 })

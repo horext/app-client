@@ -149,10 +149,7 @@ const ending = async () => {
   }
   successSave.value = false
   loading.value = true
-  store.updateFaculty(internalFaculty.value!)
-  store.updateSpeciality(internalSpeciality.value!)
-  store.updateHourlyLoad(internalHourlyLoad.value!)
-  store.updateFirstEntry(false)
+  await store.completeSetup(internalFaculty.value!, internalSpeciality.value!, internalHourlyLoad.value!)
   loading.value = false
   successSave.value = true
 }

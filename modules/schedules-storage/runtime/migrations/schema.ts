@@ -27,4 +27,22 @@ export const schemaMigrations: SchemaMigration[] = [
       db.createObjectStore('activities', { keyPath: 'id' })
     },
   },
+  {
+    version: 4,
+    up(db) {
+      db.createObjectStore('profile', { keyPath: 'id' })
+    },
+  },
+  {
+    version: 5,
+    up(db) {
+      db.createObjectStore('preferences', { keyPath: 'id' })
+    },
+  },
+  {
+    version: 6,
+    up(db) {
+      db.createObjectStore('academic-config', { keyPath: 'id' })
+    },
+  },
 ]

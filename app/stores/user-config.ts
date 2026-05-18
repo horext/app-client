@@ -9,28 +9,12 @@ import type { Weekdays } from '~/interfaces/event'
 export const useUserConfigStore = defineStore('user-config', () => {
   const storage = useLocalStorage<{
     items: {
-      mySubjects: Array<ISelectedSubject>
-      myCrossings: number
       myOcurrences: Array<IIntersectionOccurrence>
-      myWeekDays: Weekdays[]
     }
   }>()
-  const myFaculty = useCookie<IOrganization | null>('myFaculty', {
-    default: () => null,
-    maxAge: 60 * 60 * 24 * 365,
-  })
-  const mySpeciality = useCookie<IOrganization | null>('mySpeciality', {
-    default: () => null,
-    maxAge: 60 * 60 * 24 * 365,
-  })
-  const myFirstEntry = useCookie<boolean>('myFirstEntry', {
-    default: () => true,
-    maxAge: 60 * 60 * 24 * 365,
-  })
-  const myHourlyLoad = useCookie<IHourlyLoad | null>('myHourlyLoad', {
-    default: () => null,
-    maxAge: 60 * 60 * 24 * 365,
-  })
+  const profileService = useProfileService()
+  const academicConfigService = useAcademicConfigService()
+  const preferencesService = usePreferencesService()
 
   const faculty = ref<IOrganization>()
   const speciality = ref<IOrganization>()
@@ -39,7 +23,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
-  const firstEntry = ref(true)
+  const setupCompleted = ref(false)
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
 
@@ -55,56 +39,50 @@ export const useUserConfigStore = defineStore('user-config', () => {
     return hourlyLoad?.value?.id
   })
 
-  function updateFaculty(_faculty: IOrganization) {
-    myFaculty.value = _faculty
+  async function updateFaculty(_faculty: IOrganization) {
     faculty.value = _faculty
+    await profileService.updateFaculty(_faculty)
   }
 
   async function updateSpeciality(_speciality: IOrganization) {
-    mySpeciality.value = _speciality
     speciality.value = _speciality
+    await profileService.updateSpeciality(_speciality)
   }
 
-  function updateFirstEntry(_myFirstEntry: boolean) {
-    myFirstEntry.value = _myFirstEntry
-    firstEntry.value = _myFirstEntry
+  async function updateSetupCompleted(_setupCompleted: boolean) {
+    setupCompleted.value = _setupCompleted
+    await profileService.updateSetupCompleted(_setupCompleted)
   }
 
   async function updateCrossings(_crossings: number) {
-    await storage.setItem('myCrossings', _crossings)
     crossings.value = _crossings
+    await preferencesService.updateCrossings(_crossings)
   }
 
-  function fetchFaculty() {
-    const data = myFaculty.value
-    if (data) {
-      faculty.value = data
-      return data
+  async function fetchFaculty() {
+    const profile = await profileService.getProfile()
+    if (profile?.faculty) {
+      faculty.value = profile.faculty
+      return profile.faculty
     }
   }
 
-  function fetchSpeciality() {
-    const data = mySpeciality.value
-    if (data) {
-      speciality.value = data
-      return data
+  async function fetchSpeciality() {
+    const profile = await profileService.getProfile()
+    if (profile?.speciality) {
+      speciality.value = profile.speciality
+      return profile.speciality
     }
-  }
-
-  function fetchFirstEntry() {
-    const data = myFirstEntry.value
-    firstEntry.value = data
   }
 
   async function fetchCrossings() {
-    const data: number | undefined = (await storage.getItem('myCrossings')) || 0
-    const _crossings = Number(data) || 0
-    crossings.value = _crossings
+    const prefs = await preferencesService.getPreferences()
+    crossings.value = prefs?.crossings ?? 0
   }
 
-  function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
-    hourlyLoad.value = newHourlyLoad
-    const currentHourlyLoad: IHourlyLoad | null | undefined = myHourlyLoad.value
+  async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
+    const config = await academicConfigService.getAcademicConfig()
+    const currentHourlyLoad = config?.hourlyLoad ?? null
     if (currentHourlyLoad?.id) {
       if (currentHourlyLoad.id !== newHourlyLoad.id) {
         isNewHourlyLoad.value = true
@@ -115,7 +93,58 @@ export const useUserConfigStore = defineStore('user-config', () => {
         isUpdateHourlyLoad.value = true
       }
     }
-    myHourlyLoad.value = newHourlyLoad
+    hourlyLoad.value = newHourlyLoad
+    await academicConfigService.updateHourlyLoad(newHourlyLoad)
+  }
+
+  async function fetchHourlyLoad() {
+    const config = await academicConfigService.getAcademicConfig()
+    if (config?.hourlyLoad) {
+      hourlyLoad.value = config.hourlyLoad
+      return config.hourlyLoad
+    }
+  }
+
+  async function fetchProfile() {
+    const profile = await profileService.getProfile()
+    if (profile) {
+      if (profile.faculty) faculty.value = profile.faculty
+      if (profile.speciality) speciality.value = profile.speciality
+      setupCompleted.value = profile.setupCompleted ?? false
+    }
+  }
+
+  async function initProfile() {
+    const profile = await profileService.createProfile()
+    if (profile.faculty) faculty.value = profile.faculty
+    if (profile.speciality) speciality.value = profile.speciality
+    setupCompleted.value = profile.setupCompleted ?? false
+  }
+
+  async function initAcademicConfig() {
+    const config = await academicConfigService.createAcademicConfig()
+    if (config.hourlyLoad) hourlyLoad.value = config.hourlyLoad
+  }
+
+  async function initPreferences() {
+    const prefs = await preferencesService.createPreferences()
+    weekDays.value = prefs.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
+    crossings.value = prefs.crossings ?? 0
+  }
+
+  async function completeSetup(
+    _faculty: IOrganization,
+    _speciality: IOrganization,
+    _hourlyLoad: IHourlyLoad,
+  ) {
+    await Promise.all([
+      profileService.completeSetup(_faculty, _speciality),
+      academicConfigService.updateHourlyLoad(_hourlyLoad),
+    ])
+    faculty.value = _faculty
+    speciality.value = _speciality
+    hourlyLoad.value = _hourlyLoad
+    setupCompleted.value = true
   }
 
   const fetchMyOcurrences = async () => {
@@ -129,13 +158,13 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   const fetchWeekDays = async () => {
-    const data = await storage.getItem('myWeekDays')
-    weekDays.value = data || [0, 1, 2, 3, 4, 5, 6]
+    const prefs = await preferencesService.getPreferences()
+    weekDays.value = prefs?.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
   }
 
   const saveWeekDays = async (data: Weekdays[]) => {
     weekDays.value = data
-    await storage.setItem('myWeekDays', data)
+    await preferencesService.updateWeekDays(data)
   }
 
   return {
@@ -145,7 +174,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     hourlyLoad,
     subjects,
     weekDays,
-    firstEntry,
+    setupCompleted,
     facultyId,
     specialityId,
     hourlyLoadId,
@@ -153,12 +182,17 @@ export const useUserConfigStore = defineStore('user-config', () => {
     isUpdateHourlyLoad,
     updateFaculty,
     updateSpeciality,
-    updateFirstEntry,
+    updateSetupCompleted,
     updateCrossings,
     updateHourlyLoad,
     fetchFaculty,
     fetchSpeciality,
-    fetchFirstEntry,
+    fetchHourlyLoad,
+    fetchProfile,
+    initProfile,
+    initAcademicConfig,
+    initPreferences,
+    completeSetup,
     fetchCrossings,
     fetchMyOcurrences,
     updateOccurrences,

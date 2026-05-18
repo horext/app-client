@@ -2,6 +2,9 @@ import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
 import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { IEvent } from '~/interfaces/event'
+import type { IUserProfile } from '~/interfaces/profile'
+import type { IUserAcademicConfig } from '~/interfaces/academic-config'
+import type { IUserPreferences } from '~/interfaces/preferences'
 import { schemaMigrations } from './migrations/schema'
 
 export interface HorextDB extends DBSchema {
@@ -24,6 +27,18 @@ export interface HorextDB extends DBSchema {
     favorites: {
         key: string
         value: { id: UUID }
+    }
+    profile: {
+        key: string
+        value: IUserProfile
+    }
+    preferences: {
+        key: string
+        value: IUserPreferences
+    }
+    'academic-config': {
+        key: string
+        value: IUserAcademicConfig
     }
 }
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>

@@ -20,6 +20,18 @@ export default defineNuxtModule({
         name: 'useActivitiesService',
         from: resolver.resolve('runtime/composables/index'),
       },
+      {
+        name: 'useProfileService',
+        from: resolver.resolve('runtime/composables/index'),
+      },
+      {
+        name: 'useAcademicConfigService',
+        from: resolver.resolve('runtime/composables/index'),
+      },
+      {
+        name: 'usePreferencesService',
+        from: resolver.resolve('runtime/composables/index'),
+      },
     ])
 
     addPlugin({
