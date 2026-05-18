@@ -32,6 +32,10 @@ export default defineNuxtModule({
         name: 'usePreferencesService',
         from: resolver.resolve('runtime/composables/index'),
       },
+      {
+        name: 'useGenerationService',
+        from: resolver.resolve('runtime/composables/index'),
+      },
     ])
 
     addPlugin({

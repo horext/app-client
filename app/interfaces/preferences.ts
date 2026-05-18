@@ -4,4 +4,5 @@ export interface IUserPreferences {
   id: 'preferences'
   weekDays: Weekdays[]
   crossings: number
+  maxGenerationHistory: number
 }

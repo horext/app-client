@@ -5,12 +5,14 @@ import { IndexedDBActivitiesRepository } from '../repositories/IndexedDBActiviti
 import { IndexedDBProfileRepository } from '../repositories/IndexedDBProfileRepository'
 import { IndexedDBAcademicConfigRepository } from '../repositories/IndexedDBAcademicConfigRepository'
 import { IndexedDBPreferencesRepository } from '../repositories/IndexedDBPreferencesRepository'
+import { IndexedDBGenerationRepository } from '../repositories/IndexedDBGenerationRepository'
 import { GeneratedSchedulesService } from '../services/GeneratedSchedulesService'
 import { FavoritesSchedulesService } from '../services/FavoritesSchedulesService'
 import { ActivitiesService } from '../services/ActivitiesService'
 import { ProfileService } from '../services/ProfileService'
 import { AcademicConfigService } from '../services/AcademicConfigService'
 import { PreferencesService } from '../services/PreferencesService'
+import { GenerationService } from '../services/GenerationService'
 import {
   SCHEDULES_REPOSITORY_KEY,
   GENERATED_SCHEDULES_SERVICE_KEY,
@@ -19,6 +21,7 @@ import {
   PROFILE_SERVICE_KEY,
   ACADEMIC_CONFIG_SERVICE_KEY,
   PREFERENCES_SERVICE_KEY,
+  GENERATION_SERVICE_KEY,
 } from '../keys'
 
 const DB_NAME = 'horext'
@@ -33,6 +36,7 @@ export default defineNuxtPlugin({
     const profileRepository = new IndexedDBProfileRepository(dbFactory)
     const academicConfigRepository = new IndexedDBAcademicConfigRepository(dbFactory)
     const preferencesRepository = new IndexedDBPreferencesRepository(dbFactory)
+    const generationRepository = new IndexedDBGenerationRepository(dbFactory)
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
@@ -42,5 +46,6 @@ export default defineNuxtPlugin({
     nuxtApp.vueApp.provide(PROFILE_SERVICE_KEY, new ProfileService(profileRepository))
     nuxtApp.vueApp.provide(ACADEMIC_CONFIG_SERVICE_KEY, new AcademicConfigService(academicConfigRepository))
     nuxtApp.vueApp.provide(PREFERENCES_SERVICE_KEY, new PreferencesService(preferencesRepository))
+    nuxtApp.vueApp.provide(GENERATION_SERVICE_KEY, new GenerationService(generationRepository, schedulesRepository))
   },
 })

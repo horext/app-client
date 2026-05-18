@@ -3,16 +3,10 @@ import { defineStore } from 'pinia'
 import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { Weekdays } from '~/interfaces/event'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserConfigStore = defineStore('user-config', () => {
-  const storage = useLocalStorage<{
-    items: {
-      myOcurrences: Array<IIntersectionOccurrence>
-    }
-  }>()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
   const preferencesService = usePreferencesService()
@@ -21,11 +15,10 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const speciality = ref<IOrganization>()
   const hourlyLoad = ref<IHourlyLoad>()
   const subjects = ref<Array<ISelectedSubject>>([])
-  const schedules = ref<IScheduleGenerate[]>([])
   const favoritesSchedules = ref<IScheduleGenerate[]>([])
-  const occurrences = ref<IIntersectionOccurrence[]>([])
   const weekDays = ref<Weekdays[]>([0, 1, 2, 3, 4, 5, 6])
   const crossings = ref(0)
+  const maxGenerationHistory = ref(5)
   const setupCompleted = ref(false)
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
@@ -133,6 +126,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     const prefs = await preferencesService.createPreferences()
     weekDays.value = prefs.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
     crossings.value = prefs.crossings ?? 0
+    maxGenerationHistory.value = prefs.maxGenerationHistory ?? 5
   }
 
   async function completeSetup(
@@ -150,16 +144,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     setupCompleted.value = true
   }
 
-  const fetchMyOcurrences = async () => {
-    const data = await storage.getItem('myOcurrences')
-    occurrences.value = data || []
-  }
-
-  const updateOccurrences = async (data: IIntersectionOccurrence[]) => {
-    occurrences.value = data
-    await storage.setItem('myOcurrences', data)
-  }
-
   const fetchWeekDays = async () => {
     const prefs = await preferencesService.getPreferences()
     weekDays.value = prefs?.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
@@ -170,13 +154,18 @@ export const useUserConfigStore = defineStore('user-config', () => {
     await preferencesService.updateWeekDays(data)
   }
 
+  const updateMaxGenerationHistory = async (n: number) => {
+    maxGenerationHistory.value = n
+    await preferencesService.updateMaxGenerationHistory(n)
+  }
+
   return {
     crossings,
+    maxGenerationHistory,
     faculty,
     speciality,
     hourlyLoad,
     subjects,
-    schedules,
     favoritesSchedules,
     weekDays,
     setupCompleted,
@@ -199,10 +188,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     initPreferences,
     completeSetup,
     fetchCrossings,
-    fetchMyOcurrences,
-    updateOccurrences,
-    occurrences,
     fetchWeekDays,
     saveWeekDays,
+    updateMaxGenerationHistory,
   }
 })

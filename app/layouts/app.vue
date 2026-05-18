@@ -39,10 +39,12 @@ const settingsStore = useSettingsStore()
 
 const { darkMode } = storeToRefs(settingsStore)
 const store = useUserConfigStore()
+const generationStore = useGenerationStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(store)
 
-const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { subjects, favoritesSchedules } = storeToRefs(store)
+const { schedules } = storeToRefs(generationStore)
 const { items: events } = storeToRefs(userEventsStore)
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
@@ -80,7 +82,6 @@ onMounted(async () => {
   await store.fetchCrossings()
   await fetchFavoritesSchedules()
   await userEventsStore.fetchItems()
-  await store.fetchMyOcurrences()
 })
 const drawer = ref(true)
 const items = computed(() => [

@@ -6,6 +6,7 @@ import {
   PROFILE_SERVICE_KEY,
   ACADEMIC_CONFIG_SERVICE_KEY,
   PREFERENCES_SERVICE_KEY,
+  GENERATION_SERVICE_KEY,
 } from '../keys'
 import type { IGeneratedSchedulesService } from '../interfaces/generated-schedules-service'
 import type { IFavoritesSchedulesService } from '../interfaces/favorites-schedules-service'
@@ -13,6 +14,7 @@ import type { IActivitiesService } from '../interfaces/activities-service'
 import type { IProfileService } from '../interfaces/profile-service'
 import type { IAcademicConfigService } from '../interfaces/academic-config-service'
 import type { IPreferencesService } from '../interfaces/preferences-service'
+import type { IGenerationService } from '../interfaces/generation-service'
 
 export const useGeneratedSchedulesService = (): IGeneratedSchedulesService => {
   const service = inject(GENERATED_SCHEDULES_SERVICE_KEY)
@@ -42,5 +44,10 @@ export const useAcademicConfigService = (): IAcademicConfigService => {
 export const usePreferencesService = (): IPreferencesService => {
   const service = inject(PREFERENCES_SERVICE_KEY)
   if (!service) throw new Error('usePreferencesService: service not provided. Is the schedules-storage plugin loaded?')
+  return service
+}
+export const useGenerationService = (): IGenerationService => {
+  const service = inject(GENERATION_SERVICE_KEY)
+  if (!service) throw new Error('useGenerationService: service not provided. Is the schedules-storage plugin loaded?')
   return service
 }

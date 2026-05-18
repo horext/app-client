@@ -6,6 +6,7 @@ import type { IActivitiesService } from './interfaces/activities-service'
 import type { IProfileService } from './interfaces/profile-service'
 import type { IAcademicConfigService } from './interfaces/academic-config-service'
 import type { IPreferencesService } from './interfaces/preferences-service'
+import type { IGenerationService } from './interfaces/generation-service'
 import type { DbFactory } from './db'
 
 export const SCHEDULES_DB_KEY: InjectionKey<DbFactory> =
@@ -31,3 +32,6 @@ export const ACADEMIC_CONFIG_SERVICE_KEY: InjectionKey<IAcademicConfigService> =
 
 export const PREFERENCES_SERVICE_KEY: InjectionKey<IPreferencesService> =
   Symbol('IPreferencesService')
+
+export const GENERATION_SERVICE_KEY: InjectionKey<IGenerationService> =
+  Symbol('IGenerationService')

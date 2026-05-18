@@ -62,9 +62,9 @@ import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
 import { useUserConfigStore } from '~/stores/user-config'
+import { useGenerationStore } from '~/stores/generation'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
@@ -73,6 +73,7 @@ useSeoMeta({
 })
 
 const configStore = useUserConfigStore()
+const generationStore = useGenerationStore()
 const eventsStore = useUserEventsStore()
 const openMySchedules = ref(false)
 const succces = ref(false)
@@ -81,9 +82,8 @@ const {
   crossings: crossingSubjects,
   subjects: mySubjects,
   favoritesSchedules: myFavoritesSchedules,
-  schedules,
-  occurrences,
 } = storeToRefs(configStore)
+const { schedules, occurrences } = storeToRefs(generationStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)
@@ -105,7 +105,6 @@ const removeFavorite = async (schedule: IScheduleGenerate) => {
 }
 
 const { loadSchedules } = useSchedules()
-const { updateSchedules } = useUserSchedules()
 const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false
@@ -118,9 +117,13 @@ const generateAllUserSchedules = async () => {
     },
   )
   loadingGenerate.value = false
-  updateSchedules(combinations)
-  configStore.updateOccurrences(occurrencesData)
-  occurrences.value = occurrencesData
+  await generationStore.setResult(toRaw(combinations), toRaw(occurrencesData), {
+    generatedAt: new Date().toISOString(),
+    subjectIds: mySubjects.value.map((s) => s.id),
+    crossingsSetting: toRaw(crossingSubjects.value),
+    weekDays: toRaw(configStore.weekDays),
+    hourlyLoadId: toRaw(configStore.hourlyLoad)?.id ?? null,
+  })
   succces.value = true
 }
 </script>

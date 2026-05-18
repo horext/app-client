@@ -1,17 +1,15 @@
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserSchedules = () => {
-  const storage = useGeneratedSchedulesService()
-  const configStore = useUserConfigStore()
-  const { schedules } = storeToRefs(configStore)
+  const generationStore = useGenerationStore()
+  const { schedules } = storeToRefs(generationStore)
 
   async function updateSchedules(_schedules: IScheduleGenerate[]) {
-    schedules.value = _schedules
-    await storage.saveGeneratedSchedules(_schedules)
+    generationStore.schedules = _schedules
   }
 
   async function fetchSchedules() {
-    schedules.value = await storage.getGeneratedSchedules()
+    await generationStore.loadSaved()
   }
 
   return {
@@ -20,3 +18,4 @@ export const useUserSchedules = () => {
     fetchSchedules,
   }
 }
+

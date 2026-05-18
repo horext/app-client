@@ -7,6 +7,7 @@ const DEFAULT_PREFERENCES: IUserPreferences = {
   id: 'preferences',
   weekDays: [0, 1, 2, 3, 4, 5, 6],
   crossings: 0,
+  maxGenerationHistory: 5,
 }
 
 export class PreferencesService implements IPreferencesService {
@@ -36,5 +37,9 @@ export class PreferencesService implements IPreferencesService {
 
   async updateCrossings(crossings: number): Promise<void> {
     await this.patch({ crossings })
+  }
+
+  async updateMaxGenerationHistory(n: number): Promise<void> {
+    await this.patch({ maxGenerationHistory: n })
   }
 }

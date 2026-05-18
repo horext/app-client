@@ -7,4 +7,5 @@ export interface IPreferencesService {
   patch(partial: Partial<Omit<IUserPreferences, 'id'>>): Promise<void>
   updateWeekDays(weekDays: Weekdays[]): Promise<void>
   updateCrossings(crossings: number): Promise<void>
+  updateMaxGenerationHistory(n: number): Promise<void>
 }
