@@ -18,6 +18,7 @@ export const schemaMigrations: SchemaMigration[] = [
     up(db) {
       db.createObjectStore('schedules', { keyPath: 'id' })
       db.createObjectStore('favorites', { keyPath: 'id' })
+      db.createObjectStore('generations', { keyPath: 'id' })
     },
   },
   {
@@ -42,12 +43,6 @@ export const schemaMigrations: SchemaMigration[] = [
     version: 6,
     up(db) {
       db.createObjectStore('academic-config', { keyPath: 'id' })
-    },
-  },
-  {
-    version: 7,
-    up(db) {
-      db.createObjectStore('generations', { keyPath: 'id' })
     },
   },
 ]
