@@ -1,4 +1,4 @@
-import importMap from 'vuetify/dist/json/importMap.json' assert { type: 'json' }
+import importMap from 'vuetify/dist/json/importMap.json'
 import {
   defineNuxtModule,
   addComponent,
