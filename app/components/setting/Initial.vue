@@ -149,7 +149,7 @@ const ending = async () => {
   }
   successSave.value = false
   loading.value = true
-  await store.completeSetup(internalFaculty.value!, internalSpeciality.value!, internalHourlyLoad.value!)
+  await store.completeSetup(toRaw(internalFaculty.value)!, toRaw(internalSpeciality.value)!, toRaw(internalHourlyLoad.value)!)
   loading.value = false
   successSave.value = true
 }
