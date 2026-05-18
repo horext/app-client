@@ -37,22 +37,22 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   async function updateFaculty(_faculty: IOrganization) {
     faculty.value = _faculty
-    await profileService.updateFaculty(_faculty)
+    await profileService.patch({ faculty: _faculty })
   }
 
   async function updateSpeciality(_speciality: IOrganization) {
     speciality.value = _speciality
-    await profileService.updateSpeciality(_speciality)
+    await profileService.patch({ speciality: _speciality })
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
     setupCompleted.value = _setupCompleted
-    await profileService.updateSetupCompleted(_setupCompleted)
+    await profileService.patch({ setupCompleted: _setupCompleted })
   }
 
   async function updateCrossings(_crossings: number) {
     crossings.value = _crossings
-    await preferencesService.updateCrossings(_crossings)
+    await preferencesService.patch({ crossings: _crossings })
   }
 
   async function fetchFaculty() {
@@ -90,7 +90,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
       }
     }
     hourlyLoad.value = newHourlyLoad
-    await academicConfigService.updateHourlyLoad(newHourlyLoad)
+    await academicConfigService.patch({ hourlyLoad: newHourlyLoad })
   }
 
   async function fetchHourlyLoad() {
@@ -136,7 +136,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
   ) {
     await Promise.all([
       profileService.completeSetup(_faculty, _speciality),
-      academicConfigService.updateHourlyLoad(_hourlyLoad),
+      academicConfigService.patch({ hourlyLoad: _hourlyLoad }),
     ])
     faculty.value = _faculty
     speciality.value = _speciality
@@ -151,12 +151,12 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   const saveWeekDays = async (data: Weekdays[]) => {
     weekDays.value = data
-    await preferencesService.updateWeekDays(data)
+    await preferencesService.patch({ weekDays: data })
   }
 
   const updateMaxGenerationHistory = async (n: number) => {
     maxGenerationHistory.value = n
-    await preferencesService.updateMaxGenerationHistory(n)
+    await preferencesService.patch({ maxGenerationHistory: n })
   }
 
   return {

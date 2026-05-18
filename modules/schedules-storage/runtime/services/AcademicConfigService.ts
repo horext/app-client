@@ -1,5 +1,4 @@
 import type { IUserAcademicConfig } from '~/interfaces/academic-config'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IAcademicConfigRepository } from '../interfaces/academic-config-repository'
 import type { IAcademicConfigService } from '../interfaces/academic-config-service'
 import { UserAcademicConfig } from '../domain/UserAcademicConfig'
@@ -34,9 +33,4 @@ export class AcademicConfigService implements IAcademicConfigService {
     await this._save(config.patch(partial))
   }
 
-  async updateHourlyLoad(hourlyLoad: IHourlyLoad | null): Promise<void> {
-    const config = await this._load()
-    if (!config) return
-    await this._save(config.withHourlyLoad(hourlyLoad))
-  }
 }

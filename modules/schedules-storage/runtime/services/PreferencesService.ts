@@ -1,5 +1,4 @@
 import type { IUserPreferences } from '~/interfaces/preferences'
-import type { Weekdays } from '~/interfaces/event'
 import type { IPreferencesRepository } from '../interfaces/preferences-repository'
 import type { IPreferencesService } from '../interfaces/preferences-service'
 import { UserPreferences } from '../domain/UserPreferences'
@@ -34,21 +33,4 @@ export class PreferencesService implements IPreferencesService {
     await this._save(prefs.patch(partial))
   }
 
-  async updateWeekDays(weekDays: Weekdays[]): Promise<void> {
-    const prefs = await this._load()
-    if (!prefs) return
-    await this._save(prefs.withWeekDays(weekDays))
-  }
-
-  async updateCrossings(crossings: number): Promise<void> {
-    const prefs = await this._load()
-    if (!prefs) return
-    await this._save(prefs.withCrossings(crossings))
-  }
-
-  async updateMaxGenerationHistory(n: number): Promise<void> {
-    const prefs = await this._load()
-    if (!prefs) return
-    await this._save(prefs.withMaxGenerationHistory(n))
-  }
 }

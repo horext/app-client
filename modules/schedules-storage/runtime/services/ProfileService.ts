@@ -34,24 +34,6 @@ export class ProfileService implements IProfileService {
     await this._save(profile.patch(partial))
   }
 
-  async updateFaculty(faculty: IOrganization | null): Promise<void> {
-    const profile = await this._load()
-    if (!profile) return
-    await this._save(profile.withFaculty(faculty))
-  }
-
-  async updateSpeciality(speciality: IOrganization | null): Promise<void> {
-    const profile = await this._load()
-    if (!profile) return
-    await this._save(profile.withSpeciality(speciality))
-  }
-
-  async updateSetupCompleted(setupCompleted: boolean): Promise<void> {
-    const profile = await this._load()
-    if (!profile) return
-    await this._save(profile.withSetupCompleted(setupCompleted))
-  }
-
   async completeSetup(faculty: IOrganization | null, speciality: IOrganization | null): Promise<void> {
     const profile = await this._load()
     if (!profile) return
