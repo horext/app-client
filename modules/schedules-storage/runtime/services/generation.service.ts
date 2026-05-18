@@ -24,7 +24,7 @@ export class GenerationService implements IGenerationService {
     meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
     schedules: IScheduleGenerate[],
     maxHistory: number,
-  ): Promise<void> {
+  ): Promise<IGenerationRecord> {
     const record: IGenerationRecord = {
       id: crypto.randomUUID(),
       scheduleIds: schedules.map((s) => s.id),
@@ -40,6 +40,8 @@ export class GenerationService implements IGenerationService {
 
     // 3. Trim history and clean orphaned schedules
     await this._trimAndCleanup(maxHistory)
+
+    return record
   }
 
   async getSchedulesForGeneration(

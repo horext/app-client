@@ -22,14 +22,13 @@ export const useGenerationStore = defineStore('generation', () => {
     newOccurrences: IIntersectionOccurrence[],
     meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
   ): Promise<void> {
-    await generationService.saveGeneration(
+    const record = await generationService.saveGeneration(
       meta,
       newSchedules,
       configStore.maxGenerationHistory,
     )
 
-    const updated = await generationService.getGenerations()
-    history.value = updated
+    history.value = [...history.value, record]
     schedules.value = newSchedules
     occurrences.value = newOccurrences
   }

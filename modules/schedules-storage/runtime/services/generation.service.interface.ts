@@ -8,7 +8,7 @@ export interface IGenerationService {
     meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
     schedules: IScheduleGenerate[],
     maxHistory: number,
-  ): Promise<void>
+  ): Promise<IGenerationRecord>
   getSchedulesForGeneration(
     record: IGenerationRecord,
   ): Promise<IScheduleGenerate[]>
