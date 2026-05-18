@@ -1,4 +1,4 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
@@ -10,11 +10,22 @@ async function up({ db }: MigrationContext) {
   for (const s of [...rawSchedules, ...rawFavorites]) allById.set(s.id, s)
 
   if (allById.size > 0) {
-    const tx = db.transaction(['schedules', 'generated', 'favorites'], 'readwrite')
+    const tx = db.transaction(['schedules', 'favorites'], 'readwrite')
     await Promise.all([...allById.values()].map((s) => tx.objectStore('schedules').put(s)))
-    await Promise.all(rawSchedules.map((s) => tx.objectStore('generated').put({ id: s.id })))
     await Promise.all(rawFavorites.map((s) => tx.objectStore('favorites').put({ id: s.id })))
     await tx.done
+  }
+
+  if (rawSchedules.length > 0) {
+    await db.put('generations', {
+      id: crypto.randomUUID(),
+      generatedAt: new Date().toISOString(),
+      scheduleIds: rawSchedules.map((s) => s.id) as UUID[],
+      crossingsSetting: 0,
+      weekDays: [0, 1, 2, 3, 4, 5, 6],
+      hourlyLoadId: 0,
+      resultCount: rawSchedules.length,
+    })
   }
 }
 

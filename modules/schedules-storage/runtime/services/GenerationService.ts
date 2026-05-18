@@ -31,10 +31,7 @@ export class GenerationService implements IGenerationService {
     // 2. Persist generation record
     await this.generationRepo.save(record)
 
-    // 3. Update 'generated' pointer list to latest scheduleIds
-    await this.schedulesRepo.setList('generated', record.scheduleIds)
-
-    // 4. Trim history and clean orphaned schedules
+    // 3. Trim history and clean orphaned schedules
     await this._trimAndCleanup(maxHistory)
   }
 

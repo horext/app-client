@@ -40,8 +40,8 @@ export default defineNuxtPlugin({
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
-    nuxtApp.vueApp.provide(GENERATED_SCHEDULES_SERVICE_KEY, new GeneratedSchedulesService(schedulesRepository))
-    nuxtApp.vueApp.provide(FAVORITES_SCHEDULES_SERVICE_KEY, new FavoritesSchedulesService(schedulesRepository))
+    nuxtApp.vueApp.provide(GENERATED_SCHEDULES_SERVICE_KEY, new GeneratedSchedulesService(generationRepository, schedulesRepository))
+    nuxtApp.vueApp.provide(FAVORITES_SCHEDULES_SERVICE_KEY, new FavoritesSchedulesService(schedulesRepository, generationRepository))
     nuxtApp.vueApp.provide(ACTIVITIES_SERVICE_KEY, new ActivitiesService(activitiesRepository))
     nuxtApp.vueApp.provide(PROFILE_SERVICE_KEY, new ProfileService(profileRepository))
     nuxtApp.vueApp.provide(ACADEMIC_CONFIG_SERVICE_KEY, new AcademicConfigService(academicConfigRepository))

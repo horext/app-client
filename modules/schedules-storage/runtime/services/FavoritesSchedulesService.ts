@@ -1,9 +1,13 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
 import type { ISchedulesRepository } from '../interfaces/schedules-repository'
+import type { IGenerationRepository } from '../interfaces/generation-repository'
 import type { IFavoritesSchedulesService } from '../interfaces/favorites-schedules-service'
 
 export class FavoritesSchedulesService implements IFavoritesSchedulesService {
-  constructor(private readonly repo: ISchedulesRepository) {}
+  constructor(
+    private readonly repo: ISchedulesRepository,
+    private readonly generationRepo: IGenerationRepository,
+  ) {}
 
   async getFavoriteSchedules(): Promise<IScheduleGenerate[]> {
     const ids = await this.repo.getIds('favorites')
@@ -29,8 +33,9 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
 
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {
     await this.repo.removeFromList('favorites', id)
-    const inGenerated = await this.repo.isInList('generated', id)
-    if (!inGenerated) {
+    const allRecords = await this.generationRepo.getAll()
+    const referencedInGenerations = allRecords.some((r) => r.scheduleIds.includes(id as UUID))
+    if (!referencedInGenerations) {
       await this.repo.deleteEntry(id)
     }
   }

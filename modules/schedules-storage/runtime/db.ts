@@ -21,10 +21,6 @@ export interface HorextDB extends DBSchema {
         key: string
         value: IEvent & { id: string }
     }
-    generated: {
-        key: string
-        value: { id: UUID }
-    }
     favorites: {
         key: string
         value: { id: UUID }

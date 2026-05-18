@@ -45,28 +45,28 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     await tx.done
   }
 
-  async getIds(list: 'generated' | 'favorites'): Promise<IScheduleGenerate['id'][]> {
+  async getIds(list: 'favorites'): Promise<IScheduleGenerate['id'][]> {
     const db = await this.getDb()
     const records = await db.getAll(list)
     return records.map((r) => r.id)
   }
 
-  async isInList(list: 'generated' | 'favorites', id: IScheduleGenerate['id']): Promise<boolean> {
+  async isInList(list: 'favorites', id: IScheduleGenerate['id']): Promise<boolean> {
     const db = await this.getDb()
     return (await db.get(list, id)) !== undefined
   }
 
-  async addToList(list: 'generated' | 'favorites', id: IScheduleGenerate['id']): Promise<void> {
+  async addToList(list: 'favorites', id: IScheduleGenerate['id']): Promise<void> {
     const db = await this.getDb()
     await db.put(list, { id })
   }
 
-  async removeFromList(list: 'generated' | 'favorites', id: IScheduleGenerate['id']): Promise<void> {
+  async removeFromList(list: 'favorites', id: IScheduleGenerate['id']): Promise<void> {
     const db = await this.getDb()
     await db.delete(list, id)
   }
 
-  async setList(list: 'generated' | 'favorites', ids: IScheduleGenerate['id'][]): Promise<void> {
+  async setList(list: 'favorites', ids: IScheduleGenerate['id'][]): Promise<void> {
     const db = await this.getDb()
     const tx = db.transaction(list, 'readwrite')
     await tx.store.clear()

@@ -1,50 +1,76 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
+import type { IGenerationRecord } from '~/interfaces/generation-record'
 import type { ISchedulesRepository } from '../interfaces/schedules-repository'
+import type { IGenerationRepository } from '../interfaces/generation-repository'
 import type { IGeneratedSchedulesService } from '../interfaces/generated-schedules-service'
 
 export class GeneratedSchedulesService implements IGeneratedSchedulesService {
-  constructor(private readonly repo: ISchedulesRepository) {}
+  constructor(
+    private readonly generationRepo: IGenerationRepository,
+    private readonly schedulesRepo: ISchedulesRepository,
+  ) {}
+
+  private async _latestGeneration(): Promise<IGenerationRecord | undefined> {
+    const records = await this.generationRepo.getAll()
+    return records.sort((a, b) => a.generatedAt.localeCompare(b.generatedAt)).at(-1)
+  }
 
   async getGeneratedSchedules(): Promise<IScheduleGenerate[]> {
-    const ids = await this.repo.getIds('generated')
-    return this.repo.getEntries(ids)
+    const latest = await this._latestGeneration()
+    if (!latest) return []
+    return this.schedulesRepo.getEntries(latest.scheduleIds)
   }
 
   async saveGeneratedSchedules(schedules: IScheduleGenerate[]): Promise<void> {
-    const [oldGeneratedIds, favIds] = await Promise.all([
-      this.repo.getIds('generated'),
-      this.repo.getIds('favorites'),
-    ])
+    const latest = await this._latestGeneration()
+    const newRecord: IGenerationRecord = {
+      id: crypto.randomUUID() as UUID,
+      generatedAt: new Date().toISOString(),
+      scheduleIds: schedules.map((s) => s.id as UUID),
+      crossingsSetting: latest?.crossingsSetting ?? 0,
+      weekDays: latest?.weekDays ?? [0, 1, 2, 3, 4, 5, 6],
+      hourlyLoadId: latest?.hourlyLoadId ?? 0,
+      resultCount: schedules.length,
+    }
 
-    const newIdSet = new Set(schedules.map((s) => s.id))
+    const favIds = await this.schedulesRepo.getIds('favorites')
     const favIdSet = new Set(favIds)
-
-    const orphans = oldGeneratedIds.filter(
-      (id) => !newIdSet.has(id) && !favIdSet.has(id),
-    )
+    const newIdSet = new Set(newRecord.scheduleIds)
+    const orphans = (latest?.scheduleIds ?? []).filter((id) => !newIdSet.has(id) && !favIdSet.has(id))
 
     await Promise.all([
-      this.repo.deleteEntries(orphans),
-      this.repo.putEntries(schedules),
-      this.repo.setList('generated', schedules.map((s) => s.id)),
+      this.schedulesRepo.putEntries(schedules),
+      this.generationRepo.save(newRecord),
+      orphans.length > 0 ? this.schedulesRepo.deleteEntries(orphans) : Promise.resolve(),
     ])
   }
 
   async addGeneratedSchedule(schedule: IScheduleGenerate): Promise<void> {
-    const inList = await this.repo.isInList('generated', schedule.id)
-    if (!inList) {
-      await Promise.all([
-        this.repo.putEntry(schedule),
-        this.repo.addToList('generated', schedule.id),
-      ])
-    }
+    const latest = await this._latestGeneration()
+    if (!latest || latest.scheduleIds.includes(schedule.id as UUID)) return
+    await this.schedulesRepo.putEntry(schedule)
+    await this.generationRepo.save({
+      ...latest,
+      scheduleIds: [...latest.scheduleIds, schedule.id as UUID],
+      resultCount: latest.resultCount + 1,
+    })
   }
 
   async removeGeneratedSchedule(id: IScheduleGenerate['id']): Promise<void> {
-    await this.repo.removeFromList('generated', id)
-    const inFav = await this.repo.isInList('favorites', id)
-    if (!inFav) {
-      await this.repo.deleteEntry(id)
+    const latest = await this._latestGeneration()
+    if (!latest) return
+    await this.generationRepo.save({
+      ...latest,
+      scheduleIds: latest.scheduleIds.filter((sid) => sid !== id),
+      resultCount: latest.resultCount - 1,
+    })
+    const [inFav, allRecords] = await Promise.all([
+      this.schedulesRepo.isInList('favorites', id),
+      this.generationRepo.getAll(),
+    ])
+    const stillReferenced = allRecords.some((r) => r.id !== latest.id && r.scheduleIds.includes(id as UUID))
+    if (!inFav && !stillReferenced) {
+      await this.schedulesRepo.deleteEntry(id)
     }
   }
 }
