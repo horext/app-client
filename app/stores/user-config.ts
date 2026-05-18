@@ -111,19 +111,21 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function initProfile() {
-    const profile = await profileService.createProfile()
+    const profile = await profileService.getProfile()
+    if (!profile) return
     if (profile.faculty) faculty.value = profile.faculty
     if (profile.speciality) speciality.value = profile.speciality
     setupCompleted.value = profile.setupCompleted ?? false
   }
 
   async function initAcademicConfig() {
-    const config = await academicConfigService.createAcademicConfig()
-    if (config.hourlyLoad) hourlyLoad.value = config.hourlyLoad
+    const config = await academicConfigService.getAcademicConfig()
+    if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
 
   async function initPreferences() {
-    const prefs = await preferencesService.createPreferences()
+    const prefs = await preferencesService.getPreferences()
+    if (!prefs) return
     weekDays.value = prefs.weekDays ?? [0, 1, 2, 3, 4, 5, 6]
     crossings.value = prefs.crossings ?? 0
     maxGenerationHistory.value = prefs.maxGenerationHistory ?? 5
@@ -148,8 +150,9 @@ export const useUserConfigStore = defineStore('user-config', () => {
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.patch({ faculty: _faculty, speciality: _speciality, setupCompleted: true }),
-      academicConfigService.patch({ hourlyLoad: _hourlyLoad }),
+      profileService.createProfile({ faculty: _faculty, speciality: _speciality, setupCompleted: true }),
+      academicConfigService.createAcademicConfig({ hourlyLoad: _hourlyLoad }),
+      preferencesService.createPreferences(),
     ])
     faculty.value = _faculty
     speciality.value = _speciality

@@ -39,8 +39,9 @@ export class UserProfile {
     }
   }
 
-  static create(): UserProfile {
-    return new UserProfile('profile', null, null, false)
+  static create(initial?: Partial<Omit<IUserProfile, 'id'>>): UserProfile {
+    const base = new UserProfile('profile', null, null, false)
+    return initial ? base.patch(initial) : base
   }
 
   static from(data: IUserProfile): UserProfile {

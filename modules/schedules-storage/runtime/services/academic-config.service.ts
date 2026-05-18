@@ -19,10 +19,10 @@ export class AcademicConfigService implements IAcademicConfigService {
     return (await this._load())?.toData()
   }
 
-  async createAcademicConfig(): Promise<IUserAcademicConfig> {
+  async createAcademicConfig(initial?: Partial<Omit<IUserAcademicConfig, 'id'>>): Promise<IUserAcademicConfig> {
     const existing = await this._load()
     if (existing) return existing.toData()
-    const config = UserAcademicConfig.create()
+    const config = UserAcademicConfig.create(initial)
     await this._save(config)
     return config.toData()
   }

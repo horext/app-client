@@ -19,10 +19,10 @@ export class ProfileService implements IProfileService {
     return (await this._load())?.toData()
   }
 
-  async createProfile(): Promise<IUserProfile> {
+  async createProfile(initial?: Partial<Omit<IUserProfile, 'id'>>): Promise<IUserProfile> {
     const existing = await this._load()
     if (existing) return existing.toData()
-    const profile = UserProfile.create()
+    const profile = UserProfile.create(initial)
     await this._save(profile)
     return profile.toData()
   }
