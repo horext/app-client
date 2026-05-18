@@ -43,9 +43,6 @@
         <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
-    <base-snackbar v-model="successSave">
-      La configuración se ha guardado correctamente
-    </base-snackbar>
   </v-form>
 </template>
 
@@ -53,6 +50,7 @@
 import { ref } from 'vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import type { IOrganization } from '~/interfaces/organization'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
 import {
   useFacultyApi,
   useHourlyLoadApi,
@@ -60,13 +58,16 @@ import {
 } from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
 
+const props = defineProps<{ loading?: boolean }>()
+const emit = defineEmits<{
+  submit: [faculty: IOrganization, speciality: IOrganization, hourlyLoad: IHourlyLoad]
+}>()
+
 const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const store = useUserConfigStore()
 const { faculty, speciality, hourlyLoad } = storeToRefs(store)
-
-const loading = ref(false)
 
 const internalFaculty = ref<IOrganization | undefined>(
   faculty.value ? { ...faculty.value } : undefined,
@@ -141,16 +142,9 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 })
 
 const form = ref<VForm>()
-const successSave = ref(false)
 const ending = async () => {
   const formValue = await form.value?.validate()
-  if (!formValue?.valid) {
-    return
-  }
-  successSave.value = false
-  loading.value = true
-  await store.completeSetup(toRaw(internalFaculty.value)!, toRaw(internalSpeciality.value)!, toRaw(internalHourlyLoad.value)!)
-  loading.value = false
-  successSave.value = true
+  if (!formValue?.valid) return
+  emit('submit', toRaw(internalFaculty.value)!, toRaw(internalSpeciality.value)!, toRaw(internalHourlyLoad.value)!)
 }
 </script>

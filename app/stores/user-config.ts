@@ -129,6 +129,19 @@ export const useUserConfigStore = defineStore('user-config', () => {
     maxGenerationHistory.value = prefs.maxGenerationHistory ?? 5
   }
 
+  async function updateBasicSettings(
+    _faculty: IOrganization,
+    _speciality: IOrganization,
+    _hourlyLoad: IHourlyLoad,
+  ) {
+    await Promise.all([
+      profileService.patch({ faculty: _faculty, speciality: _speciality }),
+      updateHourlyLoad(_hourlyLoad),
+    ])
+    faculty.value = _faculty
+    speciality.value = _speciality
+  }
+
   async function completeSetup(
     _faculty: IOrganization,
     _speciality: IOrganization,
@@ -186,6 +199,7 @@ export const useUserConfigStore = defineStore('user-config', () => {
     initProfile,
     initAcademicConfig,
     initPreferences,
+    updateBasicSettings,
     completeSetup,
     fetchCrossings,
     fetchWeekDays,

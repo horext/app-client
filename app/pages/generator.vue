@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-dialog :model-value="!setupCompleted" max-width="600" persistent>
-      <InitialSettings />
+      <InitialForm :loading="loading" @submit="onSubmit" />
     </v-dialog>
     <base-alert-dialog v-model="isNewHourlyLoad">
       Se ha encontrado una nueva carga horaria. Actualiza las secciones de los
@@ -16,9 +16,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { watch } from 'vue'
-import InitialSettings from '~/components/setting/Initial.vue'
+import type { IOrganization } from '~/interfaces/organization'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import InitialForm from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 
 definePageMeta({
@@ -35,6 +37,14 @@ const router = useRouter()
 
 const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad } =
   storeToRefs(configStore)
+
+const loading = ref(false)
+
+const onSubmit = async (faculty: IOrganization, speciality: IOrganization, hourlyLoad: IHourlyLoad) => {
+  loading.value = true
+  await configStore.completeSetup(faculty, speciality, hourlyLoad)
+  loading.value = false
+}
 
 watch(setupCompleted, async (newValue, oldValue) => {
   if (!oldValue && newValue) {

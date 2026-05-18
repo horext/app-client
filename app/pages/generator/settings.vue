@@ -3,8 +3,11 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <SettingInitial />
+          <SettingInitial :loading="savingBasic" @submit="saveBasicSettings" />
         </v-card>
+        <base-snackbar v-model="successSave">
+          La configuración se ha guardado correctamente
+        </base-snackbar>
       </v-col>
       <v-col cols="12">
         <v-card>
@@ -40,6 +43,8 @@
 import SettingInitial from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
+import type { IOrganization } from '~/interfaces/organization'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
 
 useSeoMeta({
   title: 'Configuración - Generador de Horarios',
@@ -53,6 +58,15 @@ const internalWeekDays = ref(weekDays.value)
 watch(weekDays, (value) => {
   internalWeekDays.value = value
 })
+
+const savingBasic = ref(false)
+const successSave = ref(false)
+const saveBasicSettings = async (faculty: IOrganization, speciality: IOrganization, hourlyLoad: IHourlyLoad) => {
+  savingBasic.value = true
+  await store.updateBasicSettings(faculty, speciality, hourlyLoad)
+  savingBasic.value = false
+  successSave.value = true
+}
 
 const save = async () => {
   await store.saveWeekDays(internalWeekDays.value)
