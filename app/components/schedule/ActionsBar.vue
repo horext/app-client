@@ -38,7 +38,7 @@ import GoogleCalendarSyncDialog from '~/components/google/calendar/SyncDialog.vu
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ViewMode } from '~/models/ViewMode'
 
-const props = defineProps<{
+defineProps<{
   currentSchedule: IScheduleGenerate
   mode: ViewMode
   path: string
