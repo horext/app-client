@@ -1,4 +1,4 @@
-import type { IGenerationRecord } from '~/interfaces/generation-record'
+import type { IGenerationMeta, IGenerationRecord } from '~/interfaces/generation-record'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
@@ -21,7 +21,7 @@ export class GenerationService implements IGenerationService {
   }
 
   async saveGeneration(
-    meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
+    meta: IGenerationMeta,
     schedules: IScheduleGenerate[],
     maxHistory: number,
   ): Promise<IGenerationRecord> {

@@ -1,6 +1,8 @@
 import type { Weekdays } from './event'
 import type { UUID } from './schedule'
 
+export type IGenerationMeta = Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>
+
 export interface IGenerationRecord {
   id: string
   generatedAt: string

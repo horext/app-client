@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IGenerationRecord } from '~/interfaces/generation-record'
+import type { IGenerationMeta, IGenerationRecord } from '~/interfaces/generation-record'
 
 export const useGenerationStore = defineStore('generation', () => {
   const generationService = useGenerationService()
@@ -20,7 +20,7 @@ export const useGenerationStore = defineStore('generation', () => {
   async function setResult(
     newSchedules: IScheduleGenerate[],
     newOccurrences: IIntersectionOccurrence[],
-    meta: Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount'>,
+    meta: IGenerationMeta,
   ): Promise<void> {
     const record = await generationService.saveGeneration(
       meta,
