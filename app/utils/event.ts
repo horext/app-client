@@ -19,17 +19,18 @@ export function scheduleToEvent(
   for (let i = 0; i < sessions.length; i++) {
     const course = schedule.subject.course
     const section = schedule.section.id
+    const session = sessions[i]!
     const event = new Event(
-      sessions[i]?.day!,
-      sessions[i]?.startTime!,
-      sessions[i]?.endTime!,
+      session.day,
+      session.startTime,
+      session.endTime,
       course.id + ' ' + section + ' - ' + course.name,
-      ` Docente: ${sessions[i]?.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
-      sessions[i]?.classroom?.code,
+      ` Docente: ${session.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
+      session.classroom?.code,
       color,
-      sessions[i]?.type.code!,
+      session.type.code,
       'COURSE',
-      String(sessions[i]?.id),
+      String(session.id),
     )
     events.push(event)
   }
