@@ -32,8 +32,9 @@
     </template>
     <template #subtitle-items="">
       <schedule-generator-actions
-        v-model:crossings="crossingSubjects"
+        :crossings="crossingSubjects"
         :loading-generate="loadingGenerate"
+        @update:crossings="updateCrossings"
         @click:generate="generateAllUserSchedules"
       />
       <base-snackbar v-model="succces">
@@ -124,6 +125,10 @@ const generateAllUserSchedules = async () => {
     hourlyLoadId: toRaw(configStore.hourlyLoad)?.id ?? 0,
   })
   succces.value = true
+}
+
+const updateCrossings = async (value: number) => {
+  await configStore.updateCrossings(value)
 }
 </script>
 
