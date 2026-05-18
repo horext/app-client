@@ -8,12 +8,11 @@ ARG NUXT_PUBLIC_GSI_SCOPES
 
 WORKDIR /usr/src/app
 
-# Install pnpm
-RUN npm install -g pnpm@11.x
 # Build
 COPY  pnpm-lock.yaml pnpm-lock.yaml
 COPY  package.json package.json
 COPY  pnpm-workspace.yaml pnpm-workspace.yaml
+RUN corepack enable && corepack install
 RUN pnpm install --frozen-lockfile --production=false
 
 COPY  . .

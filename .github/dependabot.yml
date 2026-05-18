@@ -35,3 +35,31 @@ updates:
       prefix: fix
       prefix-development: chore
       include: scope
+  # Fetch and update Dockerfiles
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "00:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - franz-bendezu
+    assignees:
+      - franz-bendezu
+    commit-message:
+      prefix: chore
+      include: scope
+  # Fetch and update devcontainer image/features
+  - package-ecosystem: devcontainers
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "00:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - franz-bendezu
+    assignees:
+      - franz-bendezu
+    commit-message:
+      prefix: chore
+      include: scope

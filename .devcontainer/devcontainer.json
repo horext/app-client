@@ -6,11 +6,6 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bullseye",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/devcontainers-extra/features/pnpm:2": {}
-	},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
@@ -27,7 +22,7 @@
 		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,consistency=cached"
 	],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pnpm install",
+	"postCreateCommand": "corepack enable && corepack install && pnpm install",
 	"postStartCommand": "git config --global user.signingkey ~/.ssh/id_ed25519.pub || true"
 	// Configure tool-specific properties.
 	// "customizations": {},
