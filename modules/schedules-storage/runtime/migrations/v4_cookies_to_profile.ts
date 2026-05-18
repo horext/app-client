@@ -10,8 +10,8 @@ async function up({ db }: MigrationContext) {
 
   await db.put('profile', {
     id: 'profile',
-    faculty,
-    speciality,
+    facultyId: faculty.id,
+    specialityId: speciality.id,
     setupCompleted: true,
   })
 }

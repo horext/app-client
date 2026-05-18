@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { IOrganization } from '~/interfaces/organization'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import InitialForm from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
@@ -41,12 +40,12 @@ const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad } =
 const loading = ref(false)
 
 const onSubmit = async (
-  faculty: IOrganization,
-  speciality: IOrganization,
+  facultyId: number,
+  specialityId: number,
   hourlyLoad: IHourlyLoad,
 ) => {
   loading.value = true
-  await configStore.completeSetup(faculty, speciality, hourlyLoad)
+  await configStore.completeSetup(facultyId, specialityId, hourlyLoad)
   loading.value = false
 }
 

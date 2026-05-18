@@ -1,7 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IUserProfile } from '~/interfaces/profile'
-import type { IOrganization } from '~/interfaces/organization'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IUserPreferences } from '~/interfaces/preferences'
@@ -31,19 +30,18 @@ export const useUserConfigStore = defineStore('user-config', () => {
     () => preferences.value?.maxGenerationHistory ?? 5,
   )
   const setupCompleted = computed(() => profile.value?.setupCompleted ?? false)
-  const facultyId = computed(() => profile.value?.faculty.id)
-  const specialityId = computed(() => profile.value?.speciality.id)
-  const hourlyLoadId = computed(() => hourlyLoad.value?.id)
+  const facultyId = computed(() => profile.value?.facultyId)
+  const specialityId = computed(() => profile.value?.specialityId)
 
-  async function updateFaculty(_faculty: IOrganization) {
-    await profileService.patch({ faculty: _faculty })
-    if (profile.value) profile.value = { ...profile.value, faculty: _faculty }
+  async function updateFaculty(_facultyId: number) {
+    await profileService.patch({ facultyId: _facultyId })
+    if (profile.value) profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
-  async function updateSpeciality(_speciality: IOrganization) {
-    await profileService.patch({ speciality: _speciality })
+  async function updateSpeciality(_specialityId: number) {
+    await profileService.patch({ specialityId: _specialityId })
     if (profile.value)
-      profile.value = { ...profile.value, speciality: _speciality }
+      profile.value = { ...profile.value, specialityId: _specialityId }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
@@ -90,31 +88,31 @@ export const useUserConfigStore = defineStore('user-config', () => {
   }
 
   async function updateBasicSettings(
-    _faculty: IOrganization,
-    _speciality: IOrganization,
+    _facultyId: number,
+    _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.patch({ faculty: _faculty, speciality: _speciality }),
+      profileService.patch({ facultyId: _facultyId, specialityId: _specialityId }),
       updateHourlyLoad(_hourlyLoad),
     ])
     if (profile.value)
       profile.value = {
         ...profile.value,
-        faculty: _faculty,
-        speciality: _speciality,
+        facultyId: _facultyId,
+        specialityId: _specialityId,
       }
   }
 
   async function completeSetup(
-    _faculty: IOrganization,
-    _speciality: IOrganization,
+    _facultyId: number,
+    _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
       profileService.createProfile({
-        faculty: _faculty,
-        speciality: _speciality,
+        facultyId: _facultyId,
+        specialityId: _specialityId,
         setupCompleted: true,
       }),
       academicConfigService.createAcademicConfig({ hourlyLoad: _hourlyLoad }),
@@ -122,8 +120,8 @@ export const useUserConfigStore = defineStore('user-config', () => {
     ])
     profile.value = {
       id: 'profile',
-      faculty: _faculty,
-      speciality: _speciality,
+      facultyId: _facultyId,
+      specialityId: _specialityId,
       setupCompleted: true,
     }
     hourlyLoad.value = _hourlyLoad
@@ -153,7 +151,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     setupCompleted,
     facultyId,
     specialityId,
-    hourlyLoadId,
     isNewHourlyLoad,
     isUpdateHourlyLoad,
     updateFaculty,

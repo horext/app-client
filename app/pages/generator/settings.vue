@@ -43,7 +43,6 @@
 import SettingInitial from '~/components/setting/Initial.vue'
 import { useUserConfigStore } from '~/stores/user-config'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
-import type { IOrganization } from '~/interfaces/organization'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 
 useSeoMeta({
@@ -62,12 +61,12 @@ watch(weekDays, (value) => {
 const savingBasic = ref(false)
 const successSave = ref(false)
 const saveBasicSettings = async (
-  faculty: IOrganization,
-  speciality: IOrganization,
+  facultyId: number,
+  specialityId: number,
   hourlyLoad: IHourlyLoad,
 ) => {
   savingBasic.value = true
-  await store.updateBasicSettings(faculty, speciality, hourlyLoad)
+  await store.updateBasicSettings(facultyId, specialityId, hourlyLoad)
   savingBasic.value = false
   successSave.value = true
 }

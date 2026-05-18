@@ -1,29 +1,28 @@
 import type { IUserProfile } from '~/interfaces/profile'
-import type { IOrganization } from '~/interfaces/organization'
 
 export class UserProfile {
   private constructor(
     readonly id: IUserProfile['id'],
-    readonly faculty: IOrganization,
-    readonly speciality: IOrganization,
+    readonly facultyId: number,
+    readonly specialityId: number,
     readonly setupCompleted: boolean,
   ) {}
 
   patch(partial: Partial<Omit<IUserProfile, 'id'>>): UserProfile {
     return new UserProfile(
       this.id,
-      partial.faculty !== undefined ? partial.faculty : this.faculty,
-      partial.speciality !== undefined ? partial.speciality : this.speciality,
+      partial.facultyId !== undefined ? partial.facultyId : this.facultyId,
+      partial.specialityId !== undefined ? partial.specialityId : this.specialityId,
       partial.setupCompleted ?? this.setupCompleted,
     )
   }
 
-  withFaculty(faculty: IOrganization): UserProfile {
-    return this.patch({ faculty })
+  withFaculty(facultyId: number): UserProfile {
+    return this.patch({ facultyId: facultyId })
   }
 
-  withSpeciality(speciality: IOrganization): UserProfile {
-    return this.patch({ speciality })
+  withSpeciality(specialityId: number): UserProfile {
+    return this.patch({ specialityId: specialityId })
   }
 
   withSetupCompleted(setupCompleted: boolean): UserProfile {
@@ -33,8 +32,8 @@ export class UserProfile {
   toData(): IUserProfile {
     return {
       id: this.id,
-      faculty: this.faculty,
-      speciality: this.speciality,
+      facultyId: this.facultyId,
+      specialityId: this.specialityId,
       setupCompleted: this.setupCompleted,
     }
   }
@@ -46,8 +45,8 @@ export class UserProfile {
   ): UserProfile {
     return new UserProfile(
       'profile',
-      initial.faculty,
-      initial.speciality,
+      initial.facultyId,
+      initial.specialityId,
       initial.setupCompleted ?? false,
     )
   }
@@ -55,8 +54,8 @@ export class UserProfile {
   static from(data: IUserProfile): UserProfile {
     return new UserProfile(
       data.id,
-      data.faculty,
-      data.speciality,
+      data.facultyId,
+      data.specialityId,
       data.setupCompleted,
     )
   }

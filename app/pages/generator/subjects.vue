@@ -130,7 +130,7 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
   )
 })
-const { specialityId, hourlyLoadId } = storeToRefs(configStore)
+const { specialityId, hourlyLoad } = storeToRefs(configStore)
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
@@ -155,7 +155,7 @@ const {
 } = useAsyncData<ISubjectSchedule[]>(
   'generator-subject-schedules',
   async () => {
-    const _hourlyLoadId = hourlyLoadId.value
+    const _hourlyLoadId = hourlyLoad.value?.id
     const subject = selectedSubject.value
     if (!_hourlyLoadId || !subject) return []
 
@@ -179,7 +179,7 @@ const {
   },
   {
     default: () => [],
-    watch: [hourlyLoadId],
+    watch: [hourlyLoad],
     immediate: false,
     server: false,
   },
@@ -238,13 +238,13 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
   async () => {
     const _search = search.value
     if (!_search) return []
-    const _hourlyLoadId = hourlyLoadId.value
+    const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
     if (!_hourlyLoadId || !_specialityId) return []
     const response = await courseApi.findBySearch(
       _search,
       _specialityId,
-      _hourlyLoadId,
+      _hourlyLoadId
     )
     return response.content
   },
