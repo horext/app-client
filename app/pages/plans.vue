@@ -9,7 +9,6 @@ definePageMeta({
 })
 
 const api = useStudyPlanApi()
-const tab = ref(0)
 const { data } = await useAsyncData<IStudyPlan[]>(
   'plans-list',
   () => api.getAll(),
