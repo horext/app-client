@@ -1,14 +1,6 @@
 import type { Weekdays } from '~/interfaces/event'
 import type { Migration, MigrationContext } from './types'
-
-function readLsJson<T>(key: string): T | null {
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? (JSON.parse(raw) as T) : null
-  } catch {
-    return null
-  }
-}
+import { readLsJson } from './utils'
 
 async function up({ db }: MigrationContext) {
   const crossings = readLsJson<number>('myCrossings') ?? 0

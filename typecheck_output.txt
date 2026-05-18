@@ -1,0 +1,4 @@
+
+> horext-ssr-client@1.0.0 typecheck /workspaces/app-client
+> nuxt typecheck
+
