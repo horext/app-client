@@ -23,12 +23,12 @@ function timeToMinutes(time: string): number {
   const parts = time.split(':')
   const hours = Number(parts[0] ?? 0)
   const minutes = Number(parts[1] ?? 0)
-  
+
   // Validate parsed values
   if (isNaN(hours) || isNaN(minutes)) {
     return 0
   }
-  
+
   return hours * 60 + minutes
 }
 
@@ -41,7 +41,7 @@ function hasOverlap(s0: number, e0: number, s1: number, e1: number): boolean {
   // Handle zero-duration events by giving them minimum duration
   const end0 = e0 <= s0 ? s0 + MIN_EVENT_DURATION : e0
   const end1 = e1 <= s1 ? s1 + MIN_EVENT_DURATION : e1
-  
+
   return !(s0 >= end1 || end0 <= s1)
 }
 
@@ -52,12 +52,12 @@ function hasOverlap(s0: number, e0: number, s1: number, e1: number): boolean {
 function getEventTimes(event: ICalendarEvent): { start: number; end: number } {
   const start = timeToMinutes(event.start)
   let end = timeToMinutes(event.end)
-  
+
   // Ensure minimum duration
   if (end <= start) {
     end = start + MIN_EVENT_DURATION
   }
-  
+
   return { start, end }
 }
 
@@ -106,11 +106,11 @@ function getColumnSpan<T extends ICalendarEvent>(
   fromColumn: number,
 ): number {
   let span = 1
-  
+
   for (let i = fromColumn + 1; i < groups.length; i++) {
     const group = groups[i]!
     let hasConflict = false
-    
+
     for (const groupVisual of group.visuals) {
       const times = getEventTimes(groupVisual.event)
       if (hasOverlap(start, end, times.start, times.end)) {
@@ -118,13 +118,13 @@ function getColumnSpan<T extends ICalendarEvent>(
         break
       }
     }
-    
+
     if (hasConflict) {
       break
     }
     span++
   }
-  
+
   return span
 }
 
@@ -137,14 +137,14 @@ function clamp(value: number, min: number, max: number): number {
 
 /**
  * Extract overlapping blocks and calculate column positions for events.
- * 
+ *
  * Algorithm (enhanced column mode):
  * 1. Sort events by start time, then by duration (longer first)
  * 2. Assign each event to the first available column
  * 3. Track the overall time range of the current overlap group
  * 4. When an event doesn't overlap with ANY previous event, start a new group
  * 5. Calculate width based on how many consecutive columns the event can span
- * 
+ *
  * Safety guarantees:
  * - Every event gets a valid position (left >= 0, left < 100)
  * - Every event has visible width (width >= MIN_WIDTH)
@@ -168,7 +168,7 @@ export function extractBlocks<T extends ICalendarEvent>(
   visuals.sort((a, b) => {
     const aTimes = getEventTimes(a.event)
     const bTimes = getEventTimes(b.event)
-    
+
     if (aTimes.start !== bTimes.start) return aTimes.start - bTimes.start
 
     // Longer events (larger duration) come first
@@ -178,8 +178,11 @@ export function extractBlocks<T extends ICalendarEvent>(
   })
 
   // Store all overlap groups to process later
-  const allGroups: { groups: ColumnGroup<T>[]; visuals: CalendarEventVisual<T>[] }[] = []
-  
+  const allGroups: {
+    groups: ColumnGroup<T>[]
+    visuals: CalendarEventVisual<T>[]
+  }[] = []
+
   let groups: ColumnGroup<T>[] = []
   let groupVisuals: CalendarEventVisual<T>[] = []
   let globalMin = -1
@@ -237,21 +240,21 @@ export function extractBlocks<T extends ICalendarEvent>(
   // Second pass: calculate columnCount, left, and width for each group
   for (const { groups: g, visuals: gVisuals } of allGroups) {
     const columnCount = Math.max(1, g.length) // Ensure at least 1
-    
+
     for (const visual of gVisuals) {
       visual.columnCount = columnCount
-      
+
       const { start, end } = getEventTimes(visual.event)
       const span = getColumnSpan(g, start, end, visual.column)
-      
+
       // Calculate raw values
       let left = (visual.column * WIDTH_FULL) / columnCount
       let width = (span * WIDTH_FULL) / columnCount
-      
+
       // Apply safety constraints
       left = clamp(left, 0, WIDTH_FULL - MIN_WIDTH)
       width = clamp(width, MIN_WIDTH, WIDTH_FULL - left)
-      
+
       visual.left = left
       visual.width = width
     }

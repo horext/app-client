@@ -6,26 +6,28 @@ import { describe, expect, it } from 'vitest'
  * Helper to validate that all events are visible and properly positioned.
  * This ensures no events are hidden due to bad calculations.
  */
-function assertAllEventsVisible(visuals: CalendarEventVisual<ICalendarEvent>[]) {
+function assertAllEventsVisible(
+  visuals: CalendarEventVisual<ICalendarEvent>[],
+) {
   for (const visual of visuals) {
     // Left must be valid (0 <= left < 100)
     expect(visual.left).toBeGreaterThanOrEqual(0)
     expect(visual.left).toBeLessThan(100)
-    
+
     // Width must be visible (> 0, ideally >= 10)
     expect(visual.width).toBeGreaterThan(0)
     expect(visual.width).toBeGreaterThanOrEqual(10)
-    
+
     // Left + width must not overflow
     expect(visual.left + visual.width).toBeLessThanOrEqual(100)
-    
+
     // Column count must be valid
     expect(visual.columnCount).toBeGreaterThanOrEqual(1)
-    
+
     // Column index must be valid
     expect(visual.column).toBeGreaterThanOrEqual(0)
     expect(visual.column).toBeLessThan(visual.columnCount)
-    
+
     // No NaN or undefined values
     expect(Number.isFinite(visual.left)).toBe(true)
     expect(Number.isFinite(visual.width)).toBe(true)
@@ -42,23 +44,23 @@ function assertNoVisualOverlap(visuals: CalendarEventVisual<ICalendarEvent>[]) {
     for (let j = i + 1; j < visuals.length; j++) {
       const a = visuals[i]!
       const b = visuals[j]!
-      
+
       // Check if events overlap in time
       const aStart = timeToMinutes(a.event.start)
       const aEnd = timeToMinutes(a.event.end)
       const bStart = timeToMinutes(b.event.start)
       const bEnd = timeToMinutes(b.event.end)
-      
+
       const timeOverlap = !(aStart >= bEnd || aEnd <= bStart)
-      
+
       if (timeOverlap) {
         // If times overlap, positions should not fully overlap
         const aRight = a.left + a.width
         const bRight = b.left + b.width
-        
+
         // They can share edges but not fully overlap
         const visualOverlap = !(a.left >= bRight || aRight <= b.left)
-        
+
         // If they visually overlap, at least one should have partial width
         if (visualOverlap) {
           expect(a.width < 100 || b.width < 100).toBe(true)
@@ -209,7 +211,7 @@ describe('extractBlocks', () => {
 
       expect(visuals).toHaveLength(10)
       assertAllEventsVisible(visuals)
-      
+
       // All events should have equal width
       const expectedWidth = 100 / 10
       for (const visual of visuals) {
@@ -370,16 +372,16 @@ describe('extractBlocks', () => {
 
       expect(visuals).toHaveLength(4)
       assertAllEventsVisible(visuals)
-      
+
       // Tall event should be in column 0
       const tall = visuals.find((v) => v.event.id === 'tall')!
       expect(tall.column).toBe(0)
-      
+
       // Short events can reuse column 1
       const short1 = visuals.find((v) => v.event.id === 'short1')!
       const short2 = visuals.find((v) => v.event.id === 'short2')!
       const short3 = visuals.find((v) => v.event.id === 'short3')!
-      
+
       expect(short1.column).toBe(1)
       expect(short2.column).toBe(1)
       expect(short3.column).toBe(1)
@@ -421,7 +423,7 @@ describe('extractBlocks', () => {
 
       expect(visuals).toHaveLength(4)
       assertAllEventsVisible(visuals)
-      
+
       // 'after' event should be able to span columns 1 and 2
       const after = visuals.find((v) => v.event.id === 'after')!
       expect(after.column).toBe(1)
@@ -490,7 +492,7 @@ describe('extractBlocks', () => {
       // Most important: no events are lost
       expect(visuals).toHaveLength(events.length)
       assertAllEventsVisible(visuals)
-      
+
       // Every input event should have a corresponding visual
       for (const event of events) {
         const visual = visuals.find((v) => v.event.id === event.id)

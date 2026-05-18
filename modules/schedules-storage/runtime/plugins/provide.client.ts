@@ -34,18 +34,41 @@ export default defineNuxtPlugin({
     const schedulesRepository = new IndexedDBSchedulesRepository(dbFactory)
     const activitiesRepository = new IndexedDBActivitiesRepository(dbFactory)
     const profileRepository = new IndexedDBProfileRepository(dbFactory)
-    const academicConfigRepository = new IndexedDBAcademicConfigRepository(dbFactory)
+    const academicConfigRepository = new IndexedDBAcademicConfigRepository(
+      dbFactory,
+    )
     const preferencesRepository = new IndexedDBPreferencesRepository(dbFactory)
     const generationRepository = new IndexedDBGenerationRepository(dbFactory)
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
-    nuxtApp.vueApp.provide(GENERATED_SCHEDULES_SERVICE_KEY, new GeneratedSchedulesService(generationRepository, schedulesRepository))
-    nuxtApp.vueApp.provide(FAVORITES_SCHEDULES_SERVICE_KEY, new FavoritesSchedulesService(schedulesRepository, generationRepository))
-    nuxtApp.vueApp.provide(ACTIVITIES_SERVICE_KEY, new ActivitiesService(activitiesRepository))
-    nuxtApp.vueApp.provide(PROFILE_SERVICE_KEY, new ProfileService(profileRepository))
-    nuxtApp.vueApp.provide(ACADEMIC_CONFIG_SERVICE_KEY, new AcademicConfigService(academicConfigRepository))
-    nuxtApp.vueApp.provide(PREFERENCES_SERVICE_KEY, new PreferencesService(preferencesRepository))
-    nuxtApp.vueApp.provide(GENERATION_SERVICE_KEY, new GenerationService(generationRepository, schedulesRepository))
+    nuxtApp.vueApp.provide(
+      GENERATED_SCHEDULES_SERVICE_KEY,
+      new GeneratedSchedulesService(generationRepository, schedulesRepository),
+    )
+    nuxtApp.vueApp.provide(
+      FAVORITES_SCHEDULES_SERVICE_KEY,
+      new FavoritesSchedulesService(schedulesRepository, generationRepository),
+    )
+    nuxtApp.vueApp.provide(
+      ACTIVITIES_SERVICE_KEY,
+      new ActivitiesService(activitiesRepository),
+    )
+    nuxtApp.vueApp.provide(
+      PROFILE_SERVICE_KEY,
+      new ProfileService(profileRepository),
+    )
+    nuxtApp.vueApp.provide(
+      ACADEMIC_CONFIG_SERVICE_KEY,
+      new AcademicConfigService(academicConfigRepository),
+    )
+    nuxtApp.vueApp.provide(
+      PREFERENCES_SERVICE_KEY,
+      new PreferencesService(preferencesRepository),
+    )
+    nuxtApp.vueApp.provide(
+      GENERATION_SERVICE_KEY,
+      new GenerationService(generationRepository, schedulesRepository),
+    )
   },
 })

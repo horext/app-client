@@ -9,5 +9,7 @@ export interface IGenerationService {
     schedules: IScheduleGenerate[],
     maxHistory: number,
   ): Promise<void>
-  getSchedulesForGeneration(record: IGenerationRecord): Promise<IScheduleGenerate[]>
+  getSchedulesForGeneration(
+    record: IGenerationRecord,
+  ): Promise<IScheduleGenerate[]>
 }

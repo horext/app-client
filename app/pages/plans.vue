@@ -10,9 +10,13 @@ definePageMeta({
 
 const api = useStudyPlanApi()
 const tab = ref(0)
-const { data } = await useAsyncData<IStudyPlan[]>('plans-list', () => api.getAll(), {
-  default: () => [],
-})
+const { data } = await useAsyncData<IStudyPlan[]>(
+  'plans-list',
+  () => api.getAll(),
+  {
+    default: () => [],
+  },
+)
 prerenderRoutes(data.value.map((plan) => `/plans/${plan.id}`))
 </script>
 

@@ -77,13 +77,10 @@
       GA4 puede recopilar automáticamente datos como dirección IP (anonimizada),
       tipo de dispositivo y navegador. Esta aplicación opera bajo la legislación
       peruana de protección de datos (<strong>Ley N.° 29733</strong>) y no está
-      sujeta al RGPD europeo. No se muestra un banner de cookies obligatorio,
-      ya que la normativa aplicable no lo exige.
-      <br /><br />
+      sujeta al RGPD europeo. No se muestra un banner de cookies obligatorio, ya
+      que la normativa aplicable no lo exige. <br /><br />
       Puedes optar por no participar en GA4 instalando el
-      <a
-        href="https://tools.google.com/dlpage/gaoptout"
-        target="_blank"
+      <a href="https://tools.google.com/dlpage/gaoptout" target="_blank"
         >complemento de inhabilitación de Google Analytics</a
       >.
     </div>

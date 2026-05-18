@@ -44,6 +44,11 @@ export class UserPreferences {
   }
 
   static from(data: IUserPreferences): UserPreferences {
-    return new UserPreferences(data.id, data.weekDays, data.crossings, data.maxGenerationHistory)
+    return new UserPreferences(
+      data.id,
+      data.weekDays,
+      data.crossings,
+      data.maxGenerationHistory,
+    )
   }
 }

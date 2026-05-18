@@ -6,7 +6,7 @@ export interface IScheduleSubjectGenerate extends ISubjectSchedule {
 }
 export type UUID = `${string}-${string}-${string}-${string}-${string}`
 export interface IScheduleGenerate {
-  id: UUID;
+  id: UUID
   scheduleSubjectKey: string
   scheduleSubjectIds: number[]
   schedule: IScheduleSubjectGenerate[]

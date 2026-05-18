@@ -21,9 +21,15 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
 
-  const weekDays = computed(() => preferences.value?.weekDays ?? [0, 1, 2, 3, 4, 5, 6] satisfies Weekdays[])
+  const weekDays = computed(
+    () =>
+      preferences.value?.weekDays ??
+      ([0, 1, 2, 3, 4, 5, 6] satisfies Weekdays[]),
+  )
   const crossings = computed(() => preferences.value?.crossings ?? 0)
-  const maxGenerationHistory = computed(() => preferences.value?.maxGenerationHistory ?? 5)
+  const maxGenerationHistory = computed(
+    () => preferences.value?.maxGenerationHistory ?? 5,
+  )
 
   const faculty = computed(() => profile.value?.faculty)
   const speciality = computed(() => profile.value?.speciality)
@@ -39,16 +45,19 @@ export const useUserConfigStore = defineStore('user-config', () => {
 
   async function updateSpeciality(_speciality: IOrganization) {
     await profileService.patch({ speciality: _speciality })
-    if (profile.value) profile.value = { ...profile.value, speciality: _speciality }
+    if (profile.value)
+      profile.value = { ...profile.value, speciality: _speciality }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
     await profileService.patch({ setupCompleted: _setupCompleted })
-    if (profile.value) profile.value = { ...profile.value, setupCompleted: _setupCompleted }
+    if (profile.value)
+      profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
 
   async function updateCrossings(_crossings: number) {
-    if (preferences.value) preferences.value = { ...preferences.value, crossings: _crossings }
+    if (preferences.value)
+      preferences.value = { ...preferences.value, crossings: _crossings }
     await preferencesService.patch({ crossings: _crossings })
   }
 
@@ -92,7 +101,12 @@ export const useUserConfigStore = defineStore('user-config', () => {
       profileService.patch({ faculty: _faculty, speciality: _speciality }),
       updateHourlyLoad(_hourlyLoad),
     ])
-    if (profile.value) profile.value = { ...profile.value, faculty: _faculty, speciality: _speciality }
+    if (profile.value)
+      profile.value = {
+        ...profile.value,
+        faculty: _faculty,
+        speciality: _speciality,
+      }
   }
 
   async function completeSetup(
@@ -101,21 +115,32 @@ export const useUserConfigStore = defineStore('user-config', () => {
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.createProfile({ faculty: _faculty, speciality: _speciality, setupCompleted: true }),
+      profileService.createProfile({
+        faculty: _faculty,
+        speciality: _speciality,
+        setupCompleted: true,
+      }),
       academicConfigService.createAcademicConfig({ hourlyLoad: _hourlyLoad }),
       preferencesService.createPreferences(),
     ])
-    profile.value = { id: 'profile', faculty: _faculty, speciality: _speciality, setupCompleted: true }
+    profile.value = {
+      id: 'profile',
+      faculty: _faculty,
+      speciality: _speciality,
+      setupCompleted: true,
+    }
     hourlyLoad.value = _hourlyLoad
   }
 
   const saveWeekDays = async (data: Weekdays[]) => {
-    if (preferences.value) preferences.value = { ...preferences.value, weekDays: data }
+    if (preferences.value)
+      preferences.value = { ...preferences.value, weekDays: data }
     await preferencesService.patch({ weekDays: data })
   }
 
   const updateMaxGenerationHistory = async (n: number) => {
-    if (preferences.value) preferences.value = { ...preferences.value, maxGenerationHistory: n }
+    if (preferences.value)
+      preferences.value = { ...preferences.value, maxGenerationHistory: n }
     await preferencesService.patch({ maxGenerationHistory: n })
   }
 

@@ -10,7 +10,14 @@ export const useGoogleOAuth2 = () => {
   const { onLoaded } = useGoogleAccounts()
   const config = useRuntimeConfig()
   const store = useGoogleOAuth2Store()
-  const { tokenClient, tokenResponse, expiresAt, isPendingClient, isPendingToken, isSignedIn } = storeToRefs(store)
+  const {
+    tokenClient,
+    tokenResponse,
+    expiresAt,
+    isPendingClient,
+    isPendingToken,
+    isSignedIn,
+  } = storeToRefs(store)
 
   const handleTokenResponse = (
     response: google.accounts.oauth2.TokenResponse,
@@ -46,9 +53,7 @@ export const useGoogleOAuth2 = () => {
     tokenClient.value?.requestAccessToken()
   }
 
-  const revokeToken = (
-    response: google.accounts.oauth2.TokenResponse,
-  ) => {
+  const revokeToken = (response: google.accounts.oauth2.TokenResponse) => {
     google.accounts.oauth2.revoke(response.access_token, () => {})
   }
 
@@ -115,4 +120,3 @@ export const useGoogleOAuth2 = () => {
     createEvent,
   }
 }
-

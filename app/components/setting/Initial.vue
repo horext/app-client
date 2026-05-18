@@ -60,7 +60,11 @@ import type { VForm } from 'vuetify/components/VForm'
 
 const props = defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
-  submit: [faculty: IOrganization, speciality: IOrganization, hourlyLoad: IHourlyLoad]
+  submit: [
+    faculty: IOrganization,
+    speciality: IOrganization,
+    hourlyLoad: IHourlyLoad,
+  ]
 }>()
 
 const hourlyLoadApi = useHourlyLoadApi()
@@ -145,6 +149,11 @@ const form = ref<VForm>()
 const ending = async () => {
   const formValue = await form.value?.validate()
   if (!formValue?.valid) return
-  emit('submit', toRaw(internalFaculty.value)!, toRaw(internalSpeciality.value)!, toRaw(internalHourlyLoad.value)!)
+  emit(
+    'submit',
+    toRaw(internalFaculty.value)!,
+    toRaw(internalSpeciality.value)!,
+    toRaw(internalHourlyLoad.value)!,
+  )
 }
 </script>

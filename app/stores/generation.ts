@@ -29,7 +29,11 @@ export const useGenerationStore = defineStore('generation', () => {
       ...meta,
     }
 
-    await generationService.saveGeneration(record, newSchedules, configStore.maxGenerationHistory)
+    await generationService.saveGeneration(
+      record,
+      newSchedules,
+      configStore.maxGenerationHistory,
+    )
 
     const updated = await generationService.getGenerations()
     history.value = updated
@@ -43,7 +47,8 @@ export const useGenerationStore = defineStore('generation', () => {
 
     const latest = records[records.length - 1]
     if (latest) {
-      schedules.value = await generationService.getSchedulesForGeneration(latest)
+      schedules.value =
+        await generationService.getSchedulesForGeneration(latest)
     } else {
       schedules.value = []
     }

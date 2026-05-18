@@ -79,4 +79,5 @@ const invertMode = () => {
   .v-tab
     width: fit-content
     &::before
-      display: none</style>
+      display: none
+</style>

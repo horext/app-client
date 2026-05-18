@@ -25,7 +25,9 @@ export class UserAcademicConfig {
     }
   }
 
-  static create(initial?: Partial<Omit<IUserAcademicConfig, 'id'>>): UserAcademicConfig {
+  static create(
+    initial?: Partial<Omit<IUserAcademicConfig, 'id'>>,
+  ): UserAcademicConfig {
     const base = new UserAcademicConfig('academic-config', null)
     return initial ? base.patch(initial) : base
   }

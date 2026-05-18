@@ -35,7 +35,9 @@ export class GenerationService implements IGenerationService {
     await this._trimAndCleanup(maxHistory)
   }
 
-  async getSchedulesForGeneration(record: IGenerationRecord): Promise<IScheduleGenerate[]> {
+  async getSchedulesForGeneration(
+    record: IGenerationRecord,
+  ): Promise<IScheduleGenerate[]> {
     return this.schedulesRepo.getEntries(record.scheduleIds)
   }
 

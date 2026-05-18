@@ -9,8 +9,7 @@ import type { IPreferencesService } from './services/preferences.service.interfa
 import type { IGenerationService } from './services/generation.service.interface'
 import type { DbFactory } from './db'
 
-export const SCHEDULES_DB_KEY: InjectionKey<DbFactory> =
-  Symbol('HorextDB')
+export const SCHEDULES_DB_KEY: InjectionKey<DbFactory> = Symbol('HorextDB')
 
 export const SCHEDULES_REPOSITORY_KEY: InjectionKey<ISchedulesRepository> =
   Symbol('ISchedulesRepository')

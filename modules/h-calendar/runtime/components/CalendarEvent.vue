@@ -72,13 +72,13 @@ const position = computed(() => {
   const { left, width, firstHour, intervalHeight, intervalMinutes } = props
   const start = parsedStart.value
   const end = parsedEnd.value
-  
+
   const minuteHeight = intervalHeight / intervalMinutes
   const startMinutes = (start.hour - firstHour) * HOUR_IN_MINUTES + start.minute
   const endMinutes = (end.hour - firstHour) * HOUR_IN_MINUTES + end.minute
   const top = startMinutes * minuteHeight
   const height = (endMinutes - startMinutes) * minuteHeight
-  
+
   return {
     top: `${top}rem`,
     height: `${height}rem`,

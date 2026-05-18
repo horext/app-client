@@ -17,7 +17,10 @@ export default defineNuxtPlugin({
 
     for (const migration of pending) {
       await migration.up(ctx)
-      await db.put('migrations', { id: migration.id, appliedAt: new Date().toISOString() })
+      await db.put('migrations', {
+        id: migration.id,
+        appliedAt: new Date().toISOString(),
+      })
     }
   },
 })

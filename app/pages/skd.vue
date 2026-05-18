@@ -7,7 +7,9 @@
           variant="outlined"
           @click="addFavoriteCurrentSchedule"
         >
-          <v-icon :color="isFavorite(firstSchedule) >= 0 ? 'yellow' : undefined">
+          <v-icon
+            :color="isFavorite(firstSchedule) >= 0 ? 'yellow' : undefined"
+          >
             {{ mdiStar }}
           </v-icon>
           <span v-if="isFavorite(firstSchedule) >= 0">

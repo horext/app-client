@@ -39,11 +39,25 @@ export class UserProfile {
     }
   }
 
-  static create(initial: Omit<IUserProfile, 'id' | 'setupCompleted'> & { setupCompleted?: boolean }): UserProfile {
-    return new UserProfile('profile', initial.faculty, initial.speciality, initial.setupCompleted ?? false)
+  static create(
+    initial: Omit<IUserProfile, 'id' | 'setupCompleted'> & {
+      setupCompleted?: boolean
+    },
+  ): UserProfile {
+    return new UserProfile(
+      'profile',
+      initial.faculty,
+      initial.speciality,
+      initial.setupCompleted ?? false,
+    )
   }
 
   static from(data: IUserProfile): UserProfile {
-    return new UserProfile(data.id, data.faculty, data.speciality, data.setupCompleted)
+    return new UserProfile(
+      data.id,
+      data.faculty,
+      data.speciality,
+      data.setupCompleted,
+    )
   }
 }

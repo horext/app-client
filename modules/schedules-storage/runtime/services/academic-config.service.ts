@@ -19,7 +19,9 @@ export class AcademicConfigService implements IAcademicConfigService {
     return (await this._load())?.toData()
   }
 
-  async createAcademicConfig(initial?: Partial<Omit<IUserAcademicConfig, 'id'>>): Promise<IUserAcademicConfig> {
+  async createAcademicConfig(
+    initial?: Partial<Omit<IUserAcademicConfig, 'id'>>,
+  ): Promise<IUserAcademicConfig> {
     const existing = await this._load()
     if (existing) return existing.toData()
     const config = UserAcademicConfig.create(initial)
@@ -27,10 +29,11 @@ export class AcademicConfigService implements IAcademicConfigService {
     return config.toData()
   }
 
-  async patch(partial: Partial<Omit<IUserAcademicConfig, 'id'>>): Promise<void> {
+  async patch(
+    partial: Partial<Omit<IUserAcademicConfig, 'id'>>,
+  ): Promise<void> {
     const config = await this._load()
     if (!config) return
     await this._save(config.patch(partial))
   }
-
 }

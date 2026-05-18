@@ -46,7 +46,12 @@ export function getSchedules(
   const advanceIndex = (i: number) => {
     const subject = subjects[i]
     const currentIndex = indexSchedules[i]
-    if (i >= 0 && subject && currentIndex !== undefined && currentIndex === subject.schedules.length - 1) {
+    if (
+      i >= 0 &&
+      subject &&
+      currentIndex !== undefined &&
+      currentIndex === subject.schedules.length - 1
+    ) {
       indexSchedules[i] = 0
       advanceIndex(i - 1)
     } else if (i >= 0 && currentIndex !== undefined) {
@@ -162,7 +167,9 @@ export function getSchedules(
         schedule: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects
-          .map((c, index) => scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'))
+          .map((c, index) =>
+            scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
+          )
           .flat()
           .concat(baseEvents),
       })

@@ -16,7 +16,10 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
 
   async saveFavorites(schedules: IScheduleGenerate[]): Promise<void> {
     await this.repo.putEntries(schedules)
-    await this.repo.setList('favorites', schedules.map((s) => s.id))
+    await this.repo.setList(
+      'favorites',
+      schedules.map((s) => s.id),
+    )
   }
 
   async saveFavoriteIds(ids: IScheduleGenerate['id'][]): Promise<void> {
@@ -34,7 +37,9 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {
     await this.repo.removeFromList('favorites', id)
     const allRecords = await this.generationRepo.getAll()
-    const referencedInGenerations = allRecords.some((r) => r.scheduleIds.includes(id as UUID))
+    const referencedInGenerations = allRecords.some((r) =>
+      r.scheduleIds.includes(id as UUID),
+    )
     if (!referencedInGenerations) {
       await this.repo.deleteEntry(id)
     }

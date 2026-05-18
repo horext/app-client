@@ -13,7 +13,9 @@ export function readCookieJson<T>(name: string): T | null {
       .split('; ')
       .find((row) => row.startsWith(`${name}=`))
     if (!match) return null
-    return JSON.parse(decodeURIComponent(match.split('=').slice(1).join('='))) as T
+    return JSON.parse(
+      decodeURIComponent(match.split('=').slice(1).join('=')),
+    ) as T
   } catch {
     return null
   }

@@ -1,4 +1,9 @@
-import { addImports, addPlugin, createResolver, defineNuxtModule } from 'nuxt/kit'
+import {
+  addImports,
+  addPlugin,
+  createResolver,
+  defineNuxtModule,
+} from 'nuxt/kit'
 
 export default defineNuxtModule({
   meta: {

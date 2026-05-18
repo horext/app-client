@@ -14,4 +14,7 @@ async function up({ db }: MigrationContext) {
   })
 }
 
-export default { id: 'v3_localstorage_config_to_indexeddb', up } satisfies Migration
+export default {
+  id: 'v3_localstorage_config_to_indexeddb',
+  up,
+} satisfies Migration

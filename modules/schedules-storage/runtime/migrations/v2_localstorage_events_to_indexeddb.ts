@@ -11,4 +11,7 @@ async function up({ db }: MigrationContext) {
   await tx.done
 }
 
-export default { id: 'v2_localstorage_events_to_indexeddb', up } satisfies Migration
+export default {
+  id: 'v2_localstorage_events_to_indexeddb',
+  up,
+} satisfies Migration

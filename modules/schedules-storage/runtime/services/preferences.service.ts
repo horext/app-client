@@ -32,5 +32,4 @@ export class PreferencesService implements IPreferencesService {
     if (!prefs) return
     await this._save(prefs.patch(partial))
   }
-
 }

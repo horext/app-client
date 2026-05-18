@@ -57,12 +57,12 @@
 
     <h2>Servicios de terceros vinculados</h2>
     <div class="text">
-      Horext integra servicios de Google (Sign-In, Calendar API, Analytics).
-      El uso de estos servicios está sujeto a los
+      Horext integra servicios de Google (Sign-In, Calendar API, Analytics). El
+      uso de estos servicios está sujeto a los
       <a href="https://policies.google.com/terms" target="_blank"
         >Términos de servicio de Google</a
-      >. Horext no tiene responsabilidad por la disponibilidad o el contenido
-      de dichos servicios.
+      >. Horext no tiene responsabilidad por la disponibilidad o el contenido de
+      dichos servicios.
     </div>
     <br />
 

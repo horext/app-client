@@ -12,7 +12,9 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
 
   private async _latestGeneration(): Promise<IGenerationRecord | undefined> {
     const records = await this.generationRepo.getAll()
-    return records.sort((a, b) => a.generatedAt.localeCompare(b.generatedAt)).at(-1)
+    return records
+      .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
+      .at(-1)
   }
 
   async getGeneratedSchedules(): Promise<IScheduleGenerate[]> {
@@ -36,12 +38,16 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
     const favIds = await this.schedulesRepo.getIds('favorites')
     const favIdSet = new Set(favIds)
     const newIdSet = new Set(newRecord.scheduleIds)
-    const orphans = (latest?.scheduleIds ?? []).filter((id) => !newIdSet.has(id) && !favIdSet.has(id))
+    const orphans = (latest?.scheduleIds ?? []).filter(
+      (id) => !newIdSet.has(id) && !favIdSet.has(id),
+    )
 
     await Promise.all([
       this.schedulesRepo.putEntries(schedules),
       this.generationRepo.save(newRecord),
-      orphans.length > 0 ? this.schedulesRepo.deleteEntries(orphans) : Promise.resolve(),
+      orphans.length > 0
+        ? this.schedulesRepo.deleteEntries(orphans)
+        : Promise.resolve(),
     ])
   }
 
@@ -68,7 +74,9 @@ export class GeneratedSchedulesService implements IGeneratedSchedulesService {
       this.schedulesRepo.isInList('favorites', id),
       this.generationRepo.getAll(),
     ])
-    const stillReferenced = allRecords.some((r) => r.id !== latest.id && r.scheduleIds.includes(id as UUID))
+    const stillReferenced = allRecords.some(
+      (r) => r.id !== latest.id && r.scheduleIds.includes(id as UUID),
+    )
     if (!inFav && !stillReferenced) {
       await this.schedulesRepo.deleteEntry(id)
     }

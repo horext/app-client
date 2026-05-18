@@ -8,7 +8,9 @@ import type { InjectionKey } from 'vue'
 export const FETCH_KEY: InjectionKey<$Fetch> = Symbol('Fetch')
 
 export const createFetchApi = () => {
-  const { public: { apiUrl } } = useRuntimeConfig()
+  const {
+    public: { apiUrl },
+  } = useRuntimeConfig()
   const fetch = $fetch.create({
     baseURL: apiUrl,
   })

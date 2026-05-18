@@ -40,7 +40,11 @@ const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad } =
 
 const loading = ref(false)
 
-const onSubmit = async (faculty: IOrganization, speciality: IOrganization, hourlyLoad: IHourlyLoad) => {
+const onSubmit = async (
+  faculty: IOrganization,
+  speciality: IOrganization,
+  hourlyLoad: IHourlyLoad,
+) => {
   loading.value = true
   await configStore.completeSetup(faculty, speciality, hourlyLoad)
   loading.value = false
