@@ -11,7 +11,11 @@
       <div class="d-flex align-self-center ga-2">
         <v-toolbar-title>
           Generados
-          <v-badge color="white" :content="result?.schedules.length ?? 0" inline />
+          <v-badge
+            color="white"
+            :content="result?.schedules.length ?? 0"
+            inline
+          />
         </v-toolbar-title>
       </div>
     </template>
@@ -44,14 +48,16 @@
     </template>
 
     <template #emptyBody>
-      <v-alert prominent type="error">
-        <v-row align="center">
-          <v-col class="grow">
-            Lo sentimos, no hemos encontrados horarios para usted.
-          </v-col>
-        </v-row>
-      </v-alert>
-      <occurrences-list :items="result?.occurrences ?? []" />
+      <template v-if="result">
+        <v-alert prominent type="error">
+          <v-row align="center">
+            <v-col class="grow">
+              Lo sentimos, no hemos encontrados horarios para usted.
+            </v-col>
+          </v-row>
+        </v-alert>
+        <occurrences-list :items="result?.occurrences ?? []" />
+      </template>
     </template>
   </schedules-presentation>
 </template>
