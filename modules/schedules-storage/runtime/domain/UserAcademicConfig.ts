@@ -14,10 +14,6 @@ export class UserAcademicConfig {
     )
   }
 
-  withHourlyLoad(hourlyLoad: IHourlyLoad | null): UserAcademicConfig {
-    return this.patch({ hourlyLoad })
-  }
-
   toData(): IUserAcademicConfig {
     return {
       id: this.id,

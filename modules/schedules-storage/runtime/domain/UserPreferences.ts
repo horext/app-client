@@ -18,18 +18,6 @@ export class UserPreferences {
     )
   }
 
-  withWeekDays(weekDays: Weekdays[]): UserPreferences {
-    return this.patch({ weekDays })
-  }
-
-  withCrossings(crossings: number): UserPreferences {
-    return this.patch({ crossings })
-  }
-
-  withMaxGenerationHistory(maxGenerationHistory: number): UserPreferences {
-    return this.patch({ maxGenerationHistory })
-  }
-
   toData(): IUserPreferences {
     return {
       id: this.id,

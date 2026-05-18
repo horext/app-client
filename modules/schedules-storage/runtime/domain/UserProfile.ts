@@ -17,18 +17,6 @@ export class UserProfile {
     )
   }
 
-  withFaculty(facultyId: number): UserProfile {
-    return this.patch({ facultyId: facultyId })
-  }
-
-  withSpeciality(specialityId: number): UserProfile {
-    return this.patch({ specialityId: specialityId })
-  }
-
-  withSetupCompleted(setupCompleted: boolean): UserProfile {
-    return this.patch({ setupCompleted })
-  }
-
   toData(): IUserProfile {
     return {
       id: this.id,
