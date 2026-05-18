@@ -6,7 +6,7 @@ import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '~/in
 
 export const useGenerationStore = defineStore('generation', () => {
   const generationService = useGenerationService()
-  const configStore = useUserConfigStore()
+  const preferencesStore = useUserPreferencesStore()
 
   const result = ref<IGenerationResult | null>(null)
   const history = ref<IGenerationRecord[]>([])
@@ -20,7 +20,7 @@ export const useGenerationStore = defineStore('generation', () => {
       meta,
       newSchedules,
       newOccurrences,
-      configStore.maxGenerationHistory,
+      preferencesStore.maxGenerationHistory,
     )
     history.value = await generationService.getGenerations()
     result.value = _result

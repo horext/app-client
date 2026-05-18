@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { ref, shallowRef, type PropType } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserPreferencesStore } from '~/stores/user-preferences'
 import SchedulesList from '~/components/SchedulesWindow.vue'
 import ScheduleActionsBar from '~/components/schedule/ActionsBar.vue'
 import { ViewMode } from '~/models/ViewMode'
@@ -73,7 +73,7 @@ defineProps({
   },
 })
 
-const store = useUserConfigStore()
+const store = useUserPreferencesStore()
 const { weekDays } = storeToRefs(store)
 
 const currentSchedule = shallowRef<IScheduleGenerate>()

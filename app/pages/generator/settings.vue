@@ -41,7 +41,8 @@
 
 <script setup lang="ts">
 import SettingInitial from '~/components/setting/Initial.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserPreferencesStore } from '~/stores/user-preferences'
+import { useUserProfileStore } from '~/stores/user-profile'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 
@@ -51,7 +52,8 @@ useSeoMeta({
     'Configura tu generador de horarios para tener una mejor experiencia',
 })
 
-const store = useUserConfigStore()
+const store = useUserPreferencesStore()
+const profileStore = useUserProfileStore()
 const { weekDays } = storeToRefs(store)
 const internalWeekDays = ref(weekDays.value)
 watch(weekDays, (value) => {
@@ -66,7 +68,7 @@ const saveBasicSettings = async (
   hourlyLoad: IHourlyLoad,
 ) => {
   savingBasic.value = true
-  await store.updateBasicSettings(facultyId, specialityId, hourlyLoad)
+  await profileStore.updateBasicSettings(facultyId, specialityId, hourlyLoad)
   savingBasic.value = false
   successSave.value = true
 }

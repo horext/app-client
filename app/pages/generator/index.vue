@@ -68,6 +68,8 @@ import { storeToRefs } from 'pinia'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
+import { useUserPreferencesStore } from '~/stores/user-preferences'
+import { useUserProfileStore } from '~/stores/user-profile'
 import { useUserConfigStore } from '~/stores/user-config'
 import { useGenerationStore } from '~/stores/generation'
 import { useUserEventsStore } from '~/stores/user-events'
@@ -79,6 +81,8 @@ useSeoMeta({
   description: 'Genera tus horarios de clases de manera automática',
 })
 
+const preferencesStore = useUserPreferencesStore()
+const profileStore = useUserProfileStore()
 const configStore = useUserConfigStore()
 const generationStore = useGenerationStore()
 const eventsStore = useUserEventsStore()
@@ -86,10 +90,11 @@ const openMySchedules = ref(false)
 const succces = ref(false)
 
 const {
-  crossings: crossingSubjects,
   subjects: mySubjects,
   favoritesSchedules: myFavoritesSchedules,
 } = storeToRefs(configStore)
+const { weekDays, crossings: crossingSubjects } = storeToRefs(preferencesStore)
+const { hourlyLoad } = storeToRefs(profileStore)
 const { result } = storeToRefs(generationStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
@@ -127,14 +132,14 @@ const generateAllUserSchedules = async () => {
   await generationStore.setResult(toRaw(combinations), toRaw(occurrencesData), {
     generatedAt: new Date().toISOString(),
     crossingsSetting: toRaw(crossingSubjects.value),
-    weekDays: toRaw(configStore.weekDays),
-    hourlyLoadId: toRaw(configStore.hourlyLoad)?.id ?? 0,
+    weekDays: toRaw(weekDays.value),
+    hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
   })
   succces.value = true
 }
 
 const updateCrossings = async (value: number) => {
-  await configStore.updateCrossings(value)
+  await preferencesStore.updateCrossings(value)
 }
 </script>
 

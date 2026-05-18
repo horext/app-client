@@ -20,7 +20,7 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import InitialForm from '~/components/setting/Initial.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 
 definePageMeta({
   layout: 'app',
@@ -31,7 +31,7 @@ useSeoMeta({
   description: 'Genera tu horario de clases de manera sencilla',
 })
 
-const configStore = useUserConfigStore()
+const configStore = useUserProfileStore()
 const router = useRouter()
 
 const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad } =

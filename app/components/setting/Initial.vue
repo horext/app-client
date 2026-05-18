@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 import type { IOrganization } from '~/interfaces/organization'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import {
@@ -71,7 +71,7 @@ const emit = defineEmits<{
 const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
-const store = useUserConfigStore()
+const store = useUserProfileStore()
 const { facultyId, specialityId, hourlyLoad } = storeToRefs(store)
 
 const internalFacultyId = ref(facultyId.value)

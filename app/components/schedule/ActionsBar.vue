@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 import ScheduleShare from '~/components/schedule/ShareCard.vue'
 import GoogleCalendarConnect from '~/components/google/calendar/Connect.vue'
 import GoogleSignInDialog from '~/components/google/SignInDialog.vue'
@@ -44,7 +44,7 @@ defineProps<{
   path: string
 }>()
 
-const store = useUserConfigStore()
+const store = useUserProfileStore()
 const { hourlyLoad } = storeToRefs(store)
 const { isSignedIn, isPendingClient } = useGoogleOAuth2()
 

@@ -95,7 +95,7 @@ import { ref, computed } from 'vue'
 import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 import type {
   ISelectedSubject,
   ISubjectSchedule,
@@ -119,7 +119,7 @@ useSeoMeta({
 
 const courseApi = useCourseApi()
 
-const configStore = useUserConfigStore()
+const configStore = useUserProfileStore()
 const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
   useUserSubjects()
 
