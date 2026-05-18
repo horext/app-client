@@ -28,7 +28,6 @@ import {
 } from '~/constants/app-routes'
 import { provideApis } from '~~/modules/apis/runtime'
 import { HOURLY_LOAD_API_KEY } from '~~/modules/apis/runtime/registry/keys'
-import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
@@ -49,13 +48,9 @@ const { items: events } = storeToRefs(userEventsStore)
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
 
-async function fetchHourlyLoad(faculty: IOrganization) {
-  try {
-    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
-    store.updateHourlyLoad(data)
-  } catch (e) {
-    console.error(e)
-  }
+async function fetchHourlyLoad(facultyId: number) {
+  const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
+  store.updateHourlyLoad(data)
 }
 
 await callOnce('initData', async () => {
@@ -63,8 +58,8 @@ await callOnce('initData', async () => {
     await store.fetchProfile()
     await store.fetchAcademicConfig()
     await store.fetchPreferences()
-    if (store.faculty) {
-      await fetchHourlyLoad(store.faculty)
+    if (store.facultyId) {
+      await fetchHourlyLoad(store.facultyId)
     }
   } catch (e) {
     console.error(e)

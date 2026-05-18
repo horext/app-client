@@ -30,9 +30,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
   const maxGenerationHistory = computed(
     () => preferences.value?.maxGenerationHistory ?? 5,
   )
-
-  const faculty = computed(() => profile.value?.faculty)
-  const speciality = computed(() => profile.value?.speciality)
   const setupCompleted = computed(() => profile.value?.setupCompleted ?? false)
   const facultyId = computed(() => profile.value?.faculty.id)
   const specialityId = computed(() => profile.value?.speciality.id)
@@ -149,8 +146,6 @@ export const useUserConfigStore = defineStore('user-config', () => {
     preferences,
     crossings,
     maxGenerationHistory,
-    faculty,
-    speciality,
     hourlyLoad,
     subjects,
     favoritesSchedules,
