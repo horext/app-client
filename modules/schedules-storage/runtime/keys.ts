@@ -1,6 +1,5 @@
 import type { InjectionKey } from 'vue'
 import type { ISchedulesRepository } from './repositories/schedules-repository.interface'
-import type { IGeneratedSchedulesService } from './services/generated-schedules.service.interface'
 import type { IFavoritesSchedulesService } from './services/favorites-schedules.service.interface'
 import type { IActivitiesService } from './services/activities-service.interface'
 import type { IProfileService } from './services/profile.service.interface'
@@ -13,9 +12,6 @@ export const SCHEDULES_DB_KEY: InjectionKey<DbFactory> = Symbol('HorextDB')
 
 export const SCHEDULES_REPOSITORY_KEY: InjectionKey<ISchedulesRepository> =
   Symbol('ISchedulesRepository')
-
-export const GENERATED_SCHEDULES_SERVICE_KEY: InjectionKey<IGeneratedSchedulesService> =
-  Symbol('IGeneratedSchedulesService')
 
 export const FAVORITES_SCHEDULES_SERVICE_KEY: InjectionKey<IFavoritesSchedulesService> =
   Symbol('IFavoritesSchedulesService')

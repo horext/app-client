@@ -6,7 +6,6 @@ import { IndexedDBProfileRepository } from '../repositories/indexed-db-profile.r
 import { IndexedDBAcademicConfigRepository } from '../repositories/indexed-db-academic-config.repository'
 import { IndexedDBPreferencesRepository } from '../repositories/indexed-db-preferences.repository'
 import { IndexedDBGenerationRepository } from '../repositories/indexed-db-generation.repository'
-import { GeneratedSchedulesService } from '../services/generated-schedules.service'
 import { FavoritesSchedulesService } from '../services/favorites-schedules.service'
 import { ActivitiesService } from '../services/activities.service'
 import { ProfileService } from '../services/profile.service'
@@ -15,7 +14,6 @@ import { PreferencesService } from '../services/preferences.service'
 import { GenerationService } from '../services/generation.service'
 import {
   SCHEDULES_REPOSITORY_KEY,
-  GENERATED_SCHEDULES_SERVICE_KEY,
   FAVORITES_SCHEDULES_SERVICE_KEY,
   ACTIVITIES_SERVICE_KEY,
   PROFILE_SERVICE_KEY,
@@ -43,10 +41,6 @@ export default defineNuxtPlugin({
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
-    nuxtApp.vueApp.provide(
-      GENERATED_SCHEDULES_SERVICE_KEY,
-      new GeneratedSchedulesService(generationRepository, schedulesRepository, favoritesRepository),
-    )
     nuxtApp.vueApp.provide(
       FAVORITES_SCHEDULES_SERVICE_KEY,
       new FavoritesSchedulesService(schedulesRepository, favoritesRepository, generationRepository),
