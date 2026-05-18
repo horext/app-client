@@ -1,4 +1,5 @@
 import type { BaseApi } from '../resources/base'
+import type { InjectionKey } from 'vue'
 
 export type ApiFactory<C extends BaseApi = BaseApi> = new (
   ...args: ConstructorParameters<typeof BaseApi>
