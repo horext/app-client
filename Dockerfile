@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 COPY  pnpm-lock.yaml pnpm-lock.yaml
 COPY  package.json package.json
 COPY  pnpm-workspace.yaml pnpm-workspace.yaml
-RUN corepack enable && corepack install
+RUN npm install -g "$(node -p 'require("./package.json").packageManager')"
 RUN pnpm install --frozen-lockfile --production=false
 
 COPY  . .
