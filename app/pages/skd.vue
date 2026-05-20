@@ -1,16 +1,15 @@
 <template>
   <v-container fluid>
-    <v-card flat style="min-height: 100vh">
+    <v-card v-if="firstSchedule" flat style="min-height: 100vh">
       <v-toolbar flat>
         <ScheduleShareAddFavorite
-          v-if="firstSchedule"
           :schedule="firstSchedule"
           :favorites-schedules="favoritesSchedules"
           @click:add-favorite="saveNewFavoriteSchedule"
           @click:remove-favorite="deleteFavoriteScheduleById"
         />
       </v-toolbar>
-      <ScheduleViewer v-if="firstSchedule" :schedule="firstSchedule" />
+      <ScheduleViewer :schedule="firstSchedule" />
     </v-card>
   </v-container>
 </template>
@@ -75,8 +74,11 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   },
 )
 
-const { deleteFavoriteScheduleById, saveNewFavoriteSchedule, favoritesSchedules } =
-  useUserFavoriteSchedules()
+const {
+  deleteFavoriteScheduleById,
+  saveNewFavoriteSchedule,
+  favoritesSchedules,
+} = useUserFavoriteSchedules()
 
 const { loadSchedules } = useSchedulesGenerator()
 
