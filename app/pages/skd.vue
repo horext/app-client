@@ -91,7 +91,7 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
 const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
   useUserFavoriteSchedules()
 
-const { loadSchedules } = useSchedules()
+const { loadSchedules } = useSchedulesGenerator()
 
 async function fetchSchedules(subjects: ISelectedSubject[]) {
   loading.value = true

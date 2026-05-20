@@ -4,7 +4,7 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
 import CoreWorker from '@/assets/workers/core?worker'
 
-export const useSchedules = () => {
+export const useSchedulesGenerator = () => {
   const worker = ref<Worker | null>(null)
   onMounted(() => {
     worker.value = new CoreWorker()

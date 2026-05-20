@@ -117,7 +117,7 @@ const removeFavorite = async (schedule: IScheduleGenerate) => {
   showRemoveFavoriteMessage.value = true
 }
 
-const { loadSchedules } = useSchedules()
+const { loadSchedules } = useSchedulesGenerator()
 const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false
