@@ -1,5 +1,4 @@
 import {
-  CLASS_SESSION_API_KEY,
   COURSE_API_KEY,
   FACULTY_API_KEY,
   HOURLY_LOAD_API_KEY,
@@ -29,4 +28,3 @@ export const useCourseApi = () => useApi(COURSE_API_KEY)
 
 export const useHourlyLoadApi = () => useApi(HOURLY_LOAD_API_KEY)
 
-export const useClassSessionApi = () => useApi(CLASS_SESSION_API_KEY)

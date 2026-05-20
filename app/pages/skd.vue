@@ -19,7 +19,6 @@ import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import {
-  useClassSessionApi,
   useScheduleSubjectApi,
 } from '~~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
@@ -36,7 +35,6 @@ useSeoMeta({
 })
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const classSessionApi = useClassSessionApi()
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
 
@@ -52,8 +50,6 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
     const scheduleSubjectIds = result.split(',').map(Number)
     const scheduleSubjects =
       await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
-    const schedulesIds = scheduleSubjects.map((ss) => ss.schedule.id)
-    const sessions = await classSessionApi.findScheduleIds(schedulesIds)
 
     return scheduleSubjects.map((sb) => ({
       ...sb.subject,
@@ -63,7 +59,7 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
           scheduleSubject: {
             id: sb.id,
           },
-          sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
+          sessions: sb.schedule.sessions,
           subject: sb.subject,
         },
       ],

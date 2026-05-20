@@ -104,7 +104,6 @@ import type {
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
-  useClassSessionApi,
   useCourseApi,
   useScheduleSubjectApi,
 } from '~~/modules/apis/runtime/composables'
@@ -146,7 +145,6 @@ const addNewSubject = (item?: ISubject) => {
 }
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const classSessionsApi = useClassSessionApi()
 
 const {
   data: schedules,
@@ -164,16 +162,13 @@ const {
         subject.id,
         _hourlyLoadId,
       )
-    const scheduleIds = schedulesSubject.map((sb) => sb.schedule.id)
-
-    const sessions = await classSessionsApi.findScheduleIds(scheduleIds)
 
     return schedulesSubject.map((sb) => ({
       ...sb?.schedule,
       scheduleSubject: {
         id: sb.id,
       },
-      sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
+      sessions: sb.schedule.sessions,
       subject: subject,
     }))
   },
@@ -244,7 +239,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const response = await courseApi.findBySearch(
       _search,
       _specialityId,
-      _hourlyLoadId
+      _hourlyLoadId,
     )
     return response.content
   },
