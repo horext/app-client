@@ -97,7 +97,7 @@ const editItem = (item: IEvent) => {
   editedItem.value = item
   dialog.value = true
 }
-
+const { deleteItemById, updateItem, saveNewItem } = useUserEvents()
 const selectedDeleteItem = ref<IEvent>()
 const deleteItem = (item: IEvent) => {
   editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
@@ -106,7 +106,7 @@ const deleteItem = (item: IEvent) => {
 }
 
 const deleteItemConfirm = (selectedItem: IEvent) => {
-  store.deleteItemById(selectedItem.id!)
+  deleteItemById(selectedItem.id!)
   closeDelete()
 }
 
@@ -124,10 +124,10 @@ const closeDelete = () => {
 const save = async (item: IEvent) => {
   const event = Activity.buildFrom(item)
   if (editedIndex.value > -1) {
-    store.updateItem(event)
+    updateItem(event)
     succcesUpdateEvent.value = true
   } else {
-    store.saveNewItem(event)
+    saveNewItem(event)
     succcesAddEvent.value = true
   }
   close()
