@@ -93,9 +93,9 @@ const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
 
 const { loadSchedules } = useSchedules()
 
-async function fetchSchedules() {
+async function fetchSchedules(subjects: ISelectedSubject[]) {
   loading.value = true
-  const { combinations } = await loadSchedules(subjects.value, [], {
+  const { combinations } = await loadSchedules(subjects, [], {
     crossingSubjects: 100,
   })
   schedules.value = combinations
@@ -103,8 +103,15 @@ async function fetchSchedules() {
 }
 
 onMounted(async () => {
-  await fetchSchedules()
+  await fetchSchedules(subjects.value)
 })
+
+watch(
+ subjects,
+  async (subjects) => {
+    await fetchSchedules(subjects)
+  },
+)
 
 const addFavoriteCurrentSchedule = () => {
   const currentSchedule = schedules.value[0]
