@@ -5,14 +5,7 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 export const useUserFavoritesStore = defineStore('user-favorites', () => {
   const favoritesSchedules = ref<IScheduleGenerate[]>([])
 
-  const isFavorite = (schedule: IScheduleGenerate) => {
-    return favoritesSchedules.value.findIndex(
-      (x) => x.scheduleSubjectKey === schedule.scheduleSubjectKey,
-    ) >= 0
-  }
-
   return {
     favoritesSchedules,
-    isFavorite,
   }
 })

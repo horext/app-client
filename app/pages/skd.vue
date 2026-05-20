@@ -2,17 +2,13 @@
   <v-container fluid>
     <v-card flat style="min-height: 100vh">
       <v-toolbar flat>
-        <v-btn
+        <ScheduleShareAddFavorite
           v-if="firstSchedule"
-          variant="outlined"
-          @click="addFavoriteCurrentSchedule(firstSchedule)"
-        >
-          <v-icon :color="isFavorite(firstSchedule) ? 'yellow' : undefined">
-            {{ mdiStar }}
-          </v-icon>
-          <span v-if="isFavorite(firstSchedule)"> Quitar de Favoritos </span>
-          <span v-else> Añadir a Favoritos </span>
-        </v-btn>
+          :schedule="firstSchedule"
+          :favorites-schedules="favoritesSchedules"
+          @click:add-favorite="saveNewFavoriteSchedule"
+          @click:remove-favorite="deleteFavoriteScheduleById"
+        />
       </v-toolbar>
       <ScheduleViewer v-if="firstSchedule" :schedule="firstSchedule" />
     </v-card>
@@ -20,16 +16,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRaw } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { mdiStar } from '@mdi/js'
 import {
   useClassSessionApi,
   useScheduleSubjectApi,
 } from '~~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
+import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
 
 definePageMeta({
   layout: 'app',
@@ -45,7 +41,6 @@ const classSessionApi = useClassSessionApi()
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
 
-const { isFavorite } = useUserFavoritesStore()
 const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
@@ -80,7 +75,7 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   },
 )
 
-const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
+const { deleteFavoriteScheduleById, saveNewFavoriteSchedule, favoritesSchedules } =
   useUserFavoriteSchedules()
 
 const { loadSchedules } = useSchedulesGenerator()
@@ -101,15 +96,6 @@ onMounted(async () => {
 watch(subjects, async (subjects) => {
   await fetchSchedules(subjects)
 })
-
-const addFavoriteCurrentSchedule = async (schedule: IScheduleGenerate) => {
-  const favorite = isFavorite(schedule)
-  if (favorite) {
-    await deleteFavoriteScheduleById(schedule.id)
-  } else {
-    await saveNewFavoriteSchedule(toRaw(schedule))
-  }
-}
 </script>
 
 <style scoped></style>
