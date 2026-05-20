@@ -16,6 +16,7 @@ export const useGenerationStore = defineStore('generation', () => {
     newOccurrences: IIntersectionOccurrence[],
     meta: IGenerationMeta,
   ): Promise<void> {
+    if (!generationService) return
     const _result = await generationService.saveGeneration(
       meta,
       newSchedules,
@@ -27,6 +28,7 @@ export const useGenerationStore = defineStore('generation', () => {
   }
 
   async function loadSaved(): Promise<void> {
+    if (!generationService) return
     const [records, latest] = await Promise.all([
       generationService.getGenerations(),
       generationService.getLatestGeneration(),

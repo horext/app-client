@@ -17,23 +17,27 @@ export const useUserProfileStore = defineStore('user-profile', () => {
   const specialityId = computed(() => profile.value?.specialityId)
 
   async function updateFaculty(_facultyId: number) {
+    if (!profileService) return
     await profileService.patch({ facultyId: _facultyId })
     if (profile.value) profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
   async function updateSpeciality(_specialityId: number) {
+    if (!profileService) return
     await profileService.patch({ specialityId: _specialityId })
     if (profile.value)
       profile.value = { ...profile.value, specialityId: _specialityId }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
+    if (!profileService) return
     await profileService.patch({ setupCompleted: _setupCompleted })
     if (profile.value)
       profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
+    if (!academicConfigService) return
     const config = await academicConfigService.getAcademicConfig()
     const currentHourlyLoad = config?.hourlyLoad ?? null
     if (currentHourlyLoad?.id) {
@@ -51,10 +55,12 @@ export const useUserProfileStore = defineStore('user-profile', () => {
   }
 
   async function fetchProfile() {
+    if (!profileService) return
     profile.value = await profileService.getProfile()
   }
 
   async function fetchAcademicConfig() {
+    if (!academicConfigService) return
     const config = await academicConfigService.getAcademicConfig()
     if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
@@ -64,6 +70,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
+    if (!profileService) return
     await Promise.all([
       profileService.patch({ facultyId: _facultyId, specialityId: _specialityId }),
       updateHourlyLoad(_hourlyLoad),
@@ -81,6 +88,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
+    if (!profileService || !academicConfigService) return
     const preferencesStore = useUserPreferencesStore()
     await Promise.all([
       profileService.createProfile({
