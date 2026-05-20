@@ -5,24 +5,16 @@
         <v-btn
           v-if="firstSchedule"
           variant="outlined"
-          @click="addFavoriteCurrentSchedule"
+          @click="addFavoriteCurrentSchedule(firstSchedule)"
         >
-          <v-icon
-            :color="isFavorite(firstSchedule)  ? 'yellow' : undefined"
-          >
+          <v-icon :color="isFavorite(firstSchedule) ? 'yellow' : undefined">
             {{ mdiStar }}
           </v-icon>
-          <span v-if="isFavorite(firstSchedule)">
-            Quitar de Favoritos
-          </span>
+          <span v-if="isFavorite(firstSchedule)"> Quitar de Favoritos </span>
           <span v-else> Añadir a Favoritos </span>
         </v-btn>
       </v-toolbar>
-      <ScheduleViewer
-        v-for="schedule in schedules"
-        :key="schedule.id"
-        :schedule="schedule"
-      />
+      <ScheduleViewer v-if="firstSchedule" :schedule="firstSchedule" />
     </v-card>
   </v-container>
 </template>
@@ -106,21 +98,16 @@ onMounted(async () => {
   await fetchSchedules(subjects.value)
 })
 
-watch(
- subjects,
-  async (subjects) => {
-    await fetchSchedules(subjects)
-  },
-)
+watch(subjects, async (subjects) => {
+  await fetchSchedules(subjects)
+})
 
-const addFavoriteCurrentSchedule = () => {
-  const currentSchedule = schedules.value[0]
-  if (!currentSchedule) return
-  const favorite = isFavorite(currentSchedule)
+const addFavoriteCurrentSchedule = async (schedule: IScheduleGenerate) => {
+  const favorite = isFavorite(schedule)
   if (favorite) {
-    deleteFavoriteScheduleById(currentSchedule.id)
+    await deleteFavoriteScheduleById(schedule.id)
   } else {
-    saveNewFavoriteSchedule(toRaw(currentSchedule))
+    await saveNewFavoriteSchedule(toRaw(schedule))
   }
 }
 </script>
