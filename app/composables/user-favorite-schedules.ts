@@ -13,6 +13,7 @@ export const useUserFavoriteSchedules = () => {
   }
 
   async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
+    console.log(favoritesStorage?.removeFavorite)
     await favoritesStorage?.removeFavorite(id)
     const index = favoritesSchedules.value.findIndex((s) => s.id === id)
     favoritesSchedules.value.splice(index, 1)

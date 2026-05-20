@@ -1,4 +1,4 @@
-import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IFavoritesSchedulesService } from './favorites-schedules.service.interface'
@@ -32,7 +32,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     await this.favoritesRepo.removeFromList(id)
     const allRecords = await this.generationRepo.getAll()
     const referencedInGenerations = allRecords.some((r) =>
-      r.scheduleIds.includes(id as UUID),
+      r.scheduleIds.includes(id),
     )
     if (!referencedInGenerations) {
       await this.repo.deleteEntry(id)
