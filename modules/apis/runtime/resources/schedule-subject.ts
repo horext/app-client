@@ -10,11 +10,6 @@ export interface IScheduleSubjectApi {
     hourlyLoad: number,
   ): Promise<IScheduleSubject[]>
   getAllByIds(ids: Array<number>): Promise<IScheduleSubjectSessionDetail[]>
-  findBySearch(
-    search: string,
-    speciality: string,
-    hourlyLoad: string,
-  ): Promise<IScheduleSubject[]>
 }
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
@@ -38,15 +33,5 @@ export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
         },
       },
     )
-  }
-
-  findBySearch(search: string, speciality: string, hourlyLoad: string) {
-    return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
-      params: {
-        speciality,
-        hourlyLoad,
-        search: search,
-      },
-    })
   }
 }
