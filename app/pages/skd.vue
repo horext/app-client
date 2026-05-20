@@ -8,11 +8,11 @@
           @click="addFavoriteCurrentSchedule"
         >
           <v-icon
-            :color="isFavorite(firstSchedule) >= 0 ? 'yellow' : undefined"
+            :color="isFavorite(firstSchedule)  ? 'yellow' : undefined"
           >
             {{ mdiStar }}
           </v-icon>
-          <span v-if="isFavorite(firstSchedule) >= 0">
+          <span v-if="isFavorite(firstSchedule)">
             Quitar de Favoritos
           </span>
           <span v-else> Añadir a Favoritos </span>
@@ -116,8 +116,8 @@ watch(
 const addFavoriteCurrentSchedule = () => {
   const currentSchedule = schedules.value[0]
   if (!currentSchedule) return
-  const index = isFavorite(currentSchedule)
-  if (index >= 0) {
+  const favorite = isFavorite(currentSchedule)
+  if (favorite) {
     deleteFavoriteScheduleById(currentSchedule.id)
   } else {
     saveNewFavoriteSchedule(toRaw(currentSchedule))
