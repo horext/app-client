@@ -53,9 +53,7 @@ const classSessionApi = useClassSessionApi()
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
 
-const store = useUserFavoritesStore()
-
-const myFavoritesSchedules = computed(() => store.favoritesSchedules)
+const { isFavorite } = useUserFavoritesStore()
 const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
@@ -117,12 +115,6 @@ const addFavoriteCurrentSchedule = () => {
   } else {
     saveNewFavoriteSchedule(toRaw(currentSchedule))
   }
-}
-
-const isFavorite = (schedule: IScheduleGenerate) => {
-  return myFavoritesSchedules.value.findIndex(
-    (x) => x.scheduleSubjectKey === schedule.scheduleSubjectKey,
-  )
 }
 </script>
 
