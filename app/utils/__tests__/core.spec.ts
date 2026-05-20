@@ -423,4 +423,99 @@ describe('getSchedules', () => {
       expect(uniqueIds.size).toBe(ids.length) // no duplicate ids
     })
   })
+
+  describe('same-subject sessions are never cross-checked', () => {
+    it('does not detect overlapping sessions within the same schedule as a crossing', () => {
+      // Both sessions belong to the same subject/schedule — the inner loop only
+      // compares subject j against subjects j+1…n, so intra-subject overlaps are ignored.
+      const subject = makeSubject(1, [
+        {
+          scheduleId: 10,
+          sessions: [
+            { id: 1, day: MON, ...T_08_10, typeCode: 'T' },
+            { id: 2, day: MON, ...T_09_11, typeCode: 'T' }, // overlaps session 1
+          ],
+        },
+      ])
+      const result = getSchedules([subject], [], { crossingSubjects: 0 })
+      // Intra-subject overlap is invisible — combination is still valid
+      expect(result.combinations).toHaveLength(1)
+      expect(result.combinations[0]!.crossings).toBe(0)
+      expect(result.occurrences).toHaveLength(0)
+    })
+  })
+
+  describe('crossEvent option behavior', () => {
+    it('does NOT prevent a T-session from crossing a MY_EVENT base event (crossEvent=false)', () => {
+      // The crossEvent condition requires BOTH events to have type MY_EVENT.
+      // A schedule session has type 'T'/'P'/etc., so the condition never fires
+      // for a session vs. a user base event — the crossing is treated as CROSSING_BASIS.
+      const subject = makeSubject(1, [
+        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const baseEvent = makeEvent('e1', MON, T_09_11.startTime, T_09_11.endTime, 'MY_EVENT')
+      const result = getSchedules([subject], [baseEvent], {
+        crossingSubjects: 1,
+        crossEvent: false,
+      })
+      // Crossing is allowed (crossingSubjects=1) and NOT marked NOT_AVAILABLE
+      expect(result.combinations).toHaveLength(1)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE')).toBe(false)
+    })
+  })
+
+  describe('crossingSubjects large enough to absorb all crossings', () => {
+    it('accepts all combinations when the limit is higher than any possible crossing count', () => {
+      const s1 = makeSubject(1, [
+        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const s2 = makeSubject(2, [
+        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+      ])
+      const s3 = makeSubject(3, [
+        { scheduleId: 30, sessions: [{ id: 3, day: MON, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const result = getSchedules([s1, s2, s3], [], { crossingSubjects: 99 })
+      // Every combination passes regardless of crossings
+      expect(result.combinations).toHaveLength(1)
+      expect(result.combinations[0]!.crossings).toBeGreaterThan(0)
+    })
+  })
+
+  describe('combination output structure', () => {
+    it('scheduleSubjectIds contains the picked scheduleSubject.id for each subject', () => {
+      const s1 = makeSubject(1, [
+        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const s2 = makeSubject(2, [
+        { scheduleId: 20, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
+      expect(result.combinations).toHaveLength(1)
+      // scheduleSubject.id is the scheduleId we passed in makeSubject
+      expect(result.combinations[0]!.scheduleSubjectIds).toEqual(
+        expect.arrayContaining([10, 20]),
+      )
+    })
+
+    it('occurrence has correct id, name, eventTarget and eventSource', () => {
+      const s1 = makeSubject(1, [
+        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+      ])
+      const s2 = makeSubject(2, [
+        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+      ])
+      const result = getSchedules([s1, s2], [], { crossingSubjects: 1 })
+      expect(result.occurrences).toHaveLength(1)
+      const occ = result.occurrences[0]!
+      // id is the sorted session ids joined with '-'
+      expect(occ.id).toBe('1-2')
+      expect(typeof occ.name).toBe('string')
+      expect(occ.name.length).toBeGreaterThan(0)
+      expect(occ.eventTarget).toBeDefined()
+      expect(occ.eventSource).toBeDefined()
+      expect(occ.type).toBe('CROSSING_BASIS')
+    })
+  })
 })
