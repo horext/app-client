@@ -46,16 +46,15 @@ interface IScheduleCalendarEvent extends IEvent {
   id: string
 }
 
-const props = defineProps({
-  schedule: {
-    type: Object as PropType<IScheduleGenerate>,
-    required: true,
+const props = withDefaults(
+  defineProps<{
+    schedule: IScheduleGenerate
+    weekDays?: Weekdays[]
+  }>(),
+  {
+    weekDays: () => DEFAULT_CALENDAR_WEEK_DAYS,
   },
-  weekDays: {
-    type: Array as PropType<Weekdays[]>,
-    default: DEFAULT_CALENDAR_WEEK_DAYS,
-  },
-})
+)
 const { schedule } = toRefs(props)
 const selectedEvent = shallowRef<IScheduleCalendarEvent | null>(null)
 const selectedElement = shallowRef<HTMLElement | null>(null)
