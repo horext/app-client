@@ -1,10 +1,6 @@
 <!-- eslint-disable vue/no-multiple-template-root -->
 <template>
-  <AppBar
-    v-model:drawer="drawer"
-    v-model:dark-mode="darkMode"
-    :hourly-load="hourlyLoad"
-  />
+  <AppBar v-model:drawer="drawer" v-model:dark-mode="darkMode" :hourly-load="hourlyLoad" />
   <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
@@ -58,25 +54,18 @@ async function fetchHourlyLoad(facultyId: number) {
   updateHourlyLoad(data)
 }
 
-await callOnce('initData', async () => {
-  try {
-    await fetchProfile()
-    await fetchAcademicConfig()
-    await fetchPreferences()
-    if (profileStore.facultyId) {
-      await fetchHourlyLoad(profileStore.facultyId)
-    }
-  } catch (e) {
-    console.error(e)
-  }
-})
-
 const { fetchSubjects } = useUserSubjects()
 const { fetchSchedules, mySchedules } = useUserSchedules()
 
 const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 
-onMounted(async () => {
+onMounted(async () => {  
+  await fetchProfile()
+  await fetchAcademicConfig()
+  await fetchPreferences()
+  if (profileStore.facultyId) {
+    await fetchHourlyLoad(profileStore.facultyId)
+  }
   await fetchSubjects()
   await fetchSchedules()
   await fetchFavoritesSchedules()
