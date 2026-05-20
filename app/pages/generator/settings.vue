@@ -42,7 +42,6 @@
 <script setup lang="ts">
 import SettingInitial from '~/components/setting/Initial.vue'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
-import { useUserProfileStore } from '~/stores/user-profile'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 
@@ -53,7 +52,7 @@ useSeoMeta({
 })
 
 const store = useUserPreferencesStore()
-const profileStore = useUserProfileStore()
+const { updateBasicSettings } = useUserProfile()
 const { weekDays } = storeToRefs(store)
 const internalWeekDays = ref(weekDays.value)
 watch(weekDays, (value) => {
@@ -68,12 +67,13 @@ const saveBasicSettings = async (
   hourlyLoad: IHourlyLoad,
 ) => {
   savingBasic.value = true
-  await profileStore.updateBasicSettings(facultyId, specialityId, hourlyLoad)
+  await updateBasicSettings(facultyId, specialityId, hourlyLoad)
   savingBasic.value = false
   successSave.value = true
 }
 
+const { saveWeekDays } = useUserPreferences()
 const save = async () => {
-  await store.saveWeekDays(internalWeekDays.value)
+  await saveWeekDays(internalWeekDays.value)
 }
 </script>
