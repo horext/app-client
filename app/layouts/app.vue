@@ -1,6 +1,10 @@
 <!-- eslint-disable vue/no-multiple-template-root -->
 <template>
-  <AppBar v-model:drawer="drawer" v-model:dark-mode="darkMode" :hourly-load="hourlyLoad" />
+  <AppBar
+    v-model:drawer="drawer"
+    v-model:dark-mode="darkMode"
+    :hourly-load="hourlyLoad"
+  />
   <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
@@ -59,17 +63,17 @@ const { fetchSchedules, mySchedules } = useUserSchedules()
 
 const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 
-onMounted(async () => {  
-  await fetchProfile()
-  await fetchAcademicConfig()
-  await fetchPreferences()
+onMounted(async () => {
+  await Promise.all([fetchProfile(), fetchAcademicConfig(), fetchPreferences()])
   if (profileStore.facultyId) {
     await fetchHourlyLoad(profileStore.facultyId)
   }
-  await fetchSubjects()
-  await fetchSchedules()
-  await fetchFavoritesSchedules()
-  await fetchEvents()
+  await Promise.all([
+    fetchSubjects(),
+    fetchSchedules(),
+    fetchFavoritesSchedules(),
+    fetchEvents(),
+  ])
 })
 const drawer = ref(true)
 const items = computed(() => [
