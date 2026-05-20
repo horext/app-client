@@ -2,8 +2,8 @@ import type { ISelectedSubject } from '~/interfaces/subject'
 
 export const useUserSubjects = () => {
   const storage = useLocalStorage()
-  const configStore = useUserConfigStore()
-  const { subjects } = storeToRefs(configStore)
+  const store = useUserSubjectsStore()
+  const { subjects } = storeToRefs(store)
 
   async function saveNewSubject(_subject: ISelectedSubject) {
     subjects.value.push(Object.assign({}, _subject))

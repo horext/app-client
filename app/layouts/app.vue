@@ -38,26 +38,31 @@ const settingsStore = useSettingsStore()
 
 const { darkMode } = storeToRefs(settingsStore)
 const profileStore = useUserProfileStore()
-const preferencesStore = useUserPreferencesStore()
-const store = useUserConfigStore()
+const subjectsStore = useUserSubjectsStore()
+const favoritesStore = useUserFavoritesStore()
 const userEventsStore = useUserEventsStore()
 const { hourlyLoad } = storeToRefs(profileStore)
 
-const { subjects, favoritesSchedules } = storeToRefs(store)
+const { subjects } = storeToRefs(subjectsStore)
+const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
+
+const { fetchProfile, fetchAcademicConfig, updateHourlyLoad } = useUserProfile()
+const { fetchPreferences } = useUserPreferences()
+const { fetchItems: fetchEvents } = useUserEvents()
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
 
 async function fetchHourlyLoad(facultyId: number) {
   const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
-  profileStore.updateHourlyLoad(data)
+  updateHourlyLoad(data)
 }
 
 await callOnce('initData', async () => {
   try {
-    await profileStore.fetchProfile()
-    await profileStore.fetchAcademicConfig()
-    await preferencesStore.fetchPreferences()
+    await fetchProfile()
+    await fetchAcademicConfig()
+    await fetchPreferences()
     if (profileStore.facultyId) {
       await fetchHourlyLoad(profileStore.facultyId)
     }
@@ -75,7 +80,7 @@ onMounted(async () => {
   await fetchSubjects()
   await fetchSchedules()
   await fetchFavoritesSchedules()
-  await userEventsStore.fetchItems()
+  await fetchEvents()
 })
 const drawer = ref(true)
 const items = computed(() => [

@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, toRaw } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
-import { useUserConfigStore } from '~/stores/user-config'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { mdiStar } from '@mdi/js'
 import {
@@ -54,7 +53,7 @@ const classSessionApi = useClassSessionApi()
 const schedules = ref<IScheduleGenerate[]>([])
 const loading = ref(false)
 
-const store = useUserConfigStore()
+const store = useUserFavoritesStore()
 
 const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const firstSchedule = computed(() => schedules.value[0])

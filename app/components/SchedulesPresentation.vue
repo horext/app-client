@@ -11,14 +11,12 @@
     <div class="d-flex align-center justify-center flex-wrap ma-1 ga-1">
       <slot name="subtitle" :item="currentSchedule">
         <slot name="subtitle-items" :item="currentSchedule" />
-        <ClientOnly>
-          <ScheduleActionsBar
-            v-if="schedules.length > 0 && currentSchedule"
-            :current-schedule="currentSchedule"
-            :mode="mode"
-            :path="path"
-          />
-        </ClientOnly>
+        <ScheduleActionsBar
+          v-if="schedules.length > 0 && currentSchedule"
+          :current-schedule="currentSchedule"
+          :mode="mode"
+          :path="path"
+        />
       </slot>
     </div>
 

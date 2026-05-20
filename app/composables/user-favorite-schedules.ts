@@ -2,8 +2,8 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
-  const configStore = useUserConfigStore()
-  const { favoritesSchedules } = storeToRefs(configStore)
+  const store = useUserFavoritesStore()
+  const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate,

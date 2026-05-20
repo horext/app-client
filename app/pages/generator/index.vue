@@ -70,7 +70,6 @@ import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
 import { useUserProfileStore } from '~/stores/user-profile'
-import { useUserConfigStore } from '~/stores/user-config'
 import { useGenerationStore } from '~/stores/generation'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
@@ -83,16 +82,18 @@ useSeoMeta({
 
 const preferencesStore = useUserPreferencesStore()
 const profileStore = useUserProfileStore()
-const configStore = useUserConfigStore()
+const subjectsStore = useUserSubjectsStore()
+const favoritesStore = useUserFavoritesStore()
 const generationStore = useGenerationStore()
 const eventsStore = useUserEventsStore()
 const openMySchedules = ref(false)
 const succces = ref(false)
 
-const {
-  subjects: mySubjects,
-  favoritesSchedules: myFavoritesSchedules,
-} = storeToRefs(configStore)
+const { subjects: mySubjects } = storeToRefs(subjectsStore)
+const { favoritesSchedules: myFavoritesSchedules } = storeToRefs(favoritesStore)
+
+const { setResult } = useGeneration()
+const { updateCrossings } = useUserPreferences()
 const { weekDays, crossings: crossingSubjects } = storeToRefs(preferencesStore)
 const { hourlyLoad } = storeToRefs(profileStore)
 const { result } = storeToRefs(generationStore)
@@ -129,17 +130,13 @@ const generateAllUserSchedules = async () => {
     },
   )
   loadingGenerate.value = false
-  await generationStore.setResult(toRaw(combinations), toRaw(occurrencesData), {
+  await setResult(toRaw(combinations), toRaw(occurrencesData), {
     generatedAt: new Date().toISOString(),
     crossingsSetting: toRaw(crossingSubjects.value),
     weekDays: toRaw(weekDays.value),
     hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
   })
   succces.value = true
-}
-
-const updateCrossings = async (value: number) => {
-  await preferencesStore.updateCrossings(value)
 }
 </script>
 
