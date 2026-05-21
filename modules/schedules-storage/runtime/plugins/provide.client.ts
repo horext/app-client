@@ -27,6 +27,7 @@ const DB_VERSION = Math.max(...schemaMigrations.map((m) => m.version))
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:provide',
+  order: 1,
   setup(nuxtApp) {
     const dbFactory = createDbFactory(DB_NAME, DB_VERSION)
     const schedulesRepository = new IndexedDBSchedulesRepository(dbFactory)
