@@ -1,11 +1,11 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
-import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
-import type { IEvent } from '~/interfaces/event'
-import type { IUserProfile } from '~/interfaces/profile'
-import type { IUserAcademicConfig } from '~/interfaces/academic-config'
-import type { IUserPreferences } from '~/interfaces/preferences'
-import type { IGenerationRecord } from '~/interfaces/generation-record'
+import type { IScheduleGenerate, UUID } from '../../shared/interfaces/schedule'
+import type { IEvent } from '../../shared/interfaces/event'
+import type { IUserProfile } from '../../shared/interfaces/profile'
+import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
+import type { IUserPreferences } from '../../shared/interfaces/preferences'
+import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
 import { schemaMigrations } from '../migrations/schema'
 
 export interface HorextDB extends DBSchema {

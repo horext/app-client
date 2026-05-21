@@ -1,4 +1,4 @@
-import type { IUserPreferences } from '~/interfaces/preferences'
+import type { IUserPreferences } from '../../shared/interfaces/preferences'
 
 export interface IPreferencesRepository {
   get(): Promise<IUserPreferences | undefined>

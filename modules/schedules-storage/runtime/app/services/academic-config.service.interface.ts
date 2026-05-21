@@ -1,4 +1,4 @@
-import type { IUserAcademicConfig } from '~/interfaces/academic-config'
+import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
 
 export interface IAcademicConfigService {
   getAcademicConfig(): Promise<IUserAcademicConfig | undefined>

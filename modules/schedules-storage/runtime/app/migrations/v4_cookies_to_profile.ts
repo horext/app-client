@@ -1,4 +1,4 @@
-import type { IOrganization } from '~/interfaces/organization'
+import type { IOrganization } from '../../shared/interfaces/organization'
 import type { Migration, MigrationContext } from './types'
 import { readCookieJson } from './utils'
 

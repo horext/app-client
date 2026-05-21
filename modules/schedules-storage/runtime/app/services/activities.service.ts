@@ -1,4 +1,4 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IEvent } from '../../shared/interfaces/event'
 import type { IActivitiesRepository } from '../repositories/activities.repository.interface'
 import type { IActivitiesService } from './activities-service.interface'
 

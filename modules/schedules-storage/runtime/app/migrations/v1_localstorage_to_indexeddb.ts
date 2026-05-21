@@ -1,4 +1,4 @@
-import type { IScheduleGenerate, UUID } from '~/interfaces/schedule'
+import type { IScheduleGenerate, UUID } from '../../shared/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 

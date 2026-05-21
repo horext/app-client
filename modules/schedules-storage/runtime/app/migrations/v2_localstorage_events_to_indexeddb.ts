@@ -1,4 +1,4 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IEvent } from '../../shared/interfaces/event'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 

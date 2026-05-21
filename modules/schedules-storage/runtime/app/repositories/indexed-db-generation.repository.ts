@@ -1,4 +1,4 @@
-import type { IGenerationRecord } from '~/interfaces/generation-record'
+import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { DbFactory } from '../context/db'
 

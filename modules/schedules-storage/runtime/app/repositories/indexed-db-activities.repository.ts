@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import type { IEvent } from '~/interfaces/event'
+import type { IEvent } from '../../shared/interfaces/event'
 import type { IActivitiesRepository } from './activities.repository.interface'
 import type { DbFactory } from '../context/db'
 

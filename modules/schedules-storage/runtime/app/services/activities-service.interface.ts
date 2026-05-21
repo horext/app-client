@@ -1,4 +1,4 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IEvent } from '../../shared/interfaces/event'
 
 export interface IActivitiesService {
   getAll(): Promise<Array<IEvent & { id: string }>>

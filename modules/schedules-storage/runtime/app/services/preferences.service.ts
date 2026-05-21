@@ -1,4 +1,4 @@
-import type { IUserPreferences } from '~/interfaces/preferences'
+import type { IUserPreferences } from '../../shared/interfaces/preferences'
 import type { IPreferencesRepository } from '../repositories/preferences-repository.interface'
 import type { IPreferencesService } from './preferences.service.interface'
 import { UserPreferences } from '../domain/UserPreferences'

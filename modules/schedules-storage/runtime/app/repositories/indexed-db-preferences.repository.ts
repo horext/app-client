@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import type { IUserPreferences } from '~/interfaces/preferences'
+import type { IUserPreferences } from '../../shared/interfaces/preferences'
 import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { DbFactory } from '../context/db'
 

@@ -1,5 +1,5 @@
-import type { IUserAcademicConfig } from '~/interfaces/academic-config'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
+import type { IHourlyLoad } from '../../shared/interfaces/houly-load'
 
 export class UserAcademicConfig {
   private constructor(

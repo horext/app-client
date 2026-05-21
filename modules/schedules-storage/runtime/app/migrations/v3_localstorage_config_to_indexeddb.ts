@@ -1,4 +1,4 @@
-import type { Weekdays } from '~/interfaces/event'
+import type { Weekdays } from '../../shared/interfaces/event'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 

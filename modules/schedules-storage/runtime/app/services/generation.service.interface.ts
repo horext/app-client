@@ -1,6 +1,6 @@
-import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '~/interfaces/generation-record'
-import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '../../shared/interfaces/generation-record'
+import type { IIntersectionOccurrence } from '../../shared/interfaces/ocurrences'
+import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
 
 export interface IGenerationService {
   getGenerations(): Promise<IGenerationRecord[]>

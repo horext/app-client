@@ -1,5 +1,5 @@
-import type { IUserPreferences } from '~/interfaces/preferences'
-import type { Weekdays } from '~/interfaces/event'
+import type { IUserPreferences } from '../../shared/interfaces/preferences'
+import type { Weekdays } from '../../shared/interfaces/event'
 
 export class UserPreferences {
   private constructor(

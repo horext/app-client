@@ -1,4 +1,4 @@
-import type { IUserProfile } from '~/interfaces/profile'
+import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IProfileRepository } from '../repositories/profile-repository.interface'
 import type { IProfileService } from './profile.service.interface'
 import { UserProfile } from '../domain/UserProfile'

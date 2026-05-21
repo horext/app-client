@@ -1,4 +1,4 @@
-import type { IUserProfile } from '~/interfaces/profile'
+import type { IUserProfile } from '../../shared/interfaces/profile'
 
 export class UserProfile {
   private constructor(
