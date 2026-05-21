@@ -20,7 +20,6 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   } = storeToRefs(store)
 
   async function fetchProfile() {
-    if (!profileService) return
     try {
       loadingProfile.value = true
       profile.value = await profileService.getProfile()
@@ -30,13 +29,11 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   }
 
   async function fetchAcademicConfig() {
-    if (!academicConfigService) return
     const config = await academicConfigService.getAcademicConfig()
     if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
-    if (!academicConfigService) return
     const currentHourlyLoad = hourlyLoad.value
     if (currentHourlyLoad?.id) {
       if (currentHourlyLoad.id !== newHourlyLoad.id) {
@@ -59,21 +56,18 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   }
 
   async function updateFaculty(_facultyId: number) {
-    if (!profileService) return
     await profileService.patch({ facultyId: _facultyId })
     if (profile.value)
       profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
   async function updateSpeciality(_specialityId: number) {
-    if (!profileService) return
     await profileService.patch({ specialityId: _specialityId })
     if (profile.value)
       profile.value = { ...profile.value, specialityId: _specialityId }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
-    if (!profileService) return
     await profileService.patch({ setupCompleted: _setupCompleted })
     if (profile.value)
       profile.value = { ...profile.value, setupCompleted: _setupCompleted }
@@ -84,7 +78,6 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
-    if (!profileService) return
     await Promise.all([
       profileService.patch({
         facultyId: _facultyId,
@@ -106,7 +99,6 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
-    if (!profileService || !academicConfigService) return
     await Promise.all([
       profileService.createProfile({
         facultyId: _facultyId,

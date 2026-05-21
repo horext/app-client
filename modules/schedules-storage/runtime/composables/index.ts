@@ -15,8 +15,7 @@ import type { IAcademicConfigService } from '../services/academic-config.service
 import type { IPreferencesService } from '../services/preferences.service.interface'
 import type { IGenerationService } from '../services/generation.service.interface'
 
-const useService = <T>(key: InjectionKey<T>, name: string): T | null => {
-  if (import.meta.server) return null
+const useService = <T>(key: InjectionKey<T>, name: string): T => {
   const service = inject(key)
   if (!service)
     throw new Error(
@@ -25,15 +24,15 @@ const useService = <T>(key: InjectionKey<T>, name: string): T | null => {
   return service
 }
 
-export const useFavoritesSchedulesService = (): IFavoritesSchedulesService | null =>
+export const useFavoritesSchedulesService = (): IFavoritesSchedulesService =>
   useService(FAVORITES_SCHEDULES_SERVICE_KEY, 'useFavoritesSchedulesService')
-export const useActivitiesService = (): IActivitiesService | null =>
+export const useActivitiesService = (): IActivitiesService =>
   useService(ACTIVITIES_SERVICE_KEY, 'useActivitiesService')
-export const useProfileService = (): IProfileService | null =>
+export const useProfileService = (): IProfileService =>
   useService(PROFILE_SERVICE_KEY, 'useProfileService')
-export const useAcademicConfigService = (): IAcademicConfigService | null =>
+export const useAcademicConfigService = (): IAcademicConfigService =>
   useService(ACADEMIC_CONFIG_SERVICE_KEY, 'useAcademicConfigService')
-export const usePreferencesService = (): IPreferencesService | null =>
+export const usePreferencesService = (): IPreferencesService =>
   useService(PREFERENCES_SERVICE_KEY, 'usePreferencesService')
-export const useGenerationService = (): IGenerationService | null =>
+export const useGenerationService = (): IGenerationService =>
   useService(GENERATION_SERVICE_KEY, 'useGenerationService')

@@ -1,0 +1,53 @@
+import type { ISchedulesRepository, ISchedulesFavoritesRepository } from './schedules-repository.interface'
+import type { IActivitiesRepository } from './activities.repository.interface'
+import type { IProfileRepository } from './profile-repository.interface'
+import type { IAcademicConfigRepository } from './academic-config.repository.interface'
+import type { IPreferencesRepository } from './preferences-repository.interface'
+import type { IGenerationRepository } from './generation.repository.interface'
+
+export class NoopSchedulesRepository implements ISchedulesRepository {
+  getEntry() { return Promise.resolve(undefined) }
+  getEntries() { return Promise.resolve([]) }
+  putEntry() { return Promise.resolve() }
+  putEntries() { return Promise.resolve() }
+  deleteEntry() { return Promise.resolve() }
+  deleteEntries() { return Promise.resolve() }
+}
+
+export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepository {
+  getIds() { return Promise.resolve([]) }
+  isInList() { return Promise.resolve(false) }
+  addToList() { return Promise.resolve() }
+  removeFromList() { return Promise.resolve() }
+  setList() { return Promise.resolve() }
+}
+
+export class NoopActivitiesRepository implements IActivitiesRepository {
+  getAll() { return Promise.resolve([]) }
+  get() { return Promise.resolve(undefined) }
+  put() { return Promise.resolve() }
+  putAll() { return Promise.resolve() }
+  delete() { return Promise.resolve() }
+}
+
+export class NoopProfileRepository implements IProfileRepository {
+  get() { return Promise.resolve(undefined) }
+  save() { return Promise.resolve() }
+}
+
+export class NoopAcademicConfigRepository implements IAcademicConfigRepository {
+  get() { return Promise.resolve(undefined) }
+  save() { return Promise.resolve() }
+}
+
+export class NoopPreferencesRepository implements IPreferencesRepository {
+  get() { return Promise.resolve(undefined) }
+  save() { return Promise.resolve() }
+}
+
+export class NoopGenerationRepository implements IGenerationRepository {
+  getAll() { return Promise.resolve([]) }
+  get() { return Promise.resolve(undefined) }
+  save() { return Promise.resolve() }
+  delete() { return Promise.resolve() }
+}

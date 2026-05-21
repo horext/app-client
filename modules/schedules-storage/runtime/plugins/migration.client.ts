@@ -5,7 +5,7 @@ import type { MigrationContext } from '../migrations/types'
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:migration',
-  dependsOn: ['schedules-storage:provide'],
+  dependsOn: ['schedules-storage:provide-repos'],
   async setup() {
     const getDb = inject(SCHEDULES_DB_KEY)!
     const db = await getDb()
