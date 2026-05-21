@@ -8,7 +8,7 @@ export const useUserEvents = () => {
 
   function saveNewItem(item: IEvent & { id: string }) {
     items.value.push(item)
-    return service.save(item) ?? Promise.resolve()
+    return service.create(item) ?? Promise.resolve()
   }
 
   function deleteItemById(id: string) {

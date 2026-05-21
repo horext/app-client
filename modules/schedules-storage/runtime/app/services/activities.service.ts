@@ -9,7 +9,7 @@ export class ActivitiesService implements IActivitiesService {
     return this.repo.getAll()
   }
 
-  async save(activity: IBaseEvent): Promise<IEvent> {
+  async create(activity: IBaseEvent): Promise<IEvent> {
     return await this.repo.create(activity)
   }
 
