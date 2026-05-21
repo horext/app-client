@@ -34,8 +34,7 @@ export const useUserProfile = () => {
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
     if (!academicConfigService) return
-    const config = await academicConfigService.getAcademicConfig()
-    const currentHourlyLoad = config?.hourlyLoad ?? null
+    const currentHourlyLoad = hourlyLoad.value
     if (currentHourlyLoad?.id) {
       if (currentHourlyLoad.id !== newHourlyLoad.id) {
         isNewHourlyLoad.value = true
