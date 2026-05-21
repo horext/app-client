@@ -61,25 +61,22 @@ const _props = withDefaults(
   defineProps<{
     event: IEventCreated | null
     loading?: boolean
-    modelValue?: boolean
   }>(),
   {
-    modelValue: false,
     loading: false,
   },
 )
 
 const emit = defineEmits<{
-  (name: 'update:modelValue', value: boolean): void
   (name: 'save:event', event: Activity): void
   (name: 'cancel'): void
 }>()
 
-const dialog = useVModel(_props, 'modelValue', emit)
+const dialog = defineModel<boolean>()
 
 const { event } = toRefs(_props)
 
-const internalEvent = ref( new Activity() )
+const internalEvent = ref(new Activity())
 
 watch(
   event,
