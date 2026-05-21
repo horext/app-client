@@ -5,7 +5,7 @@ export interface IScheduleSubject {
   id: number
   subject: Pick<ISubject, 'id'>
   hourlyLoad: Pick<IHourlyLoad, 'id'>
-  schedule: ISubjectSchedule
+  schedule: Pick<ISubjectSchedule, 'id' | 'section' | 'sessions'>
 }
 
 export interface IScheduleSubjectSessionDetail extends IScheduleSubject {
