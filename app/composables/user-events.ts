@@ -13,7 +13,7 @@ export const useUserEvents = () => {
 
   async function deleteItemById(id: string) {
     await service.delete(id)
-    items.value = items.value.filter((e) => e.id !== id)
+    store.deleteItemById(id)
   }
 
   async function updateItem(item: IEvent) {

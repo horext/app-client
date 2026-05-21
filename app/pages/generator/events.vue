@@ -86,21 +86,15 @@ const headers = EVENT_HEADERS
 
 const editedItem = ref<IEvent>(new Activity())
 
-const DEFAULT_INDEX = -1
-
-const editedIndex = ref(DEFAULT_INDEX)
-
 const dialogDelete = ref(false)
 
 const editItem = (item: IEvent) => {
-  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
   editedItem.value = item
   dialog.value = true
 }
 const { deleteItemById, updateItem, saveNewItem } = useUserEvents()
 const selectedDeleteItem = ref<IEvent>()
 const deleteItem = (item: IEvent) => {
-  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
   selectedDeleteItem.value = item
   dialogDelete.value = true
 }
@@ -112,18 +106,16 @@ const deleteItemConfirm = (selectedItem: IEvent) => {
 
 const close = () => {
   editedItem.value = new Activity()
-  editedIndex.value = DEFAULT_INDEX
   dialog.value = false
 }
 
 const closeDelete = () => {
   dialogDelete.value = false
-  editedIndex.value = DEFAULT_INDEX
 }
 
 const save = async (item: IEvent) => {
   const event = Activity.buildFrom(item)
-  if (editedIndex.value > -1) {
+  if (item.id) {
     updateItem(event)
     succcesUpdateEvent.value = true
   } else {
