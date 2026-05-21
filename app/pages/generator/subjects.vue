@@ -168,7 +168,6 @@ const {
       scheduleSubject: {
         id: sb.id,
       },
-      subject: subject,
     }))
   },
   {
