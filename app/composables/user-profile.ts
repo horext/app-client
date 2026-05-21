@@ -3,7 +3,7 @@ import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IApiRegistry } from '~~/modules/apis/runtime'
 import { useHourlyLoadApi } from '~~/modules/apis/runtime/composables'
 
-export const useUserProfile = (apis: IApiRegistry) => {
+export const useUserProfile = (apis?: IApiRegistry) => {
   const store = useUserProfileStore()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
