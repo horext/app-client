@@ -1,10 +1,12 @@
 import { storeToRefs } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
+import { useHourlyLoadApi } from '~~/modules/apis/runtime/composables'
 
 export const useUserProfile = () => {
   const store = useUserProfileStore()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
+  const hourlyLoadApi = useHourlyLoadApi()
   const {
     profile,
     hourlyLoad,
@@ -47,6 +49,12 @@ export const useUserProfile = () => {
     }
     hourlyLoad.value = newHourlyLoad
     await academicConfigService.patch({ hourlyLoad: newHourlyLoad })
+  }
+
+
+  async function fetchLatestHourlyLoad(facultyId: number) {
+    const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
+    updateHourlyLoad(data)
   }
 
   async function updateFaculty(_facultyId: number) {
@@ -133,5 +141,6 @@ export const useUserProfile = () => {
     updateSetupCompleted,
     updateBasicSettings,
     completeSetup,
+    fetchLatestHourlyLoad,
   }
 }

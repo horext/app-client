@@ -27,12 +27,11 @@ import {
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
 import { provideApis } from '~~/modules/apis/runtime'
-import { HOURLY_LOAD_API_KEY } from '~~/modules/apis/runtime/registry/keys'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
 
-const apis = provideApis()
+provideApis()
 
 const settingsStore = useSettingsStore()
 
@@ -47,16 +46,9 @@ const { subjects } = storeToRefs(subjectsStore)
 const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
 
-const { fetchProfile, fetchAcademicConfig, updateHourlyLoad } = useUserProfile()
+const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } = useUserProfile()
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
-
-const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
-
-async function fetchLatestHourlyLoad(facultyId: number) {
-  const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
-  updateHourlyLoad(data)
-}
 
 const { fetchSubjects } = useUserSubjects()
 const { fetchSchedules, mySchedules } = useUserSchedules()
