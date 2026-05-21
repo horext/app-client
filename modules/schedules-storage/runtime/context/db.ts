@@ -6,7 +6,7 @@ import type { IUserProfile } from '~/interfaces/profile'
 import type { IUserAcademicConfig } from '~/interfaces/academic-config'
 import type { IUserPreferences } from '~/interfaces/preferences'
 import type { IGenerationRecord } from '~/interfaces/generation-record'
-import { schemaMigrations } from './migrations/schema'
+import { schemaMigrations } from '../migrations/schema'
 
 export interface HorextDB extends DBSchema {
   schedules: {

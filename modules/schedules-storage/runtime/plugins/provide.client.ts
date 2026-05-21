@@ -1,4 +1,4 @@
-import { createDbFactory, SCHEDULES_DB_KEY } from '../db'
+import { createDbFactory, SCHEDULES_DB_KEY } from '../context/db'
 import { schemaMigrations } from '../migrations/schema'
 import { IndexedDBScheduleFavoritesRepository, IndexedDBSchedulesRepository } from '../repositories/indexed-db-schedules.repository'
 import { IndexedDBActivitiesRepository } from '../repositories/indexed-db-activities.repository'

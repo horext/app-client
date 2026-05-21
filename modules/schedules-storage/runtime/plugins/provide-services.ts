@@ -18,7 +18,7 @@ import {
   ACADEMIC_CONFIG_SERVICE_KEY,
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
-} from '../keys'
+} from '../context/keys'
 
 interface SchedulesStorage {
   schedulesRepository: ISchedulesRepository

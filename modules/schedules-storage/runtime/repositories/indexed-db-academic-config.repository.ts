@@ -1,7 +1,7 @@
 import { toRaw } from 'vue'
 import type { IUserAcademicConfig } from '~/interfaces/academic-config'
 import type { IAcademicConfigRepository } from './academic-config.repository.interface'
-import type { DbFactory } from '../db'
+import type { DbFactory } from '../context/db'
 
 const ACADEMIC_CONFIG_KEY: IUserAcademicConfig['id'] = 'academic-config'
 

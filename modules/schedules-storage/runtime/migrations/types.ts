@@ -1,5 +1,5 @@
 import type { IDBPDatabase } from 'idb'
-import type { HorextDB } from '../db'
+import type { HorextDB } from '../context/db'
 
 export type MigrationContext = {
   db: IDBPDatabase<HorextDB>

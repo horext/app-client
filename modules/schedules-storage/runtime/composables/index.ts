@@ -7,7 +7,7 @@ import {
   ACADEMIC_CONFIG_SERVICE_KEY,
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
-} from '../keys'
+} from '../context/keys'
 import type { IFavoritesSchedulesService } from '../services/favorites-schedules.service.interface'
 import type { IActivitiesService } from '../services/activities-service.interface'
 import type { IProfileService } from '../services/profile.service.interface'

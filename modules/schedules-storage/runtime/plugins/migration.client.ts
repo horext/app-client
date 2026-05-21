@@ -1,5 +1,5 @@
 import { inject } from 'vue'
-import { SCHEDULES_DB_KEY } from '../db'
+import { SCHEDULES_DB_KEY } from '../context/db'
 import { migrations } from '../migrations/index'
 import type { MigrationContext } from '../migrations/types'
 

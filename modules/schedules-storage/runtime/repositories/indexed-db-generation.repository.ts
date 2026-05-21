@@ -1,6 +1,6 @@
 import type { IGenerationRecord } from '~/interfaces/generation-record'
 import type { IGenerationRepository } from './generation.repository.interface'
-import type { DbFactory } from '../db'
+import type { DbFactory } from '../context/db'
 
 export class IndexedDBGenerationRepository implements IGenerationRepository {
   private static STORE_NAME = 'generations' as const

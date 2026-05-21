@@ -1,7 +1,7 @@
 import { toRaw } from 'vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 import type { ISchedulesFavoritesRepository, ISchedulesRepository } from './schedules-repository.interface'
-import type { DbFactory } from '../db'
+import type { DbFactory } from '../context/db'
 
 export class IndexedDBSchedulesRepository implements ISchedulesRepository {
   private static STORE_NAME = 'schedules' as const
