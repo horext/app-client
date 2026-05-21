@@ -53,7 +53,7 @@ const { fetchItems: fetchEvents } = useUserEvents()
 
 const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
 
-async function fetchHourlyLoad(facultyId: number) {
+async function fetchLatestHourlyLoad(facultyId: number) {
   const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
   updateHourlyLoad(data)
 }
@@ -66,7 +66,7 @@ const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 onMounted(async () => {
   await Promise.all([fetchProfile(), fetchAcademicConfig(), fetchPreferences()])
   if (profileStore.facultyId) {
-    await fetchHourlyLoad(profileStore.facultyId)
+    await fetchLatestHourlyLoad(profileStore.facultyId)
   }
   await Promise.all([
     fetchSubjects(),
