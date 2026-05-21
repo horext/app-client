@@ -15,27 +15,27 @@ export default defineNuxtModule({
     addImports([
       {
         name: 'useFavoritesSchedulesService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
       {
         name: 'useActivitiesService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
       {
         name: 'useProfileService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
       {
         name: 'useAcademicConfigService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
       {
         name: 'usePreferencesService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
       {
         name: 'useGenerationService',
-        from: resolver.resolve('runtime/composables/index'),
+        from: resolver.resolve('runtime/app/composables/index'),
       },
     ])
 
