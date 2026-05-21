@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
-    {{ loadingProfile }}
-    <v-dialog v-if="!loadingProfile" :model-value="!setupCompleted" max-width="600" persistent>
+    <v-dialog :model-value="!setupCompleted" max-width="600" persistent>
       <InitialForm :loading="loading" @submit="onSubmit" />
     </v-dialog>
     <base-alert-dialog v-model="isNewHourlyLoad">
@@ -30,7 +29,7 @@ useSeoMeta({
   description: 'Genera tu horario de clases de manera sencilla',
 })
 
-const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad, completeSetup, loadingProfile } =
+const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad, completeSetup } =
   useUserProfile()
 
 const router = useRouter()
