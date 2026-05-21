@@ -1,6 +1,6 @@
 /// <reference types="google.accounts" />
 
-import type { UseScriptContext } from "@unhead/vue"
+import type { UseScriptContext } from '@unhead/vue'
 
 export interface GoogleAccountsLoaderApi {
   google: {

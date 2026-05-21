@@ -1,5 +1,8 @@
 import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
-import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type {
+  ISchedulesFavoritesRepository,
+  ISchedulesRepository,
+} from '../repositories/schedules-repository.interface'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IFavoritesSchedulesService } from './favorites-schedules.service.interface'
 

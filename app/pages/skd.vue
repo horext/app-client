@@ -18,9 +18,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import {
-  useScheduleSubjectApi,
-} from '~~/modules/apis/runtime/composables'
+import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'

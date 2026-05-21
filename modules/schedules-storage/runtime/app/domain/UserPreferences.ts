@@ -34,7 +34,9 @@ export class UserPreferences {
   static from(data: undefined): undefined
   static from(data: IUserPreferences): UserPreferences
   static from(data: IUserPreferences | undefined): UserPreferences | undefined
-  static from(data?: IUserPreferences | undefined): UserPreferences | undefined {
+  static from(
+    data?: IUserPreferences | undefined,
+  ): UserPreferences | undefined {
     if (!data) {
       return undefined
     }

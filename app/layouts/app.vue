@@ -46,7 +46,8 @@ const { subjects } = storeToRefs(subjectsStore)
 const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
 
-const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } = useUserProfile(apis)
+const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } =
+  useUserProfile(apis)
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
 

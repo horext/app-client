@@ -3,7 +3,8 @@ import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
 async function up({ db }: MigrationContext) {
-  const rawEvents = readLsJson<Array<IBaseEvent & { id: string }>>('myEvents') ?? []
+  const rawEvents =
+    readLsJson<Array<IBaseEvent & { id: string }>>('myEvents') ?? []
   if (rawEvents.length === 0) return
 
   const tx = db.transaction('activities', 'readwrite')

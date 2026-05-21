@@ -61,11 +61,7 @@ import { storeToRefs } from 'pinia'
 
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
-  submit: [
-    facultyId: number,
-    specialityId: number,
-    hourlyLoad: IHourlyLoad,
-  ]
+  submit: [facultyId: number, specialityId: number, hourlyLoad: IHourlyLoad]
 }>()
 
 const hourlyLoadApi = useHourlyLoadApi()

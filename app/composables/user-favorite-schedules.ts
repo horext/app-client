@@ -33,7 +33,8 @@ export const useUserFavoriteSchedules = () => {
   }
 
   async function fetchFavoritesSchedules() {
-    favoritesSchedules.value = await favoritesStorage.getFavoriteSchedules() ?? []
+    favoritesSchedules.value =
+      (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
 
   const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {

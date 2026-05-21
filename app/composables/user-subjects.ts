@@ -24,7 +24,9 @@ export const useUserSubjects = () => {
 
   async function fetchSubjects() {
     const data = await service.getAll()
-    subjects.value = data.filter((subject: ISelectedSubject) => subject?.schedules?.length > 0)
+    subjects.value = data.filter(
+      (subject: ISelectedSubject) => subject?.schedules?.length > 0,
+    )
   }
 
   return {

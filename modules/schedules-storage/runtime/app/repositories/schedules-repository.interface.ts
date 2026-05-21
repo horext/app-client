@@ -6,7 +6,6 @@ export interface ISchedulesRepository {
   putEntries(schedules: IScheduleGenerate[]): Promise<void>
   deleteEntry(id: IScheduleGenerate['id']): Promise<void>
   deleteEntries(ids: IScheduleGenerate['id'][]): Promise<void>
-
 }
 export interface ISchedulesFavoritesRepository {
   getIds(): Promise<IScheduleGenerate['id'][]>

@@ -65,10 +65,22 @@ const MON = 1
 const TUE = 2
 const THU = 4
 
-const T_08_10 = { startTime: '2024-01-01T08:00:00', endTime: '2024-01-01T10:00:00' }
-const T_09_11 = { startTime: '2024-01-01T09:00:00', endTime: '2024-01-01T11:00:00' }
-const T_10_12 = { startTime: '2024-01-01T10:00:00', endTime: '2024-01-01T12:00:00' }
-const T_14_16 = { startTime: '2024-01-01T14:00:00', endTime: '2024-01-01T16:00:00' }
+const T_08_10 = {
+  startTime: '2024-01-01T08:00:00',
+  endTime: '2024-01-01T10:00:00',
+}
+const T_09_11 = {
+  startTime: '2024-01-01T09:00:00',
+  endTime: '2024-01-01T11:00:00',
+}
+const T_10_12 = {
+  startTime: '2024-01-01T10:00:00',
+  endTime: '2024-01-01T12:00:00',
+}
+const T_14_16 = {
+  startTime: '2024-01-01T14:00:00',
+  endTime: '2024-01-01T16:00:00',
+}
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -92,7 +104,10 @@ describe('getSchedules', () => {
   describe('single subject', () => {
     it('returns exactly one combination', () => {
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([subject], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
@@ -102,10 +117,15 @@ describe('getSchedules', () => {
 
     it('includes base events in every combination', () => {
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const baseEvent = makeEvent('e1', THU, T_08_10.startTime, T_08_10.endTime)
-      const result = getSchedules([subject], [baseEvent], { crossingSubjects: 0 })
+      const result = getSchedules([subject], [baseEvent], {
+        crossingSubjects: 0,
+      })
       expect(result.combinations).toHaveLength(1)
       // base event is on a different day — no crossing
       expect(result.combinations[0]!.crossings).toBe(0)
@@ -115,10 +135,16 @@ describe('getSchedules', () => {
   describe('two subjects — no overlap', () => {
     it('produces one combination with zero crossings', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_10_12, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_10_12, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
@@ -128,10 +154,16 @@ describe('getSchedules', () => {
 
     it('produces one combination when sessions are on different days', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
@@ -144,86 +176,135 @@ describe('getSchedules', () => {
       // The first crossing within the per-event counter is recorded as CROSSING_BASIS;
       // the combination is rejected afterwards because crossingCombination > crossingSubjects.
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(0)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(
+        true,
+      )
     })
 
     it('records CROSSING_EXCEEDED when one event overlaps more than crossingSubjects+1 others', () => {
       // s1 session on Mon 09-11 will intersect s2 (Mon 08-10) AND s3 (Mon 10-12 — wait, end=10 is not overlap)
       // Use s3 Mon 09-11 to guarantee a second intersection in the same restScheduleEvents pass
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s3 = makeSubject(3, [
-        { scheduleId: 30, sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 30,
+          sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       // crossingSubjects=0: first intersection (s1 vs s2) → CROSSING_BASIS (within limit 0);
       // second (s1 vs s3) → CROSSING_EXCEEDED (0+1 > 0)
       const result = getSchedules([s1, s2, s3], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(0)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_EXCEEDED')).toBe(true)
+      expect(
+        result.occurrences.some((o) => o.type === 'CROSSING_EXCEEDED'),
+      ).toBe(true)
     })
 
     it('accepts the combination and records CROSSING_BASIS when crossingSubjects=1', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 1 })
       expect(result.combinations).toHaveLength(1)
       expect(result.combinations[0]!.crossings).toBe(1)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(
+        true,
+      )
     })
   })
 
   describe('practice session crossings', () => {
     it('rejects and records CROSSING_NOT_AVAILABLE when both are P type and crossPractices=false', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'P' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'P' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], {
         crossingSubjects: 1,
         crossPractices: false,
       })
       expect(result.combinations).toHaveLength(0)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE')).toBe(true)
+      expect(
+        result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+      ).toBe(true)
     })
 
     it('accepts the combination when both are P type and crossPractices=true', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'P' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'P' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], {
         crossingSubjects: 1,
         crossPractices: true,
       })
       expect(result.combinations).toHaveLength(1)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(
+        true,
+      )
     })
 
     it('treats a T vs P crossing as CROSSING_BASIS (not a forbidden crossing)', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'P' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], {
         crossingSubjects: 1,
@@ -231,27 +312,51 @@ describe('getSchedules', () => {
       })
       // Only P+P is forbidden — T+P should be allowed
       expect(result.combinations).toHaveLength(1)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(
+        true,
+      )
     })
   })
 
   describe('base event crossings', () => {
     it('rejects a combination when a session overlaps a base event (crossingSubjects=0)', () => {
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       // Base event overlaps with the session
-      const baseEvent = makeEvent('e1', MON, T_09_11.startTime, T_09_11.endTime, 'T')
-      const result = getSchedules([subject], [baseEvent], { crossingSubjects: 0 })
+      const baseEvent = makeEvent(
+        'e1',
+        MON,
+        T_09_11.startTime,
+        T_09_11.endTime,
+        'T',
+      )
+      const result = getSchedules([subject], [baseEvent], {
+        crossingSubjects: 0,
+      })
       expect(result.combinations).toHaveLength(0)
     })
 
     it('accepts a combination when base event is on a different day', () => {
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
-      const baseEvent = makeEvent('e1', TUE, T_08_10.startTime, T_08_10.endTime, 'T')
-      const result = getSchedules([subject], [baseEvent], { crossingSubjects: 0 })
+      const baseEvent = makeEvent(
+        'e1',
+        TUE,
+        T_08_10.startTime,
+        T_08_10.endTime,
+        'T',
+      )
+      const result = getSchedules([subject], [baseEvent], {
+        crossingSubjects: 0,
+      })
       expect(result.combinations).toHaveLength(1)
       expect(result.combinations[0]!.crossings).toBe(0)
     })
@@ -262,12 +367,24 @@ describe('getSchedules', () => {
       // s1: schedule A (Mon 08-10), schedule B (Tue 08-10)
       // s2: schedule C (Mon 09-11 — overlaps A), schedule D (Thu 14-16 — no overlap)
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 11, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 11,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }] },
-        { scheduleId: 21, sessions: [{ id: 4, day: THU, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 21,
+          sessions: [{ id: 4, day: THU, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       // (A,C) → cross; (A,D) → ok; (B,C) → ok; (B,D) → ok → 3 valid
@@ -277,13 +394,27 @@ describe('getSchedules', () => {
 
     it('each combination contains events from all subjects plus base events', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
       ])
-      const baseEvent = makeEvent('e1', THU, T_08_10.startTime, T_08_10.endTime, 'T')
-      const result = getSchedules([s1, s2], [baseEvent], { crossingSubjects: 0 })
+      const baseEvent = makeEvent(
+        'e1',
+        THU,
+        T_08_10.startTime,
+        T_08_10.endTime,
+        'T',
+      )
+      const result = getSchedules([s1, s2], [baseEvent], {
+        crossingSubjects: 0,
+      })
       expect(result.combinations).toHaveLength(1)
       // events = 1 (s1 session) + 1 (s2 session) + 1 (base event) = 3
       expect(result.combinations[0]!.events).toHaveLength(3)
@@ -293,9 +424,18 @@ describe('getSchedules', () => {
   describe('single subject with multiple schedules', () => {
     it('returns one combination per schedule', () => {
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 11, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 12, sessions: [{ id: 3, day: THU, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 11,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 12,
+          sessions: [{ id: 3, day: THU, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([subject], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(3)
@@ -326,13 +466,16 @@ describe('getSchedules', () => {
         {
           scheduleId: 10,
           sessions: [
-            { id: 1, day: MON, ...T_08_10, typeCode: 'T' },  // no overlap
-            { id: 2, day: TUE, ...T_08_10, typeCode: 'T' },  // overlaps s2's session
+            { id: 1, day: MON, ...T_08_10, typeCode: 'T' }, // no overlap
+            { id: 2, day: TUE, ...T_08_10, typeCode: 'T' }, // overlaps s2's session
           ],
         },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 3, day: TUE, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 3, day: TUE, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(0)
@@ -343,7 +486,10 @@ describe('getSchedules', () => {
   describe('multi-subject: one subject has no schedules', () => {
     it('returns zero combinations when any subject has an empty schedule list', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, []) // no schedules
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
@@ -357,13 +503,22 @@ describe('getSchedules', () => {
       // s1 Mon 09-11, s2 Mon 08-10 (cross #1), s3 Mon 09-11 (cross #2)
       // crossingSubjects=1: the total 2 crossings exceeds the limit
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s3 = makeSubject(3, [
-        { scheduleId: 30, sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 30,
+          sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2, s3], [], { crossingSubjects: 1 })
       expect(result.combinations).toHaveLength(0)
@@ -371,10 +526,16 @@ describe('getSchedules', () => {
 
     it('accepts combination when crossings are exactly at the limit', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       // crossingSubjects=1, exactly 1 crossing — must be accepted
       const result = getSchedules([s1, s2], [], { crossingSubjects: 1 })
@@ -387,16 +548,34 @@ describe('getSchedules', () => {
     it('enumerates all 8 combinations for 3 subjects × 2 schedules each', () => {
       // All sessions on different days so no crossings — every combo is valid
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 11, sessions: [{ id: 2, day: MON, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 11,
+          sessions: [{ id: 2, day: MON, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 3, day: TUE, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 21, sessions: [{ id: 4, day: TUE, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 3, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 21,
+          sessions: [{ id: 4, day: TUE, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const s3 = makeSubject(3, [
-        { scheduleId: 30, sessions: [{ id: 5, day: THU, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 31, sessions: [{ id: 6, day: THU, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 30,
+          sessions: [{ id: 5, day: THU, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 31,
+          sessions: [{ id: 6, day: THU, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2, s3], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(8)
@@ -409,12 +588,24 @@ describe('getSchedules', () => {
       // 2 subjects × 2 schedules — the overlapping pair (id 1, id 3) appears
       // in multiple combinations but should be recorded once per type
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
-        { scheduleId: 11, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 11,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }] },
-        { scheduleId: 21, sessions: [{ id: 4, day: THU, ...T_14_16, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 3, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
+        {
+          scheduleId: 21,
+          sessions: [{ id: 4, day: THU, ...T_14_16, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       // Only sessions 1 and 3 overlap — one CROSSING_EXCEEDED occurrence
@@ -451,30 +642,52 @@ describe('getSchedules', () => {
       // A schedule session has type 'T'/'P'/etc., so the condition never fires
       // for a session vs. a user base event — the crossing is treated as CROSSING_BASIS.
       const subject = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
-      const baseEvent = makeEvent('e1', MON, T_09_11.startTime, T_09_11.endTime, 'MY_EVENT')
+      const baseEvent = makeEvent(
+        'e1',
+        MON,
+        T_09_11.startTime,
+        T_09_11.endTime,
+        'MY_EVENT',
+      )
       const result = getSchedules([subject], [baseEvent], {
         crossingSubjects: 1,
         crossEvent: false,
       })
       // Crossing is allowed (crossingSubjects=1) and NOT marked NOT_AVAILABLE
       expect(result.combinations).toHaveLength(1)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(true)
-      expect(result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE')).toBe(false)
+      expect(result.occurrences.some((o) => o.type === 'CROSSING_BASIS')).toBe(
+        true,
+      )
+      expect(
+        result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+      ).toBe(false)
     })
   })
 
   describe('crossingSubjects large enough to absorb all crossings', () => {
     it('accepts all combinations when the limit is higher than any possible crossing count', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const s3 = makeSubject(3, [
-        { scheduleId: 30, sessions: [{ id: 3, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 30,
+          sessions: [{ id: 3, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2, s3], [], { crossingSubjects: 99 })
       // Every combination passes regardless of crossings
@@ -486,10 +699,16 @@ describe('getSchedules', () => {
   describe('combination output structure', () => {
     it('scheduleSubjectIds contains the picked scheduleSubject.id for each subject', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
@@ -501,10 +720,16 @@ describe('getSchedules', () => {
 
     it('occurrence has correct id, name, eventTarget and eventSource', () => {
       const s1 = makeSubject(1, [
-        { scheduleId: 10, sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }] },
+        {
+          scheduleId: 10,
+          sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+        },
       ])
       const s2 = makeSubject(2, [
-        { scheduleId: 20, sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }] },
+        {
+          scheduleId: 20,
+          sessions: [{ id: 2, day: MON, ...T_09_11, typeCode: 'T' }],
+        },
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 1 })
       expect(result.occurrences).toHaveLength(1)

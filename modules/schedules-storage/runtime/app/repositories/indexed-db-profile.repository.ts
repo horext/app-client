@@ -5,7 +5,7 @@ import type { DbFactory } from '../context/db'
 const PROFILE_KEY: IUserProfile['id'] = 'profile'
 
 export class IndexedDBProfileRepository implements IProfileRepository {
-private static STORE_NAME = 'profile' as const
+  private static STORE_NAME = 'profile' as const
   constructor(private readonly getDb: DbFactory) {}
 
   async get(): Promise<IUserProfile | undefined> {
@@ -15,6 +15,6 @@ private static STORE_NAME = 'profile' as const
 
   async save(profile: IUserProfile): Promise<void> {
     const db = await this.getDb()
-    await db.put(IndexedDBProfileRepository.STORE_NAME,profile)
+    await db.put(IndexedDBProfileRepository.STORE_NAME, profile)
   }
 }

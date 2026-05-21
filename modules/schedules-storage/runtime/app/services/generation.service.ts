@@ -1,9 +1,16 @@
-import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '../../shared/interfaces/generation-record'
+import type {
+  IGenerationMeta,
+  IGenerationRecord,
+  IGenerationResult,
+} from '../../shared/interfaces/generation-record'
 import type { IIntersectionOccurrence } from '../../shared/interfaces/ocurrences'
 import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
-import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type {
+  ISchedulesFavoritesRepository,
+  ISchedulesRepository,
+} from '../repositories/schedules-repository.interface'
 
 export class GenerationService implements IGenerationService {
   constructor(

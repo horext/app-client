@@ -2,7 +2,7 @@ import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserSchedules = () => {
   const generationStore = useGenerationStore()
-  const  { loadSaved } = useGeneration()
+  const { loadSaved } = useGeneration()
   const { result } = storeToRefs(generationStore)
 
   async function updateSchedules(_schedules: IScheduleGenerate[]) {

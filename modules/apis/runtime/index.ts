@@ -23,7 +23,7 @@ export const provideFetch = () => {
 }
 
 export interface IApiRegistry {
-  get<T >(key: InjectionKey<T>): T
+  get<T>(key: InjectionKey<T>): T
 }
 
 export const provideApis = (registry = APIS_REGISTRY) => {
