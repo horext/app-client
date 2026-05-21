@@ -1,6 +1,6 @@
 import type {
   IScheduleSubjectResponse,
-  IScheduleSubjectSessionDetailResponse,
+  IScheduleSubjectDetailResponse,
 } from '../interfaces/schedule-subject'
 import { BaseApi } from './base'
 
@@ -9,7 +9,7 @@ export interface IScheduleSubjectApi {
     subject: number,
     hourlyLoad: number,
   ): Promise<IScheduleSubjectResponse[]>
-  getAllByIds(ids: Array<number>): Promise<IScheduleSubjectSessionDetailResponse[]>
+  getAllByIds(ids: Array<number>): Promise<IScheduleSubjectDetailResponse[]>
 }
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
@@ -25,7 +25,7 @@ export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
   }
 
   getAllByIds(ids: Array<number>) {
-    return this.$fetch<IScheduleSubjectSessionDetailResponse[]>(
+    return this.$fetch<IScheduleSubjectDetailResponse[]>(
       PATH_SCHEDULE_SUBJECTS,
       {
         params: {

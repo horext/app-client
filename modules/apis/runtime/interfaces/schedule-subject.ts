@@ -8,6 +8,6 @@ export interface IScheduleSubjectResponse {
   schedule: IScheduleResponse
 }
 
-export interface IScheduleSubjectSessionDetailResponse extends IScheduleSubjectResponse {
+export interface IScheduleSubjectDetailResponse extends IScheduleSubjectResponse {
   subject: ISubjectResponse
 }
