@@ -1,9 +1,9 @@
-import type { IEvent } from '../../shared/interfaces/event'
+import type { IBaseEvent } from '../../shared/interfaces/event'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
 async function up({ db }: MigrationContext) {
-  const rawEvents = readLsJson<Array<IEvent & { id: string }>>('myEvents') ?? []
+  const rawEvents = readLsJson<Array<IBaseEvent & { id: string }>>('myEvents') ?? []
   if (rawEvents.length === 0) return
 
   const tx = db.transaction('activities', 'readwrite')

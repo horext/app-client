@@ -4,6 +4,7 @@ import type { IProfileRepository } from './profile-repository.interface'
 import type { IAcademicConfigRepository } from './academic-config.repository.interface'
 import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
+import type { IEvent } from '../../shared/interfaces/event'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
   getEntries() { return Promise.resolve([]) }
@@ -24,8 +25,9 @@ export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepo
 export class NoopActivitiesRepository implements IActivitiesRepository {
   getAll() { return Promise.resolve([]) }
   get() { return Promise.resolve(undefined) }
-  put() { return Promise.resolve() }
-  putAll() { return Promise.resolve() }
+  create(): Promise<IEvent> { throw new Error('Method not implemented.') }
+  update(): Promise<IEvent> { throw new Error('Method not implemented.') }
+  putAll() { return Promise.resolve([]) }
   delete() { return Promise.resolve() }
 }
 

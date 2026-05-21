@@ -1,32 +1,42 @@
-import { toRaw } from 'vue'
-import type { IEvent } from '../../shared/interfaces/event'
+import type { IBaseEvent, IEvent } from '../../shared/interfaces/event'
 import type { IActivitiesRepository } from './activities.repository.interface'
 import type { DbFactory } from '../context/db'
 
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
   constructor(private readonly getDb: DbFactory) {}
 
-  async getAll(): Promise<Array<IEvent & { id: string }>> {
+  async getAll(): Promise<Array<IBaseEvent & { id: string }>> {
     const db = await this.getDb()
     return db.getAll('activities')
   }
 
-  async get(id: string): Promise<(IEvent & { id: string }) | undefined> {
+  async get(id: string): Promise<IEvent | undefined> {
     const db = await this.getDb()
     return db.get('activities', id)
   }
 
-  async put(activity: IEvent & { id: string }): Promise<void> {
+  async create(activity: IBaseEvent): Promise<IEvent> {
     const db = await this.getDb()
-    await db.put('activities', toRaw(activity))
+    const id = crypto.randomUUID()
+    const newActivity = { ...activity, id }
+    await db.put('activities', newActivity)
+    return newActivity
   }
 
-  async putAll(activities: Array<IEvent & { id: string }>): Promise<void> {
-    if (!activities.length) return
+  async update(activity: IEvent): Promise<IEvent> {
+    const db = await this.getDb()
+    await db.put('activities', activity)
+    return activity
+  }
+
+  async putAll(activities: Array<IBaseEvent>): Promise<IEvent[]> {
+    if (!activities.length) return []
     const db = await this.getDb()
     const tx = db.transaction('activities', 'readwrite')
-    await Promise.all(activities.map((a) => tx.store.put(toRaw(a))))
+    const newActivities = activities.map((a) => ({ ...a, id: crypto.randomUUID() }))
+    await Promise.all(newActivities.map((a) => tx.store.put(a)))
     await tx.done
+    return newActivities
   }
 
   async delete(id: string): Promise<void> {

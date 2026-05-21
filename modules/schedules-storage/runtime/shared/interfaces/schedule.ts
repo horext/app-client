@@ -1,4 +1,4 @@
-import type { IEvent } from './event'
+import type { IBaseEvent } from './event'
 import type { ISubject, ISubjectSchedule } from './subject'
 
 export interface IScheduleSubjectGenerate extends ISubjectSchedule {
@@ -11,5 +11,5 @@ export interface IScheduleGenerate {
   scheduleSubjectIds: number[]
   schedule: IScheduleSubjectGenerate[]
   crossings: number
-  events: IEvent[]
+  events: IBaseEvent[]
 }

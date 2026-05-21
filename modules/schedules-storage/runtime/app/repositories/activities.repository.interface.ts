@@ -1,9 +1,10 @@
-import type { IEvent } from '../../shared/interfaces/event'
+import type { IBaseEvent, IEvent } from '../../shared/interfaces/event'
 
 export interface IActivitiesRepository {
-  getAll(): Promise<Array<IEvent & { id: string }>>
-  get(id: string): Promise<(IEvent & { id: string }) | undefined>
-  put(activity: IEvent & { id: string }): Promise<void>
-  putAll(activities: Array<IEvent & { id: string }>): Promise<void>
+  getAll(): Promise<Array<IEvent>>
+  get(id: string): Promise<IEvent | undefined>
+  create(activity: IBaseEvent): Promise<IEvent>
+  update(activity: IEvent): Promise<IEvent>
+  putAll(activities: Array<IBaseEvent>): Promise<IEvent[]>
   delete(id: string): Promise<void>
 }
