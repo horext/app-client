@@ -53,12 +53,13 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch, toRefs } from 'vue'
-import type { IEvent } from '~/interfaces/event'
+import { Activity } from '~/models/Event'
 import type { VForm } from 'vuetify/components/VForm'
+import type { IEventCreated } from '~/interfaces/event'
 
 const _props = withDefaults(
   defineProps<{
-    event: IEvent
+    event: IEventCreated | null
     loading?: boolean
     modelValue?: boolean
   }>(),
@@ -70,7 +71,7 @@ const _props = withDefaults(
 
 const emit = defineEmits<{
   (name: 'update:modelValue', value: boolean): void
-  (name: 'save:event', event: IEvent): void
+  (name: 'save:event', event: Activity): void
   (name: 'cancel'): void
 }>()
 
@@ -78,26 +79,15 @@ const dialog = useVModel(_props, 'modelValue', emit)
 
 const { event } = toRefs(_props)
 
-const internalEvent = ref<IEvent>({
-  id: event.value.id,
-  title: event.value.title,
-  day: event.value.day,
-  startTime: event.value.startTime,
-  endTime: event.value.endTime,
-  color: event.value.color,
-  type: event.value.type,
-})
+const internalEvent = ref( new Activity() )
+
 watch(
   event,
   (newVal) => {
-    internalEvent.value = {
-      id: newVal.id,
-      title: newVal.title,
-      day: newVal.day,
-      startTime: newVal.startTime,
-      endTime: newVal.endTime,
-      color: newVal.color,
-      type: newVal.type,
+    if (newVal) {
+      internalEvent.value.updateFrom(newVal)
+    } else {
+      internalEvent.value = new Activity()
     }
   },
   { immediate: true },

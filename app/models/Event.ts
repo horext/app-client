@@ -94,7 +94,7 @@ export class Activity extends Event {
     )
   }
 
-  buildFrom(event: IEvent) {
+  updateFrom(event: IEvent) {
     return new Activity(
       event.day,
       event.startTime,

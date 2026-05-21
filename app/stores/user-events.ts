@@ -1,10 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { IEvent } from '~/interfaces/event'
+export type { IEventCreated } from '~/interfaces/event'
 
-export interface IEventCreated extends IEvent {
-  id: string
-}
 
 export const useUserEventsStore = defineStore('user/events', () => {
   const items = ref<Array<IEventCreated>>([])

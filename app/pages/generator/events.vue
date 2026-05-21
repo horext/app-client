@@ -63,10 +63,9 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Activity } from '~/models/Event'
-import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
+import type { Activity } from '~/models/Event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
@@ -80,7 +79,7 @@ const dialog = ref(false)
 
 const headers = EVENT_HEADERS
 
-const editedItem = ref<IEvent>(new Activity())
+const editedItem = ref<IEventCreated | null>(null)
 
 const dialogDelete = ref(false)
 
@@ -89,7 +88,12 @@ const editItem = (item: IEventCreated) => {
   dialog.value = true
 }
 
-const { deleteItemById, updateItem, createNewItem, items: activities } = useUserEvents()
+const {
+  deleteItemById,
+  updateItem,
+  createNewItem,
+  items: activities,
+} = useUserEvents()
 
 const selectedDeleteItem = ref<IEventCreated>()
 const deleteItem = (item: IEventCreated) => {
@@ -103,7 +107,7 @@ const deleteItemConfirm = (selectedItem: IEventCreated) => {
 }
 
 const close = () => {
-  editedItem.value = new Activity()
+  editedItem.value = null
   dialog.value = false
 }
 
@@ -111,9 +115,8 @@ const closeDelete = () => {
   dialogDelete.value = false
 }
 
-const save = async (item: IEvent) => {
-  const event = Activity.buildFrom(item)
-  if (item.id) {
+const save = async (event: Activity) => {
+  if (event.id) {
     updateItem(event)
     succcesUpdateEvent.value = true
   } else {

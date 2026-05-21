@@ -12,3 +12,7 @@ export interface IEvent {
   startTime: string
   endTime: string
 }
+
+export interface IEventCreated extends IEvent {
+  id: string
+}
