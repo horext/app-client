@@ -92,7 +92,7 @@ const editItem = (item: IEvent) => {
   editedItem.value = item
   dialog.value = true
 }
-const { deleteItemById, updateItem, saveNewItem } = useUserEvents()
+const { deleteItemById, updateItem, createNewItem } = useUserEvents()
 const selectedDeleteItem = ref<IEvent>()
 const deleteItem = (item: IEvent) => {
   selectedDeleteItem.value = item
@@ -119,7 +119,7 @@ const save = async (item: IEvent) => {
     updateItem(event)
     succcesUpdateEvent.value = true
   } else {
-    saveNewItem(event)
+    createNewItem(event)
     succcesAddEvent.value = true
   }
   close()

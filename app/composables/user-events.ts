@@ -6,7 +6,7 @@ export const useUserEvents = () => {
   const service = useActivitiesService()
   const { items } = storeToRefs(store)
 
-  async function saveNewItem(item: IEvent) {
+  async function createNewItem(item: IEvent) {
     const result = await service.create(item)
     items.value.push(result)
   }
@@ -31,7 +31,7 @@ export const useUserEvents = () => {
 
   return {
     items,
-    saveNewItem,
+    createNewItem,
     deleteItemById,
     updateItem,
     fetchItems,
