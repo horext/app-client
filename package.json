@@ -18,7 +18,8 @@
     "test:unit": "vitest",
     "test:unit:cov": "vitest --coverage",
     "test:unit:ci": "vitest run --coverage",
-    "test:types": "nuxi prepare && vue-tsc --noEmit"
+    "test:types": "nuxi prepare && vue-tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -65,6 +66,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-vue": "^10.9.1",
     "happy-dom": "^20.9.0",
+    "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "nitropack": "^2.13.4",
     "nuxt": "^4.4.6",
