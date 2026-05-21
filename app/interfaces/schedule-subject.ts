@@ -7,7 +7,3 @@ export interface IScheduleSubject {
   hourlyLoad: Pick<IHourlyLoad, 'id'>
   schedule: Pick<ISubjectSchedule, 'id' | 'section' | 'sessions'>
 }
-
-export interface IScheduleSubjectSessionDetail extends IScheduleSubject {
-  subject: ISubject
-}
