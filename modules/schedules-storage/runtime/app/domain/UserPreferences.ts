@@ -31,7 +31,13 @@ export class UserPreferences {
     return new UserPreferences('preferences', [0, 1, 2, 3, 4, 5, 6], 0, 5)
   }
 
-  static from(data: IUserPreferences): UserPreferences {
+  static from(data: undefined): undefined
+  static from(data: IUserPreferences): UserPreferences
+  static from(data: IUserPreferences | undefined): UserPreferences | undefined
+  static from(data?: IUserPreferences | undefined): UserPreferences | undefined {
+    if (!data) {
+      return undefined
+    }
     return new UserPreferences(
       data.id,
       data.weekDays,

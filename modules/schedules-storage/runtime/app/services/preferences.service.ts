@@ -7,8 +7,7 @@ export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
 
   private async _load(): Promise<UserPreferences | undefined> {
-    const data = await this.repo.get()
-    return data ? UserPreferences.from(data) : undefined
+    return await this.repo.get()
   }
 
   private async _save(prefs: UserPreferences): Promise<void> {
@@ -16,7 +15,7 @@ export class PreferencesService implements IPreferencesService {
   }
 
   async getPreferences(): Promise<IUserPreferences | undefined> {
-    return (await this._load())?.toData()
+    return await this._load()
   }
 
   async createPreferences(): Promise<IUserPreferences> {
