@@ -1,15 +1,15 @@
-import type { IOrganization } from '~/interfaces/organization'
+import type { IOrganizationResponse } from '../interfaces/organization'
 import { BaseApi } from './base'
 
 export interface ISpecialityApi {
-  getAllByFaculty(facultyId: number): Promise<IOrganization[]>
+  getAllByFaculty(facultyId: number): Promise<IOrganizationResponse[]>
 }
 
 const PATH_SUBJECTS = 'specialities'
 
 export class SpecialityApi extends BaseApi {
   getAllByFaculty(facultyId: number) {
-    return this.$fetch<IOrganization[]>(PATH_SUBJECTS, {
+    return this.$fetch<IOrganizationResponse[]>(PATH_SUBJECTS, {
       params: {
         faculty: facultyId,
       },
