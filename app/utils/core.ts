@@ -98,7 +98,7 @@ export function getSchedules(
         for (const restScheduleEvent of restScheduleScheduleEvents) {
           if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
-              const occurrenceId = [scheduleSubjectEvent.id, restScheduleEvent.id]
+              const occurrenceId = [scheduleSubjectEvent.internalId, restScheduleEvent.internalId]
                 .sort()
                 .join('-')
               const key = `${occurrenceId}:${type}`

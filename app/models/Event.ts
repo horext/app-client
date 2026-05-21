@@ -1,8 +1,10 @@
+import type { UUID } from 'crypto'
 import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
 import { convertToDate } from '~/utils/weekday'
 
 export default class Event {
-  id: string
+  id?: string
+  internalId: string
   day: Weekdays
   startTime: string
   endTime: string
@@ -25,7 +27,8 @@ export default class Event {
     color: string,
     type: string,
     category?: EventCategories,
-    id: string = crypto.randomUUID(),
+    id?: string,
+    internalId = crypto.randomUUID(),
   ) {
     this.day = day
     this.startTime = startTime
@@ -37,6 +40,7 @@ export default class Event {
     this.category = category
     this.type = type
     this.id = id
+    this.internalId = internalId
   }
 
   get start() {
@@ -73,6 +77,7 @@ export class Activity extends Event {
     location = '',
     color = '#1976d2',
     id?: string,
+    internalId?: UUID,
   ) {
     super(
       day,
@@ -85,6 +90,7 @@ export class Activity extends Event {
       'MY_EVENT',
       'MY_EVENT',
       id,
+      internalId,
     )
   }
 
@@ -97,7 +103,7 @@ export class Activity extends Event {
       event.description,
       event.location,
       event.color,
-      event.id || crypto.randomUUID(),
+      event.id,
     )
   }
 }
