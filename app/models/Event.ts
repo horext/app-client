@@ -94,7 +94,7 @@ export class Activity extends Event {
     )
   }
 
-  updateFrom(event: IEvent) {
+  static override buildFrom(event: IEvent) {
     return new Activity(
       event.day,
       event.startTime,

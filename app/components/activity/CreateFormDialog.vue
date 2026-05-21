@@ -82,7 +82,7 @@ watch(
   event,
   (newVal) => {
     if (newVal) {
-      internalEvent.value.updateFrom(newVal)
+      internalEvent.value = Activity.buildFrom(newVal)
     } else {
       internalEvent.value = new Activity()
     }
