@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-data-table
         :headers="headers"
-        :items="myEvents"
+        :items="activities"
         class="elevation-1"
         mobile-breakpoint="md"
         :mobile="null"
@@ -62,9 +62,8 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Activity } from '~/models/Event'
-import { useUserEventsStore } from '~/stores/user-events'
 import type { IEvent } from '~/interfaces/event'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
@@ -75,9 +74,6 @@ useSeoMeta({
     'Administra tus actividades para tener un mejor control de tu tiempo',
 })
 
-const store = useUserEventsStore()
-
-const myEvents = computed(() => store.items)
 const succcesAddEvent = ref(false)
 const succcesUpdateEvent = ref(false)
 const dialog = ref(false)
@@ -88,18 +84,20 @@ const editedItem = ref<IEvent>(new Activity())
 
 const dialogDelete = ref(false)
 
-const editItem = (item: IEvent) => {
+const editItem = (item: IEventCreated) => {
   editedItem.value = item
   dialog.value = true
 }
-const { deleteItemById, updateItem, createNewItem } = useUserEvents()
-const selectedDeleteItem = ref<IEvent>()
-const deleteItem = (item: IEvent) => {
+
+const { deleteItemById, updateItem, createNewItem, items: activities } = useUserEvents()
+
+const selectedDeleteItem = ref<IEventCreated>()
+const deleteItem = (item: IEventCreated) => {
   selectedDeleteItem.value = item
   dialogDelete.value = true
 }
 
-const deleteItemConfirm = (selectedItem: IEvent) => {
+const deleteItemConfirm = (selectedItem: IEventCreated) => {
   deleteItemById(selectedItem.id!)
   closeDelete()
 }
