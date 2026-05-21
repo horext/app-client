@@ -47,7 +47,8 @@ export const useUserProfile = () => {
   async function updateFaculty(_facultyId: number) {
     if (!profileService) return
     await profileService.patch({ facultyId: _facultyId })
-    if (profile.value) profile.value = { ...profile.value, facultyId: _facultyId }
+    if (profile.value)
+      profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
   async function updateSpeciality(_specialityId: number) {
@@ -71,7 +72,10 @@ export const useUserProfile = () => {
   ) {
     if (!profileService) return
     await Promise.all([
-      profileService.patch({ facultyId: _facultyId, specialityId: _specialityId }),
+      profileService.patch({
+        facultyId: _facultyId,
+        specialityId: _specialityId,
+      }),
       updateHourlyLoad(_hourlyLoad),
     ])
     if (profile.value)
@@ -82,13 +86,13 @@ export const useUserProfile = () => {
       }
   }
 
+  const { createPreferences } = useUserPreferences()
   async function completeSetup(
     _facultyId: number,
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
     if (!profileService || !academicConfigService) return
-    const { createPreferences } = useUserPreferences()
     await Promise.all([
       profileService.createProfile({
         facultyId: _facultyId,

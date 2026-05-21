@@ -9,7 +9,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
   const isNewHourlyLoad = ref(false)
   const isUpdateHourlyLoad = ref(false)
 
-  const setupCompleted = computed(() => profile.value?.setupCompleted ?? true)
+  const setupCompleted = computed(() => profile.value?.setupCompleted)
   const facultyId = computed(() => profile.value?.facultyId)
   const specialityId = computed(() => profile.value?.specialityId)
 
