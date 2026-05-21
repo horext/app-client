@@ -20,10 +20,7 @@ export const useUserEvents = () => {
     const itemId = item.id
     if (!itemId) return
     const result = await service.update({ ...item, id: itemId })
-    const index = items.value.findIndex((e) => e.id === itemId)
-    if (index !== -1) {
-      items.value[index] = result
-    }
+    store.updateItem(result)
   }
 
   async function fetchItems() {
