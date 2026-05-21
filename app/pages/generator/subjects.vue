@@ -164,11 +164,10 @@ const {
       )
 
     return schedulesSubject.map((sb) => ({
-      ...sb?.schedule,
+      ...sb.schedule,
       scheduleSubject: {
         id: sb.id,
       },
-      sessions: sb.schedule.sessions,
       subject: subject,
     }))
   },

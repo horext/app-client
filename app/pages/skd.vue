@@ -55,11 +55,10 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
       ...sb.subject,
       schedules: [
         {
-          ...sb?.schedule,
+          ...sb.schedule,
           scheduleSubject: {
             id: sb.id,
           },
-          sessions: sb.schedule.sessions,
           subject: sb.subject,
         },
       ],
