@@ -5,6 +5,5 @@ export interface IActivitiesRepository {
   get(id: string): Promise<IEvent | undefined>
   create(activity: IBaseEvent): Promise<IEvent>
   update(activity: IEvent): Promise<IEvent>
-  putAll(activities: Array<IBaseEvent>): Promise<IEvent[]>
   delete(id: string): Promise<void>
 }

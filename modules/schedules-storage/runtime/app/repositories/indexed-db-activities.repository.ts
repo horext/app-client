@@ -30,22 +30,6 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
     return activity
   }
 
-  async putAll(activities: Array<IBaseEvent>): Promise<IEvent[]> {
-    if (!activities.length) return []
-    const db = await this.getDb()
-    const tx = db.transaction(
-      IndexedDBActivitiesRepository.STORE_NAME,
-      'readwrite',
-    )
-    const newActivities = activities.map((a) => ({
-      ...a,
-      id: crypto.randomUUID(),
-    }))
-    await Promise.all(newActivities.map((a) => tx.store.put(a)))
-    await tx.done
-    return newActivities
-  }
-
   async delete(id: string): Promise<void> {
     const db = await this.getDb()
     await db.delete(IndexedDBActivitiesRepository.STORE_NAME, id)

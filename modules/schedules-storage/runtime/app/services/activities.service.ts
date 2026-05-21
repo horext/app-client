@@ -13,10 +13,6 @@ export class ActivitiesService implements IActivitiesService {
     return await this.repo.create(activity)
   }
 
-  async saveAll(activities: Array<IBaseEvent>): Promise<IEvent[]> {
-    return await this.repo.putAll(activities)
-  }
-
   async delete(id: string): Promise<void> {
     await this.repo.delete(id)
   }
