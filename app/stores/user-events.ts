@@ -19,9 +19,15 @@ export const useUserEventsStore = defineStore('user/events', () => {
       items.value[index] = item
     }
   }
+
+  function deleteItemById(id: string) {
+    items.value = items.value.filter((e) => e.id !== id)
+  }
+
   return {
     items,
     setItems,
     updateItem,
+    deleteItemById,
   }
 })
