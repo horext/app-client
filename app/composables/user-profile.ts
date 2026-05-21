@@ -13,11 +13,17 @@ export const useUserProfile = () => {
     setupCompleted,
     facultyId,
     specialityId,
+    loadingProfile,
   } = storeToRefs(store)
 
   async function fetchProfile() {
     if (!profileService) return
-    profile.value = await profileService.getProfile()
+    try {
+      loadingProfile.value = true
+      profile.value = await profileService.getProfile()
+    } finally {
+      loadingProfile.value = false
+    }
   }
 
   async function fetchAcademicConfig() {
@@ -112,6 +118,7 @@ export const useUserProfile = () => {
   }
 
   return {
+    loadingProfile,
     profile,
     hourlyLoad,
     isNewHourlyLoad,
