@@ -1,4 +1,3 @@
-import { toRaw } from 'vue'
 import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
 import type { IAcademicConfigRepository } from './academic-config.repository.interface'
 import type { DbFactory } from '../context/db'
@@ -15,6 +14,6 @@ export class IndexedDBAcademicConfigRepository implements IAcademicConfigReposit
 
   async save(config: IUserAcademicConfig): Promise<void> {
     const db = await this.getDb()
-    await db.put('academic-config', toRaw(config))
+    await db.put('academic-config', config)
   }
 }

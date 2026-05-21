@@ -1,4 +1,3 @@
-import { toRaw } from 'vue'
 import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IProfileRepository } from './profile-repository.interface'
 import type { DbFactory } from '../context/db'
@@ -16,6 +15,6 @@ private static STORE_NAME = 'profile' as const
 
   async save(profile: IUserProfile): Promise<void> {
     const db = await this.getDb()
-    await db.put(IndexedDBProfileRepository.STORE_NAME, toRaw(profile))
+    await db.put(IndexedDBProfileRepository.STORE_NAME,profile)
   }
 }

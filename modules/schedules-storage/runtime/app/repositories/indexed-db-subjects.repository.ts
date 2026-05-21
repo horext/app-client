@@ -1,4 +1,3 @@
-import { toRaw } from 'vue'
 import type { ISelectedSubject } from '../../shared/interfaces/subject'
 import type { ISubjectsRepository } from './subjects-repository.interface'
 import type { DbFactory } from '../context/db'
@@ -15,7 +14,7 @@ export class IndexedDBSubjectsRepository implements ISubjectsRepository {
 
   async save(subject: ISelectedSubject): Promise<void> {
     const db = await this.getDb()
-    await db.put(IndexedDBSubjectsRepository.STORE_NAME, toRaw(subject))
+    await db.put(IndexedDBSubjectsRepository.STORE_NAME, subject)
   }
 
   async delete(id: ISelectedSubject['id']): Promise<void> {
