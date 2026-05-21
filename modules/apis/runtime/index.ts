@@ -22,6 +22,10 @@ export const provideFetch = () => {
   provide(FETCH_KEY, fetch)
 }
 
+export interface IApiRegistry {
+  get<T >(key: InjectionKey<T>): T
+}
+
 export const provideApis = (registry = APIS_REGISTRY) => {
   type ProvidedType =
     (typeof registry)[number]['provide'] extends InjectionKey<infer T>
@@ -41,7 +45,7 @@ export const provideApis = (registry = APIS_REGISTRY) => {
       }
       return instance as T
     },
-  }
+  } satisfies IApiRegistry
 }
 
 export const provideApi = <R, T extends BaseApi & R = BaseApi & R>(

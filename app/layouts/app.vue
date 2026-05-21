@@ -31,7 +31,7 @@ import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
 
-provideApis()
+const apis = provideApis()
 
 const settingsStore = useSettingsStore()
 
@@ -46,7 +46,7 @@ const { subjects } = storeToRefs(subjectsStore)
 const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
 
-const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } = useUserProfile()
+const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } = useUserProfile(apis)
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
 
