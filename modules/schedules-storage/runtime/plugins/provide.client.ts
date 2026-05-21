@@ -6,6 +6,7 @@ import { IndexedDBGenerationRepository } from "../app/repositories/indexed-db-ge
 import { IndexedDBPreferencesRepository } from "../app/repositories/indexed-db-preferences.repository"
 import { IndexedDBProfileRepository } from "../app/repositories/indexed-db-profile.repository"
 import { IndexedDBScheduleFavoritesRepository, IndexedDBSchedulesRepository } from "../app/repositories/indexed-db-schedules.repository"
+import { IndexedDBSubjectsRepository } from "../app/repositories/indexed-db-subjects.repository"
 
 const DB_NAME = 'horext'
 const DB_VERSION = Math.max(...schemaMigrations.map((m) => m.version))
@@ -22,6 +23,7 @@ export default defineNuxtPlugin({
     const preferencesRepository = new IndexedDBPreferencesRepository(dbFactory)
     const generationRepository = new IndexedDBGenerationRepository(dbFactory)
     const favoritesRepository = new IndexedDBScheduleFavoritesRepository(dbFactory)
+    const subjectsRepository = new IndexedDBSubjectsRepository(dbFactory)
 
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
 
@@ -35,6 +37,7 @@ export default defineNuxtPlugin({
           preferencesRepository,
           generationRepository,
           favoritesRepository,
+          subjectsRepository,
         },
       },
     }

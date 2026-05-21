@@ -6,6 +6,7 @@ import type { IProfileService } from '../services/profile.service.interface'
 import type { IAcademicConfigService } from '../services/academic-config.service.interface'
 import type { IPreferencesService } from '../services/preferences.service.interface'
 import type { IGenerationService } from '../services/generation.service.interface'
+import type { ISubjectsService } from '../services/subjects.service.interface'
 import type { DbFactory } from './db'
 
 export const SCHEDULES_DB_KEY: InjectionKey<DbFactory> = Symbol('HorextDB')
@@ -30,3 +31,6 @@ export const PREFERENCES_SERVICE_KEY: InjectionKey<IPreferencesService> =
 
 export const GENERATION_SERVICE_KEY: InjectionKey<IGenerationService> =
   Symbol('IGenerationService')
+
+export const SUBJECTS_SERVICE_KEY: InjectionKey<ISubjectsService> =
+  Symbol('ISubjectsService')

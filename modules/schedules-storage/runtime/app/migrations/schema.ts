@@ -45,4 +45,10 @@ export const schemaMigrations: SchemaMigration[] = [
       db.createObjectStore('academic-config', { keyPath: 'id' })
     },
   },
+  {
+    version: 7,
+    up(db) {
+      db.createObjectStore('subjects', { keyPath: 'id' })
+    },
+  },
 ]

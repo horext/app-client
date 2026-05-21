@@ -37,6 +37,10 @@ export default defineNuxtModule({
         name: 'useGenerationService',
         from: resolver.resolve('runtime/app/composables/index'),
       },
+      {
+        name: 'useSubjectsService',
+        from: resolver.resolve('runtime/app/composables/index'),
+      },
     ])
 
     addPlugin({

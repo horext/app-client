@@ -7,6 +7,7 @@ import {
   ACADEMIC_CONFIG_SERVICE_KEY,
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
+  SUBJECTS_SERVICE_KEY,
 } from '../context/keys'
 import type { IFavoritesSchedulesService } from '../services/favorites-schedules.service.interface'
 import type { IActivitiesService } from '../services/activities-service.interface'
@@ -14,6 +15,7 @@ import type { IProfileService } from '../services/profile.service.interface'
 import type { IAcademicConfigService } from '../services/academic-config.service.interface'
 import type { IPreferencesService } from '../services/preferences.service.interface'
 import type { IGenerationService } from '../services/generation.service.interface'
+import type { ISubjectsService } from '../services/subjects.service.interface'
 
 const useService = <T>(key: InjectionKey<T>, name: string): T => {
   const service = inject(key)
@@ -36,3 +38,5 @@ export const usePreferencesService = (): IPreferencesService =>
   useService(PREFERENCES_SERVICE_KEY, 'usePreferencesService')
 export const useGenerationService = (): IGenerationService =>
   useService(GENERATION_SERVICE_KEY, 'useGenerationService')
+export const useSubjectsService = (): ISubjectsService =>
+  useService(SUBJECTS_SERVICE_KEY, 'useSubjectsService')

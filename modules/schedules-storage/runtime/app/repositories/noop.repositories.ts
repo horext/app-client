@@ -4,6 +4,7 @@ import type { IProfileRepository } from './profile-repository.interface'
 import type { IAcademicConfigRepository } from './academic-config.repository.interface'
 import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
+import type { ISubjectsRepository } from './subjects-repository.interface'
 import type { IEvent } from '../../shared/interfaces/event'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
@@ -49,6 +50,12 @@ export class NoopPreferencesRepository implements IPreferencesRepository {
 export class NoopGenerationRepository implements IGenerationRepository {
   getAll() { return Promise.resolve([]) }
   get() { return Promise.resolve(undefined) }
+  save() { return Promise.resolve() }
+  delete() { return Promise.resolve() }
+}
+
+export class NoopSubjectsRepository implements ISubjectsRepository {
+  getAll() { return Promise.resolve([]) }
   save() { return Promise.resolve() }
   delete() { return Promise.resolve() }
 }

@@ -6,6 +6,7 @@ import {
   NoopProfileRepository,
   NoopSchedulesFavoritesRepository,
   NoopSchedulesRepository,
+  NoopSubjectsRepository,
 } from '../app/repositories/noop.repositories'
 
 export default defineNuxtPlugin({
@@ -22,6 +23,7 @@ export default defineNuxtPlugin({
           preferencesRepository: new NoopPreferencesRepository(),
           generationRepository: new NoopGenerationRepository(),
           favoritesRepository: new NoopSchedulesFavoritesRepository(),
+          subjectsRepository: new NoopSubjectsRepository(),
         },
       },
     }
