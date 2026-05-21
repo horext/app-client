@@ -6,21 +6,21 @@ export const useUserEvents = () => {
   const service = useActivitiesService()
   const { items } = storeToRefs(store)
 
-  function saveNewItem(item: IEvent & { id: string }) {
-    items.value.push(item)
-    return service.create(item) ?? Promise.resolve()
+  async function saveNewItem(item: IEvent) {
+    const result = await service.create(item)
+    items.value.push(result)
   }
 
-  function deleteItemById(id: string) {
+  async function deleteItemById(id: string) {
+    await service.delete(id)
     items.value = items.value.filter((e) => e.id !== id)
-    return service.delete(id) ?? Promise.resolve()
   }
 
-  function updateItem(item: IEvent & { id: string }) {
+  async function updateItem(item: IEvent & { id: string }) {
     const index = items.value.findIndex((e) => e.id === item.id)
     if (index >= 0) {
       items.value = items.value.map((e, i) => (i === index ? item : e))
-      return service.update(item) ?? Promise.resolve()
+      return service.update(item)
     } else {
       console.error('updateItem: item not found', item.id)
       return Promise.resolve()
