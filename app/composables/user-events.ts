@@ -16,15 +16,10 @@ export const useUserEvents = () => {
     items.value = items.value.filter((e) => e.id !== id)
   }
 
-  async function updateItem(item: IEvent & { id: string }) {
-    const index = items.value.findIndex((e) => e.id === item.id)
-    if (index >= 0) {
-      items.value = items.value.map((e, i) => (i === index ? item : e))
-      return service.update(item)
-    } else {
-      console.error('updateItem: item not found', item.id)
-      return Promise.resolve()
-    }
+  async function updateItem(item: IEvent) {
+    const itemId = item.id
+    if (!itemId) return
+    return await service.update({ ...item, id: itemId })
   }
 
   async function updateItems(newItems: Array<IEvent & { id: string }>) {
