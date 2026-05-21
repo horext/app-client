@@ -19,12 +19,11 @@ export const useUserEvents = () => {
   async function updateItem(item: IEvent) {
     const itemId = item.id
     if (!itemId) return
-    return await service.update({ ...item, id: itemId })
-  }
-
-  async function updateItems(newItems: Array<IEvent & { id: string }>) {
-    store.setItems(newItems)
-    await service.saveAll(newItems)
+    const result = await service.update({ ...item, id: itemId })
+    const index = items.value.findIndex((e) => e.id === itemId)
+    if (index !== -1) {
+      items.value[index] = result
+    }
   }
 
   async function fetchItems() {
@@ -38,7 +37,6 @@ export const useUserEvents = () => {
     saveNewItem,
     deleteItemById,
     updateItem,
-    updateItems,
     fetchItems,
   }
 }
