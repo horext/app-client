@@ -1,7 +1,7 @@
 import { inject } from 'vue'
-import { SCHEDULES_DB_KEY } from '../context/db'
-import { migrations } from '../migrations/index'
-import type { MigrationContext } from '../migrations/types'
+import { SCHEDULES_DB_KEY } from '../app/context/db'
+import { migrations } from '../app/migrations'
+import type { MigrationContext } from '../app/migrations/types'
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:migration',

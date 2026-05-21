@@ -1,11 +1,11 @@
-import { createDbFactory, SCHEDULES_DB_KEY } from '../context/db'
-import { schemaMigrations } from '../migrations/schema'
-import { IndexedDBScheduleFavoritesRepository, IndexedDBSchedulesRepository } from '../repositories/indexed-db-schedules.repository'
-import { IndexedDBActivitiesRepository } from '../repositories/indexed-db-activities.repository'
-import { IndexedDBProfileRepository } from '../repositories/indexed-db-profile.repository'
-import { IndexedDBAcademicConfigRepository } from '../repositories/indexed-db-academic-config.repository'
-import { IndexedDBPreferencesRepository } from '../repositories/indexed-db-preferences.repository'
-import { IndexedDBGenerationRepository } from '../repositories/indexed-db-generation.repository'
+import { createDbFactory, SCHEDULES_DB_KEY } from "../app/context/db"
+import { schemaMigrations } from "../app/migrations/schema"
+import { IndexedDBAcademicConfigRepository } from "../app/repositories/indexed-db-academic-config.repository"
+import { IndexedDBActivitiesRepository } from "../app/repositories/indexed-db-activities.repository"
+import { IndexedDBGenerationRepository } from "../app/repositories/indexed-db-generation.repository"
+import { IndexedDBPreferencesRepository } from "../app/repositories/indexed-db-preferences.repository"
+import { IndexedDBProfileRepository } from "../app/repositories/indexed-db-profile.repository"
+import { IndexedDBScheduleFavoritesRepository, IndexedDBSchedulesRepository } from "../app/repositories/indexed-db-schedules.repository"
 
 const DB_NAME = 'horext'
 const DB_VERSION = Math.max(...schemaMigrations.map((m) => m.version))

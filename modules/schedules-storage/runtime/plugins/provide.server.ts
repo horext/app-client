@@ -1,12 +1,12 @@
 import {
-  NoopSchedulesRepository,
-  NoopSchedulesFavoritesRepository,
-  NoopActivitiesRepository,
-  NoopProfileRepository,
   NoopAcademicConfigRepository,
-  NoopPreferencesRepository,
+  NoopActivitiesRepository,
   NoopGenerationRepository,
-} from '../repositories/noop.repositories'
+  NoopPreferencesRepository,
+  NoopProfileRepository,
+  NoopSchedulesFavoritesRepository,
+  NoopSchedulesRepository,
+} from '../app/repositories/noop.repositories'
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:provide-repos',
