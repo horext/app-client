@@ -7,13 +7,6 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
   private static STORE_NAME = 'schedules' as const
   constructor(private readonly getDb: DbFactory) {}
 
-  async getEntry(
-    id: IScheduleGenerate['id'],
-  ): Promise<IScheduleGenerate | undefined> {
-    const db = await this.getDb()
-    return db.get(IndexedDBSchedulesRepository.STORE_NAME, id)
-  }
-
   async getEntries(
     ids: IScheduleGenerate['id'][],
   ): Promise<IScheduleGenerate[]> {

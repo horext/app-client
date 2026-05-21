@@ -6,7 +6,6 @@ import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
-  getEntry() { return Promise.resolve(undefined) }
   getEntries() { return Promise.resolve([]) }
   putEntry() { return Promise.resolve() }
   putEntries() { return Promise.resolve() }
