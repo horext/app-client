@@ -10,40 +10,51 @@ import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 import { schemaMigrations } from '../migrations/schema'
 import type { UUID } from 'crypto'
 
+export const enum StoresDB {
+  SCHEDULES = 'schedules',
+  MIGRATIONS = 'migrations',
+  ACTIVITIES = 'activities',
+  FAVORITES = 'favorites',
+  PROFILE = 'profile',
+  PREFERENCES = 'preferences',
+  ACADEMIC_CONFIG = 'academic-config',
+  GENERATIONS = 'generations',
+  SUBJECTS = 'subjects',
+}
 export interface HorextDB extends DBSchema {
-  schedules: {
+  [StoresDB.SCHEDULES]: {
     key: IScheduleGenerate['id']
     value: IScheduleGenerate
   }
-  migrations: {
+  [StoresDB.MIGRATIONS]: {
     key: string
     value: { id: string; appliedAt: string }
   }
-  activities: {
+  [StoresDB.ACTIVITIES]: {
     key: IActivity['id']
     value: IActivity
   }
-  favorites: {
+  [StoresDB.FAVORITES]: {
     key: UUID
     value: { id: UUID }
   }
-  profile: {
+  [StoresDB.PROFILE]: {
     key: IUserProfile['id']
     value: IUserProfile
   }
-  preferences: {
+  [StoresDB.PREFERENCES]: {
     key: IUserPreferences['id']
     value: IUserPreferences
   }
-  'academic-config': {
+  [StoresDB.ACADEMIC_CONFIG]: {
     key: IUserAcademicConfig['id']
     value: IUserAcademicConfig
   }
-  generations: {
+  [StoresDB.GENERATIONS]: {
     key: IGenerationRecord['id']
     value: IGenerationRecord
   }
-  subjects: {
+  [StoresDB.SUBJECTS]: {
     key: ISubjectSchedules['id']
     value: ISubjectSchedules
   }

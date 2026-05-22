@@ -6,6 +6,7 @@ import type {
 } from '../../shared/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
+import { StoresDB } from '../context/db'
 
 interface IMySchedule {
   id: string
@@ -42,18 +43,25 @@ async function up({ db }: MigrationContext) {
   }
 
   if (allById.size > 0) {
-    const tx = db.transaction(['schedules', 'favorites'], 'readwrite')
-    await Promise.all(
-      [...allById.values()].map((s) => tx.objectStore('schedules').put(s)),
+    const tx = db.transaction(
+      [StoresDB.SCHEDULES, StoresDB.FAVORITES],
+      'readwrite',
     )
     await Promise.all(
-      rawFavorites.map((s) => tx.objectStore('favorites').put({ id: s.id })),
+      [...allById.values()].map((s) =>
+        tx.objectStore(StoresDB.SCHEDULES).put(s),
+      ),
+    )
+    await Promise.all(
+      rawFavorites.map((s) =>
+        tx.objectStore(StoresDB.FAVORITES).put({ id: s.id }),
+      ),
     )
     await tx.done
   }
 
   if (rawSchedules.length > 0) {
-    await db.put('generations', {
+    await db.put(StoresDB.GENERATIONS, {
       id: crypto.randomUUID(),
       generatedAt: new Date().toISOString(),
       scheduleIds: rawSchedules.map((s) => s.id),

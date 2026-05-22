@@ -2,6 +2,7 @@ import type { UUID } from 'node:crypto'
 import type { Weekdays } from '../../shared/interfaces/event'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
+import { StoresDB } from '../context/db'
 
 interface IMyEvent {
   id: UUID
@@ -19,7 +20,7 @@ async function up({ db }: MigrationContext) {
   const rawEvents = readLsJson<IMyEvent[]>('myEvents') ?? []
   if (rawEvents.length === 0) return
 
-  const tx = db.transaction('activities', 'readwrite')
+  const tx = db.transaction(StoresDB.ACTIVITIES, 'readwrite')
   await Promise.all(
     rawEvents.map((e) =>
       tx.store.put({

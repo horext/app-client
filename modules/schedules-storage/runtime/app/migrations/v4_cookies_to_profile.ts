@@ -1,3 +1,4 @@
+import { StoresDB } from '../context/db'
 import type { Migration, MigrationContext } from './types'
 import { readCookieJson } from './utils'
 
@@ -20,7 +21,7 @@ async function up({ db }: MigrationContext) {
 
   if (!faculty || !speciality) return
 
-  await db.put('profile', {
+  await db.put(StoresDB.PROFILE, {
     id: 'profile',
     facultyId: faculty.id,
     specialityId: speciality.id,

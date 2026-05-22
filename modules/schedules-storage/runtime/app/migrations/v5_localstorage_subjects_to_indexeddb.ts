@@ -1,4 +1,5 @@
 import type { Weekdays } from '../../shared/interfaces/event'
+import { StoresDB } from '../context/db'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
@@ -68,7 +69,7 @@ async function up({ db }: MigrationContext) {
   const valid = subjects.filter((s) => s?.schedules?.length > 0)
 
   if (valid.length > 0) {
-    const tx = db.transaction('subjects', 'readwrite')
+    const tx = db.transaction(StoresDB.SUBJECTS, 'readwrite')
     await Promise.all(
       valid.map((s) =>
         tx.store.put({
