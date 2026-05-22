@@ -98,16 +98,17 @@ export function getSchedules(
         for (const restScheduleEvent of restScheduleScheduleEvents) {
           if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
-              const occurrenceId = [
-                scheduleSubjectEvent.internalId,
-                restScheduleEvent.internalId,
+              const occurrenceKey = [
+                scheduleSubjectEvent.id,
+                restScheduleEvent.id,
               ]
                 .sort()
                 .join('-')
-              const key = `${occurrenceId}:${type}`
+              const key = `${occurrenceKey}:${type}`
               if (!occurrencesMap.has(key)) {
                 occurrencesMap.set(key, {
-                  id: occurrenceId,
+                  id: crypto.randomUUID(),
+                  eventKey: occurrenceKey,
                   name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
                   eventTarget: scheduleSubjectEvent,
                   eventSource: restScheduleEvent,

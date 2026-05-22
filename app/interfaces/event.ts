@@ -1,7 +1,7 @@
 export type EventCategories = 'COURSE' | 'MY_EVENT'
 export type Weekdays = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export interface IEvent {
-  id?: string
+  id: string
   title: string
   day: Weekdays
   description?: string
@@ -11,8 +11,4 @@ export interface IEvent {
   type: string
   startTime: string
   endTime: string
-}
-
-export interface IEventCreated extends IEvent {
-  id: string
 }

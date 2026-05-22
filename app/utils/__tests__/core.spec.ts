@@ -609,7 +609,7 @@ describe('getSchedules', () => {
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       // Only sessions 1 and 3 overlap — one CROSSING_EXCEEDED occurrence
-      const ids = result.occurrences.map((o) => o.id)
+      const ids = result.occurrences.map((o) => o.eventKey)
       const uniqueIds = new Set(ids)
       expect(uniqueIds.size).toBe(ids.length) // no duplicate ids
     })
@@ -735,7 +735,7 @@ describe('getSchedules', () => {
       expect(result.occurrences).toHaveLength(1)
       const occ = result.occurrences[0]!
       // id is the sorted session ids joined with '-'
-      expect(occ.id).toBe('1-2')
+      expect(occ.eventKey).toBe('1-2')
       expect(typeof occ.name).toBe('string')
       expect(occ.name.length).toBeGreaterThan(0)
       expect(occ.eventTarget).toBeDefined()
