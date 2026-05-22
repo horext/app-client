@@ -33,7 +33,7 @@ describe('Schedule Calendar', () => {
     ],
     id: crypto.randomUUID(),
     scheduleSubjectIds: [],
-    schedule: [],
+    schedules: [],
     crossings: 0,
     scheduleSubjectKey: '1,2',
   }
