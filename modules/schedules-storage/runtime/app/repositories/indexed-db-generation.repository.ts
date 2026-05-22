@@ -14,7 +14,9 @@ export class IndexedDBGenerationRepository implements IGenerationRepository {
     return db.getAll(IndexedDBGenerationRepository.STORE_NAME)
   }
 
-  async get(id: string): Promise<IGenerationRecord | undefined> {
+  async get(
+    id: IGenerationRecord['id'],
+  ): Promise<IGenerationRecord | undefined> {
     const db = await this.getDb()
     return db.get(IndexedDBGenerationRepository.STORE_NAME, id)
   }
@@ -26,7 +28,7 @@ export class IndexedDBGenerationRepository implements IGenerationRepository {
     return dbRecord
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: IGenerationRecord['id']): Promise<void> {
     const db = await this.getDb()
     await db.delete(IndexedDBGenerationRepository.STORE_NAME, id)
   }

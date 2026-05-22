@@ -4,20 +4,19 @@ import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
 interface IMyEvent {
-  id: UUID;
-  day: Weekdays;
-  startTime: string;
-  endTime: string;
-  title: string;
-  description: string;
-  location: string;
-  color: string;
-  type: string;
+  id: UUID
+  day: Weekdays
+  startTime: string
+  endTime: string
+  title: string
+  description: string
+  location: string
+  color: string
+  type: string
 }
 
 async function up({ db }: MigrationContext) {
-  const rawEvents =
-    readLsJson<IMyEvent[]>('myEvents') ?? []
+  const rawEvents = readLsJson<IMyEvent[]>('myEvents') ?? []
   if (rawEvents.length === 0) return
 
   const tx = db.transaction('activities', 'readwrite')

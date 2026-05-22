@@ -11,7 +11,7 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
     return db.getAll(IndexedDBActivitiesRepository.STORE_NAME)
   }
 
-  async get(id: string): Promise<IActivity | undefined> {
+  async get(id: IActivity['id']): Promise<IActivity | undefined> {
     const db = await this.getDb()
     return db.get(IndexedDBActivitiesRepository.STORE_NAME, id)
   }
@@ -35,7 +35,7 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
     return activity
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: IActivity['id']): Promise<void> {
     const db = await this.getDb()
     await db.delete(IndexedDBActivitiesRepository.STORE_NAME, id)
   }

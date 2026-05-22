@@ -13,11 +13,14 @@ export class ActivitiesService implements IActivitiesService {
     return await this.repo.create(activity)
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: IActivity['id']): Promise<void> {
     await this.repo.delete(id)
   }
 
-  async updateById(id: string, activity: IBaseActivity): Promise<IActivity> {
+  async updateById(
+    id: IActivity['id'],
+    activity: IBaseActivity,
+  ): Promise<IActivity> {
     const existingActivity = await this.repo.get(id)
     if (!existingActivity) {
       throw new Error(`Activity with id ${id} not found`)

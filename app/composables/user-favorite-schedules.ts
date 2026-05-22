@@ -28,7 +28,9 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules.value.push(...result)
   }
 
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate | IBaseScheduleGenerate,) => {
+  const addFavoriteSchedule = async (
+    schedule: IScheduleGenerate | IBaseScheduleGenerate,
+  ) => {
     const result = await favoritesStorage.addFavorite(schedule)
     if (
       !favoritesSchedules.value.some(
