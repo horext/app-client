@@ -9,7 +9,7 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
+    _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
   ) {
     const result = await favoritesStorage.addFavorite(_favoritesSchedule)
     favoritesSchedules.value.push(result)
@@ -28,7 +28,7 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules.value.push(...result)
   }
 
-  const addFavoriteSchedule = async (schedule: IBaseScheduleGenerate) => {
+  const addFavoriteSchedule = async (schedule: IScheduleGenerate | IBaseScheduleGenerate,) => {
     const result = await favoritesStorage.addFavorite(schedule)
     if (
       !favoritesSchedules.value.some(
