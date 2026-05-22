@@ -12,7 +12,8 @@ updates:
       interval: daily
       time: "00:00"
     open-pull-requests-limit: 15
-    cooldown: "P1D" 
+    cooldown:
+      default-days: 3
     reviewers:
       - franz-bendezu
     assignees:
