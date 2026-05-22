@@ -160,7 +160,7 @@ export function getSchedules(
       generatedSchedules.push({
         scheduleSubjectKey,
         scheduleSubjectIds,
-        schedules: scheduleSubjects,
+        schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects
           .map((c, index) =>

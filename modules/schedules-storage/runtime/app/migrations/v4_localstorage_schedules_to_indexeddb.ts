@@ -33,7 +33,7 @@ function transformSchedule(s: IMySchedule): IScheduleGenerate {
     id: crypto.randomUUID(),
     scheduleSubjectIds: s.scheduleSubjectIds,
     scheduleSubjectKey: s.id,
-    schedules: s.schedule,
+    schedulesSubject: s.schedule,
     crossings: s.crossings,
     events: s.events,
   }

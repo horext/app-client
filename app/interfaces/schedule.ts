@@ -8,7 +8,7 @@ export interface IScheduleSubjectGenerate extends ISubjectSchedule {
 export interface IBaseScheduleGenerate {
   scheduleSubjectKey: string
   scheduleSubjectIds: number[]
-  schedules: IScheduleSubjectGenerate[]
+  schedulesSubject: IScheduleSubjectGenerate[]
   crossings: number
   events: IEvent[]
 }
