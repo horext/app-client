@@ -12,7 +12,7 @@ import type { UUID } from 'crypto'
 
 export interface HorextDB extends DBSchema {
   schedules: {
-    key: string
+    key: IScheduleGenerate['id']
     value: IScheduleGenerate
   }
   migrations: {
@@ -20,31 +20,31 @@ export interface HorextDB extends DBSchema {
     value: { id: string; appliedAt: string }
   }
   activities: {
-    key: string
+    key: IActivity['id']
     value: IActivity
   }
   favorites: {
-    key: string
+    key: UUID
     value: { id: UUID }
   }
   profile: {
-    key: string
+    key: IUserProfile['id']
     value: IUserProfile
   }
   preferences: {
-    key: string
+    key: IUserPreferences['id']
     value: IUserPreferences
   }
   'academic-config': {
-    key: string
+    key: IUserAcademicConfig['id']
     value: IUserAcademicConfig
   }
   generations: {
-    key: string
+    key: IGenerationRecord['id']
     value: IGenerationRecord
   }
   subjects: {
-    key: string
+    key: ISubjectSchedules['id']
     value: ISubjectSchedules
   }
 }
