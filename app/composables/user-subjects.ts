@@ -21,9 +21,9 @@ export const useUserSubjects = () => {
   }
 
   async function updateSubject(_subject: ISubjectSchedules) {
-    await service.update(_subject.id, _subject)
+    const result = await service.update(_subject.id, _subject)
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    subjects.value = subjects.value.map((c, i) => (i === index ? _subject : c))
+    subjects.value[index] = result
   }
 
   async function fetchSubjects() {
