@@ -1,10 +1,22 @@
-import type { IOrganization } from '../../shared/interfaces/organization'
 import type { Migration, MigrationContext } from './types'
 import { readCookieJson } from './utils'
 
+interface IMyOrganization {
+  id: number
+  parentOrganizationUnit: {
+    id: number
+  }
+  code: string
+  name: string
+  type: {
+    id: number
+    name: string
+  }
+}
+
 async function up({ db }: MigrationContext) {
-  const faculty = readCookieJson<IOrganization>('myFaculty')
-  const speciality = readCookieJson<IOrganization>('mySpeciality')
+  const faculty = readCookieJson<IMyOrganization>('myFaculty')
+  const speciality = readCookieJson<IMyOrganization>('mySpeciality')
 
   if (!faculty || !speciality) return
 
