@@ -1,6 +1,9 @@
 import type { UUID } from 'node:crypto'
 import type { IEvent } from '../../shared/interfaces/event'
-import type { IScheduleGenerate, IScheduleSubjectGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IScheduleGenerate,
+  IScheduleSubjectGenerate,
+} from '../../shared/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
@@ -12,23 +15,26 @@ interface IMySchedule {
   events: IEvent[]
 }
 
+function transformSchedule(s: IMySchedule): IScheduleGenerate {
+  return {
+    id: crypto.randomUUID(),
+    scheduleSubjectIds: s.scheduleSubjectIds,
+    scheduleSubjectKey: s.id,
+    schedules: s.schedule,
+    crossings: s.crossings,
+    events: s.events,
+  }
+}
+
 async function up({ db }: MigrationContext) {
-  const rawSchedules = readLsJson<IMySchedule[]>('mySchedules')?.map<IScheduleGenerate>((s) => ({
-      id: crypto.randomUUID(),
-      scheduleSubjectIds: s.scheduleSubjectIds,
-      scheduleSubjectKey: s.id,
-      schedules: s.schedule,
-      crossings: s.crossings,
-      events: s.events,
-    })) ?? []
-  const rawFavorites = readLsJson<IMySchedule[]>('myFavoritesSchedules')?.map<IScheduleGenerate>((s) => ({
-      id: crypto.randomUUID(),
-      scheduleSubjectIds: s.scheduleSubjectIds,
-      scheduleSubjectKey: s.id,
-      schedules: s.schedule,
-      crossings: s.crossings,
-      events: s.events,
-    })) ?? []
+  const rawSchedules =
+    readLsJson<IMySchedule[]>('mySchedules')?.map<IScheduleGenerate>((s) =>
+      transformSchedule(s),
+    ) ?? []
+  const rawFavorites =
+    readLsJson<IMySchedule[]>('myFavoritesSchedules')?.map<IScheduleGenerate>(
+      (s) => transformSchedule(s),
+    ) ?? []
 
   const allById = new Map<UUID, IScheduleGenerate>()
   for (const s of [...rawSchedules, ...rawFavorites]) {
@@ -38,9 +44,7 @@ async function up({ db }: MigrationContext) {
   if (allById.size > 0) {
     const tx = db.transaction(['schedules', 'favorites'], 'readwrite')
     await Promise.all(
-      [...allById.values()].map((s) =>
-        tx.objectStore('schedules').put(s),
-      ),
+      [...allById.values()].map((s) => tx.objectStore('schedules').put(s)),
     )
     await Promise.all(
       rawFavorites.map((s) => tx.objectStore('favorites').put({ id: s.id })),
