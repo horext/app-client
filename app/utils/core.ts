@@ -117,11 +117,11 @@ export function getSchedules(
               intersections++
             } else {
               if (
-                (restScheduleEvent.type?.includes('P', 0) &&
-                  scheduleSubjectEvent.type?.includes('P', 0) &&
+                (restScheduleEvent.isPractice &&
+                  scheduleSubjectEvent.isPractice &&
                   !options.crossPractices) ||
-                (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                  scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
+                (restScheduleEvent.isActivity &&
+                  scheduleSubjectEvent.isActivity &&
                   !options.crossEvent)
               ) {
                 addEventToIntersection('CROSSING_NOT_AVAILABLE')
@@ -132,11 +132,11 @@ export function getSchedules(
             }
 
             if (
-              (restScheduleEvent.type?.includes('P', 0) &&
-                scheduleSubjectEvent.type?.includes('P', 0) &&
+              (restScheduleEvent.isPractice &&
+                scheduleSubjectEvent.isPractice &&
                 !options.crossPractices) ||
-              (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
+              (restScheduleEvent.isActivity &&
+                scheduleSubjectEvent.isActivity &&
                 !options.crossEvent)
             ) {
               addEventToIntersection('CROSSING_NOT_AVAILABLE')

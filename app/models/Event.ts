@@ -54,6 +54,14 @@ export default class Event<ID extends string | undefined = string> {
     return convertToDate(this.day, this.endTime)
   }
 
+  get isPractice() {
+    return this.type.includes('P')
+  }
+
+  get isActivity() {
+    return this.type.includes('MY_EVENT')
+  }
+
   static buildFrom(event: IEvent) {
     return new Event(
       event.day,
