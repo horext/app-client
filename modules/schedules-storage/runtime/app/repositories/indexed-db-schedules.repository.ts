@@ -21,6 +21,17 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return results.filter((s): s is IScheduleGenerate => s !== undefined)
   }
 
+  async getByKey(
+    scheduleSubjectKey: string,
+  ): Promise<IScheduleGenerate | undefined> {
+    const db = await this.getDb()
+    const result = await db
+      .transaction(StoresDB.SCHEDULES, 'readonly')
+      .store.index('scheduleSubjectKey')
+      .get(scheduleSubjectKey)
+    return result
+  }
+
   async create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate> {
     const db = await this.getDb()
     const result = { ...schedule, id: crypto.randomUUID() }

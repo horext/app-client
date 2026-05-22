@@ -31,7 +31,6 @@ interface IMyHourlyLoad {
 function transformSchedule(s: IMySchedule): IScheduleGenerate {
   return {
     id: crypto.randomUUID(),
-    scheduleSubjectIds: s.scheduleSubjectIds,
     scheduleSubjectKey: s.id,
     schedulesSubject: s.schedule,
     crossings: s.crossings,

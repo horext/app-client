@@ -712,7 +712,7 @@ describe('getSchedules', () => {
   })
 
   describe('combination output structure', () => {
-    it('scheduleSubjectIds contains the picked scheduleSubject.id for each subject', () => {
+    it('scheduleSubject Ids contains the picked scheduleSubject.id for each subject', () => {
       const s1 = makeSubject(1, [
         {
           scheduleId: 10,
@@ -728,7 +728,7 @@ describe('getSchedules', () => {
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
       // scheduleSubject.id is the scheduleId we passed in makeSubject
-      expect(result.combinations[0]!.scheduleSubjectIds).toEqual(
+      expect(result.combinations[0]!.schedulesSubject.map(s => s.id)).toEqual(
         expect.arrayContaining([10, 20]),
       )
     })

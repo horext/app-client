@@ -1,9 +1,12 @@
-import type { IDBPDatabase } from 'idb'
+import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb'
 import { StoresDB, type HorextDB } from '../context/db'
 
 export type SchemaMigration = {
   version: number
-  up: (db: IDBPDatabase<HorextDB>) => void
+  up: (
+    db: IDBPDatabase<HorextDB>,
+    tx: IDBPTransaction<HorextDB, StoreNames<HorextDB>[], 'versionchange'>,
+  ) => void
 }
 
 export const schemaMigrations: SchemaMigration[] = [
@@ -49,6 +52,12 @@ export const schemaMigrations: SchemaMigration[] = [
     version: 7,
     up(db) {
       db.createObjectStore(StoresDB.SUBJECTS, { keyPath: 'id' })
+    },
+  },
+  {
+    version: 8,
+    up(_db, tx) {
+      tx.objectStore(StoresDB.SCHEDULES).createIndex('scheduleSubjectKey', 'scheduleSubjectKey')
     },
   },
 ]

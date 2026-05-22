@@ -14,6 +14,9 @@ import type { IGenerationRecord } from '../../shared/interfaces/generation-recor
 import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
+  getByKey(): Promise<IScheduleGenerate | undefined> {
+    throw new Error('Method not implemented.')
+  }
   getEntries() {
     return Promise.resolve([])
   }

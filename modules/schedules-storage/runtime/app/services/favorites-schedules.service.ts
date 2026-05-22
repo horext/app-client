@@ -43,6 +43,12 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     if ('id' in schedule) {
       return await this.checkAndAddToFavorites(schedule)
     }
+    const existing = await this.repo.getByKey(
+      schedule.scheduleSubjectKey,
+    )
+    if (existing?.events.length === schedule.events.length) {
+      return await this.checkAndAddToFavorites(existing)
+    }
     const createdSchedule = await this.repo.create(schedule)
     return await this.checkAndAddToFavorites(createdSchedule)
   }

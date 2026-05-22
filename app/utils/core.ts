@@ -159,7 +159,6 @@ export function getSchedules(
       const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
       generatedSchedules.push({
         scheduleSubjectKey,
-        scheduleSubjectIds,
         schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects

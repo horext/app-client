@@ -25,6 +25,7 @@ export interface HorextDB extends DBSchema {
   [StoresDB.SCHEDULES]: {
     key: IScheduleGenerate['id']
     value: IScheduleGenerate
+    indexes: { scheduleSubjectKey: string }
   }
   [StoresDB.MIGRATIONS]: {
     key: string
@@ -67,10 +68,10 @@ export function createDbFactory(dbName: string, dbVersion: number): DbFactory {
   let _db: Promise<IDBPDatabase<HorextDB>> | undefined
   return () =>
     (_db ??= openDB<HorextDB>(dbName, dbVersion, {
-      upgrade(db, oldVersion) {
+      upgrade(db, oldVersion, _newVersion, transaction) {
         for (const migration of schemaMigrations) {
           if (oldVersion < migration.version) {
-            migration.up(db)
+            migration.up(db, transaction)
           }
         }
       },
