@@ -1,4 +1,4 @@
-import type { IEvent } from "./event"
+import type { IEvent } from './event'
 
 export interface IBaseIntersectionOccurrence {
   id: string

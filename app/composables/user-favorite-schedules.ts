@@ -1,4 +1,7 @@
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -27,7 +30,11 @@ export const useUserFavoriteSchedules = () => {
 
   const addFavoriteSchedule = async (schedule: IBaseScheduleGenerate) => {
     const result = await favoritesStorage.addFavorite(schedule)
-    if (!favoritesSchedules.value.some((s) => s.scheduleSubjectKey === schedule.scheduleSubjectKey)) {
+    if (
+      !favoritesSchedules.value.some(
+        (s) => s.scheduleSubjectKey === schedule.scheduleSubjectKey,
+      )
+    ) {
       favoritesSchedules.value.push(result)
     }
   }

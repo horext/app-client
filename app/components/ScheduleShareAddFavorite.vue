@@ -13,7 +13,10 @@
 
 <script setup lang="ts">
 import { mdiStar } from '@mdi/js'
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 
 const props = defineProps<{
   schedule: IBaseScheduleGenerate

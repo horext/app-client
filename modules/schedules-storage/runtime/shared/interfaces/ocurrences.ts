@@ -10,6 +10,6 @@ export interface IBaseIntersectionOccurrence {
 
 export interface IIntersectionOccurrence extends IBaseIntersectionOccurrence {
   id: string
-  eventTarget: IEvent,
-  eventSource: IEvent,
+  eventTarget: IEvent
+  eventSource: IEvent
 }

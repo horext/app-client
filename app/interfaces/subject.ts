@@ -75,7 +75,6 @@ export interface ISubjectSchedules extends IBaseSubjectSchedules {
   id: UUID
 }
 
-
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {
     subjectId: number

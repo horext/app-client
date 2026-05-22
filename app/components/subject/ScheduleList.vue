@@ -25,7 +25,10 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
-import type { IBaseSubjectSchedules, ISubjectSchedule } from '~/interfaces/subject'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedule,
+} from '~/interfaces/subject'
 
 const props = defineProps<{
   subjectSchedules: IBaseSubjectSchedules

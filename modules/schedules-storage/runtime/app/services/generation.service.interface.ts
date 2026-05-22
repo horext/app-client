@@ -4,7 +4,10 @@ import type {
   IGenerationResult,
 } from '../../shared/interfaces/generation-record'
 import type { IBaseIntersectionOccurrence } from '../../shared/interfaces/ocurrences'
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 
 export interface IGenerationService {
   getGenerations(): Promise<IGenerationRecord[]>

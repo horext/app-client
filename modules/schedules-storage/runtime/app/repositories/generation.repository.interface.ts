@@ -1,4 +1,7 @@
-import type { IBaseGenerationRecord, IGenerationRecord } from '../../shared/interfaces/generation-record'
+import type {
+  IBaseGenerationRecord,
+  IGenerationRecord,
+} from '../../shared/interfaces/generation-record'
 
 export interface IGenerationRepository {
   getAll(): Promise<IGenerationRecord[]>

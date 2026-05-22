@@ -1,4 +1,7 @@
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 
 export interface ISchedulesRepository {
   getEntries(ids: IScheduleGenerate['id'][]): Promise<IScheduleGenerate[]>

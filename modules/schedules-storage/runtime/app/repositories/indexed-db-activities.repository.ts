@@ -19,7 +19,12 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
   async create(activity: IBaseActivity): Promise<IActivity> {
     const db = await this.getDb()
     const id = crypto.randomUUID()
-    const newActivity:IActivity = { ...activity, id, category: 'MY_EVENT' , type: 'MY_EVENT' } 
+    const newActivity: IActivity = {
+      ...activity,
+      id,
+      category: 'MY_EVENT',
+      type: 'MY_EVENT',
+    }
     await db.put(IndexedDBActivitiesRepository.STORE_NAME, newActivity)
     return newActivity
   }

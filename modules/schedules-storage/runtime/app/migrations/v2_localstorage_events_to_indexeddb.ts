@@ -9,11 +9,15 @@ async function up({ db }: MigrationContext) {
   if (rawEvents.length === 0) return
 
   const tx = db.transaction('activities', 'readwrite')
-  await Promise.all(rawEvents.map((e) => tx.store.put({
-    ...e,
-    category: 'MY_EVENT',
-    type: 'MY_EVENT',
-  })))
+  await Promise.all(
+    rawEvents.map((e) =>
+      tx.store.put({
+        ...e,
+        category: 'MY_EVENT',
+        type: 'MY_EVENT',
+      }),
+    ),
+  )
   await tx.done
 }
 

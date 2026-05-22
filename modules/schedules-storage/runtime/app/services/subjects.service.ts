@@ -1,4 +1,7 @@
-import type { IBaseSubjectSchedules, ISubjectSchedules } from '../../shared/interfaces/subject'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '../../shared/interfaces/subject'
 import type { ISubjectsRepository } from '../repositories/subjects-repository.interface'
 import type { ISubjectsService } from './subjects.service.interface'
 
@@ -17,7 +20,10 @@ export class SubjectsService implements ISubjectsService {
     return this.repo.delete(id)
   }
 
-  update(id: ISubjectSchedules['id'], subject: IBaseSubjectSchedules): Promise<ISubjectSchedules> {
+  update(
+    id: ISubjectSchedules['id'],
+    subject: IBaseSubjectSchedules,
+  ): Promise<ISubjectSchedules> {
     return this.repo.update({
       id,
       ...subject,

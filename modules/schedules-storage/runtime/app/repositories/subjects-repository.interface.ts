@@ -1,4 +1,7 @@
-import type { IBaseSubjectSchedules, ISubjectSchedules } from '../../shared/interfaces/subject'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '../../shared/interfaces/subject'
 
 export interface ISubjectsRepository {
   getAll(): Promise<ISubjectSchedules[]>

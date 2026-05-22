@@ -1,5 +1,8 @@
 import type { UUID } from 'crypto'
-import type { IBaseSubjectSchedules, ISubjectSchedules } from '~/interfaces/subject'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '~/interfaces/subject'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()

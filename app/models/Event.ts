@@ -1,5 +1,10 @@
 import type { UUID } from 'crypto'
-import type { EventCategories, IActivity, IEvent, Weekdays } from '~/interfaces/event'
+import type {
+  EventCategories,
+  IActivity,
+  IEvent,
+  Weekdays,
+} from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 import { convertToDate } from '~/utils/weekday'
 
@@ -125,7 +130,8 @@ export class CourseEvent extends Event implements IEvent {
       title,
       description,
       location,
-      color, type,
+      color,
+      type,
       'COURSE',
       id,
     )

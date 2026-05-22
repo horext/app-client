@@ -18,9 +18,10 @@ export class NoopSchedulesRepository implements ISchedulesRepository {
     return Promise.resolve([])
   }
   create(): Promise<IScheduleGenerate> {
-     throw new Error('Method not implemented.')
+    throw new Error('Method not implemented.')
   }
-  saveAll(): Promise<IScheduleGenerate[]> {   throw new Error('Method not implemented.')
+  saveAll(): Promise<IScheduleGenerate[]> {
+    throw new Error('Method not implemented.')
   }
   update(): Promise<IScheduleGenerate> {
     throw new Error('Method not implemented.')
@@ -118,7 +119,7 @@ export class NoopSubjectsRepository implements ISubjectsRepository {
   getAll() {
     return Promise.resolve([])
   }
-  create():Promise<ISubjectSchedules> {
+  create(): Promise<ISubjectSchedules> {
     throw new Error('Method not implemented.')
   }
   update(): Promise<ISubjectSchedules> {

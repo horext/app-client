@@ -1,4 +1,7 @@
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -35,18 +38,22 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return schedule
   }
 
-  async saveAll(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]> {
+  async saveAll(
+    schedules: IBaseScheduleGenerate[],
+  ): Promise<IScheduleGenerate[]> {
     if (!schedules.length) return []
     const db = await this.getDb()
     const tx = db.transaction(
       IndexedDBSchedulesRepository.STORE_NAME,
       'readwrite',
     )
-    const results = await Promise.all(schedules.map((s) => {
-      const result = { ...s, id: crypto.randomUUID() }
-      tx.store.put(result)
-      return result
-    }))
+    const results = await Promise.all(
+      schedules.map((s) => {
+        const result = { ...s, id: crypto.randomUUID() }
+        tx.store.put(result)
+        return result
+      }),
+    )
     await tx.done
     return results
   }

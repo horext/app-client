@@ -5,7 +5,10 @@ import type {
   IGenerationResult,
 } from '../../shared/interfaces/generation-record'
 import type { IIntersectionOccurrence } from '../../shared/interfaces/ocurrences'
-import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
 import type {
@@ -39,8 +42,7 @@ export class GenerationService implements IGenerationService {
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
   ): Promise<IGenerationResult> {
-   
-   const savedSchedules = await this.schedulesRepo.saveAll(schedules)
+    const savedSchedules = await this.schedulesRepo.saveAll(schedules)
 
     const record: IBaseGenerationRecord = {
       resultCount: schedules.length,
@@ -49,7 +51,7 @@ export class GenerationService implements IGenerationService {
       scheduleIds: savedSchedules.map((s) => s.id),
     }
 
-   const savedRecord = await this.generationRepo.create(record)
+    const savedRecord = await this.generationRepo.create(record)
 
     // 3. Trim history and clean orphaned schedules
     await this._trimAndCleanup(maxHistory)

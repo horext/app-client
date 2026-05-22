@@ -22,7 +22,7 @@ export interface IGenerationRecord extends IBaseGenerationRecord {
   id: UUID
 }
 
-export interface IGenerationResult  extends IGenerationRecord {
+export interface IGenerationResult extends IGenerationRecord {
   schedules: IScheduleGenerate[]
   occurrences: IIntersectionOccurrence[]
 }
