@@ -4,9 +4,9 @@ import type {
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 import { EVENT_COLORS } from '~/constants/event'
-import Event, { CourseEvent } from '~/models/Event'
+import { Activity, CourseEvent } from '~/models/Event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -17,7 +17,7 @@ export type ScheduleOptions = {
 
 export function getSchedules(
   subjectsSchedules: Array<IBaseSubjectSchedules>,
-  activities: Array<IEvent>,
+  activities: Array<IActivity>,
   _options?: ScheduleOptions,
 ): {
   occurrences: IBaseIntersectionOccurrence[]
@@ -34,7 +34,7 @@ export function getSchedules(
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const generatedSchedules: Array<ILocalScheduleGenerate> = []
-  const baseEvents = activities.map(Event.buildFrom)
+  const baseEvents = activities.map(Activity.buildActivityFrom)
 
   const advanceIndex = (i: number) => {
     const subjectSchedules = subjectsSchedules[i]
@@ -60,7 +60,7 @@ export function getSchedules(
   )
 
   const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
-  for (let i = totalSchedules; i--; ) {
+  for (let i = totalSchedules; i--;) {
     const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
       const subjectSchedules = subjectsSchedules[j]

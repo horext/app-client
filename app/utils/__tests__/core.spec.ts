@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { getSchedules } from '../core'
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { UUID } from 'crypto'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -57,19 +58,19 @@ function makeSubject(
   }
 }
 
-function makeEvent(
-  id: string,
+function makeActivity(
+  id: UUID,
   day: 0 | 1 | 2 | 3 | 4 | 5 | 6,
   startTime: string,
   endTime: string,
-  type = 'MY_EVENT',
-): IEvent {
+): IActivity {
   return {
     id,
     title: `Event ${id}`,
     day,
     color: '#ff0000',
-    type,
+    type: 'MY_EVENT',
+    category: 'MY_EVENT',
     startTime,
     endTime,
   }
@@ -137,7 +138,7 @@ describe('getSchedules', () => {
           sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
         },
       ])
-      const baseEvent = makeEvent('e1', THU, T_08_10.startTime, T_08_10.endTime)
+      const baseEvent = makeActivity('00000000-0000-0000-0000-000000000001' as UUID, THU, T_08_10.startTime, T_08_10.endTime)
       const result = getSchedules([subject], [baseEvent], {
         crossingSubjects: 0,
       })
@@ -342,12 +343,11 @@ describe('getSchedules', () => {
         },
       ])
       // Base event overlaps with the session
-      const baseEvent = makeEvent(
-        'e1',
+      const baseEvent = makeActivity(
+        crypto.randomUUID(),
         MON,
         T_09_11.startTime,
         T_09_11.endTime,
-        'T',
       )
       const result = getSchedules([subject], [baseEvent], {
         crossingSubjects: 0,
@@ -362,12 +362,11 @@ describe('getSchedules', () => {
           sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
         },
       ])
-      const baseEvent = makeEvent(
-        'e1',
+      const baseEvent = makeActivity(
+        '00000000-0000-0000-0000-000000000001' as UUID,
         TUE,
         T_08_10.startTime,
         T_08_10.endTime,
-        'T',
       )
       const result = getSchedules([subject], [baseEvent], {
         crossingSubjects: 0,
@@ -420,12 +419,11 @@ describe('getSchedules', () => {
           sessions: [{ id: 2, day: TUE, ...T_08_10, typeCode: 'T' }],
         },
       ])
-      const baseEvent = makeEvent(
-        'e1',
+      const baseEvent = makeActivity(
+        '00000000-0000-0000-0000-000000000001' as UUID,
         THU,
         T_08_10.startTime,
         T_08_10.endTime,
-        'T',
       )
       const result = getSchedules([s1, s2], [baseEvent], {
         crossingSubjects: 0,
@@ -662,12 +660,11 @@ describe('getSchedules', () => {
           sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
         },
       ])
-      const baseEvent = makeEvent(
-        'e1',
+      const baseEvent = makeActivity(
+        '00000000-0000-0000-0000-000000000001' as UUID,
         MON,
         T_09_11.startTime,
         T_09_11.endTime,
-        'MY_EVENT',
       )
       const result = getSchedules([subject], [baseEvent], {
         crossingSubjects: 1,

@@ -1,4 +1,4 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
 import type {
@@ -19,7 +19,7 @@ export const useSchedulesGenerator = () => {
 
   const loadSchedulesViaWorker = (
     subjects: Array<IBaseSubjectSchedules>,
-    myEvents: Array<IEvent>,
+    myEvents: Array<IActivity>,
     options: ScheduleOptions,
   ) => {
     return new Promise<{
@@ -50,7 +50,7 @@ export const useSchedulesGenerator = () => {
 
   const loadSchedules = (
     subjects: Array<IBaseSubjectSchedules>,
-    myEvents: Array<IEvent>,
+    myEvents: Array<IActivity>,
     options: ScheduleOptions,
   ) => {
     try {

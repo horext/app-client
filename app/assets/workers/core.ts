@@ -1,4 +1,4 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 import type { ISubjectSchedules } from '~/interfaces/subject'
 import type { ScheduleOptions } from '~/utils/core'
 import { getSchedules } from '~/utils/core'
@@ -8,7 +8,7 @@ self.addEventListener(
   function (e) {
     const input: [
       subjects: Array<ISubjectSchedules>,
-      myEvents: Array<IEvent>,
+      myEvents: Array<IActivity>,
       options?: ScheduleOptions,
     ] = JSON.parse(e.data)
     const output = getSchedules(...input)
