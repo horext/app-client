@@ -1,8 +1,8 @@
-import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
+import type { IBaseGenerationRecord, IGenerationRecord } from '../../shared/interfaces/generation-record'
 
 export interface IGenerationRepository {
   getAll(): Promise<IGenerationRecord[]>
   get(id: string): Promise<IGenerationRecord | undefined>
-  save(record: IGenerationRecord): Promise<void>
+  create(record: IBaseGenerationRecord): Promise<IGenerationRecord>
   delete(id: string): Promise<void>
 }

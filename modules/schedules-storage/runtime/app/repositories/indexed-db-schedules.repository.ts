@@ -1,4 +1,4 @@
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -22,20 +22,33 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return results.filter((s): s is IScheduleGenerate => s !== undefined)
   }
 
-  async putEntry(schedule: IScheduleGenerate): Promise<void> {
+  async create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate> {
     const db = await this.getDb()
-    await db.put(IndexedDBSchedulesRepository.STORE_NAME, schedule)
+    const result = { ...schedule, id: crypto.randomUUID() }
+    await db.put(IndexedDBSchedulesRepository.STORE_NAME, result)
+    return result
   }
 
-  async putEntries(schedules: IScheduleGenerate[]): Promise<void> {
-    if (!schedules.length) return
+  async update(schedule: IScheduleGenerate): Promise<IScheduleGenerate> {
+    const db = await this.getDb()
+    await db.put(IndexedDBSchedulesRepository.STORE_NAME, schedule)
+    return schedule
+  }
+
+  async saveAll(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]> {
+    if (!schedules.length) return []
     const db = await this.getDb()
     const tx = db.transaction(
       IndexedDBSchedulesRepository.STORE_NAME,
       'readwrite',
     )
-    await Promise.all(schedules.map((s) => tx.store.put(s)))
+    const results = await Promise.all(schedules.map((s) => {
+      const result = { ...s, id: crypto.randomUUID() }
+      tx.store.put(result)
+      return result
+    }))
     await tx.done
+    return results
   }
 
   async deleteEntry(id: IScheduleGenerate['id']): Promise<void> {

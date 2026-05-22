@@ -1,9 +1,10 @@
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
 
 export interface ISchedulesRepository {
   getEntries(ids: IScheduleGenerate['id'][]): Promise<IScheduleGenerate[]>
-  putEntry(schedule: IScheduleGenerate): Promise<void>
-  putEntries(schedules: IScheduleGenerate[]): Promise<void>
+  create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate>
+  update(schedule: IScheduleGenerate): Promise<IScheduleGenerate>
+  saveAll(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]>
   deleteEntry(id: IScheduleGenerate['id']): Promise<void>
   deleteEntries(ids: IScheduleGenerate['id'][]): Promise<void>
 }

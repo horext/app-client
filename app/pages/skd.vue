@@ -17,11 +17,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
 import type { ISelectedSubject } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
+import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
 
 definePageMeta({
   layout: 'app',
@@ -33,7 +33,7 @@ useSeoMeta({
 })
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const schedules = ref<IScheduleGenerate[]>([])
+const schedules = ref<ILocalScheduleGenerate[]>([])
 const loading = ref(false)
 
 const firstSchedule = computed(() => schedules.value[0])

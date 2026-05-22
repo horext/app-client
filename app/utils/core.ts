@@ -1,6 +1,6 @@
-import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
+import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
-  IScheduleGenerate,
+  ILocalScheduleGenerate,
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
 import type { ISelectedSubject } from '~/interfaces/subject'
@@ -8,7 +8,7 @@ import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
 import Event from '~/models/Event'
-import { scheduleToEvent } from '~/utils/event'
+import { scheduleToEvents } from '~/utils/event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -24,11 +24,11 @@ export type ISubjectEntry = Pick<
 
 export function getSchedules(
   subjects: Array<ISubjectEntry>,
-  myEvents: Array<IEvent>,
+  activities: Array<IEvent>,
   _options?: ScheduleOptions,
 ): {
-  occurrences: IIntersectionOccurrence[]
-  combinations: IScheduleGenerate[]
+  occurrences: IBaseIntersectionOccurrence[]
+  combinations: ILocalScheduleGenerate[]
 } {
   const options = {
     credits: 100,
@@ -37,11 +37,11 @@ export function getSchedules(
     crossPractices: false,
     ..._options,
   }
-  const occurrencesMap = new Map<string, IIntersectionOccurrence>()
+  const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
   const maxQuantity = subjects.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const schedules: Array<IScheduleGenerate> = []
-  const baseEvents = myEvents.map(Event.buildFrom)
+  const schedules: Array<ILocalScheduleGenerate> = []
+  const baseEvents = activities.map(Event.buildFrom)
 
   const advanceIndex = (i: number) => {
     const subject = subjects[i]
@@ -82,7 +82,7 @@ export function getSchedules(
       })
     }
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
+      scheduleToEvents(c, EVENT_COLORS[index] ?? '#000000'),
     )
     let crossingCombination = 0
     let useCombination = true
@@ -163,14 +163,13 @@ export function getSchedules(
       )
       const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
       schedules.push({
-        id: crypto.randomUUID(),
         scheduleSubjectKey,
         scheduleSubjectIds,
         schedule: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjects
           .map((c, index) =>
-            scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
+            scheduleToEvents(c, EVENT_COLORS[index] ?? '#000000'),
           )
           .flat()
           .concat(baseEvents),

@@ -1,4 +1,4 @@
-import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
+import type { IBaseGenerationRecord, IGenerationRecord } from '../../shared/interfaces/generation-record'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { DbFactory } from '../context/db'
 
@@ -16,9 +16,11 @@ export class IndexedDBGenerationRepository implements IGenerationRepository {
     return db.get(IndexedDBGenerationRepository.STORE_NAME, id)
   }
 
-  async save(record: IGenerationRecord): Promise<void> {
+  async create(record: IBaseGenerationRecord): Promise<IGenerationRecord> {
     const db = await this.getDb()
-    await db.put(IndexedDBGenerationRepository.STORE_NAME, record)
+    const dbRecord = { ...record, scheduleIds: [] , id:  crypto.randomUUID() }
+    await db.put(IndexedDBGenerationRepository.STORE_NAME, dbRecord)
+    return dbRecord
   }
 
   async delete(id: string): Promise<void> {

@@ -13,17 +13,17 @@
 
 <script setup lang="ts">
 import { mdiStar } from '@mdi/js'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '~/interfaces/schedule'
 
 const props = defineProps<{
-  schedule: IScheduleGenerate
+  schedule: IBaseScheduleGenerate
   favoritesSchedules: IScheduleGenerate[]
 }>()
 
 const { favoritesSchedules, schedule } = toRefs(props)
 
 const emit = defineEmits<{
-  (e: 'click:add-favorite', event: IScheduleGenerate): void
+  (e: 'click:add-favorite', event: IBaseScheduleGenerate): void
   (e: 'click:remove-favorite', event: IScheduleGenerate['id']): void
 }>()
 

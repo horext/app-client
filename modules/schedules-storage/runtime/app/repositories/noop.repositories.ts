@@ -9,16 +9,20 @@ import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { ISubjectsRepository } from './subjects-repository.interface'
 import type { IEvent } from '../../shared/interfaces/event'
+import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
   getEntries() {
     return Promise.resolve([])
   }
-  putEntry() {
-    return Promise.resolve()
+  create(): Promise<IScheduleGenerate> {
+     throw new Error('Method not implemented.')
   }
-  putEntries() {
-    return Promise.resolve()
+  saveAll(): Promise<IScheduleGenerate[]> {   throw new Error('Method not implemented.')
+  }
+  update(): Promise<IScheduleGenerate> {
+    throw new Error('Method not implemented.')
   }
   deleteEntry() {
     return Promise.resolve()
@@ -101,8 +105,8 @@ export class NoopGenerationRepository implements IGenerationRepository {
   get() {
     return Promise.resolve(undefined)
   }
-  save() {
-    return Promise.resolve()
+  create(): Promise<IGenerationRecord> {
+    throw new Error('Method not implemented.')
   }
   delete() {
     return Promise.resolve()

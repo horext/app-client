@@ -55,11 +55,11 @@
 import { computed, ref, watch, toRefs } from 'vue'
 import { Activity } from '~/models/Event'
 import type { VForm } from 'vuetify/components/VForm'
-import type { IEventCreated } from '~/interfaces/event'
+import type { IEvent } from '~/interfaces/event'
 
 const _props = withDefaults(
   defineProps<{
-    event: IEventCreated | null
+    event: IEvent | null
     loading?: boolean
   }>(),
   {
@@ -82,7 +82,7 @@ watch(
   event,
   (newVal) => {
     if (newVal) {
-      internalEvent.value = Activity.buildFrom(newVal)
+      internalEvent.value = Activity.buildActivityFrom(newVal)
     } else {
       internalEvent.value = new Activity()
     }

@@ -1,15 +1,19 @@
 import type { UUID } from 'crypto'
-import type { IBaseEvent } from './event'
+import type { IEvent } from './event'
 import type { ISubject, ISubjectSchedule } from './subject'
 
 export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: Pick<ISubject, 'id' | 'course'>
 }
-export interface IScheduleGenerate {
-  id: UUID
+
+export interface IBaseScheduleGenerate {
   scheduleSubjectKey: string
   scheduleSubjectIds: number[]
   schedule: IScheduleSubjectGenerate[]
   crossings: number
-  events: IBaseEvent[]
+  events: IEvent[]
+}
+
+export interface IScheduleGenerate extends IBaseScheduleGenerate {
+  id: UUID
 }

@@ -37,7 +37,7 @@ export interface ISession {
     id: number
   }
   classroom: IClassroom
-  teacher: ITeacher
+  teacher?: ITeacher
   type: {
     id: number
     code: string

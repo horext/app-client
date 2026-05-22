@@ -1,4 +1,4 @@
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -18,17 +18,19 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     return this.repo.getEntries(ids)
   }
 
-  async saveFavorites(schedules: IScheduleGenerate[]): Promise<void> {
-    await this.repo.putEntries(schedules)
-    await this.favoritesRepo.setList(schedules.map((s) => s.id))
+  async saveFavorites(schedules: IScheduleGenerate[]): Promise<IScheduleGenerate[]> {
+    const savedSchedules = await this.repo.saveAll(schedules)
+    await this.favoritesRepo.setList(savedSchedules.map((s) => s.id))
+    return savedSchedules
   }
 
-  async addFavorite(schedule: IScheduleGenerate): Promise<void> {
-    await this.repo.putEntry(schedule)
-    const inList = await this.favoritesRepo.isInList(schedule.id)
+  async addFavorite(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate> {
+    const createdSchedule = await this.repo.create(schedule)
+    const inList = await this.favoritesRepo.isInList(createdSchedule.id)
     if (!inList) {
-      await this.favoritesRepo.addToList(schedule.id)
+      await this.favoritesRepo.addToList(createdSchedule.id)
     }
+    return createdSchedule
   }
 
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {

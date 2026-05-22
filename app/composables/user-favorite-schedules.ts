@@ -1,4 +1,4 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseScheduleGenerate, IScheduleGenerate } from '~/interfaces/schedule'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -6,10 +6,10 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
+    _favoritesSchedule: IBaseScheduleGenerate,
   ) {
-    await favoritesStorage.addFavorite(_favoritesSchedule)
-    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
+    const result = await favoritesStorage.addFavorite(_favoritesSchedule)
+    favoritesSchedules.value.push(result)
   }
 
   async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
@@ -21,14 +21,14 @@ export const useUserFavoriteSchedules = () => {
   async function updateFavoritesSchedules(
     _favoritesSchedules: IScheduleGenerate[],
   ) {
-    await favoritesStorage.saveFavorites(_favoritesSchedules)
-    favoritesSchedules.value = _favoritesSchedules
+    const result = await favoritesStorage.saveFavorites(_favoritesSchedules)
+    favoritesSchedules.value.push(...result)
   }
 
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await favoritesStorage.addFavorite(schedule)
-    if (!favoritesSchedules.value.some((s) => s.id === schedule.id)) {
-      favoritesSchedules.value.push(schedule)
+  const addFavoriteSchedule = async (schedule: IBaseScheduleGenerate) => {
+    const result = await favoritesStorage.addFavorite(schedule)
+    if (!favoritesSchedules.value.some((s) => s.scheduleSubjectKey === schedule.scheduleSubjectKey)) {
+      favoritesSchedules.value.push(result)
     }
   }
 
@@ -37,10 +37,10 @@ export const useUserFavoriteSchedules = () => {
       (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
 
-  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await favoritesStorage.removeFavorite(schedule.id)
+  const removeFavoriteSchedule = async (schedule: IBaseScheduleGenerate) => {
+    await favoritesStorage.removeFavorite(schedule.scheduleSubjectKey)
     favoritesSchedules.value = favoritesSchedules.value.filter(
-      (s) => s.id !== schedule.id,
+      (s) => s.scheduleSubjectKey !== schedule.scheduleSubjectKey,
     )
   }
 
