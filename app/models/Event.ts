@@ -63,9 +63,7 @@ export default class Event<ID extends string | undefined = string> {
   }
 
   intersects(other: Event<string | undefined>): boolean {
-    return !(
-      this.endTime <= other.startTime || other.endTime <= this.startTime
-    )
+    return !(this.end <= other.start || other.end <= this.start)
   }
 
   static buildFrom(event: IEvent) {
@@ -84,7 +82,7 @@ export default class Event<ID extends string | undefined = string> {
   }
 }
 
-export class Activity extends Event<UUID | undefined> {
+export class Activity<ID extends UUID | undefined = UUID | undefined> extends Event<ID> {
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -93,7 +91,7 @@ export class Activity extends Event<UUID | undefined> {
     description = '',
     location = '',
     color = '#1976d2',
-    id: UUID | undefined = undefined,
+    id: ID = undefined as ID,
   ) {
     super(
       day,
