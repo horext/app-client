@@ -29,4 +29,4 @@ async function up({ db }: MigrationContext) {
   })
 }
 
-export default { id: 'v4_cookies_to_profile', up } satisfies Migration
+export default { id: 'v1_organization_to_profile', up } satisfies Migration

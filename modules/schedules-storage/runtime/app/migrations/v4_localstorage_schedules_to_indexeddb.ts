@@ -74,4 +74,4 @@ async function up({ db }: MigrationContext) {
   }
 }
 
-export default { id: 'v1_localstorage_to_indexeddb', up } satisfies Migration
+export default { id: 'v4_localstorage_schedules_to_indexeddb', up } satisfies Migration
