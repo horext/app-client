@@ -3,6 +3,6 @@ import type { IBaseScheduleGenerate, IScheduleGenerate } from '../../shared/inte
 export interface IFavoritesSchedulesService {
   getFavoriteSchedules(): Promise<IScheduleGenerate[]>
   saveFavorites(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]>
-  addFavorite(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate>
+  addFavorite(schedule: IBaseScheduleGenerate | IScheduleGenerate): Promise<IScheduleGenerate>
   removeFavorite(id: string): Promise<void>
 }

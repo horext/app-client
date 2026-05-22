@@ -24,13 +24,20 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     return savedSchedules
   }
 
-  async addFavorite(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate> {
-    const createdSchedule = await this.repo.create(schedule)
+  private async checkAndAddToFavorites(createdSchedule: IScheduleGenerate) {
     const inList = await this.favoritesRepo.isInList(createdSchedule.id)
     if (!inList) {
       await this.favoritesRepo.addToList(createdSchedule.id)
     }
     return createdSchedule
+  }
+
+  async addFavorite(schedule: IBaseScheduleGenerate | IScheduleGenerate): Promise<IScheduleGenerate> {
+    if ('id' in schedule) {
+      return await this.checkAndAddToFavorites(schedule)
+    }
+    const createdSchedule = await this.repo.create(schedule)
+    return await this.checkAndAddToFavorites(createdSchedule)
   }
 
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {

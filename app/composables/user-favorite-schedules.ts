@@ -6,7 +6,7 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IBaseScheduleGenerate,
+    _favoritesSchedule: IScheduleGenerate,
   ) {
     const result = await favoritesStorage.addFavorite(_favoritesSchedule)
     favoritesSchedules.value.push(result)
