@@ -1,6 +1,7 @@
+import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './ocurrences'
-import type { IScheduleGenerate, UUID } from './schedule'
+import type { IScheduleGenerate } from './schedule'
 
 export type IGenerationMeta = Omit<
   IGenerationRecord,

@@ -1,4 +1,4 @@
-import type { IScheduleGenerate, UUID } from '../../shared/interfaces/schedule'
+import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
@@ -25,7 +25,7 @@ async function up({ db }: MigrationContext) {
     await db.put('generations', {
       id: crypto.randomUUID(),
       generatedAt: new Date().toISOString(),
-      scheduleIds: rawSchedules.map((s) => s.id) as UUID[],
+      scheduleIds: rawSchedules.map((s) => s.id),
       crossingsSetting: 0,
       weekDays: [0, 1, 2, 3, 4, 5, 6],
       hourlyLoadId: 0,
