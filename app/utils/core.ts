@@ -35,7 +35,7 @@ export function getSchedules(
   const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const schedules: Array<ILocalScheduleGenerate> = []
+  const generatedSchedules: Array<ILocalScheduleGenerate> = []
   const baseEvents = activities.map(Event.buildFrom)
 
   const advanceIndex = (i: number) => {
@@ -157,7 +157,7 @@ export function getSchedules(
         (c) => c.scheduleSubject.id,
       )
       const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
-      schedules.push({
+      generatedSchedules.push({
         scheduleSubjectKey,
         scheduleSubjectIds,
         schedule: scheduleSubjects,
@@ -175,7 +175,7 @@ export function getSchedules(
   }
 
   return {
-    combinations: schedules,
+    combinations: generatedSchedules,
     occurrences: Array.from(occurrencesMap.values()),
   }
 }
