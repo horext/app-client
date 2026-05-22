@@ -36,7 +36,7 @@
             :subject="selectedSubject"
             :schedules="schedules"
             :loading="statusSchedules === 'pending'"
-            @save="save(selectedSubject, $event)"
+            @save="save(toRaw(selectedSubject), toRaw($event))"
             @cancel="close"
           />
         </v-dialog>
@@ -134,7 +134,7 @@ const { specialityId, hourlyLoad } = storeToRefs(configStore)
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const selectedSubject = ref<ISelectedSubject>()
+const selectedSubject = shallowRef<ISelectedSubject>()
 
 const openSearchMenu = ref(false)
 

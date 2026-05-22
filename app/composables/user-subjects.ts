@@ -6,7 +6,7 @@ export const useUserSubjects = () => {
   const { subjects } = storeToRefs(store)
 
   async function saveNewSubject(_subject: ISelectedSubject) {
-    await service.save(Object.assign({}, _subject))
+    await service.save(_subject)
     subjects.value.push(Object.assign({}, _subject))
   }
 
