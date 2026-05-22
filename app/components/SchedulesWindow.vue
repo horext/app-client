@@ -19,8 +19,8 @@
       />
       <view-list v-else :schedule="schedule" />
       <v-divider />
-      <v-footer class="text-center align-center justify-center">
-        <v-pagination v-model="page" :length="schedules.length" />
+      <v-footer v-if="schedules.length > 1" width="100%" color="transparent" class="pa-0">
+        <v-pagination v-model="page" :length="schedules.length" class="w-100" />
       </v-footer>
     </v-window-item>
   </v-window>
@@ -60,8 +60,10 @@ const schedule = computed(() => schedules.value[index.value])
 // Reset to first item only when the list size changes (new generation or removal)
 watch(
   () => schedules.value.length,
-  () => {
-    index.value = 0
+  (length) => {
+    if (index.value >= length) {
+      index.value = 0
+    }
   },
 )
 
