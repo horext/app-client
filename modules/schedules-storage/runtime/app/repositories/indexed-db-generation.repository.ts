@@ -18,7 +18,7 @@ export class IndexedDBGenerationRepository implements IGenerationRepository {
 
   async create(record: IBaseGenerationRecord): Promise<IGenerationRecord> {
     const db = await this.getDb()
-    const dbRecord = { ...record, scheduleIds: [] , id:  crypto.randomUUID() }
+    const dbRecord = { ...record, id:  crypto.randomUUID() }
     await db.put(IndexedDBGenerationRepository.STORE_NAME, dbRecord)
     return dbRecord
   }
