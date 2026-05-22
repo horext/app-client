@@ -5,8 +5,11 @@ import type {
   IScheduleSubjectGenerate,
 } from '../../shared/interfaces/schedule'
 import type { Migration, MigrationContext } from './types'
-import { readLsJson } from './utils'
+import { readCookieJson, readLsJson } from './utils'
 import { StoresDB } from '../context/db'
+import type {
+  IAcademicPeriodOrganizationUnit,
+} from '~/interfaces/houly-load'
 
 interface IMySchedule {
   id: string
@@ -14,6 +17,15 @@ interface IMySchedule {
   schedule: IScheduleSubjectGenerate[]
   crossings: number
   events: IEvent[]
+}
+
+interface IMyHourlyLoad {
+  id: number
+  name: string
+  checkedAt: string
+  updatedAt: string
+  publishedAt: string
+  academicPeriodOrganizationUnit: IAcademicPeriodOrganizationUnit
 }
 
 function transformSchedule(s: IMySchedule): IScheduleGenerate {
@@ -28,6 +40,7 @@ function transformSchedule(s: IMySchedule): IScheduleGenerate {
 }
 
 async function up({ db }: MigrationContext) {
+  const myHourlyLoad = readCookieJson<IMyHourlyLoad>('myHourlyLoad')
   const rawSchedules =
     readLsJson<IMySchedule[]>('mySchedules')?.map<IScheduleGenerate>((s) =>
       transformSchedule(s),
@@ -67,11 +80,14 @@ async function up({ db }: MigrationContext) {
       scheduleIds: rawSchedules.map((s) => s.id),
       crossingsSetting: 0,
       weekDays: [0, 1, 2, 3, 4, 5, 6],
-      hourlyLoadId: 0,
+      hourlyLoadId: myHourlyLoad?.id ??  0,
       resultCount: rawSchedules.length,
       occurrences: [],
     })
   }
 }
 
-export default { id: 'v4_localstorage_schedules_to_indexeddb', up } satisfies Migration
+export default {
+  id: 'v4_localstorage_schedules_to_indexeddb',
+  up,
+} satisfies Migration
