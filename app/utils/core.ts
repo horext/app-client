@@ -36,19 +36,17 @@ export function getSchedules(
   const generatedSchedules: Array<ILocalScheduleGenerate> = []
   const baseEvents = activities.map(Activity.buildActivityFrom)
 
-  const advanceIndex = (i: number) => {
-    const subjectSchedules = subjectsSchedules[i]
-    const currentIndex = indexSchedules[i]
-    if (
-      i >= 0 &&
-      subjectSchedules &&
-      currentIndex !== undefined &&
-      currentIndex === subjectSchedules.schedules.length - 1
-    ) {
-      indexSchedules[i] = 0
-      advanceIndex(i - 1)
-    } else if (i >= 0 && currentIndex !== undefined) {
-      indexSchedules[i] = currentIndex + 1
+  const advanceIndex = (start: number) => {
+    let i = start
+    while (i >= 0) {
+      const currentIndex = indexSchedules[i]!
+      if (currentIndex === subjectsSchedules[i]!.schedules.length - 1) {
+        indexSchedules[i] = 0
+        i--
+      } else {
+        indexSchedules[i] = currentIndex + 1
+        break
+      }
     }
   }
 
@@ -59,44 +57,30 @@ export function getSchedules(
     subjectsSchedules.length > 0 ? 1 : 0,
   )
 
-  const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
   for (let i = totalSchedules; i--;) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
-    for (let j = 0; j < indexSchedules.length; j++) {
-      const subjectSchedules = subjectsSchedules[j]
-      if (!subjectSchedules) continue
-      const scheduleIndex = indexSchedules[j]
-      if (scheduleIndex === undefined) continue
-      const schedule = subjectSchedules.schedules[scheduleIndex]
-      if (!schedule) continue
-      scheduleSubjects.push({
-        ...schedule,
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> = subjectsSchedules.map(
+      (subjectSchedules, j) => ({
+        ...subjectSchedules.schedules[indexSchedules[j]!]!,
         subject: subjectSchedules.subject,
-      })
-    }
+      }),
+    )
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
       CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
     )
     let crossingCombination = 0
     let useCombination = true
-    for (let j = 0; j < scheduleSubjects.length; j++) {
-      const currentScheduleSubjectEvents = scheduleSubjectsEvents.shift()
-      if (!currentScheduleSubjectEvents) continue
+    for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
+      const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
+      const restScheduleScheduleEvents = scheduleSubjectsEvents.slice(j + 1).flat().concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
-        const restScheduleScheduleEvents = scheduleSubjectsEvents.flat()
-
-        restScheduleScheduleEvents.push(...baseEvents)
         let intersections = 0
         for (const restScheduleEvent of restScheduleScheduleEvents) {
           if (scheduleSubjectEvent.intersects(restScheduleEvent)) {
-            const addEventToIntersection = (type: string) => {
-              const occurrenceKey = [
-                scheduleSubjectEvent.id,
-                restScheduleEvent.id,
-              ]
-                .sort()
-                .join('-')
+            const a = scheduleSubjectEvent.id
+            const b = restScheduleEvent.id
+            const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+            const addOccurrence = (type: string) => {
               const key = `${occurrenceKey}:${type}`
               if (!occurrencesMap.has(key)) {
                 occurrencesMap.set(key, {
@@ -109,39 +93,24 @@ export function getSchedules(
                 })
               }
             }
-            if (
-              crossingCombination + intersections <=
-              options.crossingSubjects
-            ) {
-              intersections++
-            } else {
-              if (
-                (restScheduleEvent.isPractice &&
-                  scheduleSubjectEvent.isPractice &&
-                  !options.crossPractices) ||
-                (restScheduleEvent.isActivity &&
-                  scheduleSubjectEvent.isActivity &&
-                  !options.crossEvent)
-              ) {
-                addEventToIntersection('CROSSING_NOT_AVAILABLE')
-              } else {
-                addEventToIntersection('CROSSING_EXCEEDED')
-              }
-              break
-            }
-
-            if (
+            const notAvailable =
               (restScheduleEvent.isPractice &&
                 scheduleSubjectEvent.isPractice &&
                 !options.crossPractices) ||
               (restScheduleEvent.isActivity &&
                 scheduleSubjectEvent.isActivity &&
                 !options.crossEvent)
-            ) {
-              addEventToIntersection('CROSSING_NOT_AVAILABLE')
+            if (crossingCombination + intersections <= options.crossingSubjects) {
+              intersections++
+            } else {
+              addOccurrence(notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED')
+              break
+            }
+            if (notAvailable) {
+              addOccurrence('CROSSING_NOT_AVAILABLE')
               useCombination = false
             } else {
-              addEventToIntersection('CROSSING_BASIS')
+              addOccurrence('CROSSING_BASIS')
             }
           }
         }
@@ -150,21 +119,15 @@ export function getSchedules(
       }
     }
     if (crossingCombination <= options.crossingSubjects && useCombination) {
-      schedulesCrossings[i] = crossingCombination
       const scheduleSubjectIds = scheduleSubjects.map(
         (c) => c.scheduleSubject.id,
       )
-      const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
+      const scheduleSubjectKey = scheduleSubjectIds.sort().join(',')
       generatedSchedules.push({
         scheduleSubjectKey,
         schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
-        events: scheduleSubjects
-          .map((c, index) =>
-            CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
-          )
-          .flat()
-          .concat(baseEvents),
+        events: scheduleSubjectsEvents.flat().concat(baseEvents),
       })
     }
 
