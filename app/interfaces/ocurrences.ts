@@ -1,4 +1,3 @@
-import type { IBaseEvent } from "~~/modules/schedules-storage/runtime/shared/interfaces/event"
 import type { IEvent } from "./event"
 
 export interface IBaseIntersectionOccurrence {
@@ -6,8 +5,8 @@ export interface IBaseIntersectionOccurrence {
   eventKey: string
   name: string
   type: string
-  eventTarget: IBaseEvent
-  eventSource: IBaseEvent
+  eventTarget: IEvent
+  eventSource: IEvent
 }
 
 export interface IIntersectionOccurrence extends IBaseIntersectionOccurrence {

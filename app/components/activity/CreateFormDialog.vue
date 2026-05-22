@@ -55,11 +55,11 @@
 import { computed, ref, watch, toRefs } from 'vue'
 import { Activity } from '~/models/Event'
 import type { VForm } from 'vuetify/components/VForm'
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 
 const _props = withDefaults(
   defineProps<{
-    event: IEvent | null
+    event: IActivity | null
     loading?: boolean
   }>(),
   {

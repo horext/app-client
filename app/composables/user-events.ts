@@ -1,3 +1,4 @@
+import type { UUID } from 'crypto'
 import { storeToRefs } from 'pinia'
 import type { Activity } from '~/models/Event'
 
@@ -11,7 +12,7 @@ export const useUserEvents = () => {
     items.value.push(result)
   }
 
-  async function deleteItemById(id: string) {
+  async function deleteItemById(id: UUID) {
     await service.delete(id)
     store.deleteItemById(id)
   }
@@ -19,7 +20,7 @@ export const useUserEvents = () => {
   async function updateItem(item: Activity) {
     const itemId = item.id
     if (!itemId) return
-    const result = await service.update({ ...item, id: itemId })
+    const result = await service.updateById(itemId, { ...item })
     store.updateItem(result)
   }
 

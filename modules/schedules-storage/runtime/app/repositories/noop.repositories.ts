@@ -8,7 +8,7 @@ import type { IAcademicConfigRepository } from './academic-config.repository.int
 import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { ISubjectsRepository } from './subjects-repository.interface'
-import type { IEvent } from '../../shared/interfaces/event'
+import type { IActivity } from '../../shared/interfaces/event'
 import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
 
@@ -57,10 +57,10 @@ export class NoopActivitiesRepository implements IActivitiesRepository {
   get() {
     return Promise.resolve(undefined)
   }
-  create(): Promise<IEvent> {
+  create(): Promise<IActivity> {
     throw new Error('Method not implemented.')
   }
-  update(): Promise<IEvent> {
+  update(): Promise<IActivity> {
     throw new Error('Method not implemented.')
   }
   putAll() {

@@ -1,4 +1,5 @@
-import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
+import type { UUID } from 'crypto'
+import type { EventCategories, IActivity, IEvent, Weekdays } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 import { convertToDate } from '~/utils/weekday'
 
@@ -64,7 +65,7 @@ export default class Event<ID extends string | undefined = string> {
   }
 }
 
-export class Activity extends Event<string | undefined> {
+export class Activity extends Event<UUID | undefined> {
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -73,7 +74,7 @@ export class Activity extends Event<string | undefined> {
     description = '',
     location = '',
     color = '#1976d2',
-    id: string | undefined = undefined,
+    id: UUID | undefined = undefined,
   ) {
     super(
       day,
@@ -89,7 +90,7 @@ export class Activity extends Event<string | undefined> {
     )
   }
 
-  static buildActivityFrom(event: IEvent) {
+  static buildActivityFrom(event: IActivity) {
     return new Activity(
       event.day,
       event.startTime,

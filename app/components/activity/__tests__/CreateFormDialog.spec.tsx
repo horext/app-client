@@ -8,14 +8,14 @@ import { VTextField } from 'vuetify/components/VTextField'
 import { VAutocomplete } from 'vuetify/components/VAutocomplete'
 import CreateFormDialog from '~/components/activity/CreateFormDialog.vue'
 import { Activity } from '~/models/Event'
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 
 vi.stubGlobal('visualViewport', new EventTarget())
 const vuetify = createVuetify()
 
 vi.stubGlobal('CSS', { supports: () => false })
 
-const mountComponent = (options: { event: IEvent | null; loading?: boolean; open?: boolean }) => {
+const mountComponent = (options: { event: IActivity | null; loading?: boolean; open?: boolean }) => {
   const Wrapper = defineComponent({
     setup() {
       const dialog = ref(options.open ?? false)
@@ -64,8 +64,8 @@ describe('CreateFormDialog', () => {
   })
 
   it('populates title field from event prop', () => {
-    const event: IEvent = {
-      id: 'abc-123',
+    const event: IActivity = {
+      id: crypto.randomUUID(),
       title: 'My Activity',
       day: 3,
       color: '#ff0000',

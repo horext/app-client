@@ -66,7 +66,7 @@ import { ref } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
 import type { Activity } from '~/models/Event'
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
@@ -80,11 +80,11 @@ const dialog = ref(false)
 
 const headers = EVENT_HEADERS
 
-const editedItem = ref<IEvent | null>(null)
+const editedItem = ref<IActivity | null>(null)
 
 const dialogDelete = ref(false)
 
-const editItem = (item: IEvent) => {
+const editItem = (item: IActivity) => {
   editedItem.value = item
   dialog.value = true
 }
@@ -96,13 +96,13 @@ const {
   items: activities,
 } = useUserEvents()
 
-const selectedDeleteItem = ref<IEvent>()
-const deleteItem = (item: IEvent) => {
+const selectedDeleteItem = ref<IActivity>()
+const deleteItem = (item: IActivity) => {
   selectedDeleteItem.value = item
   dialogDelete.value = true
 }
 
-const deleteItemConfirm = (selectedItem: IEvent) => {
+const deleteItemConfirm = (selectedItem: IActivity) => {
   deleteItemById(selectedItem.id!)
   closeDelete()
 }

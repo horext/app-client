@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
 import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
-import type { IBaseEvent } from '../../shared/interfaces/event'
+import type { IActivity } from '../../shared/interfaces/event'
 import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
 import type { IUserPreferences } from '../../shared/interfaces/preferences'
@@ -21,7 +21,7 @@ export interface HorextDB extends DBSchema {
   }
   activities: {
     key: string
-    value: IBaseEvent & { id: string }
+    value: IActivity
   }
   favorites: {
     key: string
