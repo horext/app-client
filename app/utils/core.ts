@@ -3,7 +3,7 @@ import type {
   ILocalScheduleGenerate,
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
-import type { ISelectedSubject } from '~/interfaces/subject'
+import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
@@ -17,13 +17,8 @@ export type ScheduleOptions = {
   crossPractices?: boolean
 }
 
-export type ISubjectEntry = Pick<
-  ISelectedSubject,
-  'id' | 'schedules' | 'course'
->
-
 export function getSchedules(
-  subjects: Array<ISubjectEntry>,
+  subjectsSchedules: Array<IBaseSubjectSchedules>,
   activities: Array<IEvent>,
   _options?: ScheduleOptions,
 ): {
@@ -38,19 +33,19 @@ export function getSchedules(
     ..._options,
   }
   const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
-  const maxQuantity = subjects.length
+  const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const schedules: Array<ILocalScheduleGenerate> = []
   const baseEvents = activities.map(Event.buildFrom)
 
   const advanceIndex = (i: number) => {
-    const subject = subjects[i]
+    const subjectSchedules = subjectsSchedules[i]
     const currentIndex = indexSchedules[i]
     if (
       i >= 0 &&
-      subject &&
+      subjectSchedules &&
       currentIndex !== undefined &&
-      currentIndex === subject.schedules.length - 1
+      currentIndex === subjectSchedules.schedules.length - 1
     ) {
       indexSchedules[i] = 0
       advanceIndex(i - 1)
@@ -59,26 +54,26 @@ export function getSchedules(
     }
   }
 
-  const totalSchedules = subjects.reduce(
-    (total, subject) => {
-      return total * subject.schedules.length
+  const totalSchedules = subjectsSchedules.reduce(
+    (total, ss) => {
+      return total * ss.schedules.length
     },
-    subjects.length > 0 ? 1 : 0,
+    subjectsSchedules.length > 0 ? 1 : 0,
   )
 
   const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
   for (let i = totalSchedules; i--; ) {
     const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
     for (let j = 0; j < indexSchedules.length; j++) {
-      const subject = subjects[j]
-      if (!subject) continue
+      const subjectSchedules = subjectsSchedules[j]
+      if (!subjectSchedules) continue
       const scheduleIndex = indexSchedules[j]
       if (scheduleIndex === undefined) continue
-      const schedule = subject.schedules[scheduleIndex]
+      const schedule = subjectSchedules.schedules[scheduleIndex]
       if (!schedule) continue
       scheduleSubjects.push({
         ...schedule,
-        subject,
+        subject: subjectSchedules.subject,
       })
     }
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>

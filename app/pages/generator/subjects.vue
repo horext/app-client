@@ -32,11 +32,11 @@
           @keydown.esc="close"
         >
           <SubjectScheduleList
-            v-if="selectedSubject"
-            :subject="selectedSubject"
+            v-if="subjectSchedules"
+            :subject-schedules="subjectSchedules"
             :schedules="schedules"
             :loading="statusSchedules === 'pending'"
-            @save="save(toRaw(selectedSubject), toRaw($event))"
+            @save="save(toRaw(subjectSchedules), toRaw($event))"
             @cancel="close"
           />
         </v-dialog>
@@ -75,7 +75,7 @@
         @click:reject="closeDelete"
       >
         ¿Estás seguro de eliminar el curso de
-        {{ selectedDelete?.course?.name }}?
+        {{ selectedDelete.subject?.course?.name }}?
       </base-confirm-dialog>
       <base-snackbar v-model="succcesAddCourse">
         Curso Agregado correctamente!
@@ -97,9 +97,10 @@ import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionL
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserProfileStore } from '~/stores/user-profile'
 import type {
-  ISelectedSubject,
+  ISubjectSchedules,
   ISubjectSchedule,
   ISubject,
+  IBaseSubjectSchedules,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
@@ -124,9 +125,10 @@ const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
 
 const succcesAddCourse = ref(false)
 
+const selectedSubject = shallowRef<ISubject>()
 const availableCourses = computed(() => {
   return subjects.value?.filter(
-    (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
+    (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
 const { specialityId, hourlyLoad } = storeToRefs(configStore)
@@ -134,14 +136,14 @@ const { specialityId, hourlyLoad } = storeToRefs(configStore)
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const selectedSubject = shallowRef<ISelectedSubject>()
+const subjectSchedules = shallowRef<IBaseSubjectSchedules | ISubjectSchedules>()
 
 const openSearchMenu = ref(false)
 
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
   openSearchMenu.value = false
-  editItem({ ...item, schedules: [] })
+  editItem({ subject: item, schedules: [] })
 }
 
 const scheduleSubjectApi = useScheduleSubjectApi()
@@ -154,7 +156,7 @@ const {
   'generator-subject-schedules',
   async () => {
     const _hourlyLoadId = hourlyLoad.value?.id
-    const subject = selectedSubject.value
+    const subject = subjectSchedules.value?.subject
     if (!_hourlyLoadId || !subject) return []
 
     const schedulesSubject =
@@ -178,20 +180,20 @@ const {
   },
 )
 
-const editItem = async (item: ISelectedSubject) => {
-  selectedSubject.value = item
+const editItem = async (item: ISubjectSchedules | IBaseSubjectSchedules) => {
+  subjectSchedules.value = item
   fetchSchedules()
   dialog.value = true
 }
 
-const selectedDelete = ref<ISelectedSubject>()
-const deleteItem = (item: ISelectedSubject) => {
+const selectedDelete = ref<ISubjectSchedules>()
+const deleteItem = (item: ISubjectSchedules) => {
   selectedDelete.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
-const deleteItemConfirm = async (item: ISelectedSubject) => {
+const deleteItemConfirm = async (item: ISubjectSchedules) => {
   await deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
@@ -199,7 +201,7 @@ const deleteItemConfirm = async (item: ISelectedSubject) => {
 
 const close = () => {
   dialog.value = false
-  selectedSubject.value = undefined
+  subjectSchedules.value = undefined
 }
 
 const closeDelete = () => {
@@ -208,19 +210,24 @@ const closeDelete = () => {
 }
 
 const succcesUpdateCourse = ref(false)
-const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
+const save = async (
+  item: IBaseSubjectSchedules | ISubjectSchedules,
+  schedules: ISubjectSchedule[],
+) => {
   succcesAddCourse.value = false
-  const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
-  if (editedIndex > -1 && schedules && schedules.length > 0) {
-    await updateSubject({ ...item, schedules })
-    close()
-    succcesUpdateCourse.value = true
-  } else if (schedules && schedules.length > 0) {
+  if ('id' in item) {
+    const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
+    if (editedIndex > -1 && schedules && schedules.length > 0) {
+      await updateSubject({ ...item, schedules })
+      close()
+      succcesUpdateCourse.value = true
+    } else if (editedIndex > -1) {
+      deleteItem(item)
+    }
+  } else {
     await saveNewSubject({ ...item, schedules })
     close()
     succcesAddCourse.value = true
-  } else if (editedIndex > -1) {
-    deleteItem(item)
   }
 }
 

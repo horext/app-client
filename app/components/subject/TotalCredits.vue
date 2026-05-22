@@ -12,14 +12,16 @@
 import type { ISubject } from '~/interfaces/subject'
 
 const props = defineProps<{
-  subjects: Pick<ISubject, 'credits'>[]
+  subjects: {
+    subject: Pick<ISubject, 'credits'>
+  }[]
 }>()
 
 const { subjects } = toRefs(props)
 
 const totalCredits = computed(() => {
   return subjects.value.reduce((previousValue, currentValue) => {
-    return currentValue.credits + previousValue
+    return currentValue.subject.credits + previousValue
   }, 0)
 })
 </script>

@@ -3,7 +3,6 @@ import { isIntersects, scheduleToEvents } from '../event'
 import type { IInterval } from '~/interfaces/interval'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
-
 function makeSchedule(
   sessions: Array<{
     id: number
@@ -22,9 +21,30 @@ function makeSchedule(
     subject: {
       id: 10,
       course: { id: 'CS101', name: 'Intro to CS' },
+      credits: 3,
+      cycle: null,
+      studyPlan: {
+        id: 1,
+        fromDate: '2020-01-01',
+        code: 'SP2020',
+        organizationUnit: { id: 1 },
+      },
+      type: {
+        id: 1,
+        code: 'COURSE',
+        name: 'Course',
+      },
     },
     sessions: sessions.map(
-      ({ id, day, startTime, endTime, typeCode, teacherName, classroomCode }) => ({
+      ({
+        id,
+        day,
+        startTime,
+        endTime,
+        typeCode,
+        teacherName,
+        classroomCode,
+      }) => ({
         id,
         day,
         startTime,
@@ -32,14 +52,16 @@ function makeSchedule(
         type: { id: 1, code: typeCode },
         schedule: { id: 1 },
         teacher: teacherName ? { id: 1, fullName: teacherName } : undefined,
-        classroom: classroomCode ? { id: 1, code: classroomCode } :   {
-            id: 0, code: '',
-        }
+        classroom: classroomCode
+          ? { id: 1, code: classroomCode }
+          : {
+              id: 0,
+              code: '',
+            },
       }),
     ),
   }
 }
-
 
 describe('isIntersects', () => {
   it('returns true when events fully overlap', () => {
@@ -91,7 +113,6 @@ describe('isIntersects', () => {
   })
 })
 
-
 describe('scheduleToEvents', () => {
   it('returns an empty array when there are no sessions', () => {
     const schedule = makeSchedule([])
@@ -100,8 +121,24 @@ describe('scheduleToEvents', () => {
 
   it('returns one Event per session', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 1, startTime: '08:00', endTime: '10:00', typeCode: 'THEORY', teacherName: 'Dr. Smith', classroomCode: 'B201' },
-      { id: 2, day: 3, startTime: '10:00', endTime: '12:00', typeCode: 'LAB', teacherName: 'Dr. Jones', classroomCode: 'LAB1' },
+      {
+        id: 1,
+        day: 1,
+        startTime: '08:00',
+        endTime: '10:00',
+        typeCode: 'THEORY',
+        teacherName: 'Dr. Smith',
+        classroomCode: 'B201',
+      },
+      {
+        id: 2,
+        day: 3,
+        startTime: '10:00',
+        endTime: '12:00',
+        typeCode: 'LAB',
+        teacherName: 'Dr. Jones',
+        classroomCode: 'LAB1',
+      },
     ])
     const events = scheduleToEvents(schedule, '#ff0000')
     expect(events).toHaveLength(2)
@@ -109,7 +146,15 @@ describe('scheduleToEvents', () => {
 
   it('maps session fields correctly onto the Event', () => {
     const schedule = makeSchedule([
-      { id: 42, day: 2, startTime: '09:00', endTime: '11:00', typeCode: 'THEORY', teacherName: 'Dr. Smith', classroomCode: 'B201' },
+      {
+        id: 42,
+        day: 2,
+        startTime: '09:00',
+        endTime: '11:00',
+        typeCode: 'THEORY',
+        teacherName: 'Dr. Smith',
+        classroomCode: 'B201',
+      },
     ])
     const [event] = scheduleToEvents(schedule, '#123456')
 
@@ -124,7 +169,14 @@ describe('scheduleToEvents', () => {
 
   it('builds the title as "<courseId> <sectionId> - <courseName>"', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 0, startTime: '08:00', endTime: '09:00', typeCode: 'THEORY', teacherName: 'Prof. X' },
+      {
+        id: 1,
+        day: 0,
+        startTime: '08:00',
+        endTime: '09:00',
+        typeCode: 'THEORY',
+        teacherName: 'Prof. X',
+      },
     ])
     const [event] = scheduleToEvents(schedule, '#000')
     expect(event!.title).toBe('CS101 A - Intro to CS')
@@ -132,7 +184,15 @@ describe('scheduleToEvents', () => {
 
   it('builds the description with teacher, course and section info', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 0, startTime: '08:00', endTime: '09:00', typeCode: 'THEORY', teacherName: 'Prof. X', classroomCode: 'R100' },
+      {
+        id: 1,
+        day: 0,
+        startTime: '08:00',
+        endTime: '09:00',
+        typeCode: 'THEORY',
+        teacherName: 'Prof. X',
+        classroomCode: 'R100',
+      },
     ])
     const [event] = scheduleToEvents(schedule, '#000')
     expect(event!.description).toContain('Prof. X')
@@ -143,7 +203,14 @@ describe('scheduleToEvents', () => {
 
   it('sets the location to the classroom code', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 0, startTime: '08:00', endTime: '09:00', typeCode: 'THEORY', classroomCode: 'ROOM_42' },
+      {
+        id: 1,
+        day: 0,
+        startTime: '08:00',
+        endTime: '09:00',
+        typeCode: 'THEORY',
+        classroomCode: 'ROOM_42',
+      },
     ])
     const [event] = scheduleToEvents(schedule, '#000')
     expect(event!.location).toBe('ROOM_42')
@@ -151,7 +218,13 @@ describe('scheduleToEvents', () => {
 
   it('handles a missing teacher gracefully', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 0, startTime: '08:00', endTime: '09:00', typeCode: 'THEORY' },
+      {
+        id: 1,
+        day: 0,
+        startTime: '08:00',
+        endTime: '09:00',
+        typeCode: 'THEORY',
+      },
     ])
     expect(() => scheduleToEvents(schedule, '#000')).not.toThrow()
     const [event] = scheduleToEvents(schedule, '#000')
@@ -160,7 +233,14 @@ describe('scheduleToEvents', () => {
 
   it('handles a missing classroom gracefully', () => {
     const schedule = makeSchedule([
-      { id: 1, day: 0, startTime: '08:00', endTime: '09:00', typeCode: 'THEORY', teacherName: 'Dr. A' },
+      {
+        id: 1,
+        day: 0,
+        startTime: '08:00',
+        endTime: '09:00',
+        typeCode: 'THEORY',
+        teacherName: 'Dr. A',
+      },
     ])
     expect(() => scheduleToEvents(schedule, '#000')).not.toThrow()
     const [event] = scheduleToEvents(schedule, '#000')

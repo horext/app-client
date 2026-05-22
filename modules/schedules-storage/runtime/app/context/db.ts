@@ -6,7 +6,7 @@ import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
 import type { IUserPreferences } from '../../shared/interfaces/preferences'
 import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
-import type { ISelectedSubject } from '../../shared/interfaces/subject'
+import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 import { schemaMigrations } from '../migrations/schema'
 import type { UUID } from 'crypto'
 
@@ -44,8 +44,8 @@ export interface HorextDB extends DBSchema {
     value: IGenerationRecord
   }
   subjects: {
-    key: number
-    value: ISelectedSubject
+    key: string
+    value: ISubjectSchedules
   }
 }
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>

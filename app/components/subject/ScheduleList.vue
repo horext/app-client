@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
-import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type { IBaseSubjectSchedules, ISubjectSchedule } from '~/interfaces/subject'
 
 const props = defineProps<{
-  subject: ISelectedSubject
+  subjectSchedules: IBaseSubjectSchedules
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
@@ -38,15 +38,15 @@ const emit = defineEmits<{
   (event: 'cancel'): void
 }>()
 
-const { subject, schedules } = toRefs(props)
+const { subjectSchedules, schedules } = toRefs(props)
 
-const selected = ref<ISubjectSchedule[]>([])
+const selected = shallowRef<ISubjectSchedule[]>([])
 
 const availableSchedules = computed(() => {
   const currentSchedules = schedules.value
-  const subjectSchedules = subject.value.schedules
+  const _subjectSchedules = subjectSchedules.value.schedules
   return currentSchedules.filter((s1) => {
-    const schedule = subjectSchedules.find(
+    const schedule = _subjectSchedules.find(
       (s2) => s2.section.id === s1.section.id,
     )
     return schedule?.id === s1?.id
@@ -62,7 +62,7 @@ const saveSections = () => {
 }
 
 const title = computed(() => {
-  const course = subject.value?.course
+  const course = subjectSchedules.value?.subject.course
   return `${course?.id} - ${course?.name}`
 })
 </script>

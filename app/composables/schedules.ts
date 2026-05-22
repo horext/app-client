@@ -1,7 +1,7 @@
 import type { IEvent } from '~/interfaces/event'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
-import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type { IBaseSubjectSchedules, ISubjectSchedule } from '~/interfaces/subject'
 import CoreWorker from '@/assets/workers/core?worker'
 
 export const useSchedulesGenerator = () => {
@@ -15,7 +15,7 @@ export const useSchedulesGenerator = () => {
   })
 
   const loadSchedulesViaWorker = (
-    subjects: Array<ISelectedSubject>,
+    subjects: Array<IBaseSubjectSchedules>,
     myEvents: Array<IEvent>,
     options: ScheduleOptions,
   ) => {
@@ -46,7 +46,7 @@ export const useSchedulesGenerator = () => {
   }
 
   const loadSchedules = (
-    subjects: Array<ISelectedSubject>,
+    subjects: Array<IBaseSubjectSchedules>,
     myEvents: Array<IEvent>,
     options: ScheduleOptions,
   ) => {

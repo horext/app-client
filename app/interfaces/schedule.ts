@@ -3,7 +3,7 @@ import type { IEvent } from './event'
 import type { UUID } from 'crypto'
 
 export interface IScheduleSubjectGenerate extends ISubjectSchedule {
-  subject: Pick<ISubject, 'id' | 'course'>
+  subject: ISubject
 }
 export interface IBaseScheduleGenerate {
   scheduleSubjectKey: string

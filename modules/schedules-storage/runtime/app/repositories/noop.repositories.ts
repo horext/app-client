@@ -11,6 +11,7 @@ import type { ISubjectsRepository } from './subjects-repository.interface'
 import type { IActivity } from '../../shared/interfaces/event'
 import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
+import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
   getEntries() {
@@ -117,8 +118,11 @@ export class NoopSubjectsRepository implements ISubjectsRepository {
   getAll() {
     return Promise.resolve([])
   }
-  save() {
-    return Promise.resolve()
+  create():Promise<ISubjectSchedules> {
+    throw new Error('Method not implemented.')
+  }
+  update(): Promise<ISubjectSchedules> {
+    throw new Error('Method not implemented.')
   }
   delete() {
     return Promise.resolve()

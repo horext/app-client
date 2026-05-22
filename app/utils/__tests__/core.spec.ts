@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getSchedules } from '../core'
-import type { ISubjectEntry } from '../core'
 import type { IEvent } from '~/interfaces/event'
+import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -20,10 +20,25 @@ function makeSubject(
       typeCode: string
     }>
   }>,
-): ISubjectEntry {
+): IBaseSubjectSchedules {
   return {
-    id,
-    course: { id: `COURSE_${id}`, name: `Course ${id}` },
+    subject: {
+      id,
+      course: { id: `COURSE_${id}`, name: `Course ${id}` },
+      credits: 3,
+      cycle: null,
+      studyPlan: {
+        id: 1,
+        code: 'SP2020',
+        fromDate: '2020-01-01',
+        organizationUnit: { id: 1 },
+      },
+      type: {
+        id: 1,
+        code: 'COURSE',
+        name: 'Course',
+      },
+    },
     schedules: schedules.map(({ scheduleId, sessions }) => ({
       id: scheduleId,
       section: { id: `SEC_${scheduleId}` },
