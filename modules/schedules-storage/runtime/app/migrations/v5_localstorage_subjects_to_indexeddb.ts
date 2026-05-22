@@ -1,34 +1,71 @@
-import type { ISubjectSchedule } from '../../shared/interfaces/subject'
+import type { Weekdays } from '../../shared/interfaces/event';
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 
+export interface MySubject {
+  course: {
+    id: string;
+    name: string;
+  };
+  credits: number;
+  cycle: number;
+  id: number;
+  studyPlan: {
+    code: string;
+    fromDate: string;
+    id: number;
+    organizationUnit: {
+      id: number;
+    };
+    toDate: null;
+  };
+  type: {
+    code: string;
+    id: number;
+    name: string;
+  };
+  schedules: {
+    deleteAt: null;
+    id: number;
+    section: {
+      id: string;
+    };
+    sessions: {
+      id: number;
+      schedule: {
+        deleteAt: null;
+        id: number;
+        section: null;
+        sessions: null;
+      };
+      type: {
+        code: string;
+        id: number;
+        name: string;
+      };
+      classroom: {
+        code: string;
+        id: number;
+        name: null;
+      };
+      teacher: {
+        code: null;
+        fullName: string;
+        id: number;
+      };
+      day: Weekdays;
+      startTime: string;
+      endTime: string;
+    }[];
+    scheduleSubject: {
+      id: number;
+    };
+  }[];
+}
+
 async function up({ db }: MigrationContext) {
   const subjects =
-    readLsJson<
-      {
-        id: number
-        course: {
-          id: string
-          name: string
-        }
-        type: {
-          id: number
-          name: string
-          code: string
-        }
-        studyPlan: {
-          id: number
-          fromDate: string
-          code: string
-          organizationUnit: {
-            id: number
-          }
-        }
-        credits: number
-        cycle: number | null
-        schedules: ISubjectSchedule[]
-      }[]
-    >('mySubjects') ?? []
+    readLsJson<MySubject[]>('mySubjects') ?? []
   const valid = subjects.filter((s) => s?.schedules?.length > 0)
 
   if (valid.length > 0) {
