@@ -42,7 +42,7 @@ const addFavoriteCurrentSchedule = (
   if (existingFavorite) {
     emit('click:remove-favorite', existingFavorite.id)
   } else {
-    emit('click:add-favorite', schedule.value)
+    emit('click:add-favorite', toRaw(schedule.value))
   }
 }
 </script>
