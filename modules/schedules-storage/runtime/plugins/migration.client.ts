@@ -12,15 +12,28 @@ export default defineNuxtPlugin({
 
     const ctx: MigrationContext = { db }
 
-    const appliedIds = await db.getAllKeys(StoresDB.MIGRATIONS)
-    const pending = migrations.filter((m) => !appliedIds.includes(m.id))
+    const allRecords = await db.getAll(StoresDB.MIGRATIONS)
+    const successfulIds = new Set(allRecords.filter((r) => !r.error).map((r) => r.id))
+    const pending = migrations
+      .slice()
+      .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
+      .filter((m) => !successfulIds.has(m.id))
 
     for (const migration of pending) {
-      await migration.up(ctx)
-      await db.put(StoresDB.MIGRATIONS, {
-        id: migration.id,
-        appliedAt: new Date().toISOString(),
-      })
+      try {
+        await migration.up(ctx)
+        await db.put(StoresDB.MIGRATIONS, {
+          id: migration.id,
+          appliedAt: new Date().toISOString(),
+        })
+      } catch (error) {
+        await db.put(StoresDB.MIGRATIONS, {
+          id: migration.id,
+          appliedAt: new Date().toISOString(),
+          error: error instanceof Error ? error.message : String(error),
+        })
+        break
+      }
     }
   },
 })

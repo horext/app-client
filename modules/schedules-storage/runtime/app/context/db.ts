@@ -28,7 +28,7 @@ export interface HorextDB extends DBSchema {
   }
   [StoresDB.MIGRATIONS]: {
     key: string
-    value: { id: string; appliedAt: string }
+    value: { id: string; appliedAt: string; error?: string }
   }
   [StoresDB.ACTIVITIES]: {
     key: IActivity['id']
