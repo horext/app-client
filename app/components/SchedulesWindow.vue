@@ -19,7 +19,12 @@
       />
       <view-list v-else :schedule="schedule" />
       <v-divider />
-      <v-footer v-if="schedules.length > 1" width="100%" color="transparent" class="pa-0">
+      <v-footer
+        v-if="schedules.length > 1"
+        width="100%"
+        color="transparent"
+        class="pa-0"
+      >
         <v-pagination v-model="page" :length="schedules.length" class="w-100" />
       </v-footer>
     </v-window-item>
@@ -28,7 +33,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useVModel } from '@vueuse/core'
 import ViewList from './schedule/SubjectsTable.vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { ViewMode } from '~/models/ViewMode'
@@ -39,19 +43,14 @@ import type { Weekdays } from '~/interfaces/event'
 const props = defineProps<{
   schedules: IScheduleGenerate[]
   weekDays: Weekdays[]
-  currentSchedule: IScheduleGenerate | undefined
   mode: ViewMode
-}>()
-
-const emit = defineEmits<{
-  (event: 'update:currentSchedule', value: IScheduleGenerate): void
 }>()
 
 const { schedules } = toRefs(props)
 
 const index = ref(0)
 
-const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
+const syncedCurrentSchedule = defineModel<IScheduleGenerate>('currentSchedule')
 
 const MODES = ViewMode
 
