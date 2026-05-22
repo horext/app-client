@@ -28,38 +28,16 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules.value.push(...result)
   }
 
-  const addFavoriteSchedule = async (
-    schedule: IScheduleGenerate | IBaseScheduleGenerate,
-  ) => {
-    const result = await favoritesStorage.addFavorite(schedule)
-    if (
-      !favoritesSchedules.value.some(
-        (s) => s.scheduleSubjectKey === schedule.scheduleSubjectKey,
-      )
-    ) {
-      favoritesSchedules.value.push(result)
-    }
-  }
-
   async function fetchFavoritesSchedules() {
     favoritesSchedules.value =
       (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
-
-  const removeFavoriteSchedule = async (schedule: IBaseScheduleGenerate) => {
-    await favoritesStorage.removeFavorite(schedule.scheduleSubjectKey)
-    favoritesSchedules.value = favoritesSchedules.value.filter(
-      (s) => s.scheduleSubjectKey !== schedule.scheduleSubjectKey,
-    )
-  }
-
+  
   return {
     favoritesSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
     updateFavoritesSchedules,
-    addFavoriteSchedule,
     fetchFavoritesSchedules,
-    removeFavoriteSchedule,
   }
 }
