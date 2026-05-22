@@ -7,8 +7,7 @@ import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
 import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
-import Event from '~/models/Event'
-import { scheduleToEvents } from '~/utils/event'
+import Event, { CourseEvent } from '~/models/Event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -77,7 +76,7 @@ export function getSchedules(
       })
     }
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      scheduleToEvents(c, EVENT_COLORS[index] ?? '#000000'),
+      CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
     )
     let crossingCombination = 0
     let useCombination = true
@@ -163,7 +162,7 @@ export function getSchedules(
         crossings: crossingCombination,
         events: scheduleSubjects
           .map((c, index) =>
-            scheduleToEvents(c, EVENT_COLORS[index] ?? '#000000'),
+            CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
           )
           .flat()
           .concat(baseEvents),
