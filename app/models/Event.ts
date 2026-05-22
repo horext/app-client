@@ -62,6 +62,12 @@ export default class Event<ID extends string | undefined = string> {
     return this.type.includes('MY_EVENT')
   }
 
+  intersects(other: Event<string | undefined>): boolean {
+    return !(
+      this.endTime <= other.startTime || other.endTime <= this.startTime
+    )
+  }
+
   static buildFrom(event: IEvent) {
     return new Event(
       event.day,

@@ -5,7 +5,6 @@ import type {
 } from '~/interfaces/schedule'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IEvent } from '~/interfaces/event'
-import { isIntersects } from './event'
 import { EVENT_COLORS } from '~/constants/event'
 import Event, { CourseEvent } from '~/models/Event'
 
@@ -90,7 +89,7 @@ export function getSchedules(
         restScheduleScheduleEvents.push(...baseEvents)
         let intersections = 0
         for (const restScheduleEvent of restScheduleScheduleEvents) {
-          if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
+          if (scheduleSubjectEvent.intersects(restScheduleEvent)) {
             const addEventToIntersection = (type: string) => {
               const occurrenceKey = [
                 scheduleSubjectEvent.id,

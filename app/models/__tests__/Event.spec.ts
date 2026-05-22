@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { CourseEvent } from '../Event'
+import { Activity, CourseEvent } from '../Event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
 function makeSchedule(
@@ -201,5 +201,59 @@ describe('CourseEvent.buildFromSchedule', () => {
     // @ts-expect-error – simulate incomplete data arriving at runtime
     delete schedule.sessions
     expect(CourseEvent.buildFromSchedule(schedule, '#000')).toEqual([])
+  })
+})
+
+function makeActivity(startTime: string, endTime: string) {
+  return new Activity(1, startTime, endTime)
+}
+
+describe('Event.intersects', () => {
+  it('returns true when events fully overlap', () => {
+    const a = makeActivity('08:00', '10:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(true)
+  })
+
+  it('returns true when target partially overlaps the start of source', () => {
+    const a = makeActivity('07:00', '09:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(true)
+  })
+
+  it('returns true when target partially overlaps the end of source', () => {
+    const a = makeActivity('09:00', '11:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(true)
+  })
+
+  it('returns true when target is fully contained within source', () => {
+    const a = makeActivity('08:30', '09:30')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(true)
+  })
+
+  it('returns false when target ends exactly when source starts (adjacent, no overlap)', () => {
+    const a = makeActivity('06:00', '08:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(false)
+  })
+
+  it('returns false when source ends exactly when target starts (adjacent, no overlap)', () => {
+    const a = makeActivity('10:00', '12:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(false)
+  })
+
+  it('returns false when events are completely separate (target before source)', () => {
+    const a = makeActivity('06:00', '07:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(false)
+  })
+
+  it('returns false when events are completely separate (target after source)', () => {
+    const a = makeActivity('11:00', '12:00')
+    const b = makeActivity('08:00', '10:00')
+    expect(a.intersects(b)).toBe(false)
   })
 })
