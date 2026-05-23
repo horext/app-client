@@ -43,9 +43,9 @@ jobs:
       - name: Benchmark
         run: pnpm bench
 
-      - name: Upload benchmark baseline
+      - name: Upload benchmark results
         uses: actions/upload-artifact@v4
         with:
-          name: bench-baseline
+          name: bench-pr
           path: .bench/results.json
           overwrite: true
