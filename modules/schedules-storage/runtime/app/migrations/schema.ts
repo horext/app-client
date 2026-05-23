@@ -57,7 +57,10 @@ export const schemaMigrations: SchemaMigration[] = [
   {
     version: 8,
     up(_db, tx) {
-      tx.objectStore(StoresDB.SCHEDULES).createIndex('scheduleSubjectKey', 'scheduleSubjectKey')
+      tx.objectStore(StoresDB.SCHEDULES).createIndex(
+        'scheduleSubjectKey',
+        'scheduleSubjectKey',
+      )
     },
   },
 ]

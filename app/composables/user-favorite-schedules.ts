@@ -32,7 +32,7 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules.value =
       (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
-  
+
   return {
     favoritesSchedules,
     saveNewFavoriteSchedule,

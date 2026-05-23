@@ -5,9 +5,7 @@ import type {
 
 export interface ISchedulesRepository {
   getEntries(ids: IScheduleGenerate['id'][]): Promise<IScheduleGenerate[]>
-  getByKey(
-    scheduleSubjectKey: string,
-  ): Promise<IScheduleGenerate | undefined>
+  getByKey(scheduleSubjectKey: string): Promise<IScheduleGenerate | undefined>
   create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate>
   update(schedule: IScheduleGenerate): Promise<IScheduleGenerate>
   saveAll(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]>
