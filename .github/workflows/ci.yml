@@ -39,3 +39,13 @@ jobs:
 
       - name: Test
         run: pnpm test:unit:ci
+
+      - name: Benchmark
+        run: pnpm bench
+
+      - name: Upload benchmark baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: bench-baseline
+          path: .bench/results.json
+          overwrite: true

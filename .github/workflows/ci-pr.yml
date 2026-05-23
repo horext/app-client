@@ -15,3 +15,84 @@ jobs:
   ci:
     name: CI
     uses: ./.github/workflows/ci.yml
+
+  bench:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Download baseline from main
+        uses: actions/download-artifact@v4
+        with:
+          name: bench-baseline
+          path: .bench
+        continue-on-error: true
+
+      - name: Rename baseline
+        run: mv .bench/results.json .bench/baseline.json 2>/dev/null || true
+
+      - name: Benchmark
+        run: pnpm bench | tee .bench/output.txt
+
+      - name: Post benchmark comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          {
+            echo '<!-- bench-results -->'
+            echo '## ⚡ Benchmark Results'
+            echo
+            HAS_ROWS=false
+            NAME=''
+            START=$(grep -n 'BENCH  Summary' .bench/output.txt 2>/dev/null | cut -d: -f1 | head -1)
+            if [[ -n "$START" ]]; then
+              while IFS= read -r line; do
+                if [[ "$line" =~ \>\ (.+)$ ]]; then
+                  NAME="${BASH_REMATCH[1]}"
+                elif [[ "$line" =~ ([0-9.]+)x\ (faster|slower)\ than\ baseline ]]; then
+                  if [[ "$HAS_ROWS" == false ]]; then
+                    echo '| Benchmark | vs main |'
+                    echo '|-----------|---------|'
+                    HAS_ROWS=true
+                  fi
+                  EMOJI=$([[ "${BASH_REMATCH[2]}" == faster ]] && echo '🟢' || echo '🔴')
+                  echo "| $NAME | $EMOJI **${BASH_REMATCH[1]}×** ${BASH_REMATCH[2]} |"
+                  NAME=''
+                fi
+              done < <(tail -n "+$((START + 2))" .bench/output.txt)
+            fi
+            if [[ "$HAS_ROWS" == false ]]; then
+              echo '_No baseline found — results will be available after this merges to main_'
+            fi
+          } > .bench/comment.md
+
+          COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | startswith("<!-- bench-results -->")) | .id' | head -1)
+          if [[ -n "$COMMENT_ID" ]]; then
+            gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH -F body="$(cat .bench/comment.md)"
+          else
+            gh pr comment "$PR_NUMBER" --body-file .bench/comment.md
+          fi
+
