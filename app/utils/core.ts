@@ -57,6 +57,7 @@ export function getSchedules(
     subjectsSchedules.length > 0 ? 1 : 0,
   )
 
+  const intersectionCache = new Map<string, boolean>()
   for (let i = totalSchedules; i--;) {
     const scheduleSubjects: Array<IScheduleSubjectGenerate> = subjectsSchedules.map(
       (subjectSchedules, j) => ({
@@ -76,10 +77,16 @@ export function getSchedules(
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
         let intersections = 0
         for (const restScheduleEvent of restScheduleScheduleEvents) {
-          if (scheduleSubjectEvent.intersects(restScheduleEvent)) {
-            const a = scheduleSubjectEvent.id
-            const b = restScheduleEvent.id
-            const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+          if (scheduleSubjectEvent.day !== restScheduleEvent.day) continue
+          const a = scheduleSubjectEvent.id
+          const b = restScheduleEvent.id
+          const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+          let doesIntersect = intersectionCache.get(occurrenceKey)
+          if (doesIntersect === undefined) {
+            doesIntersect = scheduleSubjectEvent.intersects(restScheduleEvent)
+            intersectionCache.set(occurrenceKey, doesIntersect)
+          }
+          if (doesIntersect) {
             const addOccurrence = (type: string) => {
               const key = `${occurrenceKey}:${type}`
               if (!occurrencesMap.has(key)) {
