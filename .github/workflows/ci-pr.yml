@@ -24,15 +24,6 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Download PR benchmark results
-        uses: actions/download-artifact@v4
-        with:
-          name: bench-pr
-          path: .bench
-
-      - name: Rename PR results
-        run: mv .bench/results.json .bench/pr-results.json
-
       - name: Checkout main
         uses: actions/checkout@v6
         with:
@@ -52,8 +43,17 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile
 
+      - name: Download PR benchmark results
+        uses: actions/download-artifact@v4
+        with:
+          name: bench-pr
+          path: .bench
+
+      - name: Set PR results as baseline
+        run: mv .bench/results.json .bench/baseline.json
+
       - name: Benchmark main
-        run: pnpm bench
+        run: pnpm bench 2>&1 | tee .bench/output.txt
 
       - name: Post benchmark comment
         if: always()
@@ -62,49 +62,17 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
         run: |
-          node -e "
-            const fs = require('fs')
-            const main = JSON.parse(fs.readFileSync('.bench/results.json', 'utf8'))
-            const pr   = JSON.parse(fs.readFileSync('.bench/pr-results.json', 'utf8'))
+          BODY="<!-- bench-results -->
+          ## ⚡ Benchmark Results
 
-            const mainMap = {}
-            for (const file of main.files)
-              for (const group of file.groups)
-                for (const b of group.benchmarks)
-                  mainMap[group.fullName + '::' + b.name] = b.hz
-
-            const rows = []
-            for (const file of pr.files) {
-              for (const group of file.groups) {
-                const label = group.fullName.replace(/^.+> /, '')
-                for (const b of group.benchmarks) {
-                  const mainHz = mainMap[group.fullName + '::' + b.name]
-                  if (!mainHz) continue
-                  const ratio = b.hz / mainHz
-                  const emoji = ratio >= 0.95 ? '\u{1F7E2}' : '\u{1F534}'
-                  const diff  = ratio >= 1
-                    ? ratio.toFixed(2) + 'x faster'
-                    : (1 / ratio).toFixed(2) + 'x slower'
-                  rows.push('| ' + label + ' | ' + Math.round(b.hz) + ' | ' + Math.round(mainHz) + ' | ' + emoji + ' ' + diff + ' |')
-                }
-              }
-            }
-
-            let body = '<!-- bench-results -->\n## \u26A1 Benchmark Results\n\n'
-            if (rows.length > 0) {
-              body += '| Benchmark | PR (ops/s) | main (ops/s) | diff |\n'
-              body += '|-----------|-----------|-------------|------|\n'
-              body += rows.join('\n')
-            } else {
-              body += '_Could not compare \u2014 benchmark data unavailable_'
-            }
-            fs.writeFileSync('.bench/comment.md', body)
-          "
+          \`\`\`
+          $(cat .bench/output.txt)
+          \`\`\`"
 
           COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
             --jq '.[] | select(.body | startswith("<!-- bench-results -->")) | .id' | head -1)
           if [[ -n "$COMMENT_ID" ]]; then
-            gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH -F body="$(cat .bench/comment.md)"
+            gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH -F body="$BODY"
           else
-            gh pr comment "$PR_NUMBER" --body-file .bench/comment.md
+            gh pr comment "$PR_NUMBER" --body "$BODY"
           fi
