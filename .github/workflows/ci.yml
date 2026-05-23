@@ -58,14 +58,8 @@ jobs:
           name: bench-baseline
           path: .bench
 
-      - name: Set baseline
-        if: inputs.with-baseline
-        run: mv .bench/results.json .bench/baseline.json
-
       - name: Benchmark
-        run: |
-          set -o pipefail
-          mkdir -p .bench && pnpm bench 2>&1 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | tee .bench/output.txt
+        run: mkdir -p .bench && pnpm bench
 
       - name: Upload benchmark results
         id: upload-bench
@@ -75,5 +69,4 @@ jobs:
           path: |
             .bench/results.json
             .bench/baseline.json
-            .bench/output.txt
           overwrite: true

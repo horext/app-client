@@ -38,11 +38,14 @@ jobs:
       - name: Benchmark
         run: mkdir -p .bench && pnpm bench
 
-      - name: Upload baseline
+      - name: Rename to baseline
+        run: mv .bench/results.json .bench/baseline.json
+
+      - name: Upload baseline artifact
         uses: actions/upload-artifact@v7
         with:
           name: bench-baseline
-          path: .bench/results.json
+          path: .bench/baseline.json
           overwrite: true
 
   ci:
