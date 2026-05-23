@@ -50,7 +50,7 @@ jobs:
           path: .bench
 
       - name: Set PR results as baseline
-        run: mv .bench/bench-pr/results.json .bench/baseline.json
+        run: mv .bench/results.json .bench/baseline.json
 
       - name: Benchmark main
         continue-on-error: true
