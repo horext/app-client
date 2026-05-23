@@ -53,7 +53,13 @@ jobs:
         run: mv .bench/results.json .bench/baseline.json
 
       - name: Benchmark main
-        run: pnpm bench 2>&1 | tee .bench/output.txt
+        continue-on-error: true
+        run: |
+          mkdir -p .bench
+          pnpm exec vitest bench --run \
+            --benchmark.outputJson=.bench/results.json \
+            --benchmark.compare=.bench/baseline.json \
+            2>&1 | tee .bench/output.txt
 
       - name: Post benchmark comment
         if: always()
@@ -62,11 +68,17 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
         run: |
+          if [[ -s .bench/output.txt ]]; then
+            BENCH_BODY="$(cat .bench/output.txt)"
+          else
+            BENCH_BODY="main branch has no benchmark setup yet — results will appear after this PR is merged."
+          fi
+
           BODY="<!-- bench-results -->
           ## ⚡ Benchmark Results
 
           \`\`\`
-          $(cat .bench/output.txt)
+          $BENCH_BODY
           \`\`\`"
 
           COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
