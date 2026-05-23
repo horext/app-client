@@ -1,14 +1,12 @@
-import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
+import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
-  IScheduleGenerate,
+  ILocalScheduleGenerate,
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
-import type { ISelectedSubject } from '~/interfaces/subject'
-import type { IEvent } from '~/interfaces/event'
-import { isIntersects } from './event'
+import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IActivity } from '~/interfaces/event'
 import { EVENT_COLORS } from '~/constants/event'
-import Event from '~/models/Event'
-import { scheduleToEvent } from '~/utils/event'
+import { Activity, CourseEvent } from '~/models/Event'
 
 export type ScheduleOptions = {
   credits?: number
@@ -17,18 +15,13 @@ export type ScheduleOptions = {
   crossPractices?: boolean
 }
 
-export type ISubjectEntry = Pick<
-  ISelectedSubject,
-  'id' | 'schedules' | 'course'
->
-
 export function getSchedules(
-  subjects: Array<ISubjectEntry>,
-  myEvents: Array<IEvent>,
+  subjectsSchedules: Array<IBaseSubjectSchedules>,
+  activities: Array<IActivity>,
   _options?: ScheduleOptions,
 ): {
-  occurrences: IIntersectionOccurrence[]
-  combinations: IScheduleGenerate[]
+  occurrences: IBaseIntersectionOccurrence[]
+  combinations: ILocalScheduleGenerate[]
 } {
   const options = {
     credits: 100,
@@ -37,74 +30,62 @@ export function getSchedules(
     crossPractices: false,
     ..._options,
   }
-  const occurrencesMap = new Map<string, IIntersectionOccurrence>()
-  const maxQuantity = subjects.length
+  const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
+  const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const schedules: Array<IScheduleGenerate> = []
-  const baseEvents = myEvents.map(Event.buildFrom)
+  const generatedSchedules: Array<ILocalScheduleGenerate> = []
+  const baseEvents = activities.map(Activity.buildActivityFrom)
 
-  const advanceIndex = (i: number) => {
-    const subject = subjects[i]
-    const currentIndex = indexSchedules[i]
-    if (
-      i >= 0 &&
-      subject &&
-      currentIndex !== undefined &&
-      currentIndex === subject.schedules.length - 1
-    ) {
-      indexSchedules[i] = 0
-      advanceIndex(i - 1)
-    } else if (i >= 0 && currentIndex !== undefined) {
-      indexSchedules[i] = currentIndex + 1
+  const advanceIndex = (start: number) => {
+    let i = start
+    while (i >= 0) {
+      const currentIndex = indexSchedules[i]!
+      if (currentIndex === subjectsSchedules[i]!.schedules.length - 1) {
+        indexSchedules[i] = 0
+        i--
+      } else {
+        indexSchedules[i] = currentIndex + 1
+        break
+      }
     }
   }
 
-  const totalSchedules = subjects.reduce(
-    (total, subject) => {
-      return total * subject.schedules.length
+  const totalSchedules = subjectsSchedules.reduce(
+    (total, ss) => {
+      return total * ss.schedules.length
     },
-    subjects.length > 0 ? 1 : 0,
+    subjectsSchedules.length > 0 ? 1 : 0,
   )
 
-  const schedulesCrossings: number[] = Array(totalSchedules).fill(0)
-  for (let i = totalSchedules; i--; ) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> = []
-    for (let j = 0; j < indexSchedules.length; j++) {
-      const subject = subjects[j]
-      if (!subject) continue
-      const scheduleIndex = indexSchedules[j]
-      if (scheduleIndex === undefined) continue
-      const schedule = subject.schedules[scheduleIndex]
-      if (!schedule) continue
-      scheduleSubjects.push({
-        ...schedule,
-        subject,
-      })
-    }
+  for (let i = totalSchedules; i--;) {
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> = subjectsSchedules.map(
+      (subjectSchedules, j) => ({
+        ...subjectSchedules.schedules[indexSchedules[j]!]!,
+        subject: subjectSchedules.subject,
+      }),
+    )
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
+      CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
     )
     let crossingCombination = 0
     let useCombination = true
-    for (let j = 0; j < scheduleSubjects.length; j++) {
-      const currentScheduleSubjectEvents = scheduleSubjectsEvents.shift()
-      if (!currentScheduleSubjectEvents) continue
+    for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
+      const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
+      const restScheduleScheduleEvents = scheduleSubjectsEvents.slice(j + 1).flat().concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
-        const restScheduleScheduleEvents = scheduleSubjectsEvents.flat()
-
-        restScheduleScheduleEvents.push(...baseEvents)
         let intersections = 0
         for (const restScheduleEvent of restScheduleScheduleEvents) {
-          if (isIntersects(scheduleSubjectEvent, restScheduleEvent)) {
-            const addEventToIntersection = (type: string) => {
-              const occurrenceId = [scheduleSubjectEvent.internalId, restScheduleEvent.internalId]
-                .sort()
-                .join('-')
-              const key = `${occurrenceId}:${type}`
+          if (scheduleSubjectEvent.intersects(restScheduleEvent)) {
+            const a = scheduleSubjectEvent.id
+            const b = restScheduleEvent.id
+            const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+            const addOccurrence = (type: string) => {
+              const key = `${occurrenceKey}:${type}`
               if (!occurrencesMap.has(key)) {
                 occurrencesMap.set(key, {
-                  id: occurrenceId,
+                  id: crypto.randomUUID(),
+                  eventKey: occurrenceKey,
                   name: `${scheduleSubjectEvent.title} - ${restScheduleEvent.title}`,
                   eventTarget: scheduleSubjectEvent,
                   eventSource: restScheduleEvent,
@@ -112,39 +93,24 @@ export function getSchedules(
                 })
               }
             }
-            if (
-              crossingCombination + intersections <=
-              options.crossingSubjects
-            ) {
+            const notAvailable =
+              (restScheduleEvent.isPractice &&
+                scheduleSubjectEvent.isPractice &&
+                !options.crossPractices) ||
+              (restScheduleEvent.isActivity &&
+                scheduleSubjectEvent.isActivity &&
+                !options.crossEvent)
+            if (crossingCombination + intersections <= options.crossingSubjects) {
               intersections++
             } else {
-              if (
-                (restScheduleEvent.type?.includes('P', 0) &&
-                  scheduleSubjectEvent.type?.includes('P', 0) &&
-                  !options.crossPractices) ||
-                (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                  scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
-                  !options.crossEvent)
-              ) {
-                addEventToIntersection('CROSSING_NOT_AVAILABLE')
-              } else {
-                addEventToIntersection('CROSSING_EXCEEDED')
-              }
+              addOccurrence(notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED')
               break
             }
-
-            if (
-              (restScheduleEvent.type?.includes('P', 0) &&
-                scheduleSubjectEvent.type?.includes('P', 0) &&
-                !options.crossPractices) ||
-              (restScheduleEvent.type?.includes('MY_EVENT', 0) &&
-                scheduleSubjectEvent.type?.includes('MY_EVENT', 0) &&
-                !options.crossEvent)
-            ) {
-              addEventToIntersection('CROSSING_NOT_AVAILABLE')
+            if (notAvailable) {
+              addOccurrence('CROSSING_NOT_AVAILABLE')
               useCombination = false
             } else {
-              addEventToIntersection('CROSSING_BASIS')
+              addOccurrence('CROSSING_BASIS')
             }
           }
         }
@@ -153,23 +119,15 @@ export function getSchedules(
       }
     }
     if (crossingCombination <= options.crossingSubjects && useCombination) {
-      schedulesCrossings[i] = crossingCombination
       const scheduleSubjectIds = scheduleSubjects.map(
         (c) => c.scheduleSubject.id,
       )
-      const scheduleSubjectKey = [...scheduleSubjectIds].sort().join(',')
-      schedules.push({
-        id: crypto.randomUUID(),
+      const scheduleSubjectKey = scheduleSubjectIds.sort().join(',')
+      generatedSchedules.push({
         scheduleSubjectKey,
-        scheduleSubjectIds,
-        schedule: scheduleSubjects,
+        schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
-        events: scheduleSubjects
-          .map((c, index) =>
-            scheduleToEvent(c, EVENT_COLORS[index] ?? '#000000'),
-          )
-          .flat()
-          .concat(baseEvents),
+        events: scheduleSubjectsEvents.flat().concat(baseEvents),
       })
     }
 
@@ -177,7 +135,7 @@ export function getSchedules(
   }
 
   return {
-    combinations: schedules,
+    combinations: generatedSchedules,
     occurrences: Array.from(occurrencesMap.values()),
   }
 }

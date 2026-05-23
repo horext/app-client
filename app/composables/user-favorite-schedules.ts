@@ -1,4 +1,7 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -6,10 +9,10 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
+    _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
   ) {
-    await favoritesStorage.addFavorite(_favoritesSchedule)
-    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
+    const result = await favoritesStorage.addFavorite(_favoritesSchedule)
+    favoritesSchedules.value.push(result)
   }
 
   async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
@@ -21,35 +24,20 @@ export const useUserFavoriteSchedules = () => {
   async function updateFavoritesSchedules(
     _favoritesSchedules: IScheduleGenerate[],
   ) {
-    await favoritesStorage.saveFavorites(_favoritesSchedules)
-    favoritesSchedules.value = _favoritesSchedules
-  }
-
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await favoritesStorage.addFavorite(schedule)
-    if (!favoritesSchedules.value.some((s) => s.id === schedule.id)) {
-      favoritesSchedules.value.push(schedule)
-    }
+    const result = await favoritesStorage.saveFavorites(_favoritesSchedules)
+    favoritesSchedules.value.push(...result)
   }
 
   async function fetchFavoritesSchedules() {
-    favoritesSchedules.value = await favoritesStorage.getFavoriteSchedules() ?? []
+    favoritesSchedules.value =
+      (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
-
-  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await favoritesStorage.removeFavorite(schedule.id)
-    favoritesSchedules.value = favoritesSchedules.value.filter(
-      (s) => s.id !== schedule.id,
-    )
-  }
-
+  
   return {
     favoritesSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
     updateFavoritesSchedules,
-    addFavoriteSchedule,
     fetchFavoritesSchedules,
-    removeFavoriteSchedule,
   }
 }

@@ -7,9 +7,9 @@ import {
   STUDY_PLAN_API_KEY,
 } from '../registry/keys'
 
-import type { InjectionKey } from 'vue';
+import type { InjectionKey } from 'vue'
 import { inject } from 'vue'
-import type { IApiRegistry } from '..';
+import type { IApiRegistry } from '..'
 
 export function useApi<T>(provider: InjectionKey<T>, ctx?: IApiRegistry): T {
   const api = inject(provider) ?? ctx?.get(provider)
@@ -27,5 +27,5 @@ export const useStudyPlanApi = () => useApi(STUDY_PLAN_API_KEY)
 
 export const useCourseApi = () => useApi(COURSE_API_KEY)
 
-export const useHourlyLoadApi = (ctx?: IApiRegistry) => useApi(HOURLY_LOAD_API_KEY, ctx)
-
+export const useHourlyLoadApi = (ctx?: IApiRegistry) =>
+  useApi(HOURLY_LOAD_API_KEY, ctx)

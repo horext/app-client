@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="item in schedule.schedule" :key="item.id">
+        <template v-for="item in schedule.schedulesSubject" :key="item.id">
           <schedule-section :schedule="item" />
           <class-session-item
             v-for="session in item.sessions"

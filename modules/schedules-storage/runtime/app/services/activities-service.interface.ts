@@ -1,8 +1,9 @@
-import type { IBaseEvent, IEvent } from '../../shared/interfaces/event'
+import type { UUID } from 'crypto'
+import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
 
 export interface IActivitiesService {
-  getAll(): Promise<Array<IEvent>>
-  create(activity: IBaseEvent): Promise<IEvent>
-  delete(id: string): Promise<void>
-  update(activity: IEvent): Promise<IEvent>
+  getAll(): Promise<Array<IActivity>>
+  create(activity: IBaseActivity): Promise<IActivity>
+  delete(id: UUID): Promise<void>
+  updateById(id: UUID, activity: IBaseActivity): Promise<IActivity>
 }

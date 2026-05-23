@@ -101,7 +101,7 @@ const internalDialog = defineModel<boolean>('dialog')
 
 const link = computed(() => location.origin + path.value + '?q=' + query.value)
 
-const query = computed(() => btoa(schedule.value.scheduleSubjectIds.join(',')))
+const query = computed(() => btoa(schedule.value.scheduleSubjectKey))
 
 const close = () => {
   internalDialog.value = false

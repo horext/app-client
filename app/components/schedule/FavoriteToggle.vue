@@ -38,9 +38,10 @@ const {
 } = toRefs(props)
 
 const indexSchedule = computed(() => {
+  const current = currentSchedule.value
   if (currentSchedule.value) {
     return favoritesSchedulesSync.value.findIndex(
-      (e) => e && e.id === currentSchedule.value.id,
+      (e) => e && (e.id === current.id || (e.scheduleSubjectKey === current.scheduleSubjectKey && e.events.length === current.events.length)),
     )
   } else {
     return -1

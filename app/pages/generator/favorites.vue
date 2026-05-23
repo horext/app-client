@@ -45,19 +45,19 @@ useSeoMeta({
 
 const showAddFavoriteMessage = ref(false)
 
-const { addFavoriteSchedule, removeFavoriteSchedule, favoritesSchedules } =
+const { saveNewFavoriteSchedule, deleteFavoriteScheduleById, favoritesSchedules } =
   useUserFavoriteSchedules()
 
 const addFavorite = async (schedule: IScheduleGenerate) => {
   showAddFavoriteMessage.value = false
-  await addFavoriteSchedule(toRaw(schedule))
+  await saveNewFavoriteSchedule(toRaw(schedule))
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
 const removeFavorite = async (schedule: IScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
-  await removeFavoriteSchedule(schedule)
+  await deleteFavoriteScheduleById(schedule.id)
   showRemoveFavoriteMessage.value = true
 }
 </script>

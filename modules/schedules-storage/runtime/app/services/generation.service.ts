@@ -1,9 +1,20 @@
-import type { IGenerationMeta, IGenerationRecord, IGenerationResult } from '../../shared/interfaces/generation-record'
+import type {
+  IBaseGenerationRecord,
+  IGenerationMeta,
+  IGenerationRecord,
+  IGenerationResult,
+} from '../../shared/interfaces/generation-record'
 import type { IIntersectionOccurrence } from '../../shared/interfaces/ocurrences'
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IGenerationService } from './generation.service.interface'
-import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type {
+  ISchedulesFavoritesRepository,
+  ISchedulesRepository,
+} from '../repositories/schedules-repository.interface'
 
 export class GenerationService implements IGenerationService {
   constructor(
@@ -27,28 +38,25 @@ export class GenerationService implements IGenerationService {
 
   async saveGeneration(
     meta: IGenerationMeta,
-    schedules: IScheduleGenerate[],
+    schedules: IBaseScheduleGenerate[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
   ): Promise<IGenerationResult> {
-    const record: IGenerationRecord = {
-      id: crypto.randomUUID(),
-      scheduleIds: schedules.map((s) => s.id),
+    const savedSchedules = await this.schedulesRepo.saveAll(schedules)
+
+    const record: IBaseGenerationRecord = {
       resultCount: schedules.length,
       occurrences,
       ...meta,
+      scheduleIds: savedSchedules.map((s) => s.id),
     }
 
-    // 1. Persist schedule objects
-    await this.schedulesRepo.putEntries(schedules)
-
-    // 2. Persist generation record
-    await this.generationRepo.save(record)
+    const savedRecord = await this.generationRepo.create(record)
 
     // 3. Trim history and clean orphaned schedules
     await this._trimAndCleanup(maxHistory)
 
-    return { ...record, schedules, occurrences }
+    return { ...savedRecord, schedules: savedSchedules, occurrences }
   }
 
   async getSchedulesForGeneration(

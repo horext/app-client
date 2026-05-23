@@ -14,12 +14,15 @@ const PATH_SUBJECTS = 'subjects'
 
 export class CourseApi extends BaseApi implements ICourseApi {
   public findBySearch(search: string, speciality: number, hourlyLoad: number) {
-    return this.$fetch<IPageResponse<ISubjectResponse>>(PATH_SUBJECTS + '?search=' + search, {
-      method: 'GET',
-      params: {
-        speciality,
-        hourlyLoad,
+    return this.$fetch<IPageResponse<ISubjectResponse>>(
+      PATH_SUBJECTS + '?search=' + search,
+      {
+        method: 'GET',
+        params: {
+          speciality,
+          hourlyLoad,
+        },
       },
-    })
+    )
   }
 }

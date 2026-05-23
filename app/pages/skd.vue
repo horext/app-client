@@ -17,13 +17,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-import {
-  useScheduleSubjectApi,
-} from '~~/modules/apis/runtime/composables'
-import type { ISelectedSubject } from '~/interfaces/subject'
+import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
+import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
+import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
 
 definePageMeta({
   layout: 'app',
@@ -35,13 +33,13 @@ useSeoMeta({
 })
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const schedules = ref<IScheduleGenerate[]>([])
+const schedules = ref<ILocalScheduleGenerate[]>([])
 const loading = ref(false)
 
 const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
-const { data: subjects } = useAsyncData<ISelectedSubject[]>(
+const { data: subjects } = useAsyncData<IBaseSubjectSchedules[]>(
   'skd-subjects',
   async () => {
     const encodedQuery = route.query.q
@@ -52,7 +50,7 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
       await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
 
     return scheduleSubjects.map((sb) => ({
-      ...sb.subject,
+      subject: sb.subject,
       schedules: [
         {
           ...sb.schedule,
@@ -77,7 +75,7 @@ const {
 
 const { loadSchedules } = useSchedulesGenerator()
 
-async function fetchSchedules(subjects: ISelectedSubject[]) {
+async function fetchSchedules(subjects: IBaseSubjectSchedules[]) {
   loading.value = true
   const { combinations } = await loadSchedules(subjects, [], {
     crossingSubjects: 100,

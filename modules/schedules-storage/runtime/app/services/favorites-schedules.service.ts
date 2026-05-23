@@ -1,5 +1,11 @@
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
-import type { ISchedulesFavoritesRepository, ISchedulesRepository } from '../repositories/schedules-repository.interface'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
+import type {
+  ISchedulesFavoritesRepository,
+  ISchedulesRepository,
+} from '../repositories/schedules-repository.interface'
 import type { IGenerationRepository } from '../repositories/generation.repository.interface'
 import type { IFavoritesSchedulesService } from './favorites-schedules.service.interface'
 
@@ -15,17 +21,36 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     return this.repo.getEntries(ids)
   }
 
-  async saveFavorites(schedules: IScheduleGenerate[]): Promise<void> {
-    await this.repo.putEntries(schedules)
-    await this.favoritesRepo.setList(schedules.map((s) => s.id))
+  async saveFavorites(
+    schedules: IScheduleGenerate[],
+  ): Promise<IScheduleGenerate[]> {
+    const savedSchedules = await this.repo.saveAll(schedules)
+    await this.favoritesRepo.setList(savedSchedules.map((s) => s.id))
+    return savedSchedules
   }
 
-  async addFavorite(schedule: IScheduleGenerate): Promise<void> {
-    await this.repo.putEntry(schedule)
-    const inList = await this.favoritesRepo.isInList(schedule.id)
+  private async checkAndAddToFavorites(createdSchedule: IScheduleGenerate) {
+    const inList = await this.favoritesRepo.isInList(createdSchedule.id)
     if (!inList) {
-      await this.favoritesRepo.addToList(schedule.id)
+      await this.favoritesRepo.addToList(createdSchedule.id)
     }
+    return createdSchedule
+  }
+
+  async addFavorite(
+    schedule: IBaseScheduleGenerate | IScheduleGenerate,
+  ): Promise<IScheduleGenerate> {
+    if ('id' in schedule) {
+      return await this.checkAndAddToFavorites(schedule)
+    }
+    const existing = await this.repo.getByKey(
+      schedule.scheduleSubjectKey,
+    )
+    if (existing?.events.length === schedule.events.length) {
+      return await this.checkAndAddToFavorites(existing)
+    }
+    const createdSchedule = await this.repo.create(schedule)
+    return await this.checkAndAddToFavorites(createdSchedule)
   }
 
   async removeFavorite(id: IScheduleGenerate['id']): Promise<void> {

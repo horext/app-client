@@ -1,15 +1,14 @@
+import type { UUID } from 'node:crypto'
 import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './ocurrences'
-import type { IScheduleGenerate, UUID } from './schedule'
+import type { IScheduleGenerate } from './schedule'
 
-export type IGenerationMeta = Omit<IGenerationRecord, 'id' | 'scheduleIds' | 'resultCount' | 'occurrences'>
-
-export type IGenerationResult = Omit<IGenerationRecord, 'scheduleIds'> & {
-  schedules: IScheduleGenerate[]
-}
+export type IGenerationMeta = Omit<
+  IGenerationRecord,
+  'id' | 'scheduleIds' | 'resultCount' | 'occurrences'
+>
 
 export interface IGenerationRecord {
-  id: UUID
   generatedAt: string
   scheduleIds: UUID[]
   crossingsSetting: number
@@ -17,4 +16,9 @@ export interface IGenerationRecord {
   hourlyLoadId: number
   resultCount: number
   occurrences: IIntersectionOccurrence[]
+}
+
+export interface IGenerationResult extends IGenerationRecord {
+  id: UUID
+  schedules: IScheduleGenerate[]
 }

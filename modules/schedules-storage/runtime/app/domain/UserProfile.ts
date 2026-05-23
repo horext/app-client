@@ -12,7 +12,9 @@ export class UserProfile {
     return new UserProfile(
       this.id,
       partial.facultyId !== undefined ? partial.facultyId : this.facultyId,
-      partial.specialityId !== undefined ? partial.specialityId : this.specialityId,
+      partial.specialityId !== undefined
+        ? partial.specialityId
+        : this.specialityId,
       partial.setupCompleted ?? this.setupCompleted,
     )
   }

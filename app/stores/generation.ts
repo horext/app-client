@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IGenerationRecord, IGenerationResult } from '~/interfaces/generation-record'
+import type {
+  IGenerationRecord,
+  IGenerationResult,
+} from '~/interfaces/generation-record'
 
 export const useGenerationStore = defineStore('generation', () => {
   const result = ref<IGenerationResult | null>(null)

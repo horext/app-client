@@ -1,3 +1,4 @@
+import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
 
@@ -37,7 +38,7 @@ export interface ISession {
     id: number
   }
   classroom: IClassroom
-  teacher: ITeacher
+  teacher?: ITeacher
   type: {
     id: number
     code: string
@@ -65,11 +66,16 @@ export interface ISubjectSchedule {
   sessions: ISession[]
 }
 
-export interface ISelectedSubject extends ISubject {
+export interface IBaseSubjectSchedules {
+  subject: ISubject
   schedules: Pick<
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'
   >[]
+}
+
+export interface ISubjectSchedules extends IBaseSubjectSchedules {
+  id: UUID
 }
 
 export interface ISubjectStudyPlan extends ISubject {

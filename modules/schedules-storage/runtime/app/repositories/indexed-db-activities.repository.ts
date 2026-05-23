@@ -1,37 +1,41 @@
-import type { IBaseEvent, IEvent } from '../../shared/interfaces/event'
+import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
 import type { IActivitiesRepository } from './activities.repository.interface'
-import type { DbFactory } from '../context/db'
+import { type DbFactory, StoresDB } from '../context/db'
 
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
-  static STORE_NAME = 'activities' as const
   constructor(private readonly getDb: DbFactory) {}
 
-  async getAll(): Promise<Array<IBaseEvent & { id: string }>> {
+  async getAll(): Promise<Array<IActivity>> {
     const db = await this.getDb()
-    return db.getAll(IndexedDBActivitiesRepository.STORE_NAME)
+    return db.getAll(StoresDB.ACTIVITIES)
   }
 
-  async get(id: string): Promise<IEvent | undefined> {
+  async get(id: IActivity['id']): Promise<IActivity | undefined> {
     const db = await this.getDb()
-    return db.get(IndexedDBActivitiesRepository.STORE_NAME, id)
+    return db.get(StoresDB.ACTIVITIES, id)
   }
 
-  async create(activity: IBaseEvent): Promise<IEvent> {
+  async create(activity: IBaseActivity): Promise<IActivity> {
     const db = await this.getDb()
     const id = crypto.randomUUID()
-    const newActivity = { ...activity, id }
-    await db.put(IndexedDBActivitiesRepository.STORE_NAME, newActivity)
+    const newActivity: IActivity = {
+      ...activity,
+      id,
+      category: 'MY_EVENT',
+      type: 'MY_EVENT',
+    }
+    await db.put(StoresDB.ACTIVITIES, newActivity)
     return newActivity
   }
 
-  async update(activity: IEvent): Promise<IEvent> {
+  async update(activity: IActivity): Promise<IActivity> {
     const db = await this.getDb()
-    await db.put(IndexedDBActivitiesRepository.STORE_NAME, activity)
+    await db.put(StoresDB.ACTIVITIES, activity)
     return activity
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: IActivity['id']): Promise<void> {
     const db = await this.getDb()
-    await db.delete(IndexedDBActivitiesRepository.STORE_NAME, id)
+    await db.delete(StoresDB.ACTIVITIES, id)
   }
 }

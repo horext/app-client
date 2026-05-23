@@ -4,7 +4,8 @@ import type { Weekdays } from '~/interfaces/event'
 export const useUserPreferences = () => {
   const store = useUserPreferencesStore()
   const service = usePreferencesService()
-  const { preferences, weekDays, crossings, maxGenerationHistory } = storeToRefs(store)
+  const { preferences, weekDays, crossings, maxGenerationHistory } =
+    storeToRefs(store)
 
   async function fetchPreferences() {
     const prefs = await service.getPreferences()

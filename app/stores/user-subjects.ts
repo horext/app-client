@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { ISelectedSubject } from '~/interfaces/subject'
+import type { ISubjectSchedules } from '~/interfaces/subject'
 
 export const useUserSubjectsStore = defineStore('user-subjects', () => {
-  const subjects = ref<Array<ISelectedSubject>>([])
+  const subjects = ref<Array<ISubjectSchedules>>([])
 
   return {
     subjects,

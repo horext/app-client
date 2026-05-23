@@ -1,7 +1,11 @@
-import type { ISelectedSubject } from '../../shared/interfaces/subject'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '../../shared/interfaces/subject'
 
 export interface ISubjectsRepository {
-  getAll(): Promise<ISelectedSubject[]>
-  save(subject: ISelectedSubject): Promise<void>
-  delete(id: ISelectedSubject['id']): Promise<void>
+  getAll(): Promise<ISubjectSchedules[]>
+  create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules>
+  update(subject: ISubjectSchedules): Promise<ISubjectSchedules>
+  delete(id: ISubjectSchedules['id']): Promise<void>
 }

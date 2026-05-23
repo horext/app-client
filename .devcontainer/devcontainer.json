@@ -4,7 +4,7 @@
 	"name": "Horext App Client Dev Container",
 
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bullseye",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:24-bullseye",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -14,7 +14,8 @@
 			"extensions": [
 				"Vue.volar",
 				"vitest.explorer",
-				"donjayamanne.git-extension-pack"
+				"donjayamanne.git-extension-pack",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
@@ -22,7 +23,7 @@
 		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,consistency=cached"
 	],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "corepack enable && corepack install && pnpm install",
+	"postCreateCommand": "corepack install && pnpm install",
 	"postStartCommand": "git config --global user.signingkey ~/.ssh/id_ed25519.pub || true"
 	// Configure tool-specific properties.
 	// "customizations": {},

@@ -11,7 +11,7 @@ export class PreferencesService implements IPreferencesService {
   }
 
   private async _save(prefs: UserPreferences): Promise<void> {
-    await this.repo.save(prefs.toData())
+    await this.repo.save(prefs)
   }
 
   async getPreferences(): Promise<IUserPreferences | undefined> {

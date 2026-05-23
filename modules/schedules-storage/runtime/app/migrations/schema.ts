@@ -1,54 +1,63 @@
-import type { IDBPDatabase } from 'idb'
-import type { HorextDB } from '../context/db'
+import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb'
+import { StoresDB, type HorextDB } from '../context/db'
 
 export type SchemaMigration = {
   version: number
-  up: (db: IDBPDatabase<HorextDB>) => void
+  up: (
+    db: IDBPDatabase<HorextDB>,
+    tx: IDBPTransaction<HorextDB, StoreNames<HorextDB>[], 'versionchange'>,
+  ) => void
 }
 
 export const schemaMigrations: SchemaMigration[] = [
   {
     version: 1,
     up(db) {
-      db.createObjectStore('migrations', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.MIGRATIONS, { keyPath: 'id' })
     },
   },
   {
     version: 2,
     up(db) {
-      db.createObjectStore('schedules', { keyPath: 'id' })
-      db.createObjectStore('favorites', { keyPath: 'id' })
-      db.createObjectStore('generations', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.SCHEDULES, { keyPath: 'id' })
+      db.createObjectStore(StoresDB.FAVORITES, { keyPath: 'id' })
+      db.createObjectStore(StoresDB.GENERATIONS, { keyPath: 'id' })
     },
   },
   {
     version: 3,
     up(db) {
-      db.createObjectStore('activities', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.ACTIVITIES, { keyPath: 'id' })
     },
   },
   {
     version: 4,
     up(db) {
-      db.createObjectStore('profile', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.PROFILE, { keyPath: 'id' })
     },
   },
   {
     version: 5,
     up(db) {
-      db.createObjectStore('preferences', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.PREFERENCES, { keyPath: 'id' })
     },
   },
   {
     version: 6,
     up(db) {
-      db.createObjectStore('academic-config', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.ACADEMIC_CONFIG, { keyPath: 'id' })
     },
   },
   {
     version: 7,
     up(db) {
-      db.createObjectStore('subjects', { keyPath: 'id' })
+      db.createObjectStore(StoresDB.SUBJECTS, { keyPath: 'id' })
+    },
+  },
+  {
+    version: 8,
+    up(_db, tx) {
+      tx.objectStore(StoresDB.SCHEDULES).createIndex('scheduleSubjectKey', 'scheduleSubjectKey')
     },
   },
 ]

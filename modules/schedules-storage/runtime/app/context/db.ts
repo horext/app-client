@@ -1,50 +1,63 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
-import type { IScheduleGenerate, UUID } from '../../shared/interfaces/schedule'
-import type { IBaseEvent } from '../../shared/interfaces/event'
+import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IActivity } from '../../shared/interfaces/event'
 import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
 import type { IUserPreferences } from '../../shared/interfaces/preferences'
 import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
-import type { ISelectedSubject } from '../../shared/interfaces/subject'
+import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 import { schemaMigrations } from '../migrations/schema'
+import type { UUID } from 'crypto'
 
+export const enum StoresDB {
+  SCHEDULES = 'schedules',
+  MIGRATIONS = 'migrations',
+  ACTIVITIES = 'activities',
+  FAVORITES = 'favorites',
+  PROFILE = 'profile',
+  PREFERENCES = 'preferences',
+  ACADEMIC_CONFIG = 'academic-config',
+  GENERATIONS = 'generations',
+  SUBJECTS = 'subjects',
+}
 export interface HorextDB extends DBSchema {
-  schedules: {
-    key: string
+  [StoresDB.SCHEDULES]: {
+    key: IScheduleGenerate['id']
     value: IScheduleGenerate
+    indexes: { scheduleSubjectKey: string }
   }
-  migrations: {
+  [StoresDB.MIGRATIONS]: {
     key: string
-    value: { id: string; appliedAt: string }
+    value: { id: string; appliedAt: string; error?: string }
   }
-  activities: {
-    key: string
-    value: IBaseEvent & { id: string }
+  [StoresDB.ACTIVITIES]: {
+    key: IActivity['id']
+    value: IActivity
   }
-  favorites: {
-    key: string
+  [StoresDB.FAVORITES]: {
+    key: UUID
     value: { id: UUID }
   }
-  profile: {
-    key: string
+  [StoresDB.PROFILE]: {
+    key: IUserProfile['id']
     value: IUserProfile
   }
-  preferences: {
-    key: string
+  [StoresDB.PREFERENCES]: {
+    key: IUserPreferences['id']
     value: IUserPreferences
   }
-  'academic-config': {
-    key: string
+  [StoresDB.ACADEMIC_CONFIG]: {
+    key: IUserAcademicConfig['id']
     value: IUserAcademicConfig
   }
-  generations: {
-    key: string
+  [StoresDB.GENERATIONS]: {
+    key: IGenerationRecord['id']
     value: IGenerationRecord
   }
-  subjects: {
-    key: number
-    value: ISelectedSubject
+  [StoresDB.SUBJECTS]: {
+    key: ISubjectSchedules['id']
+    value: ISubjectSchedules
   }
 }
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>
@@ -55,10 +68,10 @@ export function createDbFactory(dbName: string, dbVersion: number): DbFactory {
   let _db: Promise<IDBPDatabase<HorextDB>> | undefined
   return () =>
     (_db ??= openDB<HorextDB>(dbName, dbVersion, {
-      upgrade(db, oldVersion) {
+      upgrade(db, oldVersion, _newVersion, transaction) {
         for (const migration of schemaMigrations) {
           if (oldVersion < migration.version) {
-            migration.up(db)
+            migration.up(db, transaction)
           }
         }
       },

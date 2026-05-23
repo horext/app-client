@@ -1,23 +1,23 @@
+import type { UUID } from 'crypto'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-export type { IEventCreated } from '~/interfaces/event'
-
+import type { IActivity } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
-  const items = ref<Array<IEventCreated>>([])
+  const items = ref<Array<IActivity>>([])
 
-  function setItems(newItems: Array<IEventCreated>) {
+  function setItems(newItems: Array<IActivity>) {
     items.value = newItems
   }
 
-  function updateItem(item: IEventCreated) {
+  function updateItem(item: IActivity) {
     const index = items.value.findIndex((e) => e.id === item.id)
     if (index >= 0) {
       items.value[index] = item
     }
   }
 
-  function deleteItemById(id: string) {
+  function deleteItemById(id: UUID) {
     items.value = items.value.filter((e) => e.id !== id)
   }
 
