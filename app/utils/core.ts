@@ -58,13 +58,12 @@ export function getSchedules(
   )
 
   const intersectionCache = new Map<string, boolean>()
-  for (let i = totalSchedules; i--;) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> = subjectsSchedules.map(
-      (subjectSchedules, j) => ({
+  for (let i = totalSchedules; i--; ) {
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> =
+      subjectsSchedules.map((subjectSchedules, j) => ({
         ...subjectSchedules.schedules[indexSchedules[j]!]!,
         subject: subjectSchedules.subject,
-      }),
-    )
+      }))
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
       CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
     )
@@ -72,7 +71,10 @@ export function getSchedules(
     let useCombination = true
     for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
       const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
-      const restScheduleScheduleEvents = scheduleSubjectsEvents.slice(j + 1).flat().concat(baseEvents)
+      const restScheduleScheduleEvents = scheduleSubjectsEvents
+        .slice(j + 1)
+        .flat()
+        .concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
         let intersections = 0
@@ -107,10 +109,15 @@ export function getSchedules(
               (restScheduleEvent.isActivity &&
                 scheduleSubjectEvent.isActivity &&
                 !options.crossEvent)
-            if (crossingCombination + intersections <= options.crossingSubjects) {
+            if (
+              crossingCombination + intersections <=
+              options.crossingSubjects
+            ) {
               intersections++
             } else {
-              addOccurrence(notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED')
+              addOccurrence(
+                notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED',
+              )
               break
             }
             if (notAvailable) {
