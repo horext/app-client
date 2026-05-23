@@ -19,6 +19,8 @@
     "test:unit:cov": "vitest --coverage",
     "test:unit:ci": "vitest run --coverage",
     "test:types": "nuxi prepare && vue-tsc --noEmit",
+    "bench": "vitest bench --run",
+    "bench:save": "cp .bench/results.json .bench/baseline.json",
     "prepare": "husky"
   },
   "dependencies": {

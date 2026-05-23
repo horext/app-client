@@ -15,10 +15,6 @@ export const weekdayToDate = (weekday: Weekdays) => {
   return date.toFormat('yyyy-MM-dd')
 }
 
-export const convertToDate = (weekday: Weekdays, startTime: string) => {
-  return weekdayToDatetime(weekday, startTime)
-}
-
 export const getWeekdayName = (weekday: Weekdays) => {
   return WEEK_DAYS_NAMES[weekday]
 }

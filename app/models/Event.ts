@@ -6,7 +6,7 @@ import type {
   Weekdays,
 } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
-import { convertToDate } from '~/utils/weekday'
+import { weekdayToDatetime } from '~/utils/weekday'
 
 export default class Event<ID extends string | undefined = string> {
   id: ID
@@ -47,11 +47,11 @@ export default class Event<ID extends string | undefined = string> {
   }
 
   get start() {
-    return convertToDate(this.day, this.startTime)
+    return weekdayToDatetime(this.day, this.startTime)
   }
 
   get end() {
-    return convertToDate(this.day, this.endTime)
+    return weekdayToDatetime(this.day, this.endTime)
   }
 
   get isPractice() {

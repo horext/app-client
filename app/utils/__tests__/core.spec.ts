@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getSchedules } from '../core'
-import type { IActivity } from '~/interfaces/event'
+import type { IActivity, Weekdays } from '~/interfaces/event'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { UUID } from 'crypto'
 
@@ -10,7 +10,7 @@ function makeSubject(
     scheduleId: number
     sessions: Array<{
       id: number
-      day: 0 | 1 | 2 | 3 | 4 | 5 | 6
+      day: Weekdays
       startTime: string
       endTime: string
       typeCode: string
@@ -55,7 +55,7 @@ function makeSubject(
 
 function makeActivity(
   id: UUID,
-  day: 0 | 1 | 2 | 3 | 4 | 5 | 6,
+  day: Weekdays,
   startTime: string,
   endTime: string,
 ): IActivity {
@@ -93,7 +93,6 @@ const T_14_16 = {
 }
 
 describe('getSchedules', () => {
-
   describe('given an empty subject list', () => {
     it('should return no combinations and no occurrences', () => {
       const result = getSchedules([], [], { crossingSubjects: 0 })
@@ -837,9 +836,9 @@ describe('getSchedules', () => {
       ])
       const result = getSchedules([s1, s2], [], { crossingSubjects: 0 })
       expect(result.combinations).toHaveLength(1)
-      expect(
-        result.combinations[0]!.schedulesSubject.map((s) => s.id),
-      ).toEqual(expect.arrayContaining([10, 20]))
+      expect(result.combinations[0]!.schedulesSubject.map((s) => s.id)).toEqual(
+        expect.arrayContaining([10, 20]),
+      )
     })
   })
 
@@ -894,4 +893,3 @@ describe('getSchedules', () => {
     })
   })
 })
-

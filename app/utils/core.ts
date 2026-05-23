@@ -57,13 +57,13 @@ export function getSchedules(
     subjectsSchedules.length > 0 ? 1 : 0,
   )
 
-  for (let i = totalSchedules; i--;) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> = subjectsSchedules.map(
-      (subjectSchedules, j) => ({
+  const intersectionCache = new Map<string, boolean>()
+  for (let i = totalSchedules; i--; ) {
+    const scheduleSubjects: Array<IScheduleSubjectGenerate> =
+      subjectsSchedules.map((subjectSchedules, j) => ({
         ...subjectSchedules.schedules[indexSchedules[j]!]!,
         subject: subjectSchedules.subject,
-      }),
-    )
+      }))
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
       CourseEvent.buildFromSchedule(c, EVENT_COLORS[index] ?? '#000000'),
     )
@@ -71,15 +71,24 @@ export function getSchedules(
     let useCombination = true
     for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
       const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
-      const restScheduleScheduleEvents = scheduleSubjectsEvents.slice(j + 1).flat().concat(baseEvents)
+      const restScheduleScheduleEvents = scheduleSubjectsEvents
+        .slice(j + 1)
+        .flat()
+        .concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
         let intersections = 0
         for (const restScheduleEvent of restScheduleScheduleEvents) {
-          if (scheduleSubjectEvent.intersects(restScheduleEvent)) {
-            const a = scheduleSubjectEvent.id
-            const b = restScheduleEvent.id
-            const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+          if (scheduleSubjectEvent.day !== restScheduleEvent.day) continue
+          const a = scheduleSubjectEvent.id
+          const b = restScheduleEvent.id
+          const occurrenceKey = a < b ? `${a}-${b}` : `${b}-${a}`
+          let doesIntersect = intersectionCache.get(occurrenceKey)
+          if (doesIntersect === undefined) {
+            doesIntersect = scheduleSubjectEvent.intersects(restScheduleEvent)
+            intersectionCache.set(occurrenceKey, doesIntersect)
+          }
+          if (doesIntersect) {
             const addOccurrence = (type: string) => {
               const key = `${occurrenceKey}:${type}`
               if (!occurrencesMap.has(key)) {
@@ -100,10 +109,15 @@ export function getSchedules(
               (restScheduleEvent.isActivity &&
                 scheduleSubjectEvent.isActivity &&
                 !options.crossEvent)
-            if (crossingCombination + intersections <= options.crossingSubjects) {
+            if (
+              crossingCombination + intersections <=
+              options.crossingSubjects
+            ) {
               intersections++
             } else {
-              addOccurrence(notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED')
+              addOccurrence(
+                notAvailable ? 'CROSSING_NOT_AVAILABLE' : 'CROSSING_EXCEEDED',
+              )
               break
             }
             if (notAvailable) {

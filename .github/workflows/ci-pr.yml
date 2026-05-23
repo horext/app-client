@@ -15,3 +15,71 @@ jobs:
   ci:
     name: CI
     uses: ./.github/workflows/ci.yml
+
+  bench:
+    name: Benchmark
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Download PR benchmark results
+        uses: actions/download-artifact@v4
+        with:
+          name: bench-pr
+          path: .bench
+
+      - name: Set PR results as baseline
+        run: mv .bench/results.json .bench/baseline.json
+
+      - name: Benchmark main
+        continue-on-error: true
+        run: pnpm bench 2>&1 | tee .bench/output.txt
+
+      - name: Post benchmark comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [[ -s .bench/output.txt ]]; then
+            BENCH_BODY="$(cat .bench/output.txt)"
+          else
+            BENCH_BODY="main branch has no benchmark setup yet — results will appear after this PR is merged."
+          fi
+
+          BODY="<!-- bench-results -->
+          ## ⚡ Benchmark Results
+
+          \`\`\`
+          $BENCH_BODY
+          \`\`\`"
+
+          COMMENT_ID=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | startswith("<!-- bench-results -->")) | .id' | head -1)
+          if [[ -n "$COMMENT_ID" ]]; then
+            gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH -F body="$BODY"
+          else
+            gh pr comment "$PR_NUMBER" --body "$BODY"
+          fi
