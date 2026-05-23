@@ -15,6 +15,8 @@ jobs:
   baseline:
     name: Baseline Benchmark
     runs-on: ubuntu-latest
+    outputs:
+      artifact-id: ${{ steps.upload-baseline.outputs.artifact-id }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v6
@@ -42,6 +44,7 @@ jobs:
         run: mv .bench/results.json .bench/baseline.json
 
       - name: Upload baseline artifact
+        id: upload-baseline
         uses: actions/upload-artifact@v7
         with:
           name: bench-baseline
@@ -54,6 +57,7 @@ jobs:
     uses: ./.github/workflows/ci.yml
     with:
       with-baseline: true
+      baseline-artifact-id: ${{ needs.baseline.outputs.artifact-id }}
 
   summary:
     name: Benchmark Summary
