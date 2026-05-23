@@ -46,11 +46,11 @@ jobs:
       - name: Download PR benchmark results
         uses: actions/download-artifact@v7
         with:
-          artifact-id: ${{ needs.ci.outputs.artifact-id }}
+          artifact-ids: ${{ needs.ci.outputs.artifact-id }}
           path: .bench
 
       - name: Set PR results as baseline
-        run: mv .bench/results.json .bench/baseline.json
+        run: mv .bench/bench-pr/results.json .bench/baseline.json
 
       - name: Benchmark main
         continue-on-error: true
