@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { bench, describe } from 'vitest'
 import { getSchedules } from '../core'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
