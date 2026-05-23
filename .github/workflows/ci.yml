@@ -47,7 +47,7 @@ jobs:
         run: pnpm test:unit:ci
 
       - name: Benchmark
-        run: pnpm bench
+        run: mkdir -p .bench && pnpm bench
 
       - name: Upload benchmark results
         id: artifact-upload-step
