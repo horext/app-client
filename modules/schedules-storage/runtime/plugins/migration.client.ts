@@ -13,7 +13,9 @@ export default defineNuxtPlugin({
     const ctx: MigrationContext = { db }
 
     const allRecords = await db.getAll(StoresDB.MIGRATIONS)
-    const successfulIds = new Set(allRecords.filter((r) => !r.error).map((r) => r.id))
+    const successfulIds = new Set(
+      allRecords.filter((r) => !r.error).map((r) => r.id),
+    )
     const pending = migrations
       .slice()
       .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))

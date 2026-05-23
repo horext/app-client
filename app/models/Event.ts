@@ -82,7 +82,9 @@ export default class Event<ID extends string | undefined = string> {
   }
 }
 
-export class Activity<ID extends UUID | undefined = UUID | undefined> extends Event<ID> {
+export class Activity<
+  ID extends UUID | undefined = UUID | undefined,
+> extends Event<ID> {
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',

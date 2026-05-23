@@ -7,9 +7,7 @@ import type {
 import type { Migration, MigrationContext } from './types'
 import { readCookieJson, readLsJson } from './utils'
 import { StoresDB } from '../context/db'
-import type {
-  IAcademicPeriodOrganizationUnit,
-} from '~/interfaces/houly-load'
+import type { IAcademicPeriodOrganizationUnit } from '~/interfaces/houly-load'
 
 interface IMySchedule {
   id: string
@@ -79,7 +77,7 @@ async function up({ db }: MigrationContext) {
       scheduleIds: rawSchedules.map((s) => s.id),
       crossingsSetting: 0,
       weekDays: [0, 1, 2, 3, 4, 5, 6],
-      hourlyLoadId: myHourlyLoad?.id ??  0,
+      hourlyLoadId: myHourlyLoad?.id ?? 0,
       resultCount: rawSchedules.length,
       occurrences: [],
     })
