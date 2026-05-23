@@ -1,15 +1,27 @@
 import { defineConfig } from 'vitest/config'
 import { defineVitestProject } from '@nuxt/test-utils/config'
+import vue from '@vitejs/plugin-vue'
 import path from 'path'
-
-const include = [
-  'app/**/__tests__/**/*.{spec,test}.ts',
-  'modules/**/__tests__/**/*.{spec,test}.ts',
-]
 
 export default defineConfig({
   test: {
     projects: [
+      {
+        test: {
+          name: 'unit',
+          include: ['modules/**/__tests__/**/*.{spec,test}.ts'],
+          environment: 'happy-dom',
+          benchmark: {
+            include: [],
+          },
+        },
+        resolve: {
+          alias: {
+            '~': path.resolve(__dirname, './app'),
+          },
+        },
+        plugins: [vue()],
+      },
       {
         test: {
           name: 'bench',
@@ -30,9 +42,8 @@ export default defineConfig({
       await defineVitestProject({
         test: {
           name: 'nuxt',
-          include,
+          include: ['app/**/__tests__/**/*.{spec,test}.ts'],
           environment: 'nuxt',
-          includeSource: ['app/**/*.{ts,vue}', 'modules/**/*.{ts,vue}'],
           benchmark: {
             include: [],
           },
