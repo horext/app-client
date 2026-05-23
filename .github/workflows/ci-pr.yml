@@ -54,12 +54,7 @@ jobs:
 
       - name: Benchmark main
         continue-on-error: true
-        run: |
-          mkdir -p .bench
-          pnpm exec vitest bench --run \
-            --benchmark.outputJson=.bench/results.json \
-            --benchmark.compare=.bench/baseline.json \
-            2>&1 | tee .bench/output.txt
+        run: pnpm bench 2>&1 | tee .bench/output.txt
 
       - name: Post benchmark comment
         if: always()
