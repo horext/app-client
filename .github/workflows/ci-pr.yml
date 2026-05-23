@@ -46,7 +46,7 @@ jobs:
       - name: Download PR benchmark results
         uses: actions/download-artifact@v7
         with:
-          name: bench-pr
+          artifact-id: ${{ needs.ci.outputs.artifact-id }}
           path: .bench
 
       - name: Set PR results as baseline
