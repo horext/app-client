@@ -4,10 +4,15 @@ permissions:
 
 on:
   workflow_call:
+    inputs:
+      with-baseline:
+        required: false
+        type: boolean
+        default: false
     outputs:
-      artifact-id:
-        description: "Benchmark artifact ID"
-        value: ${{ jobs.validate.outputs.artifact-id }}
+      bench-artifact-id:
+        description: "Benchmark results artifact ID"
+        value: ${{ jobs.validate.outputs.bench-artifact-id }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,7 +23,7 @@ jobs:
     name: Validate
     runs-on: ubuntu-latest
     outputs:
-      artifact-id: ${{ steps.artifact-upload-step.outputs.artifact-id }}
+      bench-artifact-id: ${{ steps.upload-bench.outputs.artifact-id }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v6
@@ -46,13 +51,28 @@ jobs:
       - name: Test
         run: pnpm test:unit:ci
 
+      - name: Download baseline
+        if: inputs.with-baseline
+        uses: actions/download-artifact@v7
+        with:
+          name: bench-baseline
+          path: .bench
+
+      - name: Set baseline
+        if: inputs.with-baseline
+        run: mv .bench/results.json .bench/baseline.json
+
       - name: Benchmark
-        run: mkdir -p .bench && pnpm bench
+        run: |
+          set -o pipefail
+          mkdir -p .bench && pnpm bench 2>&1 | tee .bench/output.txt
 
       - name: Upload benchmark results
-        id: artifact-upload-step
+        id: upload-bench
         uses: actions/upload-artifact@v7
         with:
-          name: bench-pr
-          path: .bench/results.json
+          name: bench-results
+          path: |
+            .bench/results.json
+            .bench/output.txt
           overwrite: true

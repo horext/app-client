@@ -12,17 +12,9 @@ permissions:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  ci:
-    name: CI
-    uses: ./.github/workflows/ci.yml
-
-  bench:
-    name: Benchmark
-    needs: ci
+  baseline:
+    name: Baseline Benchmark
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v6
@@ -43,21 +35,52 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Download PR benchmark results
+      - name: Benchmark
+        run: mkdir -p .bench && pnpm bench
+
+      - name: Upload baseline
+        uses: actions/upload-artifact@v7
+        with:
+          name: bench-baseline
+          path: .bench/results.json
+          overwrite: true
+
+  ci:
+    name: CI
+    needs: baseline
+    uses: ./.github/workflows/ci.yml
+    with:
+      with-baseline: true
+
+  summary:
+    name: Benchmark Summary
+    needs: ci
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download benchmark results
+        continue-on-error: true
         uses: actions/download-artifact@v7
         with:
-          artifact-ids: ${{ needs.ci.outputs.artifact-id }}
+          name: bench-results
           path: .bench
 
-      - name: Set PR results as baseline
-        run: mv .bench/results.json .bench/baseline.json
-
-      - name: Benchmark main
-        continue-on-error: true
-        run: pnpm bench 2>&1 | tee .bench/output.txt
+      - name: Write job summary
+        run: |
+          echo "## ⚡ Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ -s .bench/output.txt ]]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat .bench/output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Benchmark output not available." >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Post benchmark comment
-        if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
