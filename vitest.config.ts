@@ -29,8 +29,6 @@ export default defineConfig({
           environment: 'node',
           benchmark: {
             include: ['app/**/__tests__/**/*.bench.ts'],
-            outputJson: '.bench/results.json',
-            compare: '.bench/baseline.json',
           },
         },
         resolve: {
@@ -50,5 +48,9 @@ export default defineConfig({
         },
       }),
     ],
+    benchmark: {
+      outputJson: '.bench/results.json',
+      compare: '.bench/baseline.json',
+    },
   },
 })
