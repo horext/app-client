@@ -65,7 +65,7 @@ jobs:
       - name: Benchmark
         run: |
           set -o pipefail
-          mkdir -p .bench && pnpm bench 2>&1 | tee .bench/output.txt
+          mkdir -p .bench && pnpm bench 2>&1 | sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' | tee .bench/output.txt
 
       - name: Upload benchmark results
         id: upload-bench
