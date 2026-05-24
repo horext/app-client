@@ -66,7 +66,7 @@ function makeActivity(
   }
 }
 
-const T = (h: number) => `2024-01-01T${String(h).padStart(2, '0')}:00:00`
+const T = (h: number) => `${String(h).padStart(2, '0')}:00:00`
 
 // ── fixtures ────────────────────────────────────────────────────────────────
 

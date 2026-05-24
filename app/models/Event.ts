@@ -6,7 +6,6 @@ import type {
   Weekdays,
 } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
-import { weekdayToDatetime } from '~/utils/weekday'
 
 export default class Event<ID extends string | undefined = string> {
   id: ID
@@ -46,14 +45,6 @@ export default class Event<ID extends string | undefined = string> {
     this.id = id
   }
 
-  get start() {
-    return weekdayToDatetime(this.day, this.startTime)
-  }
-
-  get end() {
-    return weekdayToDatetime(this.day, this.endTime)
-  }
-
   get isPractice() {
     return this.type.includes('P')
   }
@@ -63,7 +54,15 @@ export default class Event<ID extends string | undefined = string> {
   }
 
   intersects(other: Event<string | undefined>): boolean {
-    return !(this.end <= other.start || other.end <= this.start)
+    const t = (s: string) => {
+      const i = s.indexOf('T')
+      return i >= 0 ? s.slice(i + 1, i + 6) : s.slice(0, 5)
+    }
+    const thisStart = t(this.startTime)
+    const thisEnd = t(this.endTime)
+    const otherStart = t(other.startTime)
+    const otherEnd = t(other.endTime)
+    return !(thisEnd <= otherStart || otherEnd <= thisStart)
   }
 
   static buildFrom(event: IEvent) {
