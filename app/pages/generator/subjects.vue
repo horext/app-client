@@ -217,12 +217,11 @@ const save = async (
 ) => {
   succcesAddCourse.value = false
   if ('id' in item) {
-    const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
-    if (editedIndex > -1 && schedules && schedules.length > 0) {
+    if (schedules && schedules.length > 0) {
       await updateSubject({ ...item, schedules })
       close()
       succcesUpdateCourse.value = true
-    } else if (editedIndex > -1) {
+    } else {
       deleteItem(item)
     }
   } else {
