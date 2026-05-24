@@ -202,6 +202,7 @@ const deleteItemConfirm = async (item: ISubjectSchedules) => {
 const close = () => {
   dialog.value = false
   subjectSchedules.value = undefined
+  selectedSubject.value = undefined
 }
 
 const closeDelete = () => {
