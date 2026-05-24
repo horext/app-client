@@ -1,5 +1,6 @@
 import type {
   IBaseScheduleGenerate,
+  IFavoriteSchedule,
   IScheduleGenerate,
 } from '../../shared/interfaces/schedule'
 import type {
@@ -85,17 +86,19 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     return records.map((r) => r.id)
   }
 
-  async isInList(id: IScheduleGenerate['id']): Promise<boolean> {
+  async findById(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule | undefined> {
     const db = await this.getDb()
-    return (await db.get(StoresDB.FAVORITES, id)) !== undefined
+    return await db.get(StoresDB.FAVORITES, id)
   }
 
-  async addToList(id: IScheduleGenerate['id']): Promise<void> {
+  async create(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule> {
     const db = await this.getDb()
-    await db.put(StoresDB.FAVORITES, { id })
+    const favorite: IFavoriteSchedule = { id }
+    await db.put(StoresDB.FAVORITES, favorite)
+    return favorite
   }
 
-  async removeFromList(id: IScheduleGenerate['id']): Promise<void> {
+  async deleteById(id: IScheduleGenerate['id']): Promise<void> {
     const db = await this.getDb()
     await db.delete(StoresDB.FAVORITES, id)
   }

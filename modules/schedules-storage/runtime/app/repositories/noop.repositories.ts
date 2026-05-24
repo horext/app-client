@@ -9,7 +9,7 @@ import type { IPreferencesRepository } from './preferences-repository.interface'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { ISubjectsRepository } from './subjects-repository.interface'
 import type { IActivity } from '../../shared/interfaces/event'
-import type { IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type { IFavoriteSchedule, IScheduleGenerate } from '../../shared/interfaces/schedule'
 import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
 import type { ISubjectSchedules } from '../../shared/interfaces/subject'
 
@@ -41,17 +41,17 @@ export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepo
   getIds() {
     return Promise.resolve([])
   }
-  isInList() {
-    return Promise.resolve(false)
+  findById():Promise<IFavoriteSchedule | undefined> {
+    throw new Error('Method not implemented.')
   }
-  addToList() {
-    return Promise.resolve()
+  create(): Promise<IFavoriteSchedule> {
+    throw new Error('Method not implemented.')
   }
-  removeFromList() {
-    return Promise.resolve()
+  deleteById(): Promise<void> {
+    throw new Error('Method not implemented.')
   }
-  setList() {
-    return Promise.resolve()
+  setList(): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 }
 

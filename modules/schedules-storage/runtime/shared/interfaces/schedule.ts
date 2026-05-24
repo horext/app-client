@@ -16,3 +16,7 @@ export interface IBaseScheduleGenerate {
 export interface IScheduleGenerate extends IBaseScheduleGenerate {
   id: UUID
 }
+ 
+export interface IFavoriteSchedule {
+  id: IScheduleGenerate['id']
+}

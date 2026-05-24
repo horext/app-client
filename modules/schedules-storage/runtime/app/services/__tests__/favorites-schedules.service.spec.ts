@@ -30,9 +30,9 @@ describe('FavoritesSchedulesService', () => {
   const makeFavoritesRepo = (): Mocked<ISchedulesFavoritesRepository> => ({
     getIds: vi.fn(),
     setList: vi.fn(),
-    isInList: vi.fn(),
-    addToList: vi.fn(),
-    removeFromList: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+    deleteById: vi.fn(),
   })
 
   const makeGenerationRepo = (): Mocked<IGenerationRepository> => ({
@@ -78,18 +78,18 @@ describe('FavoritesSchedulesService', () => {
   describe('addFavorite', () => {
     it('adds to favorites when schedule has id and not in list', async () => {
       const schedule = makeSchedule('s1')
-      favRepo.isInList.mockResolvedValue(false)
-      favRepo.addToList.mockResolvedValue(undefined)
+      favRepo.findById.mockResolvedValue(undefined)
+      favRepo.create.mockResolvedValue({ id: 's1' as UUID })
       const result = await service.addFavorite(schedule)
-      expect(favRepo.addToList).toHaveBeenCalledWith('s1')
+      expect(favRepo.create).toHaveBeenCalledWith('s1')
       expect(result).toEqual(schedule)
     })
 
     it('does not add to list when already in favorites', async () => {
       const schedule = makeSchedule('s1')
-      favRepo.isInList.mockResolvedValue(true)
+      favRepo.findById.mockResolvedValue({ id: 's1' as UUID })
       await service.addFavorite(schedule)
-      expect(favRepo.addToList).not.toHaveBeenCalled()
+      expect(favRepo.create).not.toHaveBeenCalled()
     })
 
     it('uses existing schedule when events match (base schedule without id)', async () => {
@@ -101,8 +101,8 @@ describe('FavoritesSchedulesService', () => {
         crossings: 0,
       }
       repo.getByKey.mockResolvedValue(existing)
-      favRepo.isInList.mockResolvedValue(false)
-      favRepo.addToList.mockResolvedValue(undefined)
+      favRepo.findById.mockResolvedValue(undefined)
+      favRepo.create.mockResolvedValue({ id: 's1' as UUID })
       const result = await service.addFavorite(baseSchedule)
       expect(result).toEqual(existing)
     })
@@ -132,8 +132,8 @@ describe('FavoritesSchedulesService', () => {
       }
       repo.getByKey.mockResolvedValue(existing)
       repo.create.mockResolvedValue(newSchedule)
-      favRepo.isInList.mockResolvedValue(false)
-      favRepo.addToList.mockResolvedValue(undefined)
+      favRepo.findById.mockResolvedValue(undefined)
+      favRepo.create.mockResolvedValue({ id: 's1' as UUID })
       const result = await service.addFavorite(baseSchedule)
       expect(repo.create).toHaveBeenCalled()
       expect(result).toEqual(newSchedule)
@@ -149,8 +149,8 @@ describe('FavoritesSchedulesService', () => {
       }
       repo.getByKey.mockResolvedValue(undefined)
       repo.create.mockResolvedValue(newSchedule)
-      favRepo.isInList.mockResolvedValue(false)
-      favRepo.addToList.mockResolvedValue(undefined)
+      favRepo.findById.mockResolvedValue(undefined)
+      favRepo.create.mockResolvedValue({ id: 's1' as UUID })
       await service.addFavorite(baseSchedule)
       expect(repo.create).toHaveBeenCalled()
     })
@@ -158,7 +158,7 @@ describe('FavoritesSchedulesService', () => {
 
   describe('removeFavorite', () => {
     it('removes from list and deletes when not in any generation', async () => {
-      favRepo.removeFromList.mockResolvedValue(undefined)
+      favRepo.deleteById.mockResolvedValue(undefined)
       genRepo.getAll.mockResolvedValue([
         {
           id: 'g-0-0-0-1' as UUID,
@@ -177,7 +177,7 @@ describe('FavoritesSchedulesService', () => {
     })
 
     it('does not delete when schedule is referenced in a generation', async () => {
-      favRepo.removeFromList.mockResolvedValue(undefined)
+      favRepo.deleteById.mockResolvedValue(undefined)
       genRepo.getAll.mockResolvedValue([
         {
           id: 'g-0-0-0-1' as UUID,
