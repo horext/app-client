@@ -1,6 +1,7 @@
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
+  ISubjectSchedulesUpdate,
 } from '../../shared/interfaces/subject'
 import type { ISubjectsRepository } from '../repositories/subjects-repository.interface'
 import type { ISubjectsService } from './subjects.service.interface'
@@ -19,13 +20,17 @@ export class SubjectsService implements ISubjectsService {
   delete(id: ISubjectSchedules['id']): Promise<void> {
     return this.repo.delete(id)
   }
-
-  update(
+  
+  async update(
     id: ISubjectSchedules['id'],
-    subject: IBaseSubjectSchedules,
+    subject: ISubjectSchedulesUpdate,
   ): Promise<ISubjectSchedules> {
-    return this.repo.update({
-      id,
+    const data = await this.repo.findById(id)
+    if (!data) {
+      throw new Error(`Subject with id ${id} not found`)
+    }
+    return await this.repo.update({
+      ...data,
       ...subject,
     })
   }

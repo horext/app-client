@@ -1,6 +1,7 @@
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
+  ISubjectSchedulesUpdate,
 } from '../../shared/interfaces/subject'
 
 export interface ISubjectsService {
@@ -9,6 +10,6 @@ export interface ISubjectsService {
   delete(id: ISubjectSchedules['id']): Promise<void>
   update(
     id: ISubjectSchedules['id'],
-    subject: IBaseSubjectSchedules,
+    subject: ISubjectSchedulesUpdate,
   ): Promise<ISubjectSchedules>
 }

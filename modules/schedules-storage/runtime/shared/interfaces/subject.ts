@@ -74,6 +74,13 @@ export interface IBaseSubjectSchedules {
   >[]
 }
 
+export interface ISubjectSchedulesUpdate {
+  schedules: Pick<
+    ISubjectSchedule,
+    'id' | 'section' | 'scheduleSubject' | 'sessions'
+  >[]
+}
+
 export interface ISubjectSchedules extends IBaseSubjectSchedules {
   id: UUID
 }

@@ -5,6 +5,7 @@ import type { ISubjectSchedules } from '~/interfaces/subject'
 
 const makeRepo = (): Mocked<ISubjectsRepository> => ({
   getAll: vi.fn(),
+  findById: vi.fn(),
   create: vi.fn(),
   delete: vi.fn(),
   update: vi.fn(),
@@ -73,6 +74,7 @@ describe('SubjectsService', () => {
   describe('update', () => {
     it('updates a subject', async () => {
       const subject = makeSubject()
+      repo.findById.mockResolvedValue(subject)
       repo.update.mockResolvedValue(subject)
       const { id: id, ...base } = subject
       const result = await service.update(id, base)

@@ -13,6 +13,11 @@ export class IndexedDBSubjectsRepository implements ISubjectsRepository {
     return db.getAll(StoresDB.SUBJECTS)
   }
 
+  async findById(id: ISubjectSchedules['id']): Promise<ISubjectSchedules | undefined> {
+    const db = await this.getDb()
+    return db.get(StoresDB.SUBJECTS, id)
+  }
+
   async create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules> {
     const data = {
       ...subject,
