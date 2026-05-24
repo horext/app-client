@@ -21,13 +21,6 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules.value.splice(index, 1)
   }
 
-  async function updateFavoritesSchedules(
-    _favoritesSchedules: IScheduleGenerate[],
-  ) {
-    const result = await favoritesStorage.saveFavorites(_favoritesSchedules)
-    favoritesSchedules.value.push(...result)
-  }
-
   async function fetchFavoritesSchedules() {
     favoritesSchedules.value =
       (await favoritesStorage.getFavoriteSchedules()) ?? []
@@ -37,7 +30,6 @@ export const useUserFavoriteSchedules = () => {
     favoritesSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
-    updateFavoritesSchedules,
     fetchFavoritesSchedules,
   }
 }
