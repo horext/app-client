@@ -176,12 +176,4 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
       await expect(repo.deleteById(schedule.id)).resolves.toBeUndefined()
     })
   })
-
-  describe('setList', () => {
-    it('resolves without error', async () => {
-      db._store.clear.mockResolvedValue(undefined)
-      db._store.put.mockResolvedValue(undefined)
-      await expect(repo.setList([schedule.id])).resolves.toBeUndefined()
-    })
-  })
 })

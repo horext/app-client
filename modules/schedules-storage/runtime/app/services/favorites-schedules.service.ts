@@ -21,14 +21,6 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     return this.repo.getEntries(ids)
   }
 
-  async saveFavorites(
-    schedules: IScheduleGenerate[],
-  ): Promise<IScheduleGenerate[]> {
-    const savedSchedules = await this.repo.saveAll(schedules)
-    await this.favoritesRepo.setList(savedSchedules.map((s) => s.id))
-    return savedSchedules
-  }
-
   private async checkAndAddToFavorites(createdSchedule: IScheduleGenerate) {
     const existingFavoriteSchedule = await this.favoritesRepo.findById(createdSchedule.id)
     if (!existingFavoriteSchedule) {

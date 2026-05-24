@@ -29,7 +29,6 @@ describe('FavoritesSchedulesService', () => {
 
   const makeFavoritesRepo = (): Mocked<ISchedulesFavoritesRepository> => ({
     getIds: vi.fn(),
-    setList: vi.fn(),
     findById: vi.fn(),
     create: vi.fn(),
     deleteById: vi.fn(),
@@ -60,17 +59,6 @@ describe('FavoritesSchedulesService', () => {
       favRepo.getIds.mockResolvedValue(['sched-1-1-1-1'])
       repo.getEntries.mockResolvedValue([schedule])
       const result = await service.getFavoriteSchedules()
-      expect(result).toEqual([schedule])
-    })
-  })
-
-  describe('saveFavorites', () => {
-    it('saves schedules and updates favorites list', async () => {
-      const schedule = makeSchedule('s1')
-      repo.saveAll.mockResolvedValue([schedule])
-      favRepo.setList.mockResolvedValue(undefined)
-      const result = await service.saveFavorites([schedule])
-      expect(favRepo.setList).toHaveBeenCalledWith(['s1'])
       expect(result).toEqual([schedule])
     })
   })

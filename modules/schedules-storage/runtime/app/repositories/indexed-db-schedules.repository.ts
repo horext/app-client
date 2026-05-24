@@ -102,12 +102,4 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     const db = await this.getDb()
     await db.delete(StoresDB.FAVORITES, id)
   }
-
-  async setList(ids: IScheduleGenerate['id'][]): Promise<void> {
-    const db = await this.getDb()
-    const tx = db.transaction(StoresDB.FAVORITES, 'readwrite')
-    await tx.store.clear()
-    await Promise.all(ids.map((id) => tx.store.put({ id })))
-    await tx.done
-  }
 }

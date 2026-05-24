@@ -5,9 +5,6 @@ import type {
 
 export interface IFavoritesSchedulesService {
   getFavoriteSchedules(): Promise<IScheduleGenerate[]>
-  saveFavorites(
-    schedules: IBaseScheduleGenerate[],
-  ): Promise<IScheduleGenerate[]>
   addFavorite(
     schedule: IBaseScheduleGenerate | IScheduleGenerate,
   ): Promise<IScheduleGenerate>

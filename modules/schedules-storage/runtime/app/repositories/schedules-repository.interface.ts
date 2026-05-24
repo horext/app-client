@@ -18,5 +18,4 @@ export interface ISchedulesFavoritesRepository {
   findById(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule | undefined>
   create(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule>
   deleteById(id: IScheduleGenerate['id']): Promise<void>
-  setList(ids: IScheduleGenerate['id'][]): Promise<void>
 }

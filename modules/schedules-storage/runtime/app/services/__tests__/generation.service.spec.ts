@@ -31,7 +31,6 @@ describe('GenerationService', () => {
     getIds: vi.fn(),
     create: vi.fn(),
     deleteById: vi.fn(),
-    setList: vi.fn(),
     findById: vi.fn(),
   })
 
