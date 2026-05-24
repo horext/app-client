@@ -27,7 +27,6 @@ export class IndexedDBSubjectsRepository implements ISubjectsRepository {
   }
 
   async update(subject: ISubjectSchedules): Promise<ISubjectSchedules> {
-    console.log('Updating subject in IndexedDB:', subject)
     const db = await this.getDb()
     await db.put(StoresDB.SUBJECTS, subject)
     return subject
