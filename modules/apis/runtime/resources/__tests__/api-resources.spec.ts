@@ -1,4 +1,4 @@
-import type { $Fetch } from 'nitropack'
+import type { $Fetch } from 'ofetch'
 import { describe, it, expect, vi, type Mocked } from 'vitest'
 import { BaseApi } from '../base'
 import { FacultyApi } from '../faculty'
@@ -12,6 +12,7 @@ const makeFetch = (): Mocked<$Fetch> =>
   Object.assign(vi.fn(), {
     create: vi.fn(),
     raw: vi.fn(),
+    native: vi.fn(),
   })
 
 describe('BaseApi', () => {
