@@ -29,10 +29,9 @@ describe('GenerationService', () => {
 
   const makeFavoritesRepo = (): Mocked<ISchedulesFavoritesRepository> => ({
     getIds: vi.fn(),
-    addToList: vi.fn(),
-    removeFromList: vi.fn(),
-    setList: vi.fn(),
-    isInList: vi.fn(),
+    create: vi.fn(),
+    deleteById: vi.fn(),
+    findById: vi.fn(),
   })
 
   const makeRecord = (

@@ -59,7 +59,6 @@ describe('useUserFavoriteSchedules', () => {
     expect(result.favoritesSchedules).toBeDefined()
     expect(result.saveNewFavoriteSchedule).toBeTypeOf('function')
     expect(result.deleteFavoriteScheduleById).toBeTypeOf('function')
-    expect(result.updateFavoritesSchedules).toBeTypeOf('function')
     expect(result.fetchFavoritesSchedules).toBeTypeOf('function')
   })
 
@@ -80,15 +79,6 @@ describe('useUserFavoriteSchedules', () => {
     await deleteFavoriteScheduleById(fav.id)
     expect(mockRemoveFavorite).toHaveBeenCalledWith(fav.id)
     expect(mockFavoritesSchedules.value).not.toContainEqual(fav)
-  })
-
-  it('updateFavoritesSchedules saves and appends results to store', async () => {
-    const favs = [makeFavorite()]
-    mockSaveFavorites.mockResolvedValue(favs)
-    const { updateFavoritesSchedules } = useUserFavoriteSchedules()
-    await updateFavoritesSchedules(favs)
-    expect(mockSaveFavorites).toHaveBeenCalledWith(favs)
-    expect(mockFavoritesSchedules.value).toEqual(favs)
   })
 
   it('fetchFavoritesSchedules loads all favorites into store', async () => {

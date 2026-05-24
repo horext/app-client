@@ -154,34 +154,26 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   describe('isInList', () => {
     it('returns true when id is in favorites', async () => {
       db.get.mockResolvedValue({ id: schedule.id })
-      expect(await repo.isInList(schedule.id)).toBe(true)
+      expect(await repo.findById(schedule.id)).toEqual({ id: schedule.id })
     })
 
     it('returns false when id is not in favorites', async () => {
       db.get.mockResolvedValue(undefined)
-      expect(await repo.isInList(schedule.id)).toBe(false)
+      expect(await repo.findById(schedule.id)).toBeUndefined()
     })
   })
 
   describe('addToList', () => {
     it('resolves without error', async () => {
       db.put.mockResolvedValue(undefined)
-      await expect(repo.addToList(schedule.id)).resolves.toBeUndefined()
+      await expect(repo.create(schedule.id)).resolves.toEqual({ id: schedule.id })
     })
   })
 
   describe('removeFromList', () => {
     it('resolves without error', async () => {
       db.delete.mockResolvedValue(undefined)
-      await expect(repo.removeFromList(schedule.id)).resolves.toBeUndefined()
-    })
-  })
-
-  describe('setList', () => {
-    it('resolves without error', async () => {
-      db._store.clear.mockResolvedValue(undefined)
-      db._store.put.mockResolvedValue(undefined)
-      await expect(repo.setList([schedule.id])).resolves.toBeUndefined()
+      await expect(repo.deleteById(schedule.id)).resolves.toBeUndefined()
     })
   })
 })
