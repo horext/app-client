@@ -1,25 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
 } from '~/interfaces/schedule'
+import { useUserFavoritesStore } from '~/stores/user-favorites'
 
 import { useUserFavoriteSchedules } from '../user-favorite-schedules'
-
-const mockFavoritesSchedules = ref<IScheduleGenerate[]>([])
 
 const mockAddFavorite = vi.fn()
 const mockRemoveFavorite = vi.fn()
 const mockSaveFavorites = vi.fn()
 const mockGetFavoriteSchedules = vi.fn()
-
-mockNuxtImport('useUserFavoritesStore', () =>
-  vi.fn(() => ({
-    favoritesSchedules: mockFavoritesSchedules,
-  })),
-)
 
 mockNuxtImport('useFavoritesSchedulesService', () =>
   vi.fn(() => ({
@@ -29,14 +22,6 @@ mockNuxtImport('useFavoritesSchedulesService', () =>
     getFavoriteSchedules: mockGetFavoriteSchedules,
   })),
 )
-
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
 
 function makeFavorite(id = crypto.randomUUID()): IScheduleGenerate {
   return {
@@ -50,8 +35,8 @@ function makeFavorite(id = crypto.randomUUID()): IScheduleGenerate {
 
 describe('useUserFavoriteSchedules', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockFavoritesSchedules.value = []
   })
 
   it('returns favoritesSchedules, saveNewFavoriteSchedule, deleteFavoriteScheduleById, updateFavoritesSchedules, fetchFavoritesSchedules', () => {
@@ -65,34 +50,35 @@ describe('useUserFavoriteSchedules', () => {
   it('saveNewFavoriteSchedule adds a favorite and pushes to store', async () => {
     const fav = makeFavorite()
     mockAddFavorite.mockResolvedValue(fav)
-    const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
+    const { saveNewFavoriteSchedule, favoritesSchedules } = useUserFavoriteSchedules()
     await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
     expect(mockAddFavorite).toHaveBeenCalledWith(fav)
-    expect(mockFavoritesSchedules.value).toContainEqual(fav)
+    expect(favoritesSchedules.value).toContainEqual(fav)
   })
 
   it('deleteFavoriteScheduleById removes from service and store', async () => {
     const fav = makeFavorite()
-    mockFavoritesSchedules.value = [fav]
+    const store = useUserFavoritesStore()
+    store.favoritesSchedules = [fav]
     mockRemoveFavorite.mockResolvedValue(undefined)
-    const { deleteFavoriteScheduleById } = useUserFavoriteSchedules()
+    const { deleteFavoriteScheduleById, favoritesSchedules } = useUserFavoriteSchedules()
     await deleteFavoriteScheduleById(fav.id)
     expect(mockRemoveFavorite).toHaveBeenCalledWith(fav.id)
-    expect(mockFavoritesSchedules.value).not.toContainEqual(fav)
+    expect(favoritesSchedules.value).not.toContainEqual(fav)
   })
 
   it('fetchFavoritesSchedules loads all favorites into store', async () => {
     const favs = [makeFavorite()]
     mockGetFavoriteSchedules.mockResolvedValue(favs)
-    const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
+    const { fetchFavoritesSchedules, favoritesSchedules } = useUserFavoriteSchedules()
     await fetchFavoritesSchedules()
-    expect(mockFavoritesSchedules.value).toEqual(favs)
+    expect(favoritesSchedules.value).toEqual(favs)
   })
 
   it('fetchFavoritesSchedules sets empty array when service returns null', async () => {
     mockGetFavoriteSchedules.mockResolvedValue(null)
-    const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
+    const { fetchFavoritesSchedules, favoritesSchedules } = useUserFavoriteSchedules()
     await fetchFavoritesSchedules()
-    expect(mockFavoritesSchedules.value).toEqual([])
+    expect(favoritesSchedules.value).toEqual([])
   })
 })

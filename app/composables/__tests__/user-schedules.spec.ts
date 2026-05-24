@@ -1,38 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { useGenerationStore } from '~/stores/generation'
 
 import { useUserSchedules } from '../user-schedules'
 
-const mockResult = ref<{ schedules: IScheduleGenerate[] } | null>(null)
 const mockLoadSaved = vi.fn()
-
-mockNuxtImport('useGenerationStore', () =>
-  vi.fn(() => ({
-    result: mockResult,
-  })),
-)
 
 mockNuxtImport('useGeneration', () =>
   vi.fn(() => ({
     loadSaved: mockLoadSaved,
-    result: mockResult,
   })),
 )
 
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
-
 describe('useUserSchedules', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockResult.value = null
   })
 
   it('returns mySchedules, updateSchedules, and fetchSchedules', () => {
@@ -43,7 +28,6 @@ describe('useUserSchedules', () => {
   })
 
   it('mySchedules is an empty array when result is null', () => {
-    mockResult.value = null
     const { mySchedules } = useUserSchedules()
     expect(mySchedules.value).toEqual([])
   })
@@ -58,13 +42,13 @@ describe('useUserSchedules', () => {
         crossings: 0,
       },
     ]
-    mockResult.value = { schedules }
+    useGenerationStore().result = { schedules } as never
     const { mySchedules } = useUserSchedules()
     expect(mySchedules.value).toEqual(schedules)
   })
 
   it('updateSchedules sets schedules on the result when result exists', async () => {
-    mockResult.value = { schedules: [] }
+    useGenerationStore().result = { schedules: [] } as never
     const newSchedules: IScheduleGenerate[] = [
       {
         id: crypto.randomUUID(),
@@ -76,11 +60,10 @@ describe('useUserSchedules', () => {
     ]
     const { updateSchedules } = useUserSchedules()
     await updateSchedules(newSchedules)
-    expect(mockResult.value.schedules).toEqual(newSchedules)
+    expect(useGenerationStore().result?.schedules).toEqual(newSchedules)
   })
 
   it('updateSchedules does nothing when result is null', async () => {
-    mockResult.value = null
     const newSchedules: IScheduleGenerate[] = [
       {
         id: crypto.randomUUID(),
@@ -92,6 +75,6 @@ describe('useUserSchedules', () => {
     ]
     const { updateSchedules } = useUserSchedules()
     await updateSchedules(newSchedules)
-    expect(mockResult.value).toBeNull()
+    expect(useGenerationStore().result).toBeNull()
   })
 })

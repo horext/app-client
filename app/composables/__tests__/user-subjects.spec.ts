@@ -1,23 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type { ISubjectSchedules } from '~/interfaces/subject'
 import type { UUID } from 'crypto'
+import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
-
-const mockSubjects = ref<ISubjectSchedules[]>([])
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
 const mockUpdate = vi.fn()
 const mockGetAll = vi.fn()
-
-mockNuxtImport('useUserSubjectsStore', () =>
-  vi.fn(() => ({
-    subjects: mockSubjects,
-  })),
-)
 
 mockNuxtImport('useSubjectsService', () =>
   vi.fn(() => ({
@@ -27,14 +20,6 @@ mockNuxtImport('useSubjectsService', () =>
     getAll: mockGetAll,
   })),
 )
-
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
 
 function makeSubject(id: UUID = crypto.randomUUID()): ISubjectSchedules {
   return {
@@ -47,8 +32,8 @@ function makeSubject(id: UUID = crypto.randomUUID()): ISubjectSchedules {
 
 describe('useUserSubjects', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockSubjects.value = []
   })
 
   it('returns mySubjects, updateSubject, saveNewSubject, deleteSubjectById, fetchSubjects', () => {
@@ -63,20 +48,21 @@ describe('useUserSubjects', () => {
   it('saveNewSubject creates a subject and pushes to store', async () => {
     const newSubject = makeSubject()
     mockCreate.mockResolvedValue(newSubject)
-    const { saveNewSubject } = useUserSubjects()
+    const { saveNewSubject, mySubjects } = useUserSubjects()
     await saveNewSubject(newSubject)
     expect(mockCreate).toHaveBeenCalledWith(newSubject)
-    expect(mockSubjects.value).toContainEqual(newSubject)
+    expect(mySubjects.value).toContainEqual(newSubject)
   })
 
   it('deleteSubjectById deletes from service and removes from store', async () => {
     const subject = makeSubject()
-    mockSubjects.value = [subject]
+    const store = useUserSubjectsStore()
+    store.subjects = [subject]
     mockDelete.mockResolvedValue(undefined)
-    const { deleteSubjectById } = useUserSubjects()
+    const { deleteSubjectById, mySubjects } = useUserSubjects()
     await deleteSubjectById(subject.id as UUID)
     expect(mockDelete).toHaveBeenCalledWith(subject.id)
-    expect(mockSubjects.value).not.toContain(subject)
+    expect(mySubjects.value).not.toContain(subject)
   })
 
   it('updateSubject updates in service and replaces in store', async () => {
@@ -85,12 +71,13 @@ describe('useUserSubjects', () => {
       ...original,
       sections: [{ id: 'A' }],
     } as ISubjectSchedules
-    mockSubjects.value = [original]
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
     mockUpdate.mockResolvedValue(updated)
-    const { updateSubject } = useUserSubjects()
+    const { updateSubject, mySubjects } = useUserSubjects()
     await updateSubject(original)
     expect(mockUpdate).toHaveBeenCalled()
-    expect(mockSubjects.value[0]).toEqual(updated)
+    expect(mySubjects.value[0]).toEqual(updated)
   })
 
   it('fetchSubjects loads subjects filtering those with schedules', async () => {
@@ -100,9 +87,9 @@ describe('useUserSubjects', () => {
       schedules: [],
     } as ISubjectSchedules
     mockGetAll.mockResolvedValue([withSchedules, withoutSchedules])
-    const { fetchSubjects } = useUserSubjects()
+    const { fetchSubjects, mySubjects } = useUserSubjects()
     await fetchSubjects()
-    expect(mockSubjects.value).toContainEqual(withSchedules)
-    expect(mockSubjects.value).not.toContainEqual(withoutSchedules)
+    expect(mySubjects.value).toContainEqual(withSchedules)
+    expect(mySubjects.value).not.toContainEqual(withoutSchedules)
   })
 })

@@ -13,7 +13,7 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['modules/**/__tests__/**/*.{spec,test}.ts'],
+          include: ['modules/**/__tests__/**/*.{spec,test}.{ts,vue}'],
           environment: 'happy-dom',
           typecheck: {
             enabled: true,
@@ -48,7 +48,7 @@ export default defineConfig({
       await defineVitestProject({
         test: {
           name: 'nuxt',
-          include: ['app/**/__tests__/**/*.{spec,test}.ts'],
+          include: ['app/**/__tests__/**/*.{spec,test}.{ts,vue}'],
           environment: 'nuxt',
           typecheck: {
             enabled: true,
