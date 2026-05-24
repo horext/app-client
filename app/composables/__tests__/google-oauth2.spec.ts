@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
+import { useGoogleOAuth2Store } from '~/stores/google-oauth2'
 
 import { useGoogleOAuth2 } from '../google-oauth2'
 
@@ -20,16 +21,6 @@ const { mockUseRuntimeConfig } = vi.hoisted(() => ({
 
 const mockOnLoaded = vi.fn()
 
-const mockTokenClient = ref<unknown>(null)
-const mockTokenResponse = ref<{
-  access_token: string
-  expires_in: string
-} | null>(null)
-const mockExpiresAt = ref<number | null>(null)
-const mockIsPendingClient = ref(false)
-const mockIsPendingToken = ref(false)
-const mockIsSignedIn = ref(false)
-
 mockNuxtImport('useGoogleAccounts', () =>
   vi.fn(() => ({
     onLoaded: mockOnLoaded,
@@ -37,25 +28,6 @@ mockNuxtImport('useGoogleAccounts', () =>
 )
 
 mockNuxtImport('useRuntimeConfig', () => mockUseRuntimeConfig)
-
-mockNuxtImport('useGoogleOAuth2Store', () =>
-  vi.fn(() => ({
-    tokenClient: mockTokenClient,
-    tokenResponse: mockTokenResponse,
-    expiresAt: mockExpiresAt,
-    isPendingClient: mockIsPendingClient,
-    isPendingToken: mockIsPendingToken,
-    isSignedIn: mockIsSignedIn,
-  })),
-)
-
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
 
 vi.mock('ofetch', async (importOriginal) => {
   const actual = await importOriginal<typeof import('ofetch')>()
@@ -86,13 +58,8 @@ vi.stubGlobal('google', {
 
 describe('useGoogleOAuth2', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockTokenClient.value = null
-    mockTokenResponse.value = null
-    mockExpiresAt.value = null
-    mockIsPendingClient.value = false
-    mockIsPendingToken.value = false
-    mockIsSignedIn.value = false
   })
 
   it('returns expected properties', () => {
@@ -114,10 +81,11 @@ describe('useGoogleOAuth2', () => {
 
   it('getToken sets isPendingToken to true and requests access token', () => {
     const requestAccessToken = vi.fn()
-    mockTokenClient.value = { requestAccessToken }
+    const store = useGoogleOAuth2Store()
+    store.tokenClient = { requestAccessToken } as never
     const { getToken } = useGoogleOAuth2()
     getToken()
-    expect(mockIsPendingToken.value).toBe(true)
+    expect(store.isPendingToken).toBe(true)
     expect(requestAccessToken).toHaveBeenCalled()
   })
 
@@ -134,15 +102,15 @@ describe('useGoogleOAuth2', () => {
     const fakeResponse = {
       access_token: 'abc123',
     } as google.accounts.oauth2.TokenResponse
-    mockTokenResponse.value = fakeResponse
+    const store = useGoogleOAuth2Store()
+    store.tokenResponse = fakeResponse
     const { signOut } = useGoogleOAuth2()
     await signOut()
     expect(mockRevoke).toHaveBeenCalled()
-    expect(mockTokenResponse.value).toBeNull()
+    expect(store.tokenResponse).toBeNull()
   })
 
   it('signOut does nothing when tokenResponse is null', async () => {
-    mockTokenResponse.value = null
     const { signOut } = useGoogleOAuth2()
     await signOut()
     expect(mockRevoke).not.toHaveBeenCalled()
@@ -156,11 +124,12 @@ describe('useGoogleOAuth2', () => {
     expect(mockInitTokenClient).toHaveBeenCalledWith(
       expect.objectContaining({ client_id: 'test-client-id' }),
     )
-    expect(mockIsPendingClient.value).toBe(false)
+    expect(useGoogleOAuth2Store().isPendingClient).toBe(false)
   })
 
   it('loadClient does not reinitialize if tokenClient already exists', async () => {
-    mockTokenClient.value = { requestAccessToken: vi.fn() }
+    const store = useGoogleOAuth2Store()
+    store.tokenClient = { requestAccessToken: vi.fn() } as never
     useGoogleOAuth2()
     const loadClient = mockOnLoaded.mock.calls[0]?.[0]
     await loadClient()

@@ -1,26 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
+import { useGenerationStore } from '~/stores/generation'
 
 import { useGeneration } from '../generation'
-
-const mockResult = ref<{ schedules: unknown[] } | null>(null)
-const mockHistory = ref<unknown[]>([])
-const mockClear = vi.fn()
 
 const mockSaveGeneration = vi.fn()
 const mockGetGenerations = vi.fn()
 const mockGetLatestGeneration = vi.fn()
-
-const mockMaxGenerationHistory = ref(5)
-
-mockNuxtImport('useGenerationStore', () =>
-  vi.fn(() => ({
-    result: mockResult,
-    history: mockHistory,
-    clear: mockClear,
-  })),
-)
 
 mockNuxtImport('useGenerationService', () =>
   vi.fn(() => ({
@@ -30,25 +17,10 @@ mockNuxtImport('useGenerationService', () =>
   })),
 )
 
-mockNuxtImport('useUserPreferencesStore', () =>
-  vi.fn(() => ({
-    maxGenerationHistory: mockMaxGenerationHistory,
-  })),
-)
-
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
-
 describe('useGeneration', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockResult.value = null
-    mockHistory.value = []
   })
 
   it('returns result, history, setResult, loadSaved, and clear', () => {
@@ -57,7 +29,7 @@ describe('useGeneration', () => {
     expect(gen.history).toBeDefined()
     expect(gen.setResult).toBeTypeOf('function')
     expect(gen.loadSaved).toBeTypeOf('function')
-    expect(gen.clear).toBe(mockClear)
+    expect(gen.clear).toBeTypeOf('function')
   })
 
   it('setResult saves a generation and updates result and history', async () => {
@@ -69,10 +41,11 @@ describe('useGeneration', () => {
     const { setResult } = useGeneration()
     await setResult([], [], { label: 'test', date: '2024-01-01' } as never)
 
+    const store = useGenerationStore()
     expect(mockSaveGeneration).toHaveBeenCalled()
     expect(mockGetGenerations).toHaveBeenCalled()
-    expect(mockResult.value).toEqual(savedResult)
-    expect(mockHistory.value).toEqual(records)
+    expect(store.result).toEqual(savedResult)
+    expect(store.history).toEqual(records)
   })
 
   it('loadSaved fetches generations and latest generation', async () => {
@@ -84,10 +57,11 @@ describe('useGeneration', () => {
     const { loadSaved } = useGeneration()
     await loadSaved()
 
+    const store = useGenerationStore()
     expect(mockGetGenerations).toHaveBeenCalled()
     expect(mockGetLatestGeneration).toHaveBeenCalled()
-    expect(mockHistory.value).toEqual(records)
-    expect(mockResult.value).toEqual(latest)
+    expect(store.history).toEqual(records)
+    expect(store.result).toEqual(latest)
   })
 
   it('loadSaved sets result to null when latest generation is null', async () => {
@@ -97,6 +71,6 @@ describe('useGeneration', () => {
     const { loadSaved } = useGeneration()
     await loadSaved()
 
-    expect(mockResult.value).toBeNull()
+    expect(useGenerationStore().result).toBeNull()
   })
 })

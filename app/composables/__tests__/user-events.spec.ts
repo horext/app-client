@@ -1,32 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type { IActivity } from '~/interfaces/event'
 import type { UUID } from 'crypto'
+import { useUserEventsStore } from '~/stores/user-events'
 
 import { useUserEvents } from '../user-events'
 import { Activity } from '~/models/Event'
-
-const mockItems = ref<IActivity[]>([])
-const mockSetItems = vi.fn((items: IActivity[]) => {
-  mockItems.value = items
-})
-const mockUpdateItem = vi.fn()
-const mockDeleteItemById = vi.fn()
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
 const mockUpdateById = vi.fn()
 const mockGetAll = vi.fn()
-
-mockNuxtImport('useUserEventsStore', () =>
-  vi.fn(() => ({
-    items: mockItems,
-    setItems: mockSetItems,
-    updateItem: mockUpdateItem,
-    deleteItemById: mockDeleteItemById,
-  })),
-)
 
 mockNuxtImport('useActivitiesService', () =>
   vi.fn(() => ({
@@ -36,14 +21,6 @@ mockNuxtImport('useActivitiesService', () =>
     getAll: mockGetAll,
   })),
 )
-
-vi.mock('pinia', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('pinia')>()
-  return {
-    ...actual,
-    storeToRefs: vi.fn((store) => store),
-  }
-})
 
 function makeActivity(): Activity {
   return Activity.buildActivityFrom({
@@ -58,8 +35,8 @@ function makeActivity(): Activity {
 
 describe('useUserEvents', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
-    mockItems.value = []
   })
 
   it('returns items, createNewItem, deleteItemById, updateItem, fetchItems', () => {
@@ -74,29 +51,33 @@ describe('useUserEvents', () => {
   it('createNewItem calls service.create and pushes result to store', async () => {
     const activity = makeActivity()
     mockCreate.mockResolvedValue(activity)
-    const { createNewItem } = useUserEvents()
+    const { createNewItem, items } = useUserEvents()
     await createNewItem(activity)
     expect(mockCreate).toHaveBeenCalledWith(activity)
-    expect(mockItems.value).toContainEqual(activity)
+    expect(items.value).toContainEqual(activity)
   })
 
-  it('deleteItemById calls service.delete and store.deleteItemById', async () => {
+  it('deleteItemById calls service.delete and removes item from store', async () => {
     const id = crypto.randomUUID() as UUID
+    const store = useUserEventsStore()
+    store.items = [{ id } as IActivity]
     mockDelete.mockResolvedValue(undefined)
-    const { deleteItemById } = useUserEvents()
+    const { deleteItemById, items } = useUserEvents()
     await deleteItemById(id)
     expect(mockDelete).toHaveBeenCalledWith(id)
-    expect(mockDeleteItemById).toHaveBeenCalledWith(id)
+    expect(items.value).not.toContainEqual(expect.objectContaining({ id }))
   })
 
-  it('updateItem calls service.updateById and store.updateItem', async () => {
+  it('updateItem calls service.updateById and updates item in store', async () => {
     const activity = makeActivity()
     const activityWithId = { ...activity, id: crypto.randomUUID() as UUID }
+    const store = useUserEventsStore()
+    store.items = [activityWithId as IActivity]
     mockUpdateById.mockResolvedValue(activityWithId)
-    const { updateItem } = useUserEvents()
+    const { updateItem, items } = useUserEvents()
     await updateItem(activityWithId as Activity)
     expect(mockUpdateById).toHaveBeenCalled()
-    expect(mockUpdateItem).toHaveBeenCalledWith(activityWithId)
+    expect(items.value).toContainEqual(activityWithId)
   })
 
   it('updateItem does nothing when id is falsy', async () => {
@@ -109,9 +90,9 @@ describe('useUserEvents', () => {
   it('fetchItems calls service.getAll and updates the store', async () => {
     const items: IActivity[] = []
     mockGetAll.mockResolvedValue(items)
-    const { fetchItems } = useUserEvents()
+    const { fetchItems, items: storeItems } = useUserEvents()
     await fetchItems()
     expect(mockGetAll).toHaveBeenCalled()
-    expect(mockSetItems).toHaveBeenCalledWith(items)
+    expect(storeItems.value).toEqual(items)
   })
 })
