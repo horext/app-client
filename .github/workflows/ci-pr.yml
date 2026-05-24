@@ -156,5 +156,5 @@ jobs:
           if [[ -n "$COMMENT_ID" ]]; then
             gh api "repos/$REPO/issues/comments/$COMMENT_ID" -X PATCH --field body=@.bench/comment.md
           else
-            gh pr comment "$PR_NUMBER" --body-file .bench/comment.md
+            gh pr comment "$PR_NUMBER" -R "$REPO" --body-file .bench/comment.md
           fi
