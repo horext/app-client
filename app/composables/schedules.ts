@@ -53,12 +53,12 @@ export const useSchedulesGenerator = () => {
     myEvents: Array<IActivity>,
     options: ScheduleOptions,
   ) => {
-    try {
-      return loadSchedulesViaWorker(subjects, myEvents, options)
-    } catch (error) {
-      console.error(error)
-      return getSchedules(subjects, myEvents, options)
-    }
+    return loadSchedulesViaWorker(subjects, myEvents, options).catch(
+      (error) => {
+        console.error(error)
+        return getSchedules(subjects, myEvents, options)
+      },
+    )
   }
 
   return { loadSchedules }

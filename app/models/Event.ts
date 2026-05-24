@@ -108,7 +108,7 @@ export class Activity<
     )
   }
 
-  static buildActivityFrom(event: IActivity) {
+  static buildActivityFrom(event: Omit<IActivity, 'category' | 'type'>) {
     return new Activity(
       event.day,
       event.startTime,

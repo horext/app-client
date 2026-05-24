@@ -1,4 +1,5 @@
-import type { $Fetch } from 'nitropack'
+import type { $Fetch } from 'ofetch'
+import { $fetch } from 'ofetch'
 import type { ApiFactory } from './interfaces/registry'
 import { APIS_REGISTRY } from './registry'
 import type { BaseApi } from './resources/base'

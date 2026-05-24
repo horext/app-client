@@ -68,4 +68,26 @@ describe('CalendarEvent', () => {
     eventWrapper.trigger('mousemove')
     expect(wrapper.emitted('mousemove')).toBeTruthy()
   })
+
+  it('handles time strings without minutes (only hour part)', () => {
+    // Triggers the ?? 0 fallback branch for parts[1] being undefined
+    const event: ICalendarEvent = {
+      name: 'Quick',
+      start: '09',
+      end: '10',
+      id: '3',
+      weekDay: 0,
+    }
+    const wrapper = shallowMount(CalendarEvent, {
+      props: {
+        event,
+        firstHour: 8,
+        intervalHeight: 2.5,
+        intervalMinutes: 60,
+        left: 0,
+        width: 100,
+      },
+    })
+    expect(wrapper.find('.event-name').text()).toBe('Quick')
+  })
 })
