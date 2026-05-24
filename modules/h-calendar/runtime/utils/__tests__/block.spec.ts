@@ -512,5 +512,25 @@ describe('extractBlocks', () => {
       expect(visuals).toHaveLength(3)
       assertAllEventsVisible(visuals)
     })
+
+    it('should handle time string with missing parts (edge case)', () => {
+      // A time string with only one part (e.g., "09") triggers the ?? 0 branch for minutes
+      const events: ICalendarEvent[] = [
+        { id: '1', weekDay: 1, start: '09', end: '10', name: 'Only hours' },
+      ]
+      const visuals = extractBlocks(events)
+      expect(visuals).toHaveLength(1)
+    })
+
+    it('should handle mixed zero-duration and normal events overlapping', () => {
+      // Two normal events overlapping — covers false branch of e0 <= s0 AND e1 <= s1 together
+      const events: ICalendarEvent[] = [
+        { id: '1', weekDay: 1, start: '09:00', end: '09:00', name: 'Zero A' },
+        { id: '2', weekDay: 1, start: '09:00', end: '10:00', name: 'Normal B' },
+      ]
+      const visuals = extractBlocks(events)
+      expect(visuals).toHaveLength(2)
+      assertAllEventsVisible(visuals)
+    })
   })
 })
