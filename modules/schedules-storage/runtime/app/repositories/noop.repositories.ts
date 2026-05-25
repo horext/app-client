@@ -119,6 +119,9 @@ export class NoopGenerationRepository implements IGenerationRepository {
 }
 
 export class NoopSubjectsRepository implements ISubjectsRepository {
+  findById(): Promise<ISubjectSchedules | undefined> {
+    throw new Error('Method not implemented.')
+  }
   getAll() {
     return Promise.resolve([])
   }
