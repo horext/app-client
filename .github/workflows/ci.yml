@@ -57,7 +57,7 @@ jobs:
 
       - name: Download baseline
         if: inputs.with-baseline
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           artifact-ids: ${{ inputs.baseline-artifact-id }}
           path: .bench
