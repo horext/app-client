@@ -23,7 +23,7 @@ jobs:
       pull-requests: write
     outputs:
       head_sha: ${{ steps.pr.outputs.head_sha }}
-      base_ref: ${{ steps.pr.outputs.base_ref }}
+      base_sha: ${{ steps.pr.outputs.base_sha }}
     steps:
       - name: React to trigger comment
         uses: actions/github-script@v9
@@ -47,19 +47,20 @@ jobs:
               pull_number: context.issue.number,
             });
             core.setOutput('head_sha', pr.data.head.sha);
-            core.setOutput('base_ref', pr.data.base.ref);
+            core.setOutput('base_sha', pr.data.base.sha);
 
   bench-baseline:
     name: Benchmark (baseline)
     needs: setup
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
       - name: Checkout base branch
         uses: actions/checkout@v6
         with:
-          ref: ${{ needs.setup.outputs.base_ref }}
+          ref: ${{ needs.setup.outputs.base_sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -89,6 +90,7 @@ jobs:
     name: Benchmark (PR)
     needs: setup
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
