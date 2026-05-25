@@ -76,13 +76,13 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Run benchmark
-        run: mkdir -p .bench && pnpm bench && mv .bench/results.json .bench/baseline.json
+        run: mkdir -p .bench && pnpm bench
 
       - name: Upload baseline artifact
         uses: actions/upload-artifact@v7
         with:
           name: bench-baseline-${{ github.run_id }}
-          path: .bench/baseline.json
+          path: .bench/results-baseline.json
           retention-days: 1
 
   bench-pr:
@@ -118,7 +118,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: bench-pr-${{ github.run_id }}
-          path: .bench/results.json
+          path: .bench/results-baseline.json
           retention-days: 1
 
   report:
@@ -128,17 +128,17 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Download baseline
+      - name: Download baseline results
         uses: actions/download-artifact@v8
         with:
           name: bench-baseline-${{ github.run_id }}
-          path: .bench
+          path: .bench/baseline
 
       - name: Download PR results
         uses: actions/download-artifact@v8
         with:
           name: bench-pr-${{ github.run_id }}
-          path: .bench
+          path: .bench/pr
 
       - name: Post benchmark comment
         uses: actions/github-script@v9
@@ -146,52 +146,35 @@ jobs:
           script: |
             const fs = require('fs');
 
-            const results = JSON.parse(fs.readFileSync('.bench/results.json', 'utf8'));
-            let baseline = null;
-            try { baseline = JSON.parse(fs.readFileSync('.bench/baseline.json', 'utf8')); } catch {}
+            const pr      = JSON.parse(fs.readFileSync('.bench/pr/results-baseline.json',       'utf8'));
+            const baseline = JSON.parse(fs.readFileSync('.bench/baseline/results-baseline.json', 'utf8'));
 
             const baselineMap = {};
-            if (baseline) {
-              for (const file of baseline.files)
-                for (const group of file.groups)
-                  for (const bench of group.benchmarks)
-                    baselineMap[`${group.fullName}::${bench.name}`] = bench;
-            }
+            for (const file of baseline.files)
+              for (const group of file.groups)
+                for (const bench of group.benchmarks)
+                  baselineMap[`${group.fullName}::${bench.name}`] = bench;
 
-            const hasBaseline = Object.keys(baselineMap).length > 0;
-            const headers = ['Scenario', 'Benchmark', 'ops/sec', 'mean (ms)', 'p99 (ms)', '±rme'];
-            if (hasBaseline) headers.push('vs baseline');
-
+            const headers = ['Benchmark', 'ops/sec', 'mean (ms)', 'p99 (ms)', '±rme', 'vs baseline'];
             const rows = [];
-            for (const file of results.files) {
-              for (const group of file.groups) {
-                const m = group.fullName.match(/> (.+)$/);
-                const scenario = m ? m[1] : group.fullName;
+
+            for (const file of pr.files)
+              for (const group of file.groups)
                 for (const bench of group.benchmarks) {
-                  const row = [
-                    scenario,
+                  const base  = baselineMap[`${group.fullName}::${bench.name}`];
+                  const delta = base ? ((bench.mean - base.mean) / base.mean) * 100 : null;
+                  const trend = delta === null ? '—' : delta < -2 ? `🟢 ${delta.toFixed(1)}%` : delta > 2 ? `🔴 +${delta.toFixed(1)}%` : `🟡 ${delta > 0 ? '+' : ''}${delta.toFixed(1)}%`;
+                  rows.push([
                     bench.name,
                     Math.round(bench.hz).toLocaleString('en-US'),
                     bench.mean.toFixed(3),
                     bench.p99.toFixed(3),
                     `±${bench.rme.toFixed(2)}%`,
-                  ];
-                  if (hasBaseline) {
-                    const base = baselineMap[`${group.fullName}::${bench.name}`];
-                    if (base) {
-                      const delta = ((bench.mean - base.mean) / base.mean) * 100;
-                      const emoji = delta < -2 ? '🟢' : delta > 2 ? '🔴' : '🟡';
-                      row.push(`${emoji} ${delta > 0 ? '+' : ''}${delta.toFixed(1)}%`);
-                    } else {
-                      row.push('—');
-                    }
-                  }
-                  rows.push(row);
+                    trend,
+                  ]);
                 }
-              }
-            }
 
-            const align = headers.map((_, i) => i >= 2 ? '---:' : ':---');
+            const align = [':---', '---:', '---:', '---:', '---:', ':---'];
             let md = `| ${headers.join(' | ')} |\n| ${align.join(' | ')} |\n`;
             for (const row of rows) md += `| ${row.join(' | ')} |\n`;
 
