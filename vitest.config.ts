@@ -35,6 +35,7 @@ export default defineConfig({
           name: 'bench',
           include: [],
           environment: 'node',
+          fileParallelism: false,
           benchmark: {
             include: ['app/**/__tests__/**/*.bench.ts'],
           },
