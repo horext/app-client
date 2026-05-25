@@ -39,6 +39,7 @@ export default defineConfig({
           benchmark: {
             include: ['app/**/__tests__/**/*.bench.ts'],
           },
+          isolate: true,
         },
         resolve: {
           alias: {
@@ -61,9 +62,5 @@ export default defineConfig({
         },
       }),
     ],
-    benchmark: {
-      outputJson: '.bench/results.json',
-      compare: '.bench/baseline.json',
-    },
   },
 })

@@ -1,0 +1,223 @@
+name: Benchmark
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    name: Validate trigger
+    if: |
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/bench') &&
+      (
+        github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    outputs:
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+      base_ref: ${{ steps.pr.outputs.base_ref }}
+    steps:
+      - name: React to trigger comment
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket',
+            });
+
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            core.setOutput('head_sha', pr.data.head.sha);
+            core.setOutput('base_ref', pr.data.base.ref);
+
+  bench-baseline:
+    name: Benchmark (baseline)
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.setup.outputs.base_ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Run benchmark
+        run: mkdir -p .bench && pnpm bench && mv .bench/results.json .bench/baseline.json
+
+      - name: Upload baseline artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: bench-baseline-${{ github.run_id }}
+          path: .bench/baseline.json
+          retention-days: 1
+
+  bench-pr:
+    name: Benchmark (PR)
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.setup.outputs.head_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Run benchmark
+        run: mkdir -p .bench && pnpm bench
+
+      - name: Upload PR benchmark artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: bench-pr-${{ github.run_id }}
+          path: .bench/results.json
+          retention-days: 1
+
+  report:
+    name: Report
+    needs: [setup, bench-baseline, bench-pr]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download baseline
+        uses: actions/download-artifact@v8
+        with:
+          name: bench-baseline-${{ github.run_id }}
+          path: .bench
+
+      - name: Download PR results
+        uses: actions/download-artifact@v8
+        with:
+          name: bench-pr-${{ github.run_id }}
+          path: .bench
+
+      - name: Post benchmark comment
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('fs');
+
+            const results = JSON.parse(fs.readFileSync('.bench/results.json', 'utf8'));
+            let baseline = null;
+            try { baseline = JSON.parse(fs.readFileSync('.bench/baseline.json', 'utf8')); } catch {}
+
+            const baselineMap = {};
+            if (baseline) {
+              for (const file of baseline.files)
+                for (const group of file.groups)
+                  for (const bench of group.benchmarks)
+                    baselineMap[`${group.fullName}::${bench.name}`] = bench;
+            }
+
+            const hasBaseline = Object.keys(baselineMap).length > 0;
+            const headers = ['Scenario', 'Benchmark', 'ops/sec', 'mean (ms)', 'p99 (ms)', '±rme'];
+            if (hasBaseline) headers.push('vs baseline');
+
+            const rows = [];
+            for (const file of results.files) {
+              for (const group of file.groups) {
+                const m = group.fullName.match(/> (.+)$/);
+                const scenario = m ? m[1] : group.fullName;
+                for (const bench of group.benchmarks) {
+                  const row = [
+                    scenario,
+                    bench.name,
+                    Math.round(bench.hz).toLocaleString('en-US'),
+                    bench.mean.toFixed(3),
+                    bench.p99.toFixed(3),
+                    `±${bench.rme.toFixed(2)}%`,
+                  ];
+                  if (hasBaseline) {
+                    const base = baselineMap[`${group.fullName}::${bench.name}`];
+                    if (base) {
+                      const delta = ((bench.mean - base.mean) / base.mean) * 100;
+                      const emoji = delta < -2 ? '🟢' : delta > 2 ? '🔴' : '🟡';
+                      row.push(`${emoji} ${delta > 0 ? '+' : ''}${delta.toFixed(1)}%`);
+                    } else {
+                      row.push('—');
+                    }
+                  }
+                  rows.push(row);
+                }
+              }
+            }
+
+            const align = headers.map((_, i) => i >= 2 ? '---:' : ':---');
+            let md = `| ${headers.join(' | ')} |\n| ${align.join(' | ')} |\n`;
+            for (const row of rows) md += `| ${row.join(' | ')} |\n`;
+
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `<!-- bench-results -->\n## ⚡ Benchmark Results\n\n${md}\n> Triggered by @${context.payload.comment.user.login} · [Run #${context.runId}](${runUrl})`;
+
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.data.find(c => c.body.startsWith('<!-- bench-results -->'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
