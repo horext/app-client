@@ -70,19 +70,3 @@ const items = [
   { name: 'Acerca de ', route: '/about' },
 ]
 </script>
-
-<style scoped lang="sass">
-#home-app-bar
-  .v-tabs
-    flex: 0 auto
-    width: fit-content
-
-  .v-tabs-slider
-    max-width: 24px
-    margin: 0 auto
-
-  .v-tab
-    width: fit-content
-    &::before
-      display: none
-</style>
