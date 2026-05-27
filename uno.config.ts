@@ -138,6 +138,8 @@ export default defineConfig({
       background: 'rgb(var(--v-theme-background))',
       surface: 'rgb(var(--v-theme-surface))',
       'surface-variant': 'rgb(var(--v-theme-surface-variant))',
+      'on-surface': 'rgb(var(--v-theme-on-surface))',
+      outline: 'rgb(var(--v-theme-outline))',
       primary: 'rgb(var(--v-theme-primary))',
       secondary: 'rgb(var(--v-theme-secondary))',
       success: 'rgb(var(--v-theme-success))',
