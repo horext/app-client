@@ -1,6 +1,6 @@
 <template>
   <article
-    class="rounded-xl border border-outline/20 bg-surface/70 p-6 text-center shadow-sm dark:bg-surface/30"
+    class="rounded-xl border border-outline/20 bg-surface/70 p-6 text-center shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:bg-surface/30"
   >
     <div class="mb-5 flex justify-center">
       <div
@@ -9,7 +9,7 @@
         {{ index }}
       </div>
     </div>
-    <h3 class="mb-2 text-xl font-bold text-on-surface">
+    <h3 class="mb-1 text-lg font-bold text-on-surface">
       {{ title }}
     </h3>
     <p class="text-sm leading-6 text-on-surface/70">

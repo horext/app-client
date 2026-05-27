@@ -25,10 +25,8 @@
           />
         </div>
 
-        <div
-          class="rounded-xl border border-outline/20 bg-surface/70 p-6 shadow-sm md:p-8 dark:bg-surface/30"
-        >
-          <p class="text-base leading-7 text-on-surface/80">
+        <section class="pt-8 md:pt-10">
+          <p class="text-center text-base leading-7 text-on-surface/80">
             Eres libre de contribuir al proyecto, puedes ver el código fuente
             en:
           </p>
@@ -44,7 +42,7 @@
               label="GitLab"
             />
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </section>
