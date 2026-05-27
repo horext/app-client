@@ -41,16 +41,16 @@
 
 <script setup lang="ts">
 import { mdiHelpCircle, mdiUpdate } from '@mdi/js'
-const props = defineProps<{
+defineProps<{
   loadingGenerate: boolean
-  crossings: number
 }>()
 const emit = defineEmits<{
   (event: 'click:generate'): void
-  (event: 'update:crossings', value: number): void
 }>()
 
-const internalCrossings = useVModel(props, 'crossings', emit)
+const internalCrossings = defineModel<number>('crossings', {
+  required: true,
+})
 
 const onClickGenerate = () => {
   emit('click:generate')

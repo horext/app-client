@@ -23,13 +23,5 @@
 import { ViewMode } from '~/models/ViewMode'
 import { mdiCalendar, mdiTable } from '@mdi/js'
 
-const props = defineProps<{
-  mode: ViewMode
-}>()
-
-const emits = defineEmits<{
-  (event: 'update:mode', mode: ViewMode): void
-}>()
-
-const internalMode = useVModel(props, 'mode', emits)
+const internalMode = defineModel<ViewMode>('mode')
 </script>

@@ -20,14 +20,11 @@ import type { ISubjectSchedule } from '~/interfaces/subject'
 
 const props = defineProps<{
   schedule: ISubjectSchedule
-  modelValue: ISubjectSchedule[]
 }>()
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: ISubjectSchedule[]): void
-}>()
-
-const valueSync = useVModel(props, 'modelValue', emit)
+const valueSync = defineModel<ISubjectSchedule[]>({
+  required: true,
+})
 const { schedule } = toRefs(props)
 
 const sessionsCount = computed(() => {

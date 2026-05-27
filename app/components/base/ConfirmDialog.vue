@@ -8,7 +8,9 @@
         </slot>
       </v-card-title>
       <v-divider class="mb-4"></v-divider>
-      <v-card-text class="text-headline-small"> <slot></slot> </v-card-text>
+      <v-card-text class="text-headline-small">
+        <slot></slot>
+      </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn
@@ -41,7 +43,7 @@
 
 <script lang="ts" setup>
 import { mdiAlertCircle } from '@mdi/js'
-const props = withDefaults(
+withDefaults(
   defineProps<{
     modelValue?: boolean
     title?: string
@@ -62,5 +64,7 @@ const emit = defineEmits<{
   (event: 'click:confirm' | 'click:reject', value: MouseEvent): void
 }>()
 
-const internalValue = useVModel(props, 'modelValue', emit)
+const internalValue = defineModel<boolean>({
+  default: false,
+})
 </script>

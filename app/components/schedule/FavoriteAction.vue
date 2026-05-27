@@ -22,15 +22,9 @@
 <script setup lang="ts">
 import { mdiStar } from '@mdi/js'
 
-const props = defineProps<{
-  active: boolean
-}>()
-
-const emit = defineEmits<{
-  (event: 'update:active', value: boolean): void
-}>()
-
-const isFavorite = useVModel(props, 'active', emit)
+const isFavorite = defineModel<boolean>('active' ,{
+  required: true,
+})
 
 const toggleFavorite = () => {
   isFavorite.value = !isFavorite.value

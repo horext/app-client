@@ -32,21 +32,19 @@ defineOptions({
 export type SnackbarVariant = 'success' | 'error' | 'warning' | 'info'
 const props = withDefaults(
   defineProps<{
-    modelValue?: boolean
     timeout?: number
     variant?: SnackbarVariant
   }>(),
   {
-    modelValue: false,
     timeout: 3000,
     variant: 'success',
   },
 )
 const { variant } = toRefs(props)
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: boolean): void
-}>()
-const internalShow = useVModel(props, 'modelValue', emit)
+
+const internalShow = defineModel<boolean>('modelValue', {
+  default: false,
+})
 
 const COLOR_MAP: Record<SnackbarVariant, string> = {
   success: 'green',

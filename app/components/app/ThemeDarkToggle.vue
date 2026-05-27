@@ -18,15 +18,9 @@ import { onMounted, ref, watch } from 'vue'
 import { useLottie } from '~/composables/lottie'
 import Animation from '~/assets/lottie/71569-hamster-toggle.json'
 
-const _props = defineProps<{
-  darkMode: boolean
-}>()
-
-const emit = defineEmits<{
-  (event: 'update:darkMode', value: boolean): void
-}>()
-
-const darkMode = useVModel(_props, 'darkMode', emit)
+const darkMode = defineModel<boolean>('darkMode', {
+  default: false,
+})
 
 const darkModeEl = ref<HTMLElement | null>(null)
 const darkModeAnimation = useLottie(darkModeEl, {

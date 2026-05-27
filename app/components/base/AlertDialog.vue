@@ -13,7 +13,7 @@
         <v-btn
           color="green-darken-1"
           variant="text"
-          @click="emit('update:modelValue', false)"
+          @click="internalValue = false"
         >
           Cerrar
         </v-btn>
@@ -24,21 +24,20 @@
 
 <script lang="ts" setup>
 import { mdiAlertCircle } from '@mdi/js'
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue?: boolean
     title?: string
   }>(),
   {
-    modelValue: false,
     title: 'Atención',
     closeable: false,
   },
 )
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: boolean): void
+defineEmits<{
   (event: 'click:confirm' | 'click:reject', value: MouseEvent): void
 }>()
 
-const internalValue = useVModel(props, 'modelValue', emit)
+const internalValue = defineModel<boolean>('modelValue', {
+  default: false,
+})
 </script>

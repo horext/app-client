@@ -62,7 +62,6 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
 import { computed, type Ref } from 'vue'
 import type { IEvent } from '~/interfaces/event'
 import {
@@ -77,14 +76,11 @@ import { getWeekdayName } from '~/utils/weekday'
 
 const props = defineProps<{
   selectedEvent: IEvent
-  dialog: boolean
 }>()
 
-const emit = defineEmits<{
-  (event: 'update:dialog', value: boolean): void
-}>()
-
-const dialogSync = useVModel(props, 'dialog', emit)
+const dialogSync = defineModel<boolean>('dialog', {
+  default: false,
+})
 
 const selectedDay: Ref<string> = computed(() =>
   getWeekdayName(props.selectedEvent.day),
