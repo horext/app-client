@@ -1,80 +1,50 @@
 <template>
-  <v-container class="text-center">
-    <v-row align="center" align-content="center" justify="center">
-      <v-col cols="12">
-        <h1 class="display-1 font-weight-light">Acerca de</h1>
-      </v-col>
-    </v-row>
-    <v-row align="center" align-content="center" justify="center">
-      <v-col cols="12">
-        <p class="text-h6 font-weight-light">
-          Horext es una aplicación web que permite a los estudiantes de la
-          Universidad Nacional de Ingeniería (UNI) generar sus horarios de
-          clases de manera automática.
+  <section class="bg-background py-12 text-on-surface md:py-16">
+    <div class="mx-auto max-w-6xl px-6 lg:px-10">
+      <HomeSectionHeading
+        eyebrow="Acerca de"
+        title="Horext"
+        description="Horext es una aplicación web que permite a los estudiantes de la Universidad Nacional de Ingeniería (UNI) generar sus horarios de clases de manera automática."
+      />
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2">
+        <AboutProfileCard
+          name="Octatec"
+          email="Email: octatec.pe@gmail.com"
+          :image-src="img('/octatec-logo.png', { quality: 100 })"
+          :image-srcset="octatecLogo.srcset"
+          :image-sizes="octatecLogo.sizes"
+        />
+        <AboutProfileCard
+          name="Franz A. Bendezu Isidro"
+          email="Email: fbendezui@uni.pe"
+          :image-src="img('/me.jpeg', { quality: 100 })"
+          :image-srcset="mePhoto.srcset"
+          :image-sizes="mePhoto.sizes"
+        />
+      </div>
+
+      <div
+        class="mt-12 rounded-[2rem] border border-outline/20 bg-surface/70 p-6 shadow-sm md:p-8 dark:bg-surface/30"
+      >
+        <p class="text-base leading-7 text-on-surface/80">
+          Eres libre de contribuir al proyecto, puedes ver el código fuente en:
         </p>
-      </v-col>
-      <v-col align-self="center">
-        <v-avatar class="elevation-2 mb-4" size="128">
-          <v-img
-            :src="img('/octatec-logo.png', { quality: 100 })"
-            :lazy-src="img('/octatec-logo.png', { width: 128, quality: 100 })"
-            :srcset="octatecLogo.srcset"
-            :sizes="octatecLogo.sizes"
+        <div class="mt-6 flex flex-wrap justify-center gap-4">
+          <AboutSourceLinkCard
+            href="https://github.com/horext"
+            :icon="mdiGithub"
+            label="GitHub"
           />
-        </v-avatar>
-        <p class="text-h6 text-center">Octatec</p>
-        <p class="text-subtitle-1 text-center">Email: octatec.pe@gmail.com</p>
-      </v-col>
-      <v-col>
-        <v-avatar class="elevation-2 mb-4" size="128">
-          <v-img
-            :lazy-src="img('/me.jpeg', { width: 128, quality: 100 })"
-            :src="img('/me.jpeg', { quality: 100 })"
-            :srcset="mePhoto.srcset"
-            :sizes="mePhoto.sizes"
+          <AboutSourceLinkCard
+            href="https://gitlab.com/horext-app"
+            :icon="mdiGitlab"
+            label="GitLab"
           />
-        </v-avatar>
-        <p class="text-h6 text-center">Franz A. Bendezu Isidro</p>
-        <p class="text-subtitle-1 text-center">Email: fbendezui@uni.pe</p>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-row>
-          <v-col cols="12">
-            Eres libre de contribuir al proyecto, puedes ver el código fuente
-            en:
-          </v-col>
-          <v-col cols="6">
-            <v-btn
-              color="black"
-              href="https://github.com/horext"
-              variant="outlined"
-              size="large"
-            >
-              <v-icon start>
-                {{ mdiGithub }}
-              </v-icon>
-              <span class="text-grey-darken-1 font-weight-bold"> GitHub </span>
-            </v-btn>
-          </v-col>
-          <v-col cols="6">
-            <v-btn
-              color="orange"
-              href="https://gitlab.com/horext-app"
-              variant="outlined"
-              size="large"
-            >
-              <v-icon start>
-                {{ mdiGitlab }}
-              </v-icon>
-              <span class="text-grey-darken-1 font-weight-bold"> GitLab </span>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts" setup>
