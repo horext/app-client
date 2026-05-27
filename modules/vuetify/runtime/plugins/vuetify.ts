@@ -2,6 +2,7 @@ import { createVuetify } from 'vuetify'
 import { VDateInput } from 'vuetify/labs/VDateInput'
 import { es } from 'vuetify/locale'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import { forVuetify } from '../breakpoints'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -11,6 +12,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     ssr: {
       clientWidth: 1280,
       clientHeight: 1024,
+    },
+    display: {
+      mobileBreakpoint: 'md',
+      thresholds: forVuetify,
     },
     locale: {
       locale: 'es',
