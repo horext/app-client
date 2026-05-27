@@ -22,7 +22,7 @@
     </v-tabs>
 
     <v-btn
-      v-if="!authStore.isLoggedIn"
+      v-if="!isLoggedIn"
       color="primary"
       variant="flat"
       rounded="lg"
@@ -46,8 +46,11 @@
 import VuetifyLogo from '../VuetifyLogo.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
+defineProps<{
+  isLoggedIn: boolean
+}>()
+
 const settingsStore = useSettingsStore()
-const authStore = useUserAuthStore()
 
 const drawer = ref(false)
 
