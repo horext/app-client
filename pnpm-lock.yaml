@@ -30,8 +30,8 @@ importers:
         specifier: ^10.6.2
         version: 10.6.2
       html2canvas-pro:
-        specifier: ^2.0.2
-        version: 2.0.2
+        specifier: ^2.0.3
+        version: 2.0.3
       idb:
         specifier: ^8.0.3
         version: 8.0.3
@@ -4301,8 +4301,8 @@ packages:
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
-  html2canvas-pro@2.0.2:
-    resolution: {integrity: sha512-9G/t0XgCZWonLwL0JwI7su6NdbOPUY7Ur4Ihpp8+XMaW9ibA2nDXF181Jr6tm94k8lX6sthpaXB3XqEnsMd5Cw==}
+  html2canvas-pro@2.0.3:
+    resolution: {integrity: sha512-lCo9YarLwEonAtH7mrh0yW0LKgpPTZFmHiqSJY/ftpBIcFhzry8LT+nBWRjbS2lgDPjS8s3PKpVRds6W3iXgcQ==}
     engines: {node: '>=16.0.0'}
 
   html2canvas@1.4.1:
@@ -5845,6 +5845,11 @@ packages:
 
   srvx@0.11.15:
     resolution: {integrity: sha512-iXsux0UcOjdvs0LCMa2Ws3WwcDUozA3JN3BquNXkaFPP7TpRqgunKdEgoZ/uwb1J6xaYHfxtz9Twlh6yzwM6Tg==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
+  srvx@0.11.16:
+    resolution: {integrity: sha512-bp07zRuycfTY43IjAvvTFnmnJi8ikW0VFiHwOhhYcVW/L4xQ1XY4PAd4Nuum1rsA17C39zL7x+CDhrn5AL32Rw==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -10907,7 +10912,7 @@ snapshots:
   h3@2.0.1-rc.20:
     dependencies:
       rou3: 0.8.1
-      srvx: 0.11.15
+      srvx: 0.11.16
 
   h3@2.0.1-rc.22:
     dependencies:
@@ -10956,7 +10961,7 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
-  html2canvas-pro@2.0.2:
+  html2canvas-pro@2.0.3:
     dependencies:
       css-line-break: 2.1.0
       text-segmentation: 1.0.3
@@ -13026,6 +13031,8 @@ snapshots:
   split2@4.2.0: {}
 
   srvx@0.11.15: {}
+
+  srvx@0.11.16: {}
 
   stable-hash-x@0.2.0: {}
 
