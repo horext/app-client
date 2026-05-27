@@ -1,6 +1,6 @@
 <template>
   <article
-    class="rounded-3xl border border-outline/25 bg-surface/70 p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:bg-surface/30"
+    class="rounded-xl border border-outline/20 bg-surface/70 p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:bg-surface/30"
   >
     <div class="flex items-start gap-4">
       <div

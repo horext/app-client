@@ -1,6 +1,6 @@
 <template>
   <article
-    class="rounded-3xl bg-surface/65 p-6 text-center shadow-sm ring-1 ring-black/5 dark:bg-surface/30"
+    class="rounded-xl border border-outline/20 bg-surface/70 p-6 text-center shadow-sm dark:bg-surface/30"
   >
     <div class="mb-5 flex justify-center">
       <div

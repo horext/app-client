@@ -91,6 +91,8 @@ export default defineConfig({
       'text-[.75rem] font-[500] leading-[1.3333] tracking-[.0417em]',
     'text-label-small':
       'text-[.6875rem] font-[500] leading-[1.4545] tracking-[.0455em]',
+    'bg-hero-overlay':
+      'bg-[linear-gradient(to_bottom,rgba(10,25,60,0.88),rgba(20,45,110,0.78))]',
     'rounded-0': 'rounded-none',
     'rounded-sm': 'rounded-[2px]',
     rounded: 'rounded-[4px]',

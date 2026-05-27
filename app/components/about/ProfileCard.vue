@@ -1,6 +1,6 @@
 <template>
   <article
-    class="rounded-[2rem] border border-outline/25 bg-surface/70 p-6 shadow-sm dark:bg-surface/30"
+    class="rounded-xl border border-outline/20 bg-surface/70 p-6 shadow-sm dark:bg-surface/30"
   >
     <div class="mb-4 flex justify-center">
       <img

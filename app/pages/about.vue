@@ -7,40 +7,43 @@
         description="Horext es una aplicación web que permite a los estudiantes de la Universidad Nacional de Ingeniería (UNI) generar sus horarios de clases de manera automática."
       />
 
-      <div class="mt-12 grid gap-6 md:grid-cols-2">
-        <AboutProfileCard
-          name="Octatec"
-          email="Email: octatec.pe@gmail.com"
-          :image-src="img('/octatec-logo.png', { quality: 100 })"
-          :image-srcset="octatecLogo.srcset"
-          :image-sizes="octatecLogo.sizes"
-        />
-        <AboutProfileCard
-          name="Franz A. Bendezu Isidro"
-          email="Email: fbendezui@uni.pe"
-          :image-src="img('/me.jpeg', { quality: 100 })"
-          :image-srcset="mePhoto.srcset"
-          :image-sizes="mePhoto.sizes"
-        />
-      </div>
+      <div class="space-y-12">
+        <div class="grid gap-6 md:grid-cols-2">
+          <AboutProfileCard
+            name="Octatec"
+            email="Email: octatec.pe@gmail.com"
+            :image-src="img('/octatec-logo.png', { quality: 100 })"
+            :image-srcset="octatecLogo.srcset"
+            :image-sizes="octatecLogo.sizes"
+          />
+          <AboutProfileCard
+            name="Franz A. Bendezu Isidro"
+            email="Email: fbendezui@uni.pe"
+            :image-src="img('/me.jpeg', { quality: 100 })"
+            :image-srcset="mePhoto.srcset"
+            :image-sizes="mePhoto.sizes"
+          />
+        </div>
 
-      <div
-        class="mt-12 rounded-[2rem] border border-outline/20 bg-surface/70 p-6 shadow-sm md:p-8 dark:bg-surface/30"
-      >
-        <p class="text-base leading-7 text-on-surface/80">
-          Eres libre de contribuir al proyecto, puedes ver el código fuente en:
-        </p>
-        <div class="mt-6 flex flex-wrap justify-center gap-4">
-          <AboutSourceLinkCard
-            href="https://github.com/horext"
-            :icon="mdiGithub"
-            label="GitHub"
-          />
-          <AboutSourceLinkCard
-            href="https://gitlab.com/horext-app"
-            :icon="mdiGitlab"
-            label="GitLab"
-          />
+        <div
+          class="rounded-xl border border-outline/20 bg-surface/70 p-6 shadow-sm md:p-8 dark:bg-surface/30"
+        >
+          <p class="text-base leading-7 text-on-surface/80">
+            Eres libre de contribuir al proyecto, puedes ver el código fuente
+            en:
+          </p>
+          <div class="mt-6 flex flex-wrap justify-center gap-4">
+            <AboutSourceLinkCard
+              href="https://github.com/horext"
+              :icon="mdiGithub"
+              label="GitHub"
+            />
+            <AboutSourceLinkCard
+              href="https://gitlab.com/horext-app"
+              :icon="mdiGitlab"
+              label="GitLab"
+            />
+          </div>
         </div>
       </div>
     </div>

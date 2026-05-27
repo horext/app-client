@@ -31,7 +31,7 @@ defineProps<{
 }
 
 .legal-header {
-  @apply mb-10 rounded-[2rem] border border-outline/10 bg-surface p-6 shadow-sm md:p-8;
+  @apply mb-10 rounded-xl border border-outline/10 bg-surface p-6 shadow-sm md:p-8;
 }
 
 .legal-kicker {
@@ -47,7 +47,7 @@ defineProps<{
 }
 
 .legal-card {
-  @apply rounded-[2rem] border border-outline/10 bg-surface p-6 shadow-sm;
+  @apply rounded-xl border border-outline/10 bg-surface p-6 shadow-sm;
 }
 
 .legal-card :deep(section + section) {

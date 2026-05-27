@@ -5,18 +5,20 @@
   >
     <section>
       <h2>Descripción del servicio</h2>
-      <div>
+      <p>
         Horext es una aplicación web gratuita que permite a estudiantes generar
         y organizar horarios de clases académicas. El servicio incluye la opción
         de exportar los horarios generados a Google Calendar.
-      </div>
+      </p>
     </section>
 
     <section>
       <h2>Uso aceptable</h2>
       <div>
-        Al usar Horext, aceptas utilizarlo únicamente para fines legítimos y
-        personales. No está permitido usar la aplicación para:
+        <p>
+          Al usar Horext, aceptas utilizarlo únicamente para fines legítimos y
+          personales. No está permitido usar la aplicación para:
+        </p>
         <ul>
           <li>Acceder a datos de terceros sin su consentimiento.</li>
           <li>Interferir con el funcionamiento de la aplicación.</li>
@@ -27,12 +29,12 @@
 
     <section>
       <h2>Autenticación con Google</h2>
-      <div>
+      <p>
         Horext usa Google Sign-In para autenticar usuarios. Al iniciar sesión,
         autorizas a Horext a recibir tu nombre, correo electrónico y foto de
         perfil desde tu cuenta de Google, exclusivamente para identificarte
         dentro de la aplicación.
-      </div>
+      </p>
     </section>
 
     <section>
@@ -64,7 +66,7 @@
 
     <section>
       <h2>Servicios de terceros vinculados</h2>
-      <div>
+      <p>
         Horext integra servicios de Google (Sign-In, Calendar API, Analytics).
         El uso de estos servicios está sujeto a los
         <a
@@ -74,21 +76,21 @@
           >Términos de servicio de Google</a
         >. Horext no tiene responsabilidad por la disponibilidad o el contenido
         de dichos servicios.
-      </div>
+      </p>
     </section>
 
     <section>
       <h2>Limitación de responsabilidad</h2>
-      <div>
+      <p>
         Horext se proporciona "tal cual", sin garantías de ningún tipo. No nos
         hacemos responsables de pérdidas de datos, interrupciones del servicio
         ni daños derivados del uso de la aplicación.
-      </div>
+      </p>
     </section>
 
     <section>
       <h2>Contacto</h2>
-      <div>
+      <p>
         Para consultas sobre estos términos:
         <a
           href="https://github.com/horext/app-client/issues"
@@ -96,7 +98,7 @@
           rel="noopener noreferrer"
           >github.com/horext/app-client/issues</a
         >
-      </div>
+      </p>
     </section>
   </LegalDocument>
 </template>

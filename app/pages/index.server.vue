@@ -8,9 +8,7 @@
         alt="Cover background"
         class="absolute inset-0 h-full w-full object-cover"
       />
-      <div
-        class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,25,60,0.88),rgba(20,45,110,0.78))]"
-      />
+      <div class="absolute inset-0 bg-hero-overlay" />
 
       <div
         class="relative mx-auto flex min-h-[90vh] max-w-7xl items-center px-6 py-20 md:min-h-[85vh] lg:px-10"
@@ -69,7 +67,7 @@
           description="Optimiza tu tiempo y olvídate de los cruces de horario."
         />
 
-        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div class="mt-10 grid gap-6 md:mt-12 md:grid-cols-2 xl:grid-cols-3">
           <HomeFeatureCard
             v-for="feature in features"
             :key="feature.title"
@@ -87,7 +85,7 @@
           description="Genera tu horario en 3 simples pasos"
         />
 
-        <div class="grid gap-8 md:grid-cols-3">
+        <div class="mt-10 grid gap-8 md:mt-12 md:grid-cols-3">
           <HomeStepCard
             v-for="(step, index) in steps"
             :key="step.title"
@@ -101,7 +99,7 @@
     <section class="py-16">
       <div class="mx-auto max-w-7xl px-6 lg:px-10">
         <div
-          class="mx-auto max-w-5xl rounded-[2rem] bg-gradient-to-br from-primary to-primary/95 px-8 py-12 text-center shadow-xl shadow-primary/25 md:px-12 md:py-16"
+          class="mx-auto max-w-5xl rounded-xl bg-gradient-to-br from-primary to-primary/95 px-8 py-12 text-center shadow-xl shadow-primary/25 md:px-12 md:py-16"
         >
           <h2
             class="mb-4 text-3xl font-bold tracking-tight text-white md:text-5xl"

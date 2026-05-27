@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-3xl text-center">
+  <div class="mx-auto mb-10 max-w-3xl text-center md:mb-12">
     <p
       class="mb-2 text-sm font-medium uppercase tracking-[0.24em] text-primary"
     >
