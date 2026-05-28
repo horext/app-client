@@ -7,6 +7,7 @@ import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
 import { EVENT_COLORS } from '~/constants/event'
 import { Activity, CourseEvent } from '~/models/Event'
+import type { UUID } from 'node:crypto'
 
 export type ScheduleOptions = {
   credits?: number
@@ -71,10 +72,11 @@ export function getSchedules(
     let useCombination = true
     for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
       const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
-      const restScheduleScheduleEvents = scheduleSubjectsEvents
-        .slice(j + 1)
-        .flat()
-        .concat(baseEvents)
+      const restScheduleScheduleEvents: Array<CourseEvent | Activity<UUID>> =
+        scheduleSubjectsEvents
+          .slice(j + 1)
+          .flat()
+          .concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
         let intersections = 0
@@ -103,11 +105,11 @@ export function getSchedules(
               }
             }
             const notAvailable =
-              (restScheduleEvent.isPractice &&
-                scheduleSubjectEvent.isPractice &&
+              (restScheduleEvent.isCrossingForbidden &&
+                scheduleSubjectEvent.isCrossingForbidden &&
                 !options.crossPractices) ||
-              (restScheduleEvent.isActivity &&
-                scheduleSubjectEvent.isActivity &&
+              (restScheduleEvent.isCrossingForbidden &&
+                scheduleSubjectEvent.isCrossingForbidden &&
                 !options.crossEvent)
             if (
               crossingCombination + intersections <=
