@@ -28,11 +28,11 @@ const valueSync = defineModel<ISubjectSchedule[]>({
 const { schedule } = toRefs(props)
 
 const sessionsCount = computed(() => {
-  return schedule.value?.sessions?.length
+  return schedule.value.sessions?.length
 })
 
 const section = computed(() => {
-  return schedule.value?.section?.id
+  return schedule.value.section?.id
 })
 </script>
 
