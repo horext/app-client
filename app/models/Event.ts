@@ -45,7 +45,9 @@ export default abstract class Event<ID extends string | undefined = string> {
     this.id = id
   }
 
-  abstract get isCrossTypeRestricted(): boolean
+  abstract get hasActivityCrossingRestriction(): boolean
+
+  abstract get hasSubjectSessionCrossingRestriction(): boolean
 
   intersects(other: Event<string | undefined>): boolean {
     const t = (s: string) => {
@@ -91,8 +93,12 @@ export class Activity<
     this.allowOverlap = allowOverlap
   }
 
-  get isCrossTypeRestricted() {
+  get hasActivityCrossingRestriction() {
     return !this.allowOverlap
+  }
+
+  get hasSubjectSessionCrossingRestriction() {
+    return false
   }
 
   static buildActivityFrom(event: Omit<IActivity, 'category' | 'type'>) {
@@ -113,8 +119,30 @@ export class Activity<
 export class CourseEvent extends Event implements IEvent {
   override id: string
 
-  get isCrossTypeRestricted() {
+  get hasActivityCrossingRestriction() {
+    return false
+  }
+
+  get hasSubjectSessionCrossingRestriction() {
     return this.type.includes('P')
+  }
+
+  isCrossingRestricted(
+    other: Event<string | undefined>,
+    crossActivities: boolean,
+    crossPractices: boolean,
+  ): boolean {
+    const activityRestriction =
+      !crossActivities &&
+      (this.hasActivityCrossingRestriction ||
+        other.hasActivityCrossingRestriction)
+
+    const practiceRestriction =
+      !crossPractices &&
+      this.hasSubjectSessionCrossingRestriction &&
+      other.hasSubjectSessionCrossingRestriction
+
+    return activityRestriction || practiceRestriction
   }
 
   constructor(

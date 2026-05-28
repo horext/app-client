@@ -6,7 +6,7 @@ import type {
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
 import { EVENT_COLORS } from '~/constants/event'
-import { Activity, CourseEvent, EventCategory } from '~/models/Event'
+import { Activity, CourseEvent } from '~/models/Event'
 import type { UUID } from 'crypto'
 
 export type ScheduleOptions = {
@@ -27,7 +27,7 @@ export function getSchedules(
   const options = {
     credits: 100,
     crossingSubjects: 0,
-    crossEvent: false,
+    crossActivities: false,
     crossPractices: false,
     ..._options,
   }
@@ -104,19 +104,11 @@ export function getSchedules(
                 })
               }
             }
-            const activityRestriction =
-              !options.crossActivities &&
-              ((restScheduleEvent.category === EventCategory.MY_EVENT &&
-                restScheduleEvent.isCrossTypeRestricted) ||
-                (scheduleSubjectEvent.category === EventCategory.MY_EVENT &&
-                  scheduleSubjectEvent.isCrossTypeRestricted))
-            const practiceRestriction =
-              !options.crossPractices &&
-              restScheduleEvent.category === EventCategory.COURSE &&
-              scheduleSubjectEvent.category === EventCategory.COURSE &&
-              restScheduleEvent.isCrossTypeRestricted &&
-              scheduleSubjectEvent.isCrossTypeRestricted
-            const notAvailable = activityRestriction || practiceRestriction
+            const notAvailable = scheduleSubjectEvent.isCrossingRestricted(
+              restScheduleEvent,
+              options.crossActivities ?? false,
+              options.crossPractices ?? false,
+            )
             if (
               crossingCombination + intersections <=
               options.crossingSubjects
