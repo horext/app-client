@@ -79,8 +79,6 @@ const emit = defineEmits<{
 
 const { subjectSchedules, schedules } = toRefs(props)
 
-const selected = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
-
 const availableSchedules = computed(() => {
   const currentSchedules = schedules.value
   const _subjectSchedules = subjectSchedules.value.schedules
@@ -91,6 +89,8 @@ const availableSchedules = computed(() => {
     return schedule?.id === s1?.id
   })
 })
+
+const selected = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
 
 watch(
   availableSchedules,
