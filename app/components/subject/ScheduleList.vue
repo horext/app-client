@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       <ScheduleSubjectList
-        v-model="selected"
+        v-model="selected.schedules"
         :schedules="schedules"
         :loading="loading"
       />
@@ -28,22 +28,28 @@ import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedule,
+  ISubjectSchedules,
 } from '~/interfaces/subject'
+import { SubjectSchedules } from '~/models/subject-schedules'
+import type { UUID } from 'crypto'
 
 const props = defineProps<{
-  subjectSchedules: IBaseSubjectSchedules
+  subjectSchedules: IBaseSubjectSchedules | ISubjectSchedules
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
 
 const emit = defineEmits<{
-  (event: 'save', value: ISubjectSchedule[]): void
+  (
+    event: 'save',
+    value: SubjectSchedules<UUID> | SubjectSchedules<undefined>,
+  ): void
   (event: 'cancel'): void
 }>()
 
 const { subjectSchedules, schedules } = toRefs(props)
 
-const selected = shallowRef<ISubjectSchedule[]>([])
+const selected = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
 
 const availableSchedules = computed(() => {
   const currentSchedules = schedules.value
@@ -56,9 +62,13 @@ const availableSchedules = computed(() => {
   })
 })
 
-watch(availableSchedules, (availableSchedules) => {
-  selected.value = availableSchedules.map((s) => ({ ...s }))
-})
+watch(
+  availableSchedules,
+  (availableSchedules) => {
+    selected.value.schedules = availableSchedules.map((s) => ({ ...s }))
+  },
+  { immediate: true },
+)
 
 const saveSections = () => {
   emit('save', selected.value)

@@ -20,7 +20,9 @@ export const useUserSubjects = () => {
     subjects.value.splice(index, 1)
   }
 
-  async function updateSubject(_subject: ISubjectSchedules) {
+  async function updateSubject(
+    _subject: Pick<ISubjectSchedules, 'id' | 'schedules'>,
+  ) {
     const result = await service.update(_subject.id, _subject)
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
     subjects.value[index] = result

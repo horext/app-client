@@ -36,7 +36,7 @@
             :subject-schedules="subjectSchedules"
             :schedules="schedules"
             :loading="statusSchedules === 'pending'"
-            @save="save(toRaw(subjectSchedules), toRaw($event))"
+            @save="save"
             @cancel="close"
           />
         </v-dialog>
@@ -111,6 +111,8 @@ import {
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
+import type { SubjectSchedules } from '~/models/subject-schedules'
+import type { UUID } from 'crypto'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -212,20 +214,19 @@ const closeDelete = () => {
 
 const succcesUpdateCourse = ref(false)
 const save = async (
-  item: IBaseSubjectSchedules | ISubjectSchedules,
-  schedules: ISubjectSchedule[],
+  data: SubjectSchedules<UUID> | SubjectSchedules<undefined>,
 ) => {
   succcesAddCourse.value = false
-  if ('id' in item) {
-    if (schedules && schedules.length > 0) {
-      await updateSubject({ ...item, schedules })
+  if (data.id) {
+    if (data.schedules && data.schedules.length > 0) {
+      await updateSubject(data.toUpdateRequest())
       close()
       succcesUpdateCourse.value = true
     } else {
-      deleteItem(item)
+      deleteItem(data)
     }
   } else {
-    await saveNewSubject({ ...item, schedules })
+    await saveNewSubject(data.toCreateRequest())
     close()
     succcesAddCourse.value = true
   }
