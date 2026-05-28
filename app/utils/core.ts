@@ -75,7 +75,7 @@ export function getSchedules(
       const restScheduleScheduleEvents: Array<CourseEvent | Activity<UUID>> =
         scheduleSubjectsEvents
           .slice(j + 1)
-          .flat()
+          .flat<Array<CourseEvent | Activity<UUID>>[]>()
           .concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
@@ -143,7 +143,9 @@ export function getSchedules(
         scheduleSubjectKey,
         schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
-        events: scheduleSubjectsEvents.flat().concat(baseEvents),
+        events: scheduleSubjectsEvents
+          .flat<Array<CourseEvent | Activity<UUID>>[]>()
+          .concat(baseEvents),
       })
     }
 

@@ -7,7 +7,7 @@ import type {
 } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
-export default class Event<ID extends string | undefined = string> {
+export default abstract class Event<ID extends string | undefined = string> {
   id: ID
   day: Weekdays
   startTime: string
