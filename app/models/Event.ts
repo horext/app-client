@@ -116,7 +116,7 @@ export class Activity<
   }
 }
 
-export class CourseEvent extends Event implements IEvent {
+export class SubjectSessionEvent extends Event implements IEvent {
   override id: string
 
   get hasActivityCrossingRestriction() {
@@ -173,13 +173,13 @@ export class CourseEvent extends Event implements IEvent {
 
   static buildFromSchedule(schedule: IScheduleSubjectGenerate, color: string) {
     if (!schedule.sessions?.length) return []
-    const events: Array<CourseEvent> = []
+    const events: Array<SubjectSessionEvent> = []
     const sessions = schedule.sessions
     for (let i = 0; i < sessions.length; i++) {
       const course = schedule.subject.course
       const section = schedule.section.id
       const session = sessions[i]!
-      const event = new CourseEvent(
+      const event = new SubjectSessionEvent(
         session.day,
         session.startTime,
         session.endTime,

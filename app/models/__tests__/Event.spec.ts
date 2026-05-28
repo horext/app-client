@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Activity, CourseEvent } from '../Event'
+import { Activity, SubjectSessionEvent } from '../Event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
 function makeSchedule(
@@ -65,7 +65,7 @@ function makeSchedule(
 describe('CourseEvent.buildFromSchedule', () => {
   it('returns an empty array when there are no sessions', () => {
     const schedule = makeSchedule([])
-    expect(CourseEvent.buildFromSchedule(schedule, '#fff')).toEqual([])
+    expect(SubjectSessionEvent.buildFromSchedule(schedule, '#fff')).toEqual([])
   })
 
   it('returns one Event per session', () => {
@@ -89,7 +89,7 @@ describe('CourseEvent.buildFromSchedule', () => {
         classroomCode: 'LAB1',
       },
     ])
-    const events = CourseEvent.buildFromSchedule(schedule, '#ff0000')
+    const events = SubjectSessionEvent.buildFromSchedule(schedule, '#ff0000')
     expect(events).toHaveLength(2)
   })
 
@@ -105,7 +105,7 @@ describe('CourseEvent.buildFromSchedule', () => {
         classroomCode: 'B201',
       },
     ])
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#123456')
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#123456')
 
     expect(event!.day).toBe(2)
     expect(event!.startTime).toBe('09:00')
@@ -127,7 +127,7 @@ describe('CourseEvent.buildFromSchedule', () => {
         teacherName: 'Prof. X',
       },
     ])
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#000')
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#000')
     expect(event!.title).toBe('CS101 A - Intro to CS')
   })
 
@@ -143,7 +143,7 @@ describe('CourseEvent.buildFromSchedule', () => {
         classroomCode: 'R100',
       },
     ])
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#000')
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#000')
     expect(event!.description).toContain('Prof. X')
     expect(event!.description).toContain('CS101')
     expect(event!.description).toContain('Intro to CS')
@@ -161,7 +161,7 @@ describe('CourseEvent.buildFromSchedule', () => {
         classroomCode: 'ROOM_42',
       },
     ])
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#000')
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#000')
     expect(event!.location).toBe('ROOM_42')
   })
 
@@ -175,8 +175,10 @@ describe('CourseEvent.buildFromSchedule', () => {
         typeCode: 'THEORY',
       },
     ])
-    expect(() => CourseEvent.buildFromSchedule(schedule, '#000')).not.toThrow()
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#000')
+    expect(() =>
+      SubjectSessionEvent.buildFromSchedule(schedule, '#000'),
+    ).not.toThrow()
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#000')
     expect(event!.description).toContain('undefined')
   })
 
@@ -191,8 +193,10 @@ describe('CourseEvent.buildFromSchedule', () => {
         teacherName: 'Dr. A',
       },
     ])
-    expect(() => CourseEvent.buildFromSchedule(schedule, '#000')).not.toThrow()
-    const [event] = CourseEvent.buildFromSchedule(schedule, '#000')
+    expect(() =>
+      SubjectSessionEvent.buildFromSchedule(schedule, '#000'),
+    ).not.toThrow()
+    const [event] = SubjectSessionEvent.buildFromSchedule(schedule, '#000')
     expect(event!.location).toBe('')
   })
 
@@ -200,7 +204,7 @@ describe('CourseEvent.buildFromSchedule', () => {
     const schedule = makeSchedule([])
     // @ts-expect-error – simulate incomplete data arriving at runtime
     delete schedule.sessions
-    expect(CourseEvent.buildFromSchedule(schedule, '#000')).toEqual([])
+    expect(SubjectSessionEvent.buildFromSchedule(schedule, '#000')).toEqual([])
   })
 })
 
