@@ -6,6 +6,7 @@ import { defineComponent, ref } from 'vue'
 import { VBtn } from 'vuetify/components/VBtn'
 import { VTextField } from 'vuetify/components/VTextField'
 import { VAutocomplete } from 'vuetify/components/VAutocomplete'
+import { VCheckbox } from 'vuetify/components/VCheckbox'
 import CreateFormDialog from '~/components/activity/CreateFormDialog.vue'
 import { Activity } from '~/models/Event'
 import type { IActivity } from '~/interfaces/event'
@@ -73,12 +74,16 @@ describe('CreateFormDialog', () => {
       category: 'MY_EVENT',
       startTime: '09:00',
       endTime: '11:00',
+      allowOverlap: false,
     }
     wrapper = mountComponent({ event, open: true })
     const titleField = wrapper
       .findAllComponents(VTextField)
       .find((f) => f.props('label') === 'Titulo del Evento')
     expect(titleField?.props('modelValue')).toBe('My Activity')
+
+    const overlapField = wrapper.findComponent(VCheckbox)
+    expect(overlapField.props('modelValue')).toBe(false)
   })
 
   it('uses default empty title when event prop is null', () => {

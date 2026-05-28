@@ -58,6 +58,7 @@ function makeActivity(
   day: Weekdays,
   startTime: string,
   endTime: string,
+  allowOverlap = true,
 ): IActivity {
   return {
     id,
@@ -68,6 +69,7 @@ function makeActivity(
     category: 'MY_EVENT',
     startTime,
     endTime,
+    allowOverlap,
   }
 }
 
@@ -669,6 +671,64 @@ describe('getSchedules', () => {
         })
         expect(result.combinations).toHaveLength(1)
         expect(result.combinations[0]!.crossings).toBe(0)
+      })
+    })
+
+    describe('when the base event comes from legacy data without allowOverlap', () => {
+      it('should treat overlap as CROSSING_BASIS (default behavior)', () => {
+        const subject = makeSubject(1, [
+          {
+            scheduleId: 10,
+            sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+          },
+        ])
+        const legacyBaseEvent: IActivity = {
+          id: '00000000-0000-0000-0000-000000000011' as UUID,
+          title: 'Legacy event',
+          day: MON,
+          color: '#ff0000',
+          type: 'MY_EVENT',
+          category: 'MY_EVENT',
+          startTime: T_09_11.startTime,
+          endTime: T_09_11.endTime,
+        }
+        const result = getSchedules([subject], [legacyBaseEvent], {
+          crossingSubjects: 1,
+          crossEvent: false,
+        })
+        expect(result.combinations).toHaveLength(1)
+        expect(
+          result.occurrences.some((o) => o.type === 'CROSSING_BASIS'),
+        ).toBe(true)
+        expect(
+          result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+        ).toBe(false)
+      })
+    })
+
+    describe('when the base event disallows overlap', () => {
+      it('should reject the combination and record CROSSING_NOT_AVAILABLE', () => {
+        const subject = makeSubject(1, [
+          {
+            scheduleId: 10,
+            sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+          },
+        ])
+        const baseEvent = makeActivity(
+          '00000000-0000-0000-0000-000000000010' as UUID,
+          MON,
+          T_09_11.startTime,
+          T_09_11.endTime,
+          false,
+        )
+        const result = getSchedules([subject], [baseEvent], {
+          crossingSubjects: 5,
+          crossEvent: false,
+        })
+        expect(result.combinations).toHaveLength(0)
+        expect(
+          result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+        ).toBe(true)
       })
     })
   })

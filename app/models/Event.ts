@@ -63,6 +63,8 @@ export default abstract class Event<ID extends string | undefined = string> {
 export class Activity<
   ID extends UUID | undefined = UUID | undefined,
 > extends Event<ID> {
+  allowOverlap: boolean
+
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -71,6 +73,7 @@ export class Activity<
     description = '',
     location = '',
     color = '#1976d2',
+    allowOverlap = true,
     id: ID = undefined as ID,
   ) {
     super(
@@ -85,10 +88,13 @@ export class Activity<
       EventCategory.MY_EVENT,
       id,
     )
+    this.allowOverlap = allowOverlap
   }
+
   get isCrossTypeRestricted() {
-    return false
+    return !this.allowOverlap
   }
+
   static buildActivityFrom(event: Omit<IActivity, 'category' | 'type'>) {
     return new Activity(
       event.day,
@@ -98,6 +104,7 @@ export class Activity<
       event.description,
       event.location,
       event.color,
+      event.allowOverlap ?? true,
       event.id,
     )
   }

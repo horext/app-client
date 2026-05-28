@@ -32,4 +32,5 @@ export interface IActivity extends IEvent {
   id: UUID
   category: 'MY_EVENT'
   type: 'MY_EVENT'
+  allowOverlap?: boolean
 }

@@ -20,6 +20,12 @@
             rows="3"
             auto-grow
           />
+          <v-checkbox
+            v-model="internalEvent.allowOverlap"
+            color="primary"
+            label="Permitir superposición con otras actividades o sesiones de clases"
+            hide-details
+          />
           <v-autocomplete
             v-model="internalEvent.day"
             :items="weekdays"
