@@ -36,7 +36,7 @@
     <v-card-text>
       <ScheduleSubjectList
         v-model="current.schedules"
-        :schedules="schedules"
+        :schedules="availableSchedules"
         :loading="loading"
       />
     </v-card-text>
@@ -65,7 +65,7 @@ import type { UUID } from 'crypto'
 
 const props = defineProps<{
   subjectSchedules: IBaseSubjectSchedules | ISubjectSchedules
-  schedules: ISubjectSchedule[]
+  availableSchedules: ISubjectSchedule[]
   loading: boolean
 }>()
 
@@ -77,10 +77,10 @@ const emit = defineEmits<{
   (event: 'cancel'): void
 }>()
 
-const { subjectSchedules, schedules } = toRefs(props)
+const { subjectSchedules, availableSchedules } = toRefs(props)
 
 const currentSelectedSchedules = computed(() => {
-  const currentSchedules = schedules.value
+  const currentSchedules = availableSchedules.value
   const _subjectSchedules = subjectSchedules.value.schedules
   return currentSchedules.filter((s1) => {
     const schedule = _subjectSchedules.find(
@@ -90,15 +90,16 @@ const currentSelectedSchedules = computed(() => {
   })
 })
 
-const current = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
-
-watch(
-  currentSelectedSchedules,
-  (availableSchedules) => {
-    current.value.schedules = availableSchedules.map((s) => ({ ...s }))
-  },
-  { immediate: true },
+const current = ref(
+  SubjectSchedules.buildFrom(
+    subjectSchedules.value,
+    currentSelectedSchedules.value,
+  ),
 )
+
+watch(currentSelectedSchedules, (availableSchedules) => {
+  current.value.schedules = availableSchedules.map((s) => ({ ...s }))
+})
 
 const saveSections = () => {
   emit('save', current.value)

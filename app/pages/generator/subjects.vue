@@ -34,7 +34,7 @@
           <SubjectSchedulesEdit
             v-if="subjectSchedules"
             :subject-schedules="subjectSchedules"
-            :schedules="schedules"
+            :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
             @save="save"
             @cancel="close"

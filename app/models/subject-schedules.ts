@@ -73,19 +73,20 @@ export class SubjectSchedules<ID extends UUID | undefined = UUID> {
 
   static buildFrom(
     data: IBaseSubjectSchedules | ISubjectSchedules,
+    selectedSchedules: ISubjectSchedule[] = [],
   ): SubjectSchedules<UUID> | SubjectSchedules<undefined> {
     if ('id' in data) {
       return new SubjectSchedules(
         data.id,
         data.subject,
-        data.schedules,
+        selectedSchedules,
         data.color,
       )
     }
     return new SubjectSchedules(
       undefined,
       data.subject,
-      data.schedules,
+      selectedSchedules,
       data.color,
     )
   }
