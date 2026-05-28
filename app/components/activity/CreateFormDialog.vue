@@ -14,6 +14,12 @@
             label="Titulo del Evento"
             :rules="[rules.required]"
           />
+          <v-textarea
+            v-model="internalEvent.description"
+            label="Descripcion"
+            rows="3"
+            auto-grow
+          />
           <v-autocomplete
             v-model="internalEvent.day"
             :items="weekdays"
