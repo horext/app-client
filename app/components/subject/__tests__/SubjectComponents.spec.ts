@@ -7,7 +7,7 @@ import type {
 } from '~/interfaces/subject'
 import ScheduleItem from '~/components/subject/ScheduleItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
-import ScheduleList from '~/components/subject/ScheduleList.vue'
+import ScheduleList from '~/components/subject/SchedulesEdit.vue'
 import Select from '~/components/subject/Select.vue'
 import ItemActions from '~/components/subject/table/ItemActions.vue'
 
@@ -91,7 +91,7 @@ describe('subject/ScheduleList', () => {
     const wrapper = shallowMount(ScheduleList, {
       props: {
         subjectSchedules: makeBaseSubjectSchedules(),
-        schedules: [],
+        availableSchedules: [],
         loading: true,
       },
       global: { plugins: [vuetify] },
@@ -103,7 +103,7 @@ describe('subject/ScheduleList', () => {
     const wrapper = shallowMount(ScheduleList, {
       props: {
         subjectSchedules: makeBaseSubjectSchedules(),
-        schedules: [makeSchedule()],
+        availableSchedules: [makeSchedule()],
         loading: false,
       },
       global: { plugins: [vuetify] },
