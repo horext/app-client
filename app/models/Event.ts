@@ -65,10 +65,6 @@ export class Activity<
     return false
   }
 
-  get isActivity() {
-    return this.type.includes('MY_EVENT')
-  }
-
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -112,10 +108,6 @@ export class CourseEvent extends Event implements IEvent {
 
   get isPractice() {
     return this.type.includes('P')
-  }
-
-  get isActivity() {
-    return false
   }
 
   constructor(

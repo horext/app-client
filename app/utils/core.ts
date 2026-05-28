@@ -105,12 +105,9 @@ export function getSchedules(
               }
             }
             const notAvailable =
-              (restScheduleEvent.isPractice &&
-                scheduleSubjectEvent.isPractice &&
-                !options.crossPractices) ||
-              (restScheduleEvent.isActivity &&
-                scheduleSubjectEvent.isActivity &&
-                !options.crossEvent)
+              restScheduleEvent.isPractice &&
+              scheduleSubjectEvent.isPractice &&
+              !options.crossPractices
             if (
               crossingCombination + intersections <=
               options.crossingSubjects
