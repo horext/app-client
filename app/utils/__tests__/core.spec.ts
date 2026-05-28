@@ -694,7 +694,7 @@ describe('getSchedules', () => {
         }
         const result = getSchedules([subject], [legacyBaseEvent], {
           crossingSubjects: 1,
-          crossEvent: false,
+          crossActivities: false,
         })
         expect(result.combinations).toHaveLength(1)
         expect(
@@ -723,7 +723,7 @@ describe('getSchedules', () => {
         )
         const result = getSchedules([subject], [baseEvent], {
           crossingSubjects: 5,
-          crossEvent: false,
+          crossActivities: false,
         })
         expect(result.combinations).toHaveLength(0)
         expect(
@@ -750,7 +750,7 @@ describe('getSchedules', () => {
         )
         const result = getSchedules([subject], [baseEvent], {
           crossingSubjects: 1,
-          crossEvent: false,
+          crossActivities: false,
         })
         expect(result.combinations).toHaveLength(1)
         expect(
@@ -780,7 +780,7 @@ describe('getSchedules', () => {
         )
         const result = getSchedules([subject], [baseEvent], {
           crossingSubjects: 1,
-          crossEvent: false,
+          crossActivities: false,
         })
         expect(result.combinations).toHaveLength(1)
         expect(
@@ -810,7 +810,7 @@ describe('getSchedules', () => {
           )
           const result = getSchedules([s1, s2], [baseEvent], {
             crossingSubjects: 0,
-            crossEvent: false,
+            crossActivities: false,
           })
           expect(result.combinations).toHaveLength(0)
           expect(

@@ -12,7 +12,7 @@ import type { UUID } from 'crypto'
 export type ScheduleOptions = {
   credits?: number
   crossingSubjects: number
-  crossEvent?: boolean
+  crossActivities?: boolean
   crossPractices?: boolean
 }
 
@@ -105,7 +105,7 @@ export function getSchedules(
               }
             }
             const activityRestriction =
-              !options.crossEvent &&
+              !options.crossActivities &&
               ((restScheduleEvent.category === EventCategory.MY_EVENT &&
                 restScheduleEvent.isCrossTypeRestricted) ||
                 (scheduleSubjectEvent.category === EventCategory.MY_EVENT &&
