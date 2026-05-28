@@ -17,6 +17,14 @@ export default defineConfig({
   outputToCssLayers: {
     cssLayerName: (layer) => (layer === 'properties' ? null : `uno-${layer}`),
   },
+  content: {
+    filesystem: [
+      'pages/**/*.vue',
+      'components/**/*.vue',
+      'layouts/**/*.vue',
+      'app.vue',
+    ],
+  },
   safelist: [
     ...Array.from({ length: 6 }, (_, index) => `elevation-${index}`),
     'rounded-0',

@@ -1,3 +1,5 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
@@ -43,6 +45,10 @@ export default defineNuxtConfig({
 
   vuetify: {
     disableGlobalStyles: true,
+  },
+
+  unocss: {
+    disableNuxtInlineStyle: false,
   },
 
   image: {
