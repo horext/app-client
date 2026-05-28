@@ -31,10 +31,7 @@ import ScheduleSection from './SubjectsTableItemSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-defineProps({
-  schedule: {
-    type: Object as PropType<IScheduleGenerate>,
-    required: true,
-  },
-})
+defineProps<{
+  schedule: IScheduleGenerate
+}>()
 </script>
