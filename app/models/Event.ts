@@ -7,7 +7,7 @@ import type {
 } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
-export default abstract class Event<ID extends string | undefined = string> {
+export default class Event<ID extends string | undefined = string> {
   id: ID
   day: Weekdays
   startTime: string
@@ -45,8 +45,6 @@ export default abstract class Event<ID extends string | undefined = string> {
     this.id = id
   }
 
-  abstract get isCrossingForbidden(): boolean
-
   intersects(other: Event<string | undefined>): boolean {
     const t = (s: string) => {
       const i = s.indexOf('T')
@@ -63,6 +61,14 @@ export default abstract class Event<ID extends string | undefined = string> {
 export class Activity<
   ID extends UUID | undefined = UUID | undefined,
 > extends Event<ID> {
+  get isPractice() {
+    return false
+  }
+
+  get isActivity() {
+    return this.type.includes('MY_EVENT')
+  }
+
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -87,10 +93,6 @@ export class Activity<
     )
   }
 
-  get isCrossingForbidden() {
-    return this.type.includes('MY_EVENT')
-  }
-
   static buildActivityFrom(event: Omit<IActivity, 'category' | 'type'>) {
     return new Activity(
       event.day,
@@ -107,6 +109,14 @@ export class Activity<
 
 export class CourseEvent extends Event implements IEvent {
   override id: string
+
+  get isPractice() {
+    return this.type.includes('P')
+  }
+
+  get isActivity() {
+    return false
+  }
 
   constructor(
     day: Weekdays,
@@ -132,10 +142,6 @@ export class CourseEvent extends Event implements IEvent {
       id,
     )
     this.id = id
-  }
-
-  get isCrossingForbidden() {
-    return this.type.includes('P')
   }
 
   static buildFromSchedule(schedule: IScheduleSubjectGenerate, color: string) {

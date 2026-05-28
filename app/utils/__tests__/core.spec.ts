@@ -703,9 +703,9 @@ describe('getSchedules', () => {
     })
   })
 
-  describe('given a session of type MY_EVENT that overlaps a MY_EVENT base activity', () => {
+  describe('given a course session labeled MY_EVENT (still not an activity) that overlaps a MY_EVENT base activity', () => {
     describe('when crossEvent is false', () => {
-      it('should record CROSSING_NOT_AVAILABLE and reject the combination (within-limit path)', () => {
+      it('should treat the crossing as CROSSING_BASIS and keep the combination because only activity+activity is blocked', () => {
         const subject = makeSubject(1, [
           {
             scheduleId: 10,
@@ -722,14 +722,14 @@ describe('getSchedules', () => {
           crossingSubjects: 1,
           crossEvent: false,
         })
-        expect(result.combinations).toHaveLength(0)
+        expect(result.combinations).toHaveLength(1)
         expect(
-          result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+          result.occurrences.some((o) => o.type === 'CROSSING_BASIS'),
         ).toBe(true)
       })
 
-      describe('and the crossing limit is already full when the activity overlap is evaluated', () => {
-        it('should record CROSSING_NOT_AVAILABLE via the EXCEEDED branch', () => {
+      describe('and the crossing limit is already full when this overlap is evaluated', () => {
+        it('should record CROSSING_EXCEEDED (not NOT_AVAILABLE) because the quota is exhausted first', () => {
           const s1 = makeSubject(1, [
             {
               scheduleId: 10,
@@ -754,7 +754,7 @@ describe('getSchedules', () => {
           })
           expect(result.combinations).toHaveLength(0)
           expect(
-            result.occurrences.some((o) => o.type === 'CROSSING_NOT_AVAILABLE'),
+            result.occurrences.some((o) => o.type === 'CROSSING_EXCEEDED'),
           ).toBe(true)
         })
       })
