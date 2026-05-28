@@ -10,7 +10,7 @@
               variant="text"
               aria-label="Editar color del curso"
             >
-              <v-avatar size="18" :color="selected.color" />
+              <v-avatar size="18" :color="current.color" />
               <v-tooltip activator="parent" location="bottom">
                 Editar color del curso
               </v-tooltip>
@@ -21,7 +21,7 @@
             <v-card-title class="text-subtitle-2">Color del curso</v-card-title>
             <v-card-text class="pt-0">
               <v-color-picker
-                v-model="selected.color"
+                v-model="current.color"
                 class="ma-2"
                 hide-canvas
                 hide-inputs
@@ -35,7 +35,7 @@
     </v-card-title>
     <v-card-text>
       <ScheduleSubjectList
-        v-model="selected.schedules"
+        v-model="current.schedules"
         :schedules="schedules"
         :loading="loading"
       />
@@ -90,18 +90,18 @@ const availableSchedules = computed(() => {
   })
 })
 
-const selected = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
+const current = ref(SubjectSchedules.buildFrom(subjectSchedules.value))
 
 watch(
   availableSchedules,
   (availableSchedules) => {
-    selected.value.schedules = availableSchedules.map((s) => ({ ...s }))
+    current.value.schedules = availableSchedules.map((s) => ({ ...s }))
   },
   { immediate: true },
 )
 
 const saveSections = () => {
-  emit('save', selected.value)
+  emit('save', current.value)
 }
 
 const title = computed(() => {
