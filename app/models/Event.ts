@@ -64,21 +64,6 @@ export default class Event<ID extends string | undefined = string> {
     const otherEnd = t(other.endTime)
     return !(thisEnd <= otherStart || otherEnd <= thisStart)
   }
-
-  static buildFrom(event: IEvent) {
-    return new Event(
-      event.day,
-      event.startTime,
-      event.endTime,
-      event.title,
-      event.description,
-      event.location,
-      event.color,
-      event.type,
-      event.category,
-      event.id,
-    )
-  }
 }
 
 export class Activity<
