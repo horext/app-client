@@ -31,7 +31,7 @@
           @click:outside="close"
           @keydown.esc="close"
         >
-          <SubjectScheduleList
+          <SubjectSchedulesEdit
             v-if="subjectSchedules"
             :subject-schedules="subjectSchedules"
             :schedules="schedules"
@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
+import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserProfileStore } from '~/stores/user-profile'
