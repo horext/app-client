@@ -190,7 +190,7 @@ const {
   },
 )
 
-const editItem = async (item: ISubjectSchedules | IBaseSubjectSchedules) => {
+const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
   subjectSchedules.value = item
   fetchSchedules()
   dialog.value = true
