@@ -1,11 +1,11 @@
 import type { UUID } from 'crypto'
-import type {
-  EventCategories,
-  IActivity,
-  IEvent,
-  Weekdays,
-} from '~/interfaces/event'
+import type { IActivity, IEvent, Weekdays } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
+
+export enum EventCategory {
+  COURSE = 'COURSE',
+  MY_EVENT = 'MY_EVENT',
+}
 
 export default abstract class Event<ID extends string | undefined = string> {
   id: ID
@@ -18,7 +18,7 @@ export default abstract class Event<ID extends string | undefined = string> {
   location?: string
   color: string
 
-  category?: EventCategories
+  category?: EventCategory
   type: string
 
   constructor(
@@ -30,7 +30,7 @@ export default abstract class Event<ID extends string | undefined = string> {
     location: string = '',
     color: string,
     type: string,
-    category: EventCategories | undefined = undefined,
+    category: EventCategory | undefined = undefined,
     id: ID,
   ) {
     this.day = day
@@ -81,8 +81,8 @@ export class Activity<
       description,
       location,
       color,
-      'MY_EVENT',
-      'MY_EVENT',
+      EventCategory.MY_EVENT,
+      EventCategory.MY_EVENT,
       id,
     )
   }
@@ -130,7 +130,7 @@ export class CourseEvent extends Event implements IEvent {
       location,
       color,
       type,
-      'COURSE',
+      EventCategory.COURSE,
       id,
     )
     this.id = id
