@@ -3,6 +3,7 @@ import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
 } from '~/interfaces/subject'
+import { EVENT_COLORS } from '~/constants/event'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()
@@ -21,7 +22,7 @@ export const useUserSubjects = () => {
   }
 
   async function updateSubject(
-    _subject: Pick<ISubjectSchedules, 'id' | 'schedules'>,
+    _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
   ) {
     const result = await service.update(_subject.id, _subject)
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
@@ -30,9 +31,13 @@ export const useUserSubjects = () => {
 
   async function fetchSubjects() {
     const data = await service.getAll()
-    subjects.value = data.filter(
+    const subjectsWithSchedules = data.filter(
       (subject: IBaseSubjectSchedules) => subject?.schedules?.length > 0,
     )
+    subjects.value = subjectsWithSchedules.map((subject, index) => ({
+      ...subject,
+      color: subject.color ?? EVENT_COLORS[index] ?? '#1976d2',
+    }))
   }
 
   return {

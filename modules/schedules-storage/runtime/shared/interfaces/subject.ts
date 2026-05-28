@@ -72,6 +72,7 @@ export interface IBaseSubjectSchedules {
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'
   >[]
+  color?: string
 }
 
 export interface ISubjectSchedulesUpdate {
@@ -79,6 +80,7 @@ export interface ISubjectSchedulesUpdate {
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'
   >[]
+  color?: string
 }
 
 export interface ISubjectSchedules extends IBaseSubjectSchedules {

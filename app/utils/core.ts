@@ -68,7 +68,7 @@ export function getSchedules(
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
       SubjectSessionEvent.buildFromSchedule(
         c,
-        EVENT_COLORS[index] ?? '#000000',
+        subjectsSchedules[index]?.color ?? EVENT_COLORS[index] ?? '#000000',
       ),
     )
     let crossingCombination = 0

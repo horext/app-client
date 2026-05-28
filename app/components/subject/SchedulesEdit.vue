@@ -1,7 +1,37 @@
 <template>
   <v-card :loading="loading">
     <v-card-title>
-      <span class="text-headline-medium">{{ title }}</span>
+      <div class="d-flex align-center w-100">
+        <v-menu :close-on-content-click="false" location="right center">
+          <template #activator="{ props: menuActivatorProps }">
+            <v-btn
+              v-bind="menuActivatorProps"
+              icon
+              variant="text"
+              aria-label="Editar color del curso"
+            >
+              <v-avatar size="18" :color="selected.color" />
+              <v-tooltip activator="parent" location="bottom">
+                Editar color del curso
+              </v-tooltip>
+            </v-btn>
+          </template>
+
+          <v-card min-width="260">
+            <v-card-title class="text-subtitle-2">Color del curso</v-card-title>
+            <v-card-text class="pt-0">
+              <v-color-picker
+                v-model="selected.color"
+                class="ma-2"
+                hide-canvas
+                hide-inputs
+              />
+            </v-card-text>
+          </v-card>
+        </v-menu>
+        <v-spacer />
+        <span class="text-headline-medium">{{ title }}</span>
+      </div>
     </v-card-title>
     <v-card-text>
       <ScheduleSubjectList

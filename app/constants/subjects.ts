@@ -1,5 +1,10 @@
 export const SUBJECT_HEADERS = [
   {
+    title: 'Color',
+    value: 'color',
+    sortable: false,
+  },
+  {
     title: 'Código',
     value: 'subject.course.id',
     sortable: true,

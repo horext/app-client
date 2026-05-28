@@ -55,6 +55,9 @@
     <template #no-data>
       <SubjectTableNoData />
     </template>
+    <template #[`item.color`]="{ item }">
+      <v-badge :color="item.color ?? '#1976d2'" />
+    </template>
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
     </template>
@@ -103,6 +106,7 @@ import type {
   IBaseSubjectSchedules,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
+import { EVENT_COLORS } from '~/constants/event'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
   useCourseApi,
@@ -145,7 +149,11 @@ const openSearchMenu = ref(false)
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
   openSearchMenu.value = false
-  editItem({ subject: item, schedules: [] })
+  editItem({
+    subject: item,
+    schedules: [],
+    color: EVENT_COLORS[mySubjects.value.length] ?? '#1976d2',
+  })
 }
 
 const scheduleSubjectApi = useScheduleSubjectApi()

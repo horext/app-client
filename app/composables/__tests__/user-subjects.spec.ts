@@ -89,7 +89,12 @@ describe('useUserSubjects', () => {
     mockGetAll.mockResolvedValue([withSchedules, withoutSchedules])
     const { fetchSubjects, mySubjects } = useUserSubjects()
     await fetchSubjects()
-    expect(mySubjects.value).toContainEqual(withSchedules)
+    expect(mySubjects.value).toContainEqual(
+      expect.objectContaining({
+        id: withSchedules.id,
+        color: expect.any(String),
+      }),
+    )
     expect(mySubjects.value).not.toContainEqual(withoutSchedules)
   })
 })

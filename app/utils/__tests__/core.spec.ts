@@ -16,6 +16,7 @@ function makeSubject(
       typeCode: string
     }>
   }>,
+  color?: string,
 ): IBaseSubjectSchedules {
   return {
     subject: {
@@ -50,6 +51,7 @@ function makeSubject(
         endTime: s.endTime,
       })),
     })),
+    color,
   }
 }
 
@@ -159,6 +161,24 @@ describe('getSchedules', () => {
         })
         expect(result.combinations).toHaveLength(1)
         expect(result.combinations[0]!.crossings).toBe(0)
+      })
+    })
+
+    describe('and the subject defines a custom color', () => {
+      it('should use the subject color in generated events', () => {
+        const subject = makeSubject(
+          1,
+          [
+            {
+              scheduleId: 10,
+              sessions: [{ id: 1, day: MON, ...T_08_10, typeCode: 'T' }],
+            },
+          ],
+          '#123456',
+        )
+        const result = getSchedules([subject], [], { crossingSubjects: 0 })
+        expect(result.combinations).toHaveLength(1)
+        expect(result.combinations[0]!.events[0]!.color).toBe('#123456')
       })
     })
   })
