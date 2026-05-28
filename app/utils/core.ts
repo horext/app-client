@@ -105,8 +105,8 @@ export function getSchedules(
               }
             }
             const notAvailable =
-              restScheduleEvent.isPractice &&
-              scheduleSubjectEvent.isPractice &&
+              restScheduleEvent.isCrossTypeRestricted &&
+              scheduleSubjectEvent.isCrossTypeRestricted &&
               !options.crossPractices
             if (
               crossingCombination + intersections <=

@@ -45,6 +45,8 @@ export default abstract class Event<ID extends string | undefined = string> {
     this.id = id
   }
 
+  abstract get isCrossTypeRestricted(): boolean
+
   intersects(other: Event<string | undefined>): boolean {
     const t = (s: string) => {
       const i = s.indexOf('T')
@@ -61,10 +63,6 @@ export default abstract class Event<ID extends string | undefined = string> {
 export class Activity<
   ID extends UUID | undefined = UUID | undefined,
 > extends Event<ID> {
-  get isPractice() {
-    return false
-  }
-
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -88,7 +86,9 @@ export class Activity<
       id,
     )
   }
-
+  get isCrossTypeRestricted() {
+    return false
+  }
   static buildActivityFrom(event: Omit<IActivity, 'category' | 'type'>) {
     return new Activity(
       event.day,
@@ -106,7 +106,7 @@ export class Activity<
 export class CourseEvent extends Event implements IEvent {
   override id: string
 
-  get isPractice() {
+  get isCrossTypeRestricted() {
     return this.type.includes('P')
   }
 
