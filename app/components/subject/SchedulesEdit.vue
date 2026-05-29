@@ -82,23 +82,21 @@ const { subjectSchedules, availableSchedules } = toRefs(props)
 const currentSelectedSchedules = computed(() => {
   const currentSchedules = availableSchedules.value
   const _subjectSchedules = subjectSchedules.value.schedules
-  return currentSchedules.filter((s1) => {
-    const schedule = _subjectSchedules.find(
-      (s2) => s2.section.id === s1.section.id,
-    )
-    return schedule?.id === s1?.id
-  })
+  return {
+    ...subjectSchedules.value,
+    currentSchedules: currentSchedules.filter((s1) => {
+      const schedule = _subjectSchedules.find(
+        (s2) => s2.section.id === s1.section.id,
+      )
+      return schedule?.id === s1?.id
+    }),
+  }
 })
 
-const current = ref(
-  SubjectSchedules.buildFrom(
-    subjectSchedules.value,
-    currentSelectedSchedules.value,
-  ),
-)
+const current = ref(SubjectSchedules.buildFrom(currentSelectedSchedules.value))
 
 watch(currentSelectedSchedules, (availableSchedules) => {
-  current.value.schedules = availableSchedules.map((s) => ({ ...s }))
+  current.value = SubjectSchedules.buildFrom(availableSchedules)
 })
 
 const saveSections = () => {
