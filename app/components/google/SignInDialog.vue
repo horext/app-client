@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    :model-value="modelValue"
-    max-width="420"
-    @update:model-value="emit('update:modelValue', $event)"
-  >
+  <v-dialog v-model="modelValue" max-width="420">
     <v-card>
       <v-card-title class="text-center pt-6">
         <v-icon size="48" color="primary">{{ mdiCalendarSync }}</v-icon>
@@ -68,12 +64,7 @@
         >
           Autorizar acceso a Google Calendar
         </v-btn>
-        <v-btn
-          size="small"
-          variant="text"
-          block
-          @click="emit('update:modelValue', false)"
-        >
+        <v-btn size="small" variant="text" block @click="modelValue = false">
           Cancelar
         </v-btn>
       </v-card-actions>
@@ -91,11 +82,9 @@ import {
 } from '@mdi/js'
 
 defineOptions({ name: 'GoogleSignInDialog' })
-
-defineProps<{ modelValue: boolean }>()
+const modelValue = defineModel<boolean>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: boolean]
   'signed-in': []
 }>()
 
@@ -107,7 +96,7 @@ function handleSignIn() {
 
 watch(isSignedIn, (value) => {
   if (value) {
-    emit('update:modelValue', false)
+    modelValue.value = false
     emit('signed-in')
   }
 })

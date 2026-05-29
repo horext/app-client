@@ -32,7 +32,7 @@
           v-if="closeable"
           color="blue-darken-1"
           variant="text"
-          @click="emit('update:modelValue', false)"
+          @click="internalValue = false"
         >
           Cerrar
         </v-btn>
@@ -45,14 +45,12 @@
 import { mdiAlertCircle } from '@mdi/js'
 withDefaults(
   defineProps<{
-    modelValue?: boolean
     title?: string
     confirmText?: string
     rejectText?: string
     closeable?: boolean
   }>(),
   {
-    modelValue: false,
     title: 'Atención',
     confirmText: 'Si',
     rejectText: 'No',
@@ -60,7 +58,6 @@ withDefaults(
   },
 )
 const emit = defineEmits<{
-  (event: 'update:modelValue', value: boolean): void
   (event: 'click:confirm' | 'click:reject', value: MouseEvent): void
 }>()
 

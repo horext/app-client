@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    :model-value="modelValue"
-    max-width="600"
-    @update:model-value="emit('update:modelValue', $event)"
-  >
+  <v-dialog v-model="modelValue" max-width="600">
     <v-card
       :disabled="
         calendarListStatus === 'pending' ||
@@ -22,7 +18,7 @@
           :icon="mdiClose"
           variant="text"
           density="compact"
-          @click="emit('update:modelValue', false)"
+          @click="modelValue = false"
         />
       </v-card-title>
       <v-card-subtitle>
@@ -205,7 +201,7 @@
         <v-btn
           variant="text"
           :prepend-icon="mdiClose"
-          @click="emit('update:modelValue', false)"
+          @click="modelValue = false"
         >
           {{
             exportEventToGCalendarStatus === 'success' ? 'Cerrar' : 'Cancelar'
@@ -263,17 +259,14 @@ import { DATE_FORMAT } from '~/constants/date'
 defineOptions({ name: 'GoogleCalendarSyncDialog' })
 
 const props = defineProps<{
-  modelValue: boolean
   startDate?: string
   endDate?: string | null
   events: IEvent[]
 }>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: boolean]
-}>()
+const modelValue = defineModel<boolean>()
 
-const { events, startDate, endDate, modelValue } = toRefs(props)
+const { events, startDate, endDate } = toRefs(props)
 
 const { signOut, fetchCalendars, createCalendar, createEvent, getToken } =
   useGoogleOAuth2()
@@ -414,14 +407,14 @@ const { execute: handleSignOut, status: signOutStatus } = useAsyncData(
   'google-calendar-sync-sign-out',
   async () => {
     await signOut()
-    emit('update:modelValue', false)
+    modelValue.value = false
     return true
   },
   { immediate: false, server: false },
 )
 
 function handleReAuth() {
-  emit('update:modelValue', false)
+  modelValue.value = false
   getToken()
 }
 </script>
