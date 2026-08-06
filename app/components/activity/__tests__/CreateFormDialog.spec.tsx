@@ -16,7 +16,11 @@ const vuetify = createVuetify()
 
 vi.stubGlobal('CSS', { supports: () => false })
 
-const mountComponent = (options: { event: IActivity | null; loading?: boolean; open?: boolean }) => {
+const mountComponent = (options: {
+  event: IActivity | null
+  loading?: boolean
+  open?: boolean
+}) => {
   const Wrapper = defineComponent({
     setup() {
       const dialog = ref(options.open ?? false)
@@ -46,34 +50,38 @@ describe('CreateFormDialog', () => {
   })
 
   it('renders the activator button with correct label', () => {
-    const btn = wrapper.findAllComponents(VBtn).find((b) => b.text() === 'Nueva Actividad')
+    const btn = wrapper
+      .findAllComponents(VBtn)
+      .find((b) => b.text() === 'Nueva Actividad')
     expect(btn).toBeTruthy()
   })
 
   it('renders startTime and endTime time fields when dialog is open', () => {
     wrapper = mountComponent({ event: null, open: true })
     const textFields = wrapper.findAllComponents(VTextField)
-    expect(textFields.find((f) => f.props('label') === 'Hora de Inicio')).toBeTruthy()
-    expect(textFields.find((f) => f.props('label') === 'Hora de Fin')).toBeTruthy()
+    expect(
+      textFields.find((f) => f.props('label') === 'Hora de Inicio'),
+    ).toBeTruthy()
+    expect(
+      textFields.find((f) => f.props('label') === 'Hora de Fin'),
+    ).toBeTruthy()
   })
 
   it('renders day autocomplete when dialog is open', () => {
     wrapper = mountComponent({ event: null, open: true })
     const autocomplete = wrapper.findComponent(VAutocomplete)
     expect(autocomplete.exists()).toBe(true)
-    expect(autocomplete.props('label')).toBe('Dia')
+    expect(autocomplete.props('label')).toBe('Día')
   })
 
   it('populates title field from event prop', () => {
     const event: IActivity = {
       id: crypto.randomUUID(),
       title: 'My Activity',
-      day: 3,
       color: '#ff0000',
       type: 'MY_EVENT',
       category: 'MY_EVENT',
-      startTime: '09:00',
-      endTime: '11:00',
+      sessions: [{ day: 3, startTime: '09:00', endTime: '11:00' }],
       allowOverlap: false,
     }
     wrapper = mountComponent({ event, open: true })
@@ -96,7 +104,9 @@ describe('CreateFormDialog', () => {
 
   it('emits cancel when cancel button is clicked', async () => {
     wrapper = mountComponent({ event: null, open: true })
-    const cancelBtn = wrapper.findAllComponents(VBtn).find((b) => b.text() === 'Cancelar')
+    const cancelBtn = wrapper
+      .findAllComponents(VBtn)
+      .find((b) => b.text() === 'Cancelar')
     expect(cancelBtn).toBeTruthy()
     await cancelBtn!.trigger('click')
     const dialog = wrapper.findComponent(CreateFormDialog)
@@ -107,10 +117,14 @@ describe('CreateFormDialog', () => {
     wrapper = mountComponent({ event: null, open: true })
     const dialog = wrapper.findComponent(CreateFormDialog)
 
-    const vm = dialog.vm as unknown as { form: { validate: () => Promise<{ valid: boolean }> } }
+    const vm = dialog.vm as unknown as {
+      form: { validate: () => Promise<{ valid: boolean }> }
+    }
     vm.form = { validate: vi.fn().mockResolvedValue({ valid: true }) }
 
-    const saveBtn = wrapper.findAllComponents(VBtn).find((b) => b.text() === 'Guardar')
+    const saveBtn = wrapper
+      .findAllComponents(VBtn)
+      .find((b) => b.text() === 'Guardar')
     await saveBtn!.trigger('click')
     await dialog.vm.$nextTick()
 
@@ -123,10 +137,14 @@ describe('CreateFormDialog', () => {
     wrapper = mountComponent({ event: null, open: true })
     const dialog = wrapper.findComponent(CreateFormDialog)
 
-    const vm = dialog.vm as unknown as { form: { validate: () => Promise<{ valid: boolean }> } }
+    const vm = dialog.vm as unknown as {
+      form: { validate: () => Promise<{ valid: boolean }> }
+    }
     vm.form = { validate: vi.fn().mockResolvedValue({ valid: false }) }
 
-    const saveBtn = wrapper.findAllComponents(VBtn).find((b) => b.text() === 'Guardar')
+    const saveBtn = wrapper
+      .findAllComponents(VBtn)
+      .find((b) => b.text() === 'Guardar')
     await saveBtn!.trigger('click')
     await dialog.vm.$nextTick()
 

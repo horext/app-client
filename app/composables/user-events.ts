@@ -1,13 +1,13 @@
 import type { UUID } from 'crypto'
 import { storeToRefs } from 'pinia'
-import type { Activity } from '~/models/Event'
+import type { IActivity, IBaseActivity } from '~/interfaces/event'
 
 export const useUserEvents = () => {
   const store = useUserEventsStore()
   const service = useActivitiesService()
   const { items } = storeToRefs(store)
 
-  async function createNewItem(item: Activity) {
+  async function createNewItem(item: IBaseActivity) {
     const result = await service.create(item)
     items.value.push(result)
   }
@@ -17,7 +17,7 @@ export const useUserEvents = () => {
     store.deleteItemById(id)
   }
 
-  async function updateItem(item: Activity) {
+  async function updateItem(item: IBaseActivity & { id?: IActivity['id'] }) {
     const itemId = item.id
     if (!itemId) return
     const result = await service.updateById(itemId, { ...item })

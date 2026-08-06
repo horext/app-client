@@ -35,7 +35,7 @@ export function getSchedules(
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const generatedSchedules: Array<ILocalScheduleGenerate> = []
-  const baseEvents = activities.map(Activity.buildActivityFrom)
+  const baseEvents = activities.flatMap(Activity.buildActivitiesFrom)
 
   const advanceIndex = (start: number) => {
     let i = start
@@ -59,7 +59,7 @@ export function getSchedules(
   )
 
   const intersectionCache = new Map<string, boolean>()
-  for (let i = totalSchedules; i--; ) {
+  for (let i = totalSchedules; i--;) {
     const scheduleSubjects: Array<IScheduleSubjectGenerate> =
       subjectsSchedules.map((subjectSchedules, j) => ({
         ...subjectSchedules.schedules[indexSchedules[j]!]!,

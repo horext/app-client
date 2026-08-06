@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import type { UUID } from 'crypto'
-import type { Weekdays } from '../../../shared/interfaces/event'
 import { ActivitiesService } from '../activities.service'
 import type { IActivitiesRepository } from '../../repositories/activities.repository.interface'
 
@@ -17,9 +16,7 @@ describe('ActivitiesService', () => {
     id,
     title: `Activity ${id}`,
     color: '#fff',
-    day: 1 as Weekdays,
-    startTime: '08:00',
-    endTime: '10:00',
+    sessions: [{ day: 1 as const, startTime: '08:00', endTime: '10:00' }],
     type: 'MY_EVENT' as const,
     category: 'MY_EVENT' as const,
   })
@@ -81,9 +78,7 @@ describe('ActivitiesService', () => {
         service.updateById('act-0-0-0-99' as UUID, {
           title: 'x',
           color: '#000',
-          day: 1 as Weekdays,
-          startTime: '08:00',
-          endTime: '09:00',
+          sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
         }),
       ).rejects.toThrow('Activity with id act-0-0-0-99 not found')
     })
