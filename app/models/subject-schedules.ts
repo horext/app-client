@@ -6,6 +6,29 @@ import type {
   ISubjectSchedules,
 } from '~/interfaces/subject'
 
+const convertSubject = (subject: ISubject): ISubject => ({
+  id: subject.id,
+  course: {
+    id: subject.course.id,
+    name: subject.course.name,
+  },
+  type: {
+    id: subject.type.id,
+    name: subject.type.name,
+    code: subject.type.code,
+  },
+  studyPlan: {
+    id: subject.studyPlan.id,
+    fromDate: subject.studyPlan.fromDate,
+    code: subject.studyPlan.code,
+    organizationUnit: {
+      id: subject.studyPlan.organizationUnit.id,
+    },
+  },
+  credits: subject.credits,
+  cycle: subject.cycle,
+})
+
 const convertSchedule = (s: ISubjectSchedule): ISubjectSchedule => ({
   id: s.id,
   scheduleSubject: {
@@ -58,7 +81,7 @@ export class SubjectSchedules<ID extends UUID | undefined = UUID> {
 
   toCreateRequest() {
     return {
-      subject: this.subject,
+      subject: convertSubject(this.subject),
       schedules: this.schedules.map(convertSchedule),
       color: this.color,
     }
