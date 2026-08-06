@@ -94,6 +94,7 @@ import type {
   IActivitySession,
   IBaseActivity,
 } from '~/interfaces/event'
+import { Activity } from '~/models/Activity'
 
 const _props = withDefaults(
   defineProps<{
@@ -114,27 +115,15 @@ const dialog = defineModel<boolean>()
 
 const { event } = toRefs(_props)
 
-const newActivity = (): IBaseActivity & { id?: IActivity['id'] } => ({
-  title: '',
-  description: '',
-  location: '',
-  color: '#1976d2',
-  allowOverlap: true,
-  sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-})
-
-const internalEvent = ref(newActivity())
+const internalEvent = ref(new Activity())
 
 watch(
   event,
   (newVal) => {
     if (newVal) {
-      internalEvent.value = {
-        ...newVal,
-        sessions: newVal.sessions.map((session) => ({ ...session })),
-      }
+      internalEvent.value = new Activity(newVal)
     } else {
-      internalEvent.value = newActivity()
+      internalEvent.value = new Activity()
     }
   },
   { immediate: true },
@@ -174,7 +163,12 @@ const form = ref<VForm>()
 const save = async () => {
   const validate = await form.value?.validate()
   if (!validate?.valid) return
-  emit('save:event', internalEvent.value)
+  emit(
+    'save:event',
+    internalEvent.value.id
+      ? internalEvent.value.toUpdateRequest()
+      : internalEvent.value.toCreateRequest(),
+  )
 }
 
 const weekdays = [
