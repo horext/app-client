@@ -11,7 +11,7 @@ import {
 } from '../app/repositories/indexed-db-schedules.repository'
 import { IndexedDBSubjectsRepository } from '../app/repositories/indexed-db-subjects.repository'
 
-const DB_NAME = 'horext'
+const DB_NAME = 'horext-app'
 const DB_VERSION = Math.max(...schemaMigrations.map((m) => m.version))
 
 export default defineNuxtPlugin({

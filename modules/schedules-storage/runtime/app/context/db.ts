@@ -1,6 +1,9 @@
 import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type { InjectionKey } from 'vue'
-import type { IFavoriteSchedule, IScheduleGenerate } from '../../shared/interfaces/schedule'
+import type {
+  IFavoriteSchedule,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
 import type { IActivity } from '../../shared/interfaces/event'
 import type { IUserProfile } from '../../shared/interfaces/profile'
 import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
@@ -11,7 +14,6 @@ import { schemaMigrations } from '../migrations/schema'
 
 export const enum StoresDB {
   SCHEDULES = 'schedules',
-  MIGRATIONS = 'migrations',
   ACTIVITIES = 'activities',
   FAVORITES = 'favorites',
   PROFILE = 'profile',
@@ -25,10 +27,6 @@ export interface HorextDB extends DBSchema {
     key: IScheduleGenerate['id']
     value: IScheduleGenerate
     indexes: { scheduleSubjectKey: string }
-  }
-  [StoresDB.MIGRATIONS]: {
-    key: string
-    value: { id: string; appliedAt: string; error?: string }
   }
   [StoresDB.ACTIVITIES]: {
     key: IActivity['id']
