@@ -108,10 +108,8 @@ describe('useUserEventsStore', () => {
         id: '1' as UUID,
         title: 'event',
         color: '#fff',
-        day: 1,
+        sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
         type: 'MY_EVENT',
-        startTime: '08:00',
-        endTime: '09:00',
         category: 'MY_EVENT',
       } satisfies IActivity,
     ])
@@ -124,10 +122,8 @@ describe('useUserEventsStore', () => {
       id: '1' as UUID,
       title: 'event',
       color: '#fff',
-      day: 1,
+      sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
       type: 'MY_EVENT',
-      startTime: '08:00',
-      endTime: '09:00',
       category: 'MY_EVENT',
     }
     store.setItems([item])
@@ -142,10 +138,8 @@ describe('useUserEventsStore', () => {
         id: '1' as UUID,
         title: 'event',
         color: '#fff',
-        day: 1,
+        sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
         type: 'MY_EVENT',
-        startTime: '08:00',
-        endTime: '09:00',
         category: 'MY_EVENT',
       } satisfies IActivity,
     ])
@@ -153,10 +147,8 @@ describe('useUserEventsStore', () => {
       id: '99' as UUID,
       title: 'x',
       color: '#000',
-      day: 1,
+      sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
       type: 'MY_EVENT',
-      startTime: '08:00',
-      endTime: '09:00',
       category: 'MY_EVENT',
     })
     expect(store.items[0]!.title).toBe('event')
@@ -169,10 +161,8 @@ describe('useUserEventsStore', () => {
         id: '1' as UUID,
         title: 'event',
         color: '#fff',
-        day: 1,
+        sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
         type: 'MY_EVENT',
-        startTime: '08:00',
-        endTime: '09:00',
         category: 'MY_EVENT',
       } satisfies IActivity,
     ])

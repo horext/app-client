@@ -39,9 +39,9 @@
           <v-badge :color="item.color" />
         </template>
         <template #[`item.schedule`]="{ item }">
-          <div>
-            {{ WEEK_DAYS_NAMES[item.day] }} : {{ item.startTime }} -
-            {{ item.endTime }}
+          <div v-for="(session, index) in item.sessions" :key="index">
+            {{ WEEK_DAYS_NAMES[session.day] }} : {{ session.startTime }} -
+            {{ session.endTime }}
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -65,8 +65,7 @@
 import { ref } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
-import type { Activity } from '~/models/Event'
-import type { IActivity } from '~/interfaces/event'
+import type { IActivity, IBaseActivity } from '~/interfaces/event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
@@ -116,7 +115,7 @@ const closeDelete = () => {
   dialogDelete.value = false
 }
 
-const save = async (event: Activity) => {
+const save = async (event: IBaseActivity & { id?: IActivity['id'] }) => {
   if (event.id) {
     await updateItem(event)
     succcesUpdateEvent.value = true

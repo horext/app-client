@@ -26,26 +26,49 @@
             label="Permitir superposición con otras actividades o sesiones de clases"
             hide-details
           />
-          <v-autocomplete
-            v-model="internalEvent.day"
-            :items="weekdays"
-            item-value="index"
-            item-title="value"
-            label="Dia"
-            :rules="[rules.requiredDay]"
-          />
-          <v-text-field
-            v-model="internalEvent.startTime"
-            label="Hora de Inicio"
-            type="time"
-            :rules="startRules"
-          />
-          <v-text-field
-            v-model="internalEvent.endTime"
-            label="Hora de Fin"
-            type="time"
-            :rules="endRules"
-          />
+          <div
+            v-for="(session, index) in internalEvent.sessions"
+            :key="index"
+            class="mb-4"
+          >
+            <div class="d-flex align-center">
+              <strong>Sesión {{ index + 1 }}</strong>
+              <v-spacer />
+              <v-btn
+                v-if="internalEvent.sessions.length > 1"
+                icon="mdi-delete"
+                size="small"
+                variant="text"
+                aria-label="Eliminar sesión"
+                @click="removeSession(index)"
+              />
+            </div>
+            <v-autocomplete
+              v-model="session.day"
+              :items="weekdays"
+              item-value="index"
+              item-title="value"
+              label="Día"
+              :rules="[rules.requiredDay]"
+            />
+            <div class="d-flex ga-3">
+              <v-text-field
+                v-model="session.startTime"
+                label="Hora de Inicio"
+                type="time"
+                :rules="sessionStartRules(session)"
+              />
+              <v-text-field
+                v-model="session.endTime"
+                label="Hora de Fin"
+                type="time"
+                :rules="sessionEndRules(session)"
+              />
+            </div>
+          </div>
+          <v-btn prepend-icon="mdi-plus" variant="tonal" @click="addSession"
+            >Agregar sesión</v-btn
+          >
           <v-color-picker
             v-model="internalEvent.color"
             class="ma-2"
@@ -65,9 +88,12 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch, toRefs } from 'vue'
-import { Activity } from '~/models/Event'
 import type { VForm } from 'vuetify/components/VForm'
-import type { IActivity } from '~/interfaces/event'
+import type {
+  IActivity,
+  IActivitySession,
+  IBaseActivity,
+} from '~/interfaces/event'
 
 const _props = withDefaults(
   defineProps<{
@@ -80,7 +106,7 @@ const _props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (name: 'save:event', event: Activity): void
+  (name: 'save:event', event: IBaseActivity & { id?: IActivity['id'] }): void
   (name: 'cancel'): void
 }>()
 
@@ -88,62 +114,60 @@ const dialog = defineModel<boolean>()
 
 const { event } = toRefs(_props)
 
-const internalEvent = ref(new Activity())
+const newActivity = (): IBaseActivity & { id?: IActivity['id'] } => ({
+  title: '',
+  description: '',
+  location: '',
+  color: '#1976d2',
+  allowOverlap: true,
+  sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
+})
+
+const internalEvent = ref(newActivity())
 
 watch(
   event,
   (newVal) => {
     if (newVal) {
-      internalEvent.value = Activity.buildActivityFrom(newVal)
+      internalEvent.value = {
+        ...newVal,
+        sessions: newVal.sessions.map((session) => ({ ...session })),
+      }
     } else {
-      internalEvent.value = new Activity()
+      internalEvent.value = newActivity()
     }
   },
   { immediate: true },
 )
 
-const startTime = computed(() => {
-  return internalEvent.value.startTime
-})
-const endTime = computed(() => {
-  return internalEvent.value.endTime
-})
 const rules = computed(() => ({
   required: (value: unknown) => !!value || 'Requerido.',
   requiredDay: (value: number) => (value >= 0 && value <= 6) || 'Requerido.',
-  max: (value: string) =>
-    value < endTime.value || 'Tiene que ser menor que el fin',
-  min: (value: string) =>
-    value > startTime.value || 'Tiene que ser mayor que el inicio',
 }))
 
-const startRules = computed(() => {
-  const rules: (
-    | ((value: unknown) => boolean | string)
-    | ((value: string) => boolean | string)
-  )[] = [(value: unknown) => !!value || 'Requerido.']
-  if (endTime.value < startTime.value) {
-    rules.push(
-      (value: string) =>
-        value < endTime.value || 'Tiene que ser menor que el fin',
-    )
-  }
-  return rules
-})
+const sessionStartRules = (session: IActivitySession) => [
+  (value: unknown) => !!value || 'Requerido.',
+  (value: string) =>
+    value < session.endTime || 'Tiene que ser menor que el fin',
+]
 
-const endRules = computed(() => {
-  const rules: (
-    | ((value: unknown) => boolean | string)
-    | ((value: string) => boolean | string)
-  )[] = [(value: unknown) => !!value || 'Requerido.']
-  if (startTime.value > endTime.value) {
-    rules.push(
-      (value: string) =>
-        value > startTime.value || 'Tiene que ser mayor que el inicio',
-    )
-  }
-  return rules
-})
+const sessionEndRules = (session: IActivitySession) => [
+  (value: unknown) => !!value || 'Requerido.',
+  (value: string) =>
+    value > session.startTime || 'Tiene que ser mayor que el inicio',
+]
+
+const addSession = () => {
+  internalEvent.value.sessions.push({
+    day: 1,
+    startTime: '08:00',
+    endTime: '10:00',
+  })
+}
+
+const removeSession = (index: number) => {
+  internalEvent.value.sessions.splice(index, 1)
+}
 
 const form = ref<VForm>()
 

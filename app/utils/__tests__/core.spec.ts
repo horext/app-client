@@ -65,12 +65,10 @@ function makeActivity(
   return {
     id,
     title: `Event ${id}`,
-    day,
+    sessions: [{ day, startTime, endTime }],
     color: '#ff0000',
     type: 'MY_EVENT',
     category: 'MY_EVENT',
-    startTime,
-    endTime,
     allowOverlap,
   }
 }
@@ -705,12 +703,10 @@ describe('getSchedules', () => {
         const legacyBaseEvent: IActivity = {
           id: '00000000-0000-0000-0000-000000000011' as UUID,
           title: 'Legacy event',
-          day: MON,
+          sessions: [{ day: MON, ...T_09_11 }],
           color: '#ff0000',
           type: 'MY_EVENT',
           category: 'MY_EVENT',
-          startTime: T_09_11.startTime,
-          endTime: T_09_11.endTime,
         }
         const result = getSchedules([subject], [legacyBaseEvent], {
           crossingSubjects: 1,

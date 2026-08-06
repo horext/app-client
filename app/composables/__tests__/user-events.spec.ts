@@ -6,7 +6,6 @@ import type { UUID } from 'crypto'
 import { useUserEventsStore } from '~/stores/user-events'
 
 import { useUserEvents } from '../user-events'
-import { Activity } from '~/models/Event'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -22,15 +21,15 @@ mockNuxtImport('useActivitiesService', () =>
   })),
 )
 
-function makeActivity(): Activity {
-  return Activity.buildActivityFrom({
-    day: 1,
-    startTime: '08:00',
-    endTime: '10:00',
+function makeActivity(): IActivity {
+  return {
+    sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
     color: '#1976d2',
     id: crypto.randomUUID(),
     title: 'Test Activity',
-  })
+    type: 'MY_EVENT',
+    category: 'MY_EVENT',
+  }
 }
 
 describe('useUserEvents', () => {
@@ -75,7 +74,7 @@ describe('useUserEvents', () => {
     store.items = [activityWithId as IActivity]
     mockUpdateById.mockResolvedValue(activityWithId)
     const { updateItem, items } = useUserEvents()
-    await updateItem(activityWithId as Activity)
+    await updateItem(activityWithId)
     expect(mockUpdateById).toHaveBeenCalled()
     expect(items.value).toContainEqual(activityWithId)
   })
@@ -83,7 +82,7 @@ describe('useUserEvents', () => {
   it('updateItem does nothing when id is falsy', async () => {
     const activityNoId = { ...makeActivity(), id: undefined }
     const { updateItem } = useUserEvents()
-    await updateItem(activityNoId as Activity)
+    await updateItem(activityNoId)
     expect(mockUpdateById).not.toHaveBeenCalled()
   })
 

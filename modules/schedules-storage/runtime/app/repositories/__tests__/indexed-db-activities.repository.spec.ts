@@ -1,14 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { UUID } from 'crypto'
-import type { Weekdays, IActivity, IBaseActivity  } from '../../../shared/interfaces/event'
+import type { IActivity, IBaseActivity } from '../../../shared/interfaces/event'
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
 
 const baseActivity: IBaseActivity = {
   title: 'Math',
-  day: 1 as Weekdays,
+  sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
   color: '#fff',
-  startTime: '08:00',
-  endTime: '10:00',
 }
 
 const activity: IActivity = {

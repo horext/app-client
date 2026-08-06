@@ -58,12 +58,12 @@ function makeActivity(
   return {
     id,
     title: `Act ${id}`,
-    day: day as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+    sessions: [
+      { day: day as 0 | 1 | 2 | 3 | 4 | 5 | 6, startTime: start, endTime: end },
+    ],
     color: '#f00',
     type: 'MY_EVENT',
     category: 'MY_EVENT',
-    startTime: start,
-    endTime: end,
   }
 }
 
@@ -94,7 +94,12 @@ describe('small — 3×3 = 27 combos, no conflicts', () => {
   const subjects = [1, 2, 3].map((id) =>
     makeSubject(
       id,
-      [1, 2, 3].map((d) => ({ id: id * 10 + d, day: d, start: T(8), end: T(10) })),
+      [1, 2, 3].map((d) => ({
+        id: id * 10 + d,
+        day: d,
+        start: T(8),
+        end: T(10),
+      })),
     ),
   )
   bench('getSchedules', () => {
@@ -115,19 +120,19 @@ describe('large — 9×3-4 = ~82944 combos, some conflicts', () => {
   const subjects = [
     // ── 4-section subjects ───────────────────────────────────────────────────
     makeSubject(1, [
-      { id: 1001, day: 1, start: T(8),  end: T(10) },
+      { id: 1001, day: 1, start: T(8), end: T(10) },
       { id: 1002, day: 2, start: T(10), end: T(12) },
-      { id: 1003, day: 3, start: T(8),  end: T(10) },
+      { id: 1003, day: 3, start: T(8), end: T(10) },
       { id: 1004, day: 4, start: T(14), end: T(16) },
     ]),
     makeSubject(2, [
       { id: 2001, day: 1, start: T(10), end: T(12) },
-      { id: 2002, day: 2, start: T(8),  end: T(10) },
+      { id: 2002, day: 2, start: T(8), end: T(10) },
       { id: 2003, day: 3, start: T(14), end: T(16) },
-      { id: 2004, day: 5, start: T(8),  end: T(10) },
+      { id: 2004, day: 5, start: T(8), end: T(10) },
     ]),
     makeSubject(3, [
-      { id: 3001, day: 1, start: T(8),  end: T(10) }, // conflicts s1-1001
+      { id: 3001, day: 1, start: T(8), end: T(10) }, // conflicts s1-1001
       { id: 3002, day: 2, start: T(12), end: T(14) },
       { id: 3003, day: 4, start: T(10), end: T(12) },
       { id: 3004, day: 5, start: T(14), end: T(16) },
@@ -135,7 +140,7 @@ describe('large — 9×3-4 = ~82944 combos, some conflicts', () => {
     makeSubject(4, [
       { id: 4001, day: 1, start: T(14), end: T(16) },
       { id: 4002, day: 3, start: T(10), end: T(12) },
-      { id: 4003, day: 4, start: T(8),  end: T(10) },
+      { id: 4003, day: 4, start: T(8), end: T(10) },
       { id: 4004, day: 5, start: T(10), end: T(12) },
     ]),
     makeSubject(5, [
@@ -148,7 +153,7 @@ describe('large — 9×3-4 = ~82944 combos, some conflicts', () => {
     makeSubject(6, [
       { id: 6001, day: 1, start: T(12), end: T(14) },
       { id: 6002, day: 3, start: T(10), end: T(12) }, // conflicts s4-4002
-      { id: 6003, day: 5, start: T(8),  end: T(10) }, // conflicts s2-2004
+      { id: 6003, day: 5, start: T(8), end: T(10) }, // conflicts s2-2004
     ]),
     makeSubject(7, [
       { id: 7001, day: 2, start: T(14), end: T(16) },
@@ -157,18 +162,28 @@ describe('large — 9×3-4 = ~82944 combos, some conflicts', () => {
     ]),
     makeSubject(8, [
       { id: 8001, day: 1, start: T(16), end: T(18) },
-      { id: 8002, day: 2, start: T(8),  end: T(10) }, // conflicts s2-2002
+      { id: 8002, day: 2, start: T(8), end: T(10) }, // conflicts s2-2002
       { id: 8003, day: 5, start: T(12), end: T(14) },
     ]),
     makeSubject(9, [
       { id: 9001, day: 1, start: T(10), end: T(12) }, // conflicts s2-2001
-      { id: 9002, day: 3, start: T(8),  end: T(10) }, // conflicts s1-1003
+      { id: 9002, day: 3, start: T(8), end: T(10) }, // conflicts s1-1003
       { id: 9003, day: 5, start: T(14), end: T(16) }, // conflicts s3-3004
     ]),
   ]
   const acts = [
-    makeActivity('00000000-0000-0000-0000-000000000010' as UUID, 3, T(14), T(16)),
-    makeActivity('00000000-0000-0000-0000-000000000011' as UUID, 5, T(10), T(12)),
+    makeActivity(
+      '00000000-0000-0000-0000-000000000010' as UUID,
+      3,
+      T(14),
+      T(16),
+    ),
+    makeActivity(
+      '00000000-0000-0000-0000-000000000011' as UUID,
+      5,
+      T(10),
+      T(12),
+    ),
   ]
   bench('getSchedules', () => {
     getSchedules(subjects, acts, DEFAULT_OPTIONS)
@@ -180,7 +195,12 @@ describe('conflicts — 5×4 = 1024 combos, all same-slot overlap', () => {
   const subjects = [1, 2, 3, 4, 5].map((id) =>
     makeSubject(
       id,
-      [1, 2, 3, 4].map((d) => ({ id: id * 10 + d, day: 1, start: T(8), end: T(10) })),
+      [1, 2, 3, 4].map((d) => ({
+        id: id * 10 + d,
+        day: 1,
+        start: T(8),
+        end: T(10),
+      })),
     ),
   )
   bench('getSchedules', () => {
@@ -190,7 +210,14 @@ describe('conflicts — 5×4 = 1024 combos, all same-slot overlap', () => {
 
 describe('medium — 5×4 = 1024 combos, 1 activity', () => {
   const subjects = makeMedium()
-  const acts = [makeActivity('00000000-0000-0000-0000-000000000001' as UUID, 1, T(8), T(10))]
+  const acts = [
+    makeActivity(
+      '00000000-0000-0000-0000-000000000001' as UUID,
+      1,
+      T(8),
+      T(10),
+    ),
+  ]
   bench('getSchedules', () => {
     getSchedules(subjects, acts, DEFAULT_OPTIONS)
   })
