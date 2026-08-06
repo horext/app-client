@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@mdi/js": "^7.4.47",
-    "@nuxt/devtools": "4.0.0-alpha.4",
+    "@nuxt/devtools": "4.0.0-alpha.7",
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/eslint-config": "^1.15.2",
     "@nuxt/scripts": "^1.1.0",
