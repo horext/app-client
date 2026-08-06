@@ -1,6 +1,10 @@
 <template>
   <v-container fluid>
-    <v-dialog :model-value="!setupCompleted" max-width="600" persistent>
+    <v-dialog
+      :model-value="!loadingProfile && !setupCompleted"
+      max-width="600"
+      persistent
+    >
       <InitialForm :loading="loading" @submit="onSubmit" />
     </v-dialog>
     <base-alert-dialog v-model="isNewHourlyLoad">
@@ -16,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import InitialForm from '~/components/setting/Initial.vue'
 
@@ -29,8 +33,13 @@ useSeoMeta({
   description: 'Genera tu horario de clases de manera sencilla',
 })
 
-const { setupCompleted, isNewHourlyLoad, isUpdateHourlyLoad, completeSetup } =
-  useUserProfile()
+const {
+  loadingProfile,
+  setupCompleted,
+  isNewHourlyLoad,
+  isUpdateHourlyLoad,
+  completeSetup,
+} = useUserProfile()
 
 const router = useRouter()
 
@@ -42,15 +51,13 @@ const onSubmit = async (
   hourlyLoad: IHourlyLoad,
 ) => {
   loading.value = true
-  await completeSetup(facultyId, specialityId, hourlyLoad)
-  loading.value = false
-}
-
-watch(setupCompleted, async (newValue, oldValue) => {
-  if (!oldValue && newValue) {
+  try {
+    await completeSetup(facultyId, specialityId, hourlyLoad)
     await router.push('/generator/subjects')
+  } finally {
+    loading.value = false
   }
-})
+}
 </script>
 
 <style scoped></style>
