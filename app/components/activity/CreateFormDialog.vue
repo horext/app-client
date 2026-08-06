@@ -94,7 +94,7 @@ import type {
   IActivitySession,
   IBaseActivity,
 } from '~/interfaces/event'
-import { ActivityForm } from '~/models/Activity'
+import { Activity } from '~/models/Activity'
 
 const _props = withDefaults(
   defineProps<{
@@ -115,15 +115,15 @@ const dialog = defineModel<boolean>()
 
 const { event } = toRefs(_props)
 
-const internalEvent = ref(new ActivityForm())
+const internalEvent = ref(new Activity())
 
 watch(
   event,
   (newVal) => {
     if (newVal) {
-      internalEvent.value = new ActivityForm(newVal)
+      internalEvent.value = new Activity(newVal)
     } else {
-      internalEvent.value = new ActivityForm()
+      internalEvent.value = new Activity()
     }
   },
   { immediate: true },

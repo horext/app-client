@@ -6,7 +6,7 @@ import type {
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
 import { EVENT_COLORS } from '~/constants/event'
-import { Activity, SubjectSessionEvent } from '~/models/Event'
+import { ActivitySessionEvent, SubjectSessionEvent } from '~/models/Event'
 import type { UUID } from 'crypto'
 
 export type ScheduleOptions = {
@@ -35,7 +35,9 @@ export function getSchedules(
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
   const generatedSchedules: Array<ILocalScheduleGenerate> = []
-  const baseEvents = activities.flatMap(Activity.buildActivitiesFrom)
+  const baseEvents = activities.flatMap(
+    ActivitySessionEvent.buildActivitiesFrom,
+  )
 
   const advanceIndex = (start: number) => {
     let i = start
@@ -76,10 +78,10 @@ export function getSchedules(
     for (let j = 0; j < scheduleSubjectsEvents.length; j++) {
       const currentScheduleSubjectEvents = scheduleSubjectsEvents[j]!
       const restScheduleScheduleEvents: Array<
-        SubjectSessionEvent | Activity<UUID>
+        SubjectSessionEvent | ActivitySessionEvent<UUID>
       > = scheduleSubjectsEvents
         .slice(j + 1)
-        .flat<Array<SubjectSessionEvent | Activity<UUID>>[]>()
+        .flat<Array<SubjectSessionEvent | ActivitySessionEvent<UUID>>[]>()
         .concat(baseEvents)
 
       for (const scheduleSubjectEvent of currentScheduleSubjectEvents) {
@@ -146,7 +148,7 @@ export function getSchedules(
         schedulesSubject: scheduleSubjects,
         crossings: crossingCombination,
         events: scheduleSubjectsEvents
-          .flat<Array<SubjectSessionEvent | Activity<UUID>>[]>()
+          .flat<Array<SubjectSessionEvent | ActivitySessionEvent<UUID>>[]>()
           .concat(baseEvents),
       })
     }

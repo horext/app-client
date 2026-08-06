@@ -5,7 +5,7 @@ import type {
   IBaseActivity,
 } from '~/interfaces/event'
 
-export class ActivityForm {
+export class Activity {
   id?: UUID
   title: string
   description?: string

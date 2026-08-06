@@ -1,10 +1,5 @@
 import type { UUID } from 'crypto'
-import type {
-  IActivity,
-  IActivitySession,
-  IEvent,
-  Weekdays,
-} from '~/interfaces/event'
+import type { IActivity, IEvent, Weekdays } from '~/interfaces/event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
 export enum EventCategory {
@@ -67,11 +62,10 @@ export default abstract class Event<ID extends string | undefined = string> {
   }
 }
 
-export class Activity<
-  ID extends string | undefined = UUID | undefined,
+export class ActivitySessionEvent<
+  ID extends UUID | undefined = UUID | undefined,
 > extends Event<ID> {
   allowOverlap: boolean
-  sessions: IActivitySession[]
 
   constructor(
     day: Weekdays = 1,
@@ -83,7 +77,6 @@ export class Activity<
     color = '#1976d2',
     allowOverlap = true,
     id: ID = undefined as ID,
-    sessions?: IActivitySession[],
   ) {
     super(
       day,
@@ -98,9 +91,6 @@ export class Activity<
       id,
     )
     this.allowOverlap = allowOverlap
-    this.sessions = sessions?.length
-      ? sessions.map((session) => ({ ...session }))
-      : [{ day, startTime, endTime }]
   }
 
   get hasActivityCrossingRestriction() {
@@ -115,8 +105,8 @@ export class Activity<
     const sessions = event.sessions
 
     return sessions.map(
-      (session, index) =>
-        new Activity(
+      (session) =>
+        new ActivitySessionEvent(
           session.day,
           session.startTime,
           session.endTime,
@@ -125,8 +115,7 @@ export class Activity<
           event.location,
           event.color,
           event.allowOverlap ?? true,
-          `${event.id}:${index}`,
-          sessions,
+          crypto.randomUUID(),
         ),
     )
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Activity, SubjectSessionEvent } from '../Event'
+import { ActivitySessionEvent, SubjectSessionEvent } from '../Event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
 function makeSchedule(
@@ -209,7 +209,7 @@ describe('CourseEvent.buildFromSchedule', () => {
 })
 
 function makeActivity(startTime: string, endTime: string) {
-  return new Activity(1, startTime, endTime)
+  return new ActivitySessionEvent(1, startTime, endTime)
 }
 
 describe('Event.intersects', () => {
