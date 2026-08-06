@@ -1,5 +1,5 @@
 import type { UUID } from 'node:crypto'
-import type { Weekdays } from '../../shared/interfaces/event'
+import type { IActivity, Weekdays } from '../../shared/interfaces/event'
 import type { Migration, MigrationContext } from './types'
 import { readLsJson } from './utils'
 import { StoresDB } from '../context/db'
@@ -27,7 +27,7 @@ async function up({ db }: MigrationContext) {
         ...e,
         category: 'MY_EVENT',
         type: 'MY_EVENT',
-      }),
+      } as unknown as IActivity),
     ),
   )
   await tx.done
