@@ -62,7 +62,7 @@ jobs:
       primary_tag: ${{ steps.primary_tag.outputs.tag }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -127,7 +127,7 @@ jobs:
       DOCKER_COMPOSE_TEMPLATE_PATH: deploy/docker-compose.yml
     steps:     
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         
       - name: Create project folder
         uses: appleboy/ssh-action@v1.2.5

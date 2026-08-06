@@ -59,7 +59,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout base branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.setup.outputs.base_sha }}
 
@@ -96,7 +96,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.setup.outputs.head_sha }}
 
