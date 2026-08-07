@@ -8,8 +8,8 @@ import { VTextField } from 'vuetify/components/VTextField'
 import { VAutocomplete } from 'vuetify/components/VAutocomplete'
 import { VCheckbox } from 'vuetify/components/VCheckbox'
 import CreateFormDialog from '~/components/activity/CreateFormDialog.vue'
-import { Activity } from '~/models/Event'
 import type { IActivity } from '~/interfaces/event'
+import { Activity } from '~/models/Activity'
 
 vi.stubGlobal('visualViewport', new EventTarget())
 const vuetify = createVuetify()
