@@ -23,3 +23,7 @@ logs
 
 # Coverage
 coverage
+.bench
+
+# tsbuildinfo files
+*.tsbuildinfo

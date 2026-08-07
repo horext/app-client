@@ -1,5 +1,4 @@
 import type { IRegistryItem } from '../interfaces/registry'
-import { ClassSessionApi } from '../resources/class-session'
 import { CourseApi } from '../resources/course'
 import { FacultyApi } from '../resources/faculty'
 import { HourlyLoadApi } from '../resources/hourly-load'
@@ -7,7 +6,6 @@ import { ScheduleSubjectApi } from '../resources/schedule-subject'
 import { SpecialityApi } from '../resources/speciality'
 import { StudyPlanApi } from '../resources/studyPlan'
 import {
-  CLASS_SESSION_API_KEY,
   COURSE_API_KEY,
   FACULTY_API_KEY,
   HOURLY_LOAD_API_KEY,
@@ -17,10 +15,6 @@ import {
 } from './keys'
 
 export const APIS_REGISTRY = [
-  {
-    provide: CLASS_SESSION_API_KEY,
-    use: ClassSessionApi,
-  },
   {
     provide: COURSE_API_KEY,
     use: CourseApi,

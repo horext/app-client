@@ -10,15 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed } from 'vue'
+import { computed } from 'vue'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
-const props = defineProps({
-  schedule: {
-    type: Object as PropType<IScheduleSubjectGenerate>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  schedule: IScheduleSubjectGenerate
+}>()
+
 const { schedule } = toRefs(props)
 const sessionsCount = computed(() => {
   return schedule.value.sessions?.length

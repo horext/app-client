@@ -1,6 +1,7 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "types": ["@types/luxon", "@pinia/nuxt"]
+    "types": ["@types/luxon", "@pinia/nuxt"],
+    "allowJs": true
   }
 }

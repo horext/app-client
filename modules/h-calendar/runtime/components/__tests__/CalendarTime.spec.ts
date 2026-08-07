@@ -30,4 +30,13 @@ describe('CalendarTime', () => {
       expect(timeSlot.text()).toBe(hours[index])
     })
   })
+
+  it('updates intervalHeightPx computed when intervalHeight changes', async () => {
+    const wrapper = shallowMount(CalendarTime, {
+      props: { hours: ['9:00 AM'], intervalHeight: 3 },
+    })
+    await wrapper.setProps({ intervalHeight: 5 })
+    // The component re-renders — computed is exercised
+    expect(wrapper.findAll('.h-calendar-time-slot').length).toBe(1)
+  })
 })

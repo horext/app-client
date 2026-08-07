@@ -3,8 +3,11 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <SettingInitial />
+          <SettingInitial :loading="savingBasic" @submit="saveBasicSettings" />
         </v-card>
+        <base-snackbar v-model="successSave">
+          La configuración se ha guardado correctamente
+        </base-snackbar>
       </v-col>
       <v-col cols="12">
         <v-card>
@@ -38,8 +41,9 @@
 
 <script setup lang="ts">
 import SettingInitial from '~/components/setting/Initial.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserPreferencesStore } from '~/stores/user-preferences'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
 
 useSeoMeta({
   title: 'Configuración - Generador de Horarios',
@@ -47,14 +51,29 @@ useSeoMeta({
     'Configura tu generador de horarios para tener una mejor experiencia',
 })
 
-const store = useUserConfigStore()
+const store = useUserPreferencesStore()
+const { updateBasicSettings } = useUserProfile()
 const { weekDays } = storeToRefs(store)
 const internalWeekDays = ref(weekDays.value)
 watch(weekDays, (value) => {
   internalWeekDays.value = value
 })
 
+const savingBasic = ref(false)
+const successSave = ref(false)
+const saveBasicSettings = async (
+  facultyId: number,
+  specialityId: number,
+  hourlyLoad: IHourlyLoad,
+) => {
+  savingBasic.value = true
+  await updateBasicSettings(facultyId, specialityId, hourlyLoad)
+  savingBasic.value = false
+  successSave.value = true
+}
+
+const { saveWeekDays } = useUserPreferences()
 const save = async () => {
-  await store.saveWeekDays(internalWeekDays.value)
+  await saveWeekDays(internalWeekDays.value)
 }
 </script>

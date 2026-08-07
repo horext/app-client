@@ -27,8 +27,6 @@ import {
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
 import { provideApis } from '~~/modules/apis/runtime'
-import { HOURLY_LOAD_API_KEY } from '~~/modules/apis/runtime/registry/keys'
-import type { IOrganization } from '~/interfaces/organization'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
@@ -38,59 +36,44 @@ const apis = provideApis()
 const settingsStore = useSettingsStore()
 
 const { darkMode } = storeToRefs(settingsStore)
-const store = useUserConfigStore()
+const profileStore = useUserProfileStore()
+const subjectsStore = useUserSubjectsStore()
+const favoritesStore = useUserFavoritesStore()
 const userEventsStore = useUserEventsStore()
-const { hourlyLoad } = storeToRefs(store)
+const { hourlyLoad } = storeToRefs(profileStore)
 
-const { schedules, subjects, favoritesSchedules } = storeToRefs(store)
+const { subjects } = storeToRefs(subjectsStore)
+const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
 
-const hourlyLoadApi = apis.get(HOURLY_LOAD_API_KEY)
-
-async function fetchHourlyLoad(faculty: IOrganization) {
-  try {
-    const data = await hourlyLoadApi.getLatestByFaculty(faculty.id)
-    store.updateHourlyLoad(data)
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-await callOnce('initData', async () => {
-  try {
-    const [_, faculty] = await Promise.all([
-      store.fetchFirstEntry(),
-      store.fetchFaculty(),
-      store.fetchSpeciality(),
-    ])
-    if (faculty) {
-      await fetchHourlyLoad(faculty)
-    }
-  } catch (e) {
-    console.error(e)
-  }
-})
+const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } =
+  useUserProfile(apis)
+const { fetchPreferences } = useUserPreferences()
+const { fetchItems: fetchEvents } = useUserEvents()
 
 const { fetchSubjects } = useUserSubjects()
-const { fetchSchedules } = useUserSchedules()
+const { fetchSchedules, mySchedules } = useUserSchedules()
 
 const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
 
 onMounted(async () => {
-  await fetchSubjects()
-  await fetchSchedules()
-  await store.fetchCrossings()
-  await fetchFavoritesSchedules()
-  await userEventsStore.fetchItems()
-  await store.fetchMyOcurrences()
-  await store.fetchWeekDays()
+  await Promise.all([fetchProfile(), fetchAcademicConfig(), fetchPreferences()])
+  if (profileStore.facultyId) {
+    await fetchLatestHourlyLoad(profileStore.facultyId)
+  }
+  await Promise.all([
+    fetchSubjects(),
+    fetchSchedules(),
+    fetchFavoritesSchedules(),
+    fetchEvents(),
+  ])
 })
 const drawer = ref(true)
 const items = computed(() => [
   HOME_ROUTE,
   {
     ...GENERATOR_ROUTE,
-    badge: schedules.value.length,
+    badge: mySchedules.value.length,
   },
   {
     ...FAVORITES_ROUTE,
@@ -110,7 +93,7 @@ const items = computed(() => [
 const denseItems = computed(() => [
   {
     ...GENERATOR_ROUTE,
-    badge: schedules.value.length,
+    badge: mySchedules.value.length,
   },
   {
     ...FAVORITES_ROUTE,

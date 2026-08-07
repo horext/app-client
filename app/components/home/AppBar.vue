@@ -3,7 +3,11 @@
     <vuetify-logo style="max-width: 48px" />
     <v-toolbar-title class="text-headline-small"> Horext </v-toolbar-title>
     <v-spacer />
-    <v-btn icon aria-label="Cambiar modo" @click="invertMode">
+    <v-btn
+      icon
+      aria-label="Cambiar modo"
+      @click="emit('click:invert-mode', $event)"
+    >
       <v-icon>{{ mdiBrightness6 }}</v-icon>
     </v-btn>
     <v-tabs class="hidden-sm-and-down">
@@ -22,7 +26,7 @@
     </v-tabs>
 
     <v-btn
-      v-if="!authStore.isLoggedIn"
+      v-if="!isLoggedIn"
       color="primary"
       variant="flat"
       rounded="lg"
@@ -46,8 +50,13 @@
 import VuetifyLogo from '../VuetifyLogo.vue'
 import { mdiBrightness6 } from '@mdi/js'
 
-const settingsStore = useSettingsStore()
-const authStore = useUserAuthStore()
+defineProps<{
+  isLoggedIn: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'click:invert-mode', event: MouseEvent): void
+}>()
 
 const drawer = ref(false)
 
@@ -60,23 +69,4 @@ const items = [
   { name: 'Generador', route: '/generator' },
   { name: 'Acerca de ', route: '/about' },
 ]
-
-const invertMode = () => {
-  settingsStore.toggleDarkMode()
-}
 </script>
-
-<style scoped lang="sass">
-#home-app-bar
-  .v-tabs
-    flex: 0 auto
-    width: fit-content
-
-  .v-tabs-slider
-    max-width: 24px
-    margin: 0 auto
-
-  .v-tab
-    width: fit-content
-    &::before
-      display: none</style>

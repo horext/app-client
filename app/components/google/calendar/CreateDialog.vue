@@ -1,6 +1,8 @@
 <template>
   <v-card :loading="loading" :disabled="loading">
-    <v-card-title class="text-headline-medium"> Crea un nuevo calendario </v-card-title>
+    <v-card-title class="text-headline-medium">
+      Crea un nuevo calendario
+    </v-card-title>
 
     <v-card-text>
       <v-form ref="form">

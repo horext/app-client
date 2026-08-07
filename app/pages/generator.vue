@@ -1,7 +1,11 @@
 <template>
   <v-container fluid>
-    <v-dialog v-model="firstEntry" max-width="600" persistent>
-      <InitialSettings />
+    <v-dialog
+      :model-value="!loadingProfile && !setupCompleted"
+      max-width="600"
+      persistent
+    >
+      <InitialForm :loading="loading" @submit="onSubmit" />
     </v-dialog>
     <base-alert-dialog v-model="isNewHourlyLoad">
       Se ha encontrado una nueva carga horaria. Actualiza las secciones de los
@@ -16,10 +20,9 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { watch } from 'vue'
-import InitialSettings from '~/components/setting/Initial.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { ref } from 'vue'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import InitialForm from '~/components/setting/Initial.vue'
 
 definePageMeta({
   layout: 'app',
@@ -30,17 +33,31 @@ useSeoMeta({
   description: 'Genera tu horario de clases de manera sencilla',
 })
 
-const configStore = useUserConfigStore()
+const {
+  loadingProfile,
+  setupCompleted,
+  isNewHourlyLoad,
+  isUpdateHourlyLoad,
+  completeSetup,
+} = useUserProfile()
+
 const router = useRouter()
 
-const { firstEntry, isNewHourlyLoad, isUpdateHourlyLoad } =
-  storeToRefs(configStore)
+const loading = ref(false)
 
-watch(firstEntry, async (newValue, oldValue) => {
-  if (oldValue && !newValue) {
+const onSubmit = async (
+  facultyId: number,
+  specialityId: number,
+  hourlyLoad: IHourlyLoad,
+) => {
+  loading.value = true
+  try {
+    await completeSetup(facultyId, specialityId, hourlyLoad)
     await router.push('/generator/subjects')
+  } finally {
+    loading.value = false
   }
-})
+}
 </script>
 
 <style scoped></style>

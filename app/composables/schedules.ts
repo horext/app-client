@@ -1,11 +1,14 @@
-import type { IEvent } from '~/interfaces/event'
+import type { IActivity } from '~/interfaces/event'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { ISelectedSubject, ISubjectSchedule } from '~/interfaces/subject'
+import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedule,
+} from '~/interfaces/subject'
 import CoreWorker from '@/assets/workers/core?worker'
 
-export const useSchedules = () => {
-  const worker = ref<Worker | null>(null)
+export const useSchedulesGenerator = () => {
+  const worker = shallowRef<Worker | null>(null)
   onMounted(() => {
     worker.value = new CoreWorker()
   })
@@ -15,14 +18,14 @@ export const useSchedules = () => {
   })
 
   const loadSchedulesViaWorker = (
-    subjects: Array<ISelectedSubject>,
-    myEvents: Array<IEvent>,
+    subjects: Array<IBaseSubjectSchedules>,
+    myEvents: Array<IActivity>,
     options: ScheduleOptions,
   ) => {
     return new Promise<{
       occurrences: IIntersectionOccurrence[]
       schedules: ISubjectSchedule[]
-      combinations: IScheduleGenerate[]
+      combinations: ILocalScheduleGenerate[]
     }>((resolve, reject) => {
       if (!worker.value) reject('Not loaded worker')
       worker.value?.addEventListener(
@@ -31,7 +34,7 @@ export const useSchedules = () => {
           e: MessageEvent<{
             occurrences: IIntersectionOccurrence[]
             schedules: ISubjectSchedule[]
-            combinations: IScheduleGenerate[]
+            combinations: ILocalScheduleGenerate[]
           }>,
         ) => {
           if (!e.data) reject('No data')
@@ -46,16 +49,16 @@ export const useSchedules = () => {
   }
 
   const loadSchedules = (
-    subjects: Array<ISelectedSubject>,
-    myEvents: Array<IEvent>,
+    subjects: Array<IBaseSubjectSchedules>,
+    myEvents: Array<IActivity>,
     options: ScheduleOptions,
   ) => {
-    try {
-      return loadSchedulesViaWorker(subjects, myEvents, options)
-    } catch (error) {
-      console.error(error)
-      return getSchedules(subjects, myEvents, options)
-    }
+    return loadSchedulesViaWorker(subjects, myEvents, options).catch(
+      (error) => {
+        console.error(error)
+        return getSchedules(subjects, myEvents, options)
+      },
+    )
   }
 
   return { loadSchedules }

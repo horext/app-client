@@ -1,4 +1,4 @@
-import importMap from 'vuetify/dist/json/importMap.json' assert { type: 'json' }
+import importMap from 'vuetify/dist/json/importMap.json'
 import {
   defineNuxtModule,
   addComponent,
@@ -42,9 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
       addComponent({
         name: component,
         export: component,
-        filePath:
-          'vuetify/' +
-          componentData.from.replace(/\/index\.mjs$/, ''),
+        filePath: 'vuetify/' + componentData.from.replace(/\/index\.mjs$/, ''),
       })
     }
 

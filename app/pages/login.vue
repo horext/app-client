@@ -50,7 +50,14 @@ const { setUser } = useUserAuthStore()
 async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
 ) {
-  const result = await $fetch<{ body: { email?: string; name?: string; picture?: string; isUniversityEmail?: boolean } }>('/auth/verify', {
+  const result = await $fetch<{
+    body: {
+      email?: string
+      name?: string
+      picture?: string
+      isUniversityEmail?: boolean
+    }
+  }>('/auth/verify', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -90,5 +97,4 @@ onMounted(async () => {
     initGoogle()
   }
 })
-
 </script>

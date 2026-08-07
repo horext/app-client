@@ -24,19 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
 
-const props = defineProps<{
-  items: IIntersectionOccurrence[]
-}>()
-
-const emit = defineEmits<{
-  (event: 'update:items', value: IIntersectionOccurrence[]): void
-}>()
-
-const itemsSync = useVModel(props, 'items', emit)
+const itemsSync = defineModel<IIntersectionOccurrence[]>('items')
 const headers = [
   {
     title: 'Tipo de Incidencia',

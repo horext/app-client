@@ -1,14 +1,19 @@
 export const SUBJECT_HEADERS = [
   {
+    title: 'Color',
+    value: 'color',
+    sortable: false,
+  },
+  {
     title: 'Código',
-    value: 'course.id',
+    value: 'subject.course.id',
     sortable: true,
   },
   {
     title: 'Nombre de curso',
     align: 'start',
     sortable: true,
-    value: 'course.name',
+    value: 'subject.course.name',
   },
   {
     title: 'Secciones',
@@ -17,7 +22,7 @@ export const SUBJECT_HEADERS = [
   },
   {
     title: 'Creditos',
-    value: 'credits',
+    value: 'subject.credits',
     sortable: true,
   },
   {

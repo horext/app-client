@@ -1,31 +1,43 @@
-import type { ISelectedSubject } from '~/interfaces/subject'
+import type { UUID } from 'crypto'
+import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '~/interfaces/subject'
+import { EVENT_COLORS } from '~/constants/event'
 
 export const useUserSubjects = () => {
-  const storage = useLocalStorage()
-  const configStore = useUserConfigStore()
-  const { subjects } = storeToRefs(configStore)
+  const service = useSubjectsService()
+  const store = useUserSubjectsStore()
+  const { subjects } = storeToRefs(store)
 
-  async function saveNewSubject(_subject: ISelectedSubject) {
-    subjects.value.push(Object.assign({}, _subject))
-    await storage.setItem('mySubjects', subjects.value)
+  async function saveNewSubject(_subject: IBaseSubjectSchedules) {
+    const created = await service.create(_subject)
+    subjects.value.push(created)
   }
 
-  async function deleteSubjectById(id: number) {
+  async function deleteSubjectById(id: UUID) {
+    await service.delete(id)
     const index = subjects.value.findIndex((s) => s.id === id)
     subjects.value.splice(index, 1)
-    await storage.setItem('mySubjects', subjects.value)
   }
 
-  async function updateSubject(_subject: ISelectedSubject) {
+  async function updateSubject(
+    _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
+  ) {
+    const result = await service.update(_subject.id, _subject)
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    subjects.value = subjects.value.map((c, i) => (i === index ? _subject : c))
-    await storage.setItem('mySubjects', subjects.value)
+    subjects.value[index] = result
   }
 
   async function fetchSubjects() {
-    const data = (await storage.getItem<ISelectedSubject[]>('mySubjects')) || []
-    const _subjets = data?.filter((subject) => subject?.schedules?.length > 0)
-    subjects.value = _subjets
+    const data = await service.getAll()
+    const subjectsWithSchedules = data.filter(
+      (subject: IBaseSubjectSchedules) => subject?.schedules?.length > 0,
+    )
+    subjects.value = subjectsWithSchedules.map((subject, index) => ({
+      ...subject,
+      color: subject.color ?? EVENT_COLORS[index] ?? '#1976d2',
+    }))
   }
 
   return {

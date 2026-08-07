@@ -8,11 +8,11 @@
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          v-model="internalFaculty"
+          v-model="internalFacultyId"
           :items="faculties"
           :loading="loadingFaculties"
-          return-object
           item-title="name"
+          item-value="id"
           label="Selecciona tu facultad"
           placeholder="Facultad"
           :rules="[(v) => !!v || 'Facultad es requerida']"
@@ -22,14 +22,14 @@
         </v-alert>
         <v-input
           v-model="internalHourlyLoad"
-          :disabled="!internalFaculty"
+          :disabled="!internalFacultyId"
           label="Carga horaria"
           :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
         />
         <v-autocomplete
-          v-model="internalSpeciality"
-          :disabled="!internalFaculty"
-          return-object
+          v-model="internalSpecialityId"
+          :disabled="!internalFacultyId"
+          item-value="id"
           :loading="loadingSpecialities"
           item-title="name"
           :items="specialities"
@@ -43,54 +43,51 @@
         <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
-    <base-snackbar v-model="successSave">
-      La configuración se ha guardado correctamente
-    </base-snackbar>
   </v-form>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 import type { IOrganization } from '~/interfaces/organization'
+import type { IHourlyLoad } from '~/interfaces/houly-load'
 import {
   useFacultyApi,
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
+import { storeToRefs } from 'pinia'
+
+defineProps<{ loading?: boolean }>()
+const emit = defineEmits<{
+  submit: [facultyId: number, specialityId: number, hourlyLoad: IHourlyLoad]
+}>()
 
 const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
-const store = useUserConfigStore()
-const { faculty, speciality, hourlyLoad } = storeToRefs(store)
+const store = useUserProfileStore()
+const { facultyId, specialityId, hourlyLoad } = storeToRefs(store)
 
-const loading = ref(false)
-
-const internalFaculty = ref<IOrganization | undefined>(
-  faculty.value ? { ...faculty.value } : undefined,
-)
-const internalSpeciality = ref<IOrganization | undefined>(
-  speciality.value ? { ...speciality.value } : undefined,
-)
+const internalFacultyId = ref(facultyId.value)
+const internalSpecialityId = ref(specialityId.value)
 
 const internalHourlyLoad = ref(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
 )
 
-watch(faculty, (value) => {
-  internalFaculty.value = value ? { ...value } : undefined
+watch(facultyId, (value) => {
+  internalFacultyId.value = value
 })
-watch(speciality, (value) => {
-  internalSpeciality.value = value ? { ...value } : undefined
+watch(specialityId, (value) => {
+  internalSpecialityId.value = value
 })
 
 watch(hourlyLoad, (value) => {
   internalHourlyLoad.value = value ? { ...value } : undefined
 })
 
-const internalFacultyId = computed(() => internalFaculty.value?.id)
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
   'setting-specialities',
   async () => {
@@ -106,9 +103,9 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
 )
 
 watch(specialities, (value) => {
-  const speciality = value.find((s) => s.id === internalSpeciality.value?.id)
+  const speciality = value.find((s) => s.id === internalSpecialityId.value)
   if (!speciality) {
-    internalSpeciality.value = undefined
+    internalSpecialityId.value = undefined
   }
 })
 
@@ -141,19 +138,14 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 })
 
 const form = ref<VForm>()
-const successSave = ref(false)
 const ending = async () => {
   const formValue = await form.value?.validate()
-  if (!formValue?.valid) {
-    return
-  }
-  successSave.value = false
-  loading.value = true
-  store.updateFaculty(internalFaculty.value!)
-  store.updateSpeciality(internalSpeciality.value!)
-  store.updateHourlyLoad(internalHourlyLoad.value!)
-  store.updateFirstEntry(false)
-  loading.value = false
-  successSave.value = true
+  if (!formValue?.valid) return
+  emit(
+    'submit',
+    toRaw(internalFacultyId.value)!,
+    toRaw(internalSpecialityId.value)!,
+    toRaw(internalHourlyLoad.value)!,
+  )
 }
 </script>

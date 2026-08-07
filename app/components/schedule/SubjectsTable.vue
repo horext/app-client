@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="item in schedule.schedule" :key="item.id">
+        <template v-for="item in schedule.schedulesSubject" :key="item.id">
           <schedule-section :schedule="item" />
           <class-session-item
             v-for="session in item.sessions"
@@ -31,10 +31,7 @@ import ScheduleSection from './SubjectsTableItemSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
 
-defineProps({
-  schedule: {
-    type: Object as PropType<IScheduleGenerate>,
-    required: true,
-  },
-})
+defineProps<{
+  schedule: IScheduleGenerate
+}>()
 </script>

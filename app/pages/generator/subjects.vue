@@ -31,12 +31,12 @@
           @click:outside="close"
           @keydown.esc="close"
         >
-          <SubjectScheduleList
-            v-if="selectedSubject"
-            :subject="selectedSubject"
-            :schedules="schedules"
+          <SubjectSchedulesEdit
+            v-if="subjectSchedules"
+            :subject-schedules="subjectSchedules"
+            :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
-            @save="save(selectedSubject, $event)"
+            @save="save"
             @cancel="close"
           />
         </v-dialog>
@@ -54,6 +54,9 @@
     </template>
     <template #no-data>
       <SubjectTableNoData />
+    </template>
+    <template #[`item.color`]="{ item }">
+      <v-badge :color="item.color ?? '#1976d2'" />
     </template>
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
@@ -75,7 +78,7 @@
         @click:reject="closeDelete"
       >
         ¿Estás seguro de eliminar el curso de
-        {{ selectedDelete?.course?.name }}?
+        {{ selectedDelete.subject?.course?.name }}?
       </base-confirm-dialog>
       <base-snackbar v-model="succcesAddCourse">
         Curso Agregado correctamente!
@@ -92,25 +95,28 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import SubjectScheduleList from '~/components/subject/ScheduleList.vue'
+import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserProfileStore } from '~/stores/user-profile'
 import type {
-  ISelectedSubject,
+  ISubjectSchedules,
   ISubjectSchedule,
   ISubject,
+  IBaseSubjectSchedules,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
+import { EVENT_COLORS } from '~/constants/event'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
-  useClassSessionApi,
   useCourseApi,
   useScheduleSubjectApi,
 } from '~~/modules/apis/runtime/composables'
-import SubjectTotalCredits from '../../components/subject/TotalCredits.vue'
-import SubjectSelect from '../../components/subject/Select.vue'
+import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
+import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
+import type { SubjectSchedules } from '~/models/subject-schedules'
+import type { UUID } from 'crypto'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -119,34 +125,38 @@ useSeoMeta({
 
 const courseApi = useCourseApi()
 
-const configStore = useUserConfigStore()
+const configStore = useUserProfileStore()
 const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
   useUserSubjects()
 
 const succcesAddCourse = ref(false)
 
+const selectedSubject = shallowRef<ISubject>()
 const availableCourses = computed(() => {
   return subjects.value?.filter(
-    (c1) => !mySubjects.value.some((c2) => c1.id === c2.id),
+    (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
-const { specialityId, hourlyLoadId } = storeToRefs(configStore)
+const { specialityId, hourlyLoad } = storeToRefs(configStore)
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const selectedSubject = ref<ISelectedSubject>()
+const subjectSchedules = shallowRef<IBaseSubjectSchedules | ISubjectSchedules>()
 
 const openSearchMenu = ref(false)
 
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
   openSearchMenu.value = false
-  editItem({ ...item, schedules: [] })
+  editItem({
+    subject: item,
+    schedules: [],
+    color: EVENT_COLORS[mySubjects.value.length] ?? '#1976d2',
+  })
 }
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const classSessionsApi = useClassSessionApi()
 
 const {
   data: schedules,
@@ -155,8 +165,8 @@ const {
 } = useAsyncData<ISubjectSchedule[]>(
   'generator-subject-schedules',
   async () => {
-    const _hourlyLoadId = hourlyLoadId.value
-    const subject = selectedSubject.value
+    const _hourlyLoadId = hourlyLoad.value?.id
+    const subject = subjectSchedules.value?.subject
     if (!_hourlyLoadId || !subject) return []
 
     const schedulesSubject =
@@ -164,41 +174,36 @@ const {
         subject.id,
         _hourlyLoadId,
       )
-    const scheduleIds = schedulesSubject.map((sb) => sb.schedule.id)
-
-    const sessions = await classSessionsApi.findScheduleIds(scheduleIds)
 
     return schedulesSubject.map((sb) => ({
-      ...sb?.schedule,
+      ...sb.schedule,
       scheduleSubject: {
         id: sb.id,
       },
-      sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
-      subject: subject,
     }))
   },
   {
     default: () => [],
-    watch: [hourlyLoadId],
+    watch: [hourlyLoad],
     immediate: false,
     server: false,
   },
 )
 
-const editItem = async (item: ISelectedSubject) => {
-  selectedSubject.value = item
+const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
+  subjectSchedules.value = item
   fetchSchedules()
   dialog.value = true
 }
 
-const selectedDelete = ref<ISelectedSubject>()
-const deleteItem = (item: ISelectedSubject) => {
+const selectedDelete = ref<ISubjectSchedules>()
+const deleteItem = (item: ISubjectSchedules) => {
   selectedDelete.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
-const deleteItemConfirm = async (item: ISelectedSubject) => {
+const deleteItemConfirm = async (item: ISubjectSchedules) => {
   await deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
@@ -206,6 +211,7 @@ const deleteItemConfirm = async (item: ISelectedSubject) => {
 
 const close = () => {
   dialog.value = false
+  subjectSchedules.value = undefined
   selectedSubject.value = undefined
 }
 
@@ -215,19 +221,22 @@ const closeDelete = () => {
 }
 
 const succcesUpdateCourse = ref(false)
-const save = async (item: ISelectedSubject, schedules: ISubjectSchedule[]) => {
+const save = async (
+  data: SubjectSchedules<UUID> | SubjectSchedules<undefined>,
+) => {
   succcesAddCourse.value = false
-  const editedIndex = mySubjects.value.findIndex((c) => c.id === item.id)
-  if (editedIndex > -1 && schedules && schedules.length > 0) {
-    await updateSubject({ ...item, schedules })
-    close()
-    succcesUpdateCourse.value = true
-  } else if (schedules && schedules.length > 0) {
-    await saveNewSubject({ ...item, schedules })
+  if (data.id) {
+    if (data.schedules && data.schedules.length > 0) {
+      await updateSubject(data.toUpdateRequest())
+      close()
+      succcesUpdateCourse.value = true
+    } else {
+      deleteItem(data)
+    }
+  } else {
+    await saveNewSubject(data.toCreateRequest())
     close()
     succcesAddCourse.value = true
-  } else if (editedIndex > -1) {
-    deleteItem(item)
   }
 }
 
@@ -238,7 +247,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
   async () => {
     const _search = search.value
     if (!_search) return []
-    const _hourlyLoadId = hourlyLoadId.value
+    const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
     if (!_hourlyLoadId || !_specialityId) return []
     const response = await courseApi.findBySearch(

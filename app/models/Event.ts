@@ -1,8 +1,14 @@
-import type { EventCategories, IEvent, Weekdays } from '~/interfaces/event'
-import { convertToDate } from '~/utils/weekday'
+import type { UUID } from 'crypto'
+import type { IActivity, IEvent, Weekdays } from '~/interfaces/event'
+import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
 
-export default class Event {
-  id: string
+export enum EventCategory {
+  COURSE = 'COURSE',
+  MY_EVENT = 'MY_EVENT',
+}
+
+export default abstract class Event<ID extends string | undefined = string> {
+  id: ID
   day: Weekdays
   startTime: string
   endTime: string
@@ -12,7 +18,7 @@ export default class Event {
   location?: string
   color: string
 
-  category?: EventCategories
+  category?: EventCategory
   type: string
 
   constructor(
@@ -24,8 +30,8 @@ export default class Event {
     location: string = '',
     color: string,
     type: string,
-    category?: EventCategories,
-    id: string = crypto.randomUUID(),
+    category: EventCategory | undefined = undefined,
+    id: ID,
   ) {
     this.day = day
     this.startTime = startTime
@@ -39,31 +45,28 @@ export default class Event {
     this.id = id
   }
 
-  get start() {
-    return convertToDate(this.day, this.startTime)
-  }
+  abstract get hasActivityCrossingRestriction(): boolean
 
-  get end() {
-    return convertToDate(this.day, this.endTime)
-  }
+  abstract get hasSubjectSessionCrossingRestriction(): boolean
 
-  static buildFrom(event: IEvent) {
-    return new Event(
-      event.day,
-      event.startTime,
-      event.endTime,
-      event.title,
-      event.description,
-      event.location,
-      event.color,
-      event.type,
-      event.category,
-      event.id,
-    )
+  intersects(other: Event<string | undefined>): boolean {
+    const t = (s: string) => {
+      const i = s.indexOf('T')
+      return i >= 0 ? s.slice(i + 1, i + 6) : s.slice(0, 5)
+    }
+    const thisStart = t(this.startTime)
+    const thisEnd = t(this.endTime)
+    const otherStart = t(other.startTime)
+    const otherEnd = t(other.endTime)
+    return !(thisEnd <= otherStart || otherEnd <= thisStart)
   }
 }
 
-export class Activity extends Event {
+export class ActivitySessionEvent<
+  ID extends UUID | undefined = UUID | undefined,
+> extends Event<ID> {
+  allowOverlap: boolean
+
   constructor(
     day: Weekdays = 1,
     startTime = '08:00',
@@ -72,7 +75,8 @@ export class Activity extends Event {
     description = '',
     location = '',
     color = '#1976d2',
-    id?: string,
+    allowOverlap = true,
+    id: ID = undefined as ID,
   ) {
     super(
       day,
@@ -82,22 +86,117 @@ export class Activity extends Event {
       description,
       location,
       color,
-      'MY_EVENT',
-      'MY_EVENT',
+      EventCategory.MY_EVENT,
+      EventCategory.MY_EVENT,
       id,
     )
+    this.allowOverlap = allowOverlap
   }
 
-  buildFrom(event: IEvent) {
-    return new Activity(
-      event.day,
-      event.startTime,
-      event.endTime,
-      event.title,
-      event.description,
-      event.location,
-      event.color,
-      event.id || crypto.randomUUID(),
+  get hasActivityCrossingRestriction() {
+    return !this.allowOverlap
+  }
+
+  get hasSubjectSessionCrossingRestriction() {
+    return false
+  }
+
+  static buildActivitiesFrom(event: Omit<IActivity, 'category' | 'type'>) {
+    const sessions = event.sessions
+
+    return sessions.map(
+      (session) =>
+        new ActivitySessionEvent(
+          session.day,
+          session.startTime,
+          session.endTime,
+          event.title,
+          event.description,
+          event.location,
+          event.color,
+          event.allowOverlap ?? true,
+          crypto.randomUUID(),
+        ),
     )
+  }
+}
+
+export class SubjectSessionEvent extends Event implements IEvent {
+  override id: string
+
+  get hasActivityCrossingRestriction() {
+    return false
+  }
+
+  get hasSubjectSessionCrossingRestriction() {
+    return this.type.includes('P')
+  }
+
+  isCrossingRestricted(
+    other: Event<string | undefined>,
+    crossActivities: boolean,
+    crossPractices: boolean,
+  ): boolean {
+    const activityRestriction =
+      !crossActivities &&
+      (this.hasActivityCrossingRestriction ||
+        other.hasActivityCrossingRestriction)
+
+    const practiceRestriction =
+      !crossPractices &&
+      this.hasSubjectSessionCrossingRestriction &&
+      other.hasSubjectSessionCrossingRestriction
+
+    return activityRestriction || practiceRestriction
+  }
+
+  constructor(
+    day: Weekdays,
+    startTime: string,
+    endTime: string,
+    title: string,
+    description: string,
+    location: string,
+    color: string,
+    type: string,
+    id: string,
+  ) {
+    super(
+      day,
+      startTime,
+      endTime,
+      title,
+      description,
+      location,
+      color,
+      type,
+      EventCategory.COURSE,
+      id,
+    )
+    this.id = id
+  }
+
+  static buildFromSchedule(schedule: IScheduleSubjectGenerate, color: string) {
+    if (!schedule.sessions?.length) return []
+    const events: Array<SubjectSessionEvent> = []
+    const sessions = schedule.sessions
+    for (let i = 0; i < sessions.length; i++) {
+      const course = schedule.subject.course
+      const section = schedule.section.id
+      const session = sessions[i]!
+      const event = new SubjectSessionEvent(
+        session.day,
+        session.startTime,
+        session.endTime,
+        course.id + ' ' + section + ' - ' + course.name,
+        ` Docente: ${session.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
+        session.classroom?.code,
+        color,
+        session.type.code,
+        String(session.id),
+      )
+      events.push(event)
+    }
+    return events
   }
 }

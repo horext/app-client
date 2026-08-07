@@ -4,14 +4,18 @@
     color="blue"
     title="Generados"
     empty-message="Usted no tiene horarios generados"
-    :schedules="schedules"
+    :schedules="result?.schedules ?? []"
     path="/skd"
   >
     <template #top-items-right>
       <div class="d-flex align-self-center ga-2">
         <v-toolbar-title>
           Generados
-          <v-badge color="white" :content="schedules.length" inline />
+          <v-badge
+            color="white"
+            :content="result?.schedules.length ?? 0"
+            inline
+          />
         </v-toolbar-title>
       </div>
     </template>
@@ -32,8 +36,9 @@
     </template>
     <template #subtitle-items="">
       <schedule-generator-actions
-        v-model:crossings="crossingSubjects"
+        :crossings="crossingSubjects"
         :loading-generate="loadingGenerate"
+        @update:crossings="updateCrossings"
         @click:generate="generateAllUserSchedules"
       />
       <base-snackbar v-model="succces">
@@ -43,14 +48,16 @@
     </template>
 
     <template #emptyBody>
-      <v-alert prominent type="error">
-        <v-row align="center">
-          <v-col class="grow">
-            Lo sentimos, no hemos encontrados horarios para usted.
-          </v-col>
-        </v-row>
-      </v-alert>
-      <occurrences-list :items="occurrences" />
+      <template v-if="result">
+        <v-alert prominent type="error">
+          <v-row align="center">
+            <v-col class="grow">
+              Lo sentimos, no hemos encontrados horarios para usted.
+            </v-col>
+          </v-row>
+        </v-alert>
+        <occurrences-list :items="result?.occurrences ?? []" />
+      </template>
     </template>
   </schedules-presentation>
 </template>
@@ -61,10 +68,11 @@ import { storeToRefs } from 'pinia'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
 import ScheduleFavoriteAdd from '~/components/schedule/FavoriteToggle.vue'
 import OccurrencesList from '~/components/schedule/OccurrencesList.vue'
-import { useUserConfigStore } from '~/stores/user-config'
+import { useUserPreferencesStore } from '~/stores/user-preferences'
+import { useUserProfileStore } from '~/stores/user-profile'
+import { useGenerationStore } from '~/stores/generation'
 import { useUserEventsStore } from '~/stores/user-events'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
@@ -72,40 +80,44 @@ useSeoMeta({
   description: 'Genera tus horarios de clases de manera automática',
 })
 
-const configStore = useUserConfigStore()
+const preferencesStore = useUserPreferencesStore()
+const profileStore = useUserProfileStore()
+const subjectsStore = useUserSubjectsStore()
+const favoritesStore = useUserFavoritesStore()
+const generationStore = useGenerationStore()
 const eventsStore = useUserEventsStore()
 const openMySchedules = ref(false)
 const succces = ref(false)
 
-const {
-  crossings: crossingSubjects,
-  subjects: mySubjects,
-  favoritesSchedules: myFavoritesSchedules,
-  schedules,
-  occurrences,
-} = storeToRefs(configStore)
+const { subjects: mySubjects } = storeToRefs(subjectsStore)
+const { favoritesSchedules: myFavoritesSchedules } = storeToRefs(favoritesStore)
+
+const { setResult } = useGeneration()
+const { updateCrossings } = useUserPreferences()
+const { weekDays, crossings: crossingSubjects } = storeToRefs(preferencesStore)
+const { hourlyLoad } = storeToRefs(profileStore)
+const { result } = storeToRefs(generationStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)
 
-const { addFavoriteSchedule, removeFavoriteSchedule } =
+const { saveNewFavoriteSchedule, deleteFavoriteScheduleById } =
   useUserFavoriteSchedules()
 
 const addFavorite = async (schedule: IScheduleGenerate) => {
   showAddFavoriteMessage.value = false
-  await addFavoriteSchedule(toRaw(schedule))
+  await saveNewFavoriteSchedule(toRaw(schedule))
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
 const removeFavorite = async (schedule: IScheduleGenerate) => {
   showRemoveFavoriteMessage.value = false
-  await removeFavoriteSchedule(schedule)
+  await deleteFavoriteScheduleById(schedule.id)
   showRemoveFavoriteMessage.value = true
 }
 
-const { loadSchedules } = useSchedules()
-const { updateSchedules } = useUserSchedules()
+const { loadSchedules } = useSchedulesGenerator()
 const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false
@@ -118,9 +130,12 @@ const generateAllUserSchedules = async () => {
     },
   )
   loadingGenerate.value = false
-  updateSchedules(combinations)
-  configStore.updateOccurrences(occurrencesData)
-  occurrences.value = occurrencesData
+  await setResult(toRaw(combinations), toRaw(occurrencesData), {
+    generatedAt: new Date().toISOString(),
+    crossingsSetting: toRaw(crossingSubjects.value),
+    weekDays: toRaw(weekDays.value),
+    hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
+  })
   succces.value = true
 }
 </script>

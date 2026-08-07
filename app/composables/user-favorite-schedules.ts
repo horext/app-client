@@ -1,54 +1,35 @@
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 
 export const useUserFavoriteSchedules = () => {
-  const storage = useLocalStorage()
-  const configStore = useUserConfigStore()
-  const { favoritesSchedules } = storeToRefs(configStore)
+  const favoritesStorage = useFavoritesSchedulesService()
+  const store = useUserFavoritesStore()
+  const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate,
+    _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
   ) {
-    favoritesSchedules.value.push(Object.assign({}, _favoritesSchedule))
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
+    const result = await favoritesStorage.addFavorite(_favoritesSchedule)
+    favoritesSchedules.value.push(result)
   }
 
   async function deleteFavoriteScheduleById(id: IScheduleGenerate['id']) {
+    await favoritesStorage.removeFavorite(id)
     const index = favoritesSchedules.value.findIndex((s) => s.id === id)
     favoritesSchedules.value.splice(index, 1)
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  async function updateFavoritesSchedules(
-    _favoritesSchedules: IScheduleGenerate[],
-  ) {
-    favoritesSchedules.value = _favoritesSchedules
-    await storage.setItem('myFavoritesSchedules', favoritesSchedules.value)
-  }
-
-  const addFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    await updateFavoritesSchedules([...favoritesSchedules.value, schedule])
   }
 
   async function fetchFavoritesSchedules() {
-    const data =
-      (await storage.getItem<IScheduleGenerate[]>('myFavoritesSchedules')) || []
-    const _schedules: IScheduleGenerate[] = data || []
-    favoritesSchedules.value = _schedules
-  }
-  const removeFavoriteSchedule = async (schedule: IScheduleGenerate) => {
-    const newFavorites = favoritesSchedules.value.filter(
-      (s) => s.id !== schedule.id,
-    )
-    await updateFavoritesSchedules(newFavorites)
+    favoritesSchedules.value =
+      (await favoritesStorage.getFavoriteSchedules()) ?? []
   }
 
   return {
     favoritesSchedules,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
-    updateFavoritesSchedules,
-    addFavoriteSchedule,
     fetchFavoritesSchedules,
-    removeFavoriteSchedule,
   }
 }

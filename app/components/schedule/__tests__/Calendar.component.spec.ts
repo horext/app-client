@@ -4,8 +4,8 @@ import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import { nextTick } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
 import { VMenu } from 'vuetify/components'
+import type { IScheduleGenerate } from '~/interfaces/schedule'
 
 const vuetify = createVuetify()
 vi.stubGlobal('visualViewport', new EventTarget())
@@ -31,10 +31,10 @@ describe('Schedule Calendar', () => {
         type: '',
       },
     ],
-    id: '',
-    scheduleSubjectIds: [],
-    schedule: [],
+    id: crypto.randomUUID(),
+    schedulesSubject: [],
     crossings: 0,
+    scheduleSubjectKey: '1,2',
   }
   it('renders correctly', () => {
     const wrapper = mount(ScheduleCalendar, {

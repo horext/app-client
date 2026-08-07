@@ -1,4 +1,5 @@
-import type { $Fetch } from 'nitropack'
+import type { $Fetch } from 'ofetch'
+import { $fetch } from 'ofetch'
 import type { ApiFactory } from './interfaces/registry'
 import { APIS_REGISTRY } from './registry'
 import type { BaseApi } from './resources/base'
@@ -8,7 +9,9 @@ import type { InjectionKey } from 'vue'
 export const FETCH_KEY: InjectionKey<$Fetch> = Symbol('Fetch')
 
 export const createFetchApi = () => {
-  const { public: { apiUrl } } = useRuntimeConfig()
+  const {
+    public: { apiUrl },
+  } = useRuntimeConfig()
   const fetch = $fetch.create({
     baseURL: apiUrl,
   })
@@ -18,6 +21,10 @@ export const createFetchApi = () => {
 export const provideFetch = () => {
   const fetch = createFetchApi()
   provide(FETCH_KEY, fetch)
+}
+
+export interface IApiRegistry {
+  get<T>(key: InjectionKey<T>): T
 }
 
 export const provideApis = (registry = APIS_REGISTRY) => {
@@ -39,7 +46,7 @@ export const provideApis = (registry = APIS_REGISTRY) => {
       }
       return instance as T
     },
-  }
+  } satisfies IApiRegistry
 }
 
 export const provideApi = <R, T extends BaseApi & R = BaseApi & R>(

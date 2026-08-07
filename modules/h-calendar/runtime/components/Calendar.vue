@@ -139,12 +139,12 @@ const internalDays = computed(() => {
   const _weekdays = weekdays.value
   const _visualsByWeekday = visualsByWeekday.value
   return _weekdays.map((day) => {
-    const weekDay = (day % 7)
+    const weekDay = day % 7
     return {
       id: day,
       weekDay,
       name: WEEKDAY_NAMES[weekDay] ?? '',
-      visuals: _visualsByWeekday.get(weekDay  as Weekdays) ?? [],
+      visuals: _visualsByWeekday.get(weekDay as Weekdays) ?? [],
     }
   })
 })

@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-data-table
         :headers="headers"
-        :items="myEvents"
+        :items="activities"
         class="elevation-1"
         mobile-breakpoint="md"
         :mobile="null"
@@ -39,9 +39,9 @@
           <v-badge :color="item.color" />
         </template>
         <template #[`item.schedule`]="{ item }">
-          <div>
-            {{ WEEK_DAYS_NAMES[item.day] }} : {{ item.startTime }} -
-            {{ item.endTime }}
+          <div v-for="(session, index) in item.sessions" :key="index">
+            {{ WEEK_DAYS_NAMES[session.day] }} : {{ session.startTime }} -
+            {{ session.endTime }}
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -62,12 +62,10 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Activity } from '~/models/Event'
-import { useUserEventsStore } from '~/stores/user-events'
-import type { IEvent } from '~/interfaces/event'
+import { ref } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
+import type { IActivity, IBaseActivity } from '~/interfaces/event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
@@ -75,59 +73,54 @@ useSeoMeta({
     'Administra tus actividades para tener un mejor control de tu tiempo',
 })
 
-const store = useUserEventsStore()
-
-const myEvents = computed(() => store.items)
 const succcesAddEvent = ref(false)
 const succcesUpdateEvent = ref(false)
 const dialog = ref(false)
 
 const headers = EVENT_HEADERS
 
-const editedItem = ref<IEvent>(new Activity())
-
-const DEFAULT_INDEX = -1
-
-const editedIndex = ref(DEFAULT_INDEX)
+const editedItem = ref<IActivity | null>(null)
 
 const dialogDelete = ref(false)
 
-const editItem = (item: IEvent) => {
-  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
+const editItem = (item: IActivity) => {
   editedItem.value = item
   dialog.value = true
 }
 
-const selectedDeleteItem = ref<IEvent>()
-const deleteItem = (item: IEvent) => {
-  editedIndex.value = myEvents.value.findIndex((c) => c.id === item.id)
+const {
+  deleteItemById,
+  updateItem,
+  createNewItem,
+  items: activities,
+} = useUserEvents()
+
+const selectedDeleteItem = ref<IActivity>()
+const deleteItem = (item: IActivity) => {
   selectedDeleteItem.value = item
   dialogDelete.value = true
 }
 
-const deleteItemConfirm = (selectedItem: IEvent) => {
-  store.deleteItemById(selectedItem.id!)
+const deleteItemConfirm = (selectedItem: IActivity) => {
+  deleteItemById(selectedItem.id!)
   closeDelete()
 }
 
 const close = () => {
-  editedItem.value = new Activity()
-  editedIndex.value = DEFAULT_INDEX
+  editedItem.value = null
   dialog.value = false
 }
 
 const closeDelete = () => {
   dialogDelete.value = false
-  editedIndex.value = DEFAULT_INDEX
 }
 
-const save = async (item: IEvent) => {
-  const event = Activity.buildFrom(item)
-  if (editedIndex.value > -1) {
-    store.updateItem(event)
+const save = async (event: IBaseActivity & { id?: IActivity['id'] }) => {
+  if (event.id) {
+    await updateItem(event)
     succcesUpdateEvent.value = true
   } else {
-    store.saveNewItem(event)
+    await createNewItem(event)
     succcesAddEvent.value = true
   }
   close()

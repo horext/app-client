@@ -13,22 +13,26 @@
     </template>
     <v-window-item v-if="schedule">
       <schedule-viewer
-        v-show="mode == MODES.CALENDAR"
+        v-if="mode === MODES.CALENDAR"
         :schedule="schedule"
         :week-days="weekDays"
       />
-      <view-list v-show="mode == MODES.LIST" :schedule="schedule" />
+      <view-list v-else :schedule="schedule" />
       <v-divider />
-      <v-footer class="text-center align-center justify-center">
-        <v-pagination v-model="page" :length="schedules.length" />
+      <v-footer
+        v-if="schedules.length > 1"
+        width="100%"
+        color="transparent"
+        class="pa-0"
+      >
+        <v-pagination v-model="page" :length="schedules.length" class="w-100" />
       </v-footer>
     </v-window-item>
   </v-window>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type WatchCallback } from 'vue'
-import { useVModel } from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
 import ViewList from './schedule/SubjectsTable.vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { ViewMode } from '~/models/ViewMode'
@@ -39,39 +43,37 @@ import type { Weekdays } from '~/interfaces/event'
 const props = defineProps<{
   schedules: IScheduleGenerate[]
   weekDays: Weekdays[]
-  currentSchedule: IScheduleGenerate | undefined
   mode: ViewMode
-}>()
-
-const emit = defineEmits<{
-  (event: 'update:currentSchedule', value: IScheduleGenerate): void
 }>()
 
 const { schedules } = toRefs(props)
 
 const index = ref(0)
 
-const syncedCurrentSchedule = useVModel(props, 'currentSchedule', emit)
+const syncedCurrentSchedule = defineModel<IScheduleGenerate>('currentSchedule')
 
 const MODES = ViewMode
 
-const onChangeSchedules: WatchCallback = (newValue, oldValue) => {
-  if (oldValue.length !== newValue.length) {
-    index.value = 0
-  }
-}
-watch(schedules, onChangeSchedules)
-
-const onChangeSchedule: WatchCallback = (value) => {
-  if (index.value >= props.schedules.length) {
-    index.value = props.schedules.length - 1
-  }
-  syncedCurrentSchedule.value = value
-}
-
 const schedule = computed(() => schedules.value[index.value])
 
-watch(schedule, onChangeSchedule, { immediate: true })
+// Reset to first item only when the list size changes (new generation or removal)
+watch(
+  () => schedules.value.length,
+  (length) => {
+    if (index.value >= length) {
+      index.value = 0
+    }
+  },
+)
+
+// Keep parent's currentSchedule in sync with the displayed schedule
+watch(
+  schedule,
+  (value) => {
+    syncedCurrentSchedule.value = value
+  },
+  { immediate: true },
+)
 
 const page = computed<number>({
   get() {

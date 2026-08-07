@@ -1,3 +1,5 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
@@ -25,6 +27,7 @@ export default defineNuxtConfig({
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@pinia/nuxt',
+    '@unocss/nuxt',
     [
       '@vueuse/nuxt',
       {
@@ -37,6 +40,16 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/eslint',
   ],
+
+  css: ['~/assets/styles/layers.css', 'vuetify/styles'],
+
+  vuetify: {
+    disableGlobalStyles: true,
+  },
+
+  unocss: {
+    disableNuxtInlineStyle: false,
+  },
 
   image: {
     dir: 'assets/images',

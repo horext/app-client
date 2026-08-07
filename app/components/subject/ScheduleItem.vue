@@ -32,22 +32,18 @@
 </template>
 
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
-const props = defineProps<{
+defineProps<{
   schedules: ISubjectSchedule[]
-  modelValue: ISubjectSchedule[]
   loading: boolean
 }>()
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: ISubjectSchedule[]): void
-}>()
-
-const valueSync = useVModel(props, 'modelValue', emit)
+const valueSync = defineModel<ISubjectSchedule[]>({
+  required: true,
+})
 </script>
 
 <style>

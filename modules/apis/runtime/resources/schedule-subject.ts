@@ -1,27 +1,22 @@
 import type {
-  IScheduleSubject,
-  IScheduleSubjectSessionDetail,
-} from '~/interfaces/schedule-subject'
+  IScheduleSubjectResponse,
+  IScheduleSubjectDetailResponse,
+} from '../interfaces/schedule-subject'
 import { BaseApi } from './base'
 
 export interface IScheduleSubjectApi {
   findBySubjectIdAndHourlyLoadId(
     subject: number,
     hourlyLoad: number,
-  ): Promise<IScheduleSubject[]>
-  getAllByIds(ids: Array<number>): Promise<IScheduleSubjectSessionDetail[]>
-  findBySearch(
-    search: string,
-    speciality: string,
-    hourlyLoad: string,
-  ): Promise<IScheduleSubject[]>
+  ): Promise<IScheduleSubjectResponse[]>
+  getAllByIds(ids: Array<number>): Promise<IScheduleSubjectDetailResponse[]>
 }
 
 const PATH_SCHEDULE_SUBJECTS = 'scheduleSubjects'
 
 export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
   findBySubjectIdAndHourlyLoadId(subject: number, hourlyLoad: number) {
-    return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
+    return this.$fetch<IScheduleSubjectResponse[]>(PATH_SCHEDULE_SUBJECTS, {
       params: {
         subject,
         hourlyLoad,
@@ -30,7 +25,7 @@ export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
   }
 
   getAllByIds(ids: Array<number>) {
-    return this.$fetch<IScheduleSubjectSessionDetail[]>(
+    return this.$fetch<IScheduleSubjectDetailResponse[]>(
       PATH_SCHEDULE_SUBJECTS,
       {
         params: {
@@ -38,15 +33,5 @@ export class ScheduleSubjectApi extends BaseApi implements IScheduleSubjectApi {
         },
       },
     )
-  }
-
-  findBySearch(search: string, speciality: string, hourlyLoad: string) {
-    return this.$fetch<IScheduleSubject[]>(PATH_SCHEDULE_SUBJECTS, {
-      params: {
-        speciality,
-        hourlyLoad,
-        search: search,
-      },
-    })
   }
 }

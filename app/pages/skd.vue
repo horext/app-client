@@ -1,42 +1,27 @@
 <template>
   <v-container fluid>
-    <v-card flat style="min-height: 100vh">
+    <v-card v-if="firstSchedule" flat style="min-height: 100vh">
       <v-toolbar flat>
-        <v-btn
-          v-if="firstSchedule"
-          variant="outlined"
-          @click="addFavoriteCurrentSchedule"
-        >
-          <v-icon :color="isFavorite(firstSchedule) >= 0 ? 'yellow' : undefined">
-            {{ mdiStar }}
-          </v-icon>
-          <span v-if="isFavorite(firstSchedule) >= 0">
-            Quitar de Favoritos
-          </span>
-          <span v-else> Añadir a Favoritos </span>
-        </v-btn>
+        <ScheduleShareAddFavorite
+          :schedule="firstSchedule"
+          :favorites-schedules="favoritesSchedules"
+          @click:add-favorite="saveNewFavoriteSchedule"
+          @click:remove-favorite="deleteFavoriteScheduleById"
+        />
       </v-toolbar>
-      <ScheduleViewer
-        v-for="schedule in schedules"
-        :key="schedule.id"
-        :schedule="schedule"
-      />
+      <ScheduleViewer :schedule="firstSchedule" />
     </v-card>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, toRaw } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
-import { useUserConfigStore } from '~/stores/user-config'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-import { mdiStar } from '@mdi/js'
-import {
-  useClassSessionApi,
-  useScheduleSubjectApi,
-} from '~~/modules/apis/runtime/composables'
-import type { ISelectedSubject } from '~/interfaces/subject'
+import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
+import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
+import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
+import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
 
 definePageMeta({
   layout: 'app',
@@ -48,17 +33,13 @@ useSeoMeta({
 })
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const classSessionApi = useClassSessionApi()
-const schedules = ref<IScheduleGenerate[]>([])
+const schedules = ref<ILocalScheduleGenerate[]>([])
 const loading = ref(false)
 
-const store = useUserConfigStore()
-
-const myFavoritesSchedules = computed(() => store.favoritesSchedules)
 const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
-const { data: subjects } = useAsyncData<ISelectedSubject[]>(
+const { data: subjects } = useAsyncData<IBaseSubjectSchedules[]>(
   'skd-subjects',
   async () => {
     const encodedQuery = route.query.q
@@ -67,18 +48,15 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
     const scheduleSubjectIds = result.split(',').map(Number)
     const scheduleSubjects =
       await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
-    const schedulesIds = scheduleSubjects.map((ss) => ss.schedule.id)
-    const sessions = await classSessionApi.findScheduleIds(schedulesIds)
 
     return scheduleSubjects.map((sb) => ({
-      ...sb.subject,
+      subject: sb.subject,
       schedules: [
         {
-          ...sb?.schedule,
+          ...sb.schedule,
           scheduleSubject: {
             id: sb.id,
           },
-          sessions: sessions.filter((s) => s.schedule.id === sb.schedule.id),
           subject: sb.subject,
         },
       ],
@@ -89,14 +67,17 @@ const { data: subjects } = useAsyncData<ISelectedSubject[]>(
   },
 )
 
-const { deleteFavoriteScheduleById, saveNewFavoriteSchedule } =
-  useUserFavoriteSchedules()
+const {
+  deleteFavoriteScheduleById,
+  saveNewFavoriteSchedule,
+  favoritesSchedules,
+} = useUserFavoriteSchedules()
 
-const { loadSchedules } = useSchedules()
+const { loadSchedules } = useSchedulesGenerator()
 
-async function fetchSchedules() {
+async function fetchSchedules(subjects: IBaseSubjectSchedules[]) {
   loading.value = true
-  const { combinations } = await loadSchedules(subjects.value, [], {
+  const { combinations } = await loadSchedules(subjects, [], {
     crossingSubjects: 100,
   })
   schedules.value = combinations
@@ -104,23 +85,12 @@ async function fetchSchedules() {
 }
 
 onMounted(async () => {
-  await fetchSchedules()
+  await fetchSchedules(subjects.value)
 })
 
-const addFavoriteCurrentSchedule = () => {
-  const currentSchedule = schedules.value[0]
-  if (!currentSchedule) return
-  const index = isFavorite(currentSchedule)
-  if (index >= 0) {
-    deleteFavoriteScheduleById(currentSchedule.id)
-  } else {
-    saveNewFavoriteSchedule(toRaw(currentSchedule))
-  }
-}
-
-const isFavorite = (schedule: IScheduleGenerate) => {
-  return myFavoritesSchedules.value.findIndex((x) => x.id === schedule.id)
-}
+watch(subjects, async (subjects) => {
+  await fetchSchedules(subjects)
+})
 </script>
 
 <style scoped></style>

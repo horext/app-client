@@ -30,12 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref, shallowRef, toRefs } from 'vue'
 import EventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
 import ScheduleEventInfo from '~/components/schedule/CalendarEventCard.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IEvent, Weekdays } from '~/interfaces/event'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  ILocalScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 import type { IEventEmitData } from '~~/modules/h-calendar/runtime/types'
 
 interface IScheduleCalendarEvent extends IEvent {
@@ -46,19 +49,18 @@ interface IScheduleCalendarEvent extends IEvent {
   id: string
 }
 
-const props = defineProps({
-  schedule: {
-    type: Object as PropType<IScheduleGenerate>,
-    required: true,
+const props = withDefaults(
+  defineProps<{
+    schedule: ILocalScheduleGenerate | IScheduleGenerate
+    weekDays?: Weekdays[]
+  }>(),
+  {
+    weekDays: () => DEFAULT_CALENDAR_WEEK_DAYS,
   },
-  weekDays: {
-    type: Array as PropType<Weekdays[]>,
-    default: DEFAULT_CALENDAR_WEEK_DAYS,
-  },
-})
+)
 const { schedule } = toRefs(props)
-const selectedEvent = ref<IScheduleCalendarEvent | null>(null)
-const selectedElement = ref<HTMLElement | null>(null)
+const selectedEvent = shallowRef<IScheduleCalendarEvent | null>(null)
+const selectedElement = shallowRef<HTMLElement | null>(null)
 const selectedOpen = ref(false)
 
 const showEvent = ({
@@ -85,15 +87,15 @@ const showEvent = ({
 
 const internalEvents = computed<IScheduleCalendarEvent[]>(
   () =>
-    schedule.value?.events?.map((event) => {
-      return {
+    schedule.value?.events?.map((event) =>
+      markRaw({
         ...event,
         start: event.startTime,
         end: event.endTime,
         weekDay: event.day,
-        id: event.id!,
+        id: event.id,
         name: event.title,
-      }
-    }) ?? [],
+      }),
+    ) ?? [],
 )
 </script>
