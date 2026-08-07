@@ -1,8 +1,7 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "composite": true,
     "types": ["@types/luxon", "@pinia/nuxt"],
     "allowJs": true
-  },
+  }
 }
