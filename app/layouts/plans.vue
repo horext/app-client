@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/no-multiple-template-root -->
 <template>
-  <home-app-bar :is-logged-in="authStore.isLoggedIn" @click:invert-mode="invertMode" />
+  <home-app-bar
+    :is-logged-in="authStore.isLoggedIn"
+    @click:invert-mode="invertMode"
+  />
   <home-view>
     <slot />
   </home-view>

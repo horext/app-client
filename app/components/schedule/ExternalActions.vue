@@ -10,10 +10,7 @@ defineProps<{
 defineEmits<{
   (
     event:
-      | 'click:share'
-      | 'click:export-pdf'
-      | 'click:export-image'
-      | 'click:sync',
+      'click:share' | 'click:export-pdf' | 'click:export-image' | 'click:sync',
     value: MouseEvent,
   ): void
 }>()

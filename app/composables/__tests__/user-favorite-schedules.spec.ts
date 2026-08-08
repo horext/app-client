@@ -50,7 +50,8 @@ describe('useUserFavoriteSchedules', () => {
   it('saveNewFavoriteSchedule adds a favorite and pushes to store', async () => {
     const fav = makeFavorite()
     mockAddFavorite.mockResolvedValue(fav)
-    const { saveNewFavoriteSchedule, favoritesSchedules } = useUserFavoriteSchedules()
+    const { saveNewFavoriteSchedule, favoritesSchedules } =
+      useUserFavoriteSchedules()
     await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
     expect(mockAddFavorite).toHaveBeenCalledWith(fav)
     expect(favoritesSchedules.value).toContainEqual(fav)
@@ -61,7 +62,8 @@ describe('useUserFavoriteSchedules', () => {
     const store = useUserFavoritesStore()
     store.favoritesSchedules = [fav]
     mockRemoveFavorite.mockResolvedValue(undefined)
-    const { deleteFavoriteScheduleById, favoritesSchedules } = useUserFavoriteSchedules()
+    const { deleteFavoriteScheduleById, favoritesSchedules } =
+      useUserFavoriteSchedules()
     await deleteFavoriteScheduleById(fav.id)
     expect(mockRemoveFavorite).toHaveBeenCalledWith(fav.id)
     expect(favoritesSchedules.value).not.toContainEqual(fav)
@@ -70,14 +72,16 @@ describe('useUserFavoriteSchedules', () => {
   it('fetchFavoritesSchedules loads all favorites into store', async () => {
     const favs = [makeFavorite()]
     mockGetFavoriteSchedules.mockResolvedValue(favs)
-    const { fetchFavoritesSchedules, favoritesSchedules } = useUserFavoriteSchedules()
+    const { fetchFavoritesSchedules, favoritesSchedules } =
+      useUserFavoriteSchedules()
     await fetchFavoritesSchedules()
     expect(favoritesSchedules.value).toEqual(favs)
   })
 
   it('fetchFavoritesSchedules sets empty array when service returns null', async () => {
     mockGetFavoriteSchedules.mockResolvedValue(null)
-    const { fetchFavoritesSchedules, favoritesSchedules } = useUserFavoriteSchedules()
+    const { fetchFavoritesSchedules, favoritesSchedules } =
+      useUserFavoriteSchedules()
     await fetchFavoritesSchedules()
     expect(favoritesSchedules.value).toEqual([])
   })
