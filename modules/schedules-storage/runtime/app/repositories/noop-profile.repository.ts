@@ -1,7 +1,7 @@
 import type { IProfileRepository } from './profile-repository.interface'
 
 export class NoopProfileRepository implements IProfileRepository {
-  get() {
+  get(_userId: string) {
     return Promise.resolve(undefined)
   }
   create(_userId: string, value: Parameters<IProfileRepository['create']>[1]) {

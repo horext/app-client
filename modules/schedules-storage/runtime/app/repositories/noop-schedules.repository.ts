@@ -1,13 +1,19 @@
 import type { ISchedulesRepository } from './schedules-repository.interface'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
-  findAll() {
+  findAll(_userId: string) {
     return Promise.resolve([])
   }
-  getEntries() {
+  getEntries(
+    _userId: string,
+    _ids: Parameters<ISchedulesRepository['getEntries']>[1],
+  ) {
     return Promise.resolve([])
   }
-  getByKey() {
+  getByKey(
+    _userId: string,
+    _scheduleSubjectKey: Parameters<ISchedulesRepository['getByKey']>[1],
+  ) {
     return Promise.resolve(undefined)
   }
   create(
@@ -28,10 +34,16 @@ export class NoopSchedulesRepository implements ISchedulesRepository {
   ) {
     return Promise.resolve(value)
   }
-  deleteEntry() {
+  deleteEntry(
+    _userId: string,
+    _id: Parameters<ISchedulesRepository['deleteEntry']>[1],
+  ) {
     return Promise.resolve()
   }
-  deleteEntries() {
+  deleteEntries(
+    _userId: string,
+    _ids: Parameters<ISchedulesRepository['deleteEntries']>[1],
+  ) {
     return Promise.resolve()
   }
 }

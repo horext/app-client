@@ -1,10 +1,10 @@
 import type { IActivitiesRepository } from './activities.repository.interface'
 
 export class NoopActivitiesRepository implements IActivitiesRepository {
-  getAll() {
+  getAll(_userId: string) {
     return Promise.resolve([])
   }
-  get() {
+  get(_userId: string, _id: Parameters<IActivitiesRepository['get']>[1]) {
     return Promise.resolve(undefined)
   }
   create(
@@ -19,7 +19,7 @@ export class NoopActivitiesRepository implements IActivitiesRepository {
   ) {
     return Promise.resolve(value)
   }
-  delete() {
+  delete(_userId: string, _id: Parameters<IActivitiesRepository['delete']>[1]) {
     return Promise.resolve()
   }
 }

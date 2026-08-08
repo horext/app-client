@@ -1,10 +1,13 @@
 import type { ISchedulesFavoritesRepository } from './schedules-repository.interface'
 
 export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepository {
-  findAll() {
+  findAll(_userId: string) {
     return Promise.resolve([])
   }
-  findById() {
+  findById(
+    _userId: string,
+    _id: Parameters<ISchedulesFavoritesRepository['findById']>[1],
+  ) {
     return Promise.resolve(undefined)
   }
   create(
@@ -13,7 +16,10 @@ export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepo
   ) {
     return Promise.resolve(value)
   }
-  delete() {
+  delete(
+    _userId: string,
+    _id: Parameters<ISchedulesFavoritesRepository['delete']>[1],
+  ) {
     return Promise.resolve()
   }
 }

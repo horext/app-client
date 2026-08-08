@@ -1,7 +1,7 @@
 import type { IAcademicConfigRepository } from './academic-config.repository.interface'
 
 export class NoopAcademicConfigRepository implements IAcademicConfigRepository {
-  get() {
+  get(_userId: string) {
     return Promise.resolve(undefined)
   }
   create(

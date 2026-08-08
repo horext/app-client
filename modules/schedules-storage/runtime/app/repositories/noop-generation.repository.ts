@@ -1,10 +1,10 @@
 import type { IGenerationRepository } from './generation.repository.interface'
 
 export class NoopGenerationRepository implements IGenerationRepository {
-  getAll() {
+  getAll(_userId: string) {
     return Promise.resolve([])
   }
-  get() {
+  get(_userId: string, _id: Parameters<IGenerationRepository['get']>[1]) {
     return Promise.resolve(undefined)
   }
   create(
@@ -13,7 +13,7 @@ export class NoopGenerationRepository implements IGenerationRepository {
   ) {
     return Promise.resolve(value)
   }
-  delete() {
+  delete(_userId: string, _id: Parameters<IGenerationRepository['delete']>[1]) {
     return Promise.resolve()
   }
 }

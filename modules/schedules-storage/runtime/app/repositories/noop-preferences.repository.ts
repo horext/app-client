@@ -1,7 +1,7 @@
 import type { IPreferencesRepository } from './preferences-repository.interface'
 
 export class NoopPreferencesRepository implements IPreferencesRepository {
-  get() {
+  get(_userId: string) {
     return Promise.resolve(undefined)
   }
   create(
