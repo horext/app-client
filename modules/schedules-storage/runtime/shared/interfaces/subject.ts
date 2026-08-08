@@ -1,6 +1,7 @@
-import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
+import type { IEntityMetadata } from './entity-metadata'
+import type { UUID } from 'crypto'
 
 export interface ICourse {
   id: string
@@ -83,7 +84,8 @@ export interface ISubjectSchedulesUpdate {
   color?: string
 }
 
-export interface ISubjectSchedules extends IBaseSubjectSchedules {
+export interface ISubjectSchedules
+  extends IBaseSubjectSchedules, IEntityMetadata {
   id: UUID
 }
 

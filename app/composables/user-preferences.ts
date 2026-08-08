@@ -4,34 +4,35 @@ import type { Weekdays } from '~/interfaces/event'
 export const useUserPreferences = () => {
   const store = useUserPreferencesStore()
   const service = usePreferencesService()
+  const userId = useSchedulesUserId()
   const { preferences, weekDays, crossings, maxGenerationHistory } =
     storeToRefs(store)
 
   async function fetchPreferences() {
-    const prefs = await service.getPreferences()
+    const prefs = await service.getPreferences(userId)
     if (prefs) preferences.value = prefs
   }
 
   async function createPreferences() {
-    await service.createPreferences()
+    await service.createPreferences(userId)
   }
 
   async function updateCrossings(_crossings: number) {
     if (preferences.value)
       preferences.value = { ...preferences.value, crossings: _crossings }
-    await service.patch({ crossings: _crossings })
+    await service.patch(userId, { crossings: _crossings })
   }
 
   async function saveWeekDays(data: Weekdays[]) {
     if (preferences.value)
       preferences.value = { ...preferences.value, weekDays: data }
-    await service.patch({ weekDays: data })
+    await service.patch(userId, { weekDays: data })
   }
 
   async function updateMaxGenerationHistory(n: number) {
     if (preferences.value)
       preferences.value = { ...preferences.value, maxGenerationHistory: n }
-    await service.patch({ maxGenerationHistory: n })
+    await service.patch(userId, { maxGenerationHistory: n })
   }
 
   return {

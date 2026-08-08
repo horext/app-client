@@ -2,8 +2,13 @@ import type { UUID } from 'crypto'
 import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
 
 export interface IActivitiesService {
-  getAll(): Promise<Array<IActivity>>
-  create(activity: IBaseActivity): Promise<IActivity>
-  delete(id: UUID): Promise<void>
-  updateById(id: UUID, activity: IBaseActivity): Promise<IActivity>
+  getAll(userId: string): Promise<Array<IActivity>>
+  get(userId: string, id: UUID): Promise<IActivity | undefined>
+  create(userId: string, activity: IBaseActivity): Promise<IActivity>
+  delete(userId: string, id: UUID): Promise<void>
+  updateById(
+    userId: string,
+    id: UUID,
+    activity: IBaseActivity,
+  ): Promise<IActivity>
 }

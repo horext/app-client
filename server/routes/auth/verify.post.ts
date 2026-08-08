@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
     return {
       body: {
         status: 'ok',
+        id: userid,
         email: payload['email'],
         name: payload['name'],
         picture: payload['picture'],

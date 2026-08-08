@@ -174,7 +174,9 @@ describe('useUserProfile', () => {
     mockProfilePatch.mockResolvedValue(undefined)
     const { updateFaculty } = useUserProfile()
     await updateFaculty(5)
-    expect(mockProfilePatch).toHaveBeenCalledWith({ facultyId: 5 })
+    expect(mockProfilePatch).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 5,
+    })
     expect(store.profile?.facultyId).toBe(5)
   })
 

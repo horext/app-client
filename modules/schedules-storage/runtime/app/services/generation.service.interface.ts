@@ -10,15 +10,17 @@ import type {
 } from '../../shared/interfaces/schedule'
 
 export interface IGenerationService {
-  getGenerations(): Promise<IGenerationRecord[]>
-  getLatestGeneration(): Promise<IGenerationResult | undefined>
+  getGenerations(userId: string): Promise<IGenerationRecord[]>
+  getLatestGeneration(userId: string): Promise<IGenerationResult | undefined>
   saveGeneration(
+    userId: string,
     meta: IGenerationMeta,
     schedules: IBaseScheduleGenerate[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,
   ): Promise<IGenerationResult>
   getSchedulesForGeneration(
+    userId: string,
     record: IGenerationRecord,
   ): Promise<IScheduleGenerate[]>
 }

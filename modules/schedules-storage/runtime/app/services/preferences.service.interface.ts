@@ -1,7 +1,10 @@
-import type { IUserPreferences } from '../../shared/interfaces/preferences'
+import type {
+  IBasePreferences,
+  IPreferences,
+} from '../../shared/interfaces/preferences'
 
 export interface IPreferencesService {
-  getPreferences(): Promise<IUserPreferences | undefined>
-  createPreferences(): Promise<IUserPreferences>
-  patch(partial: Partial<Omit<IUserPreferences, 'id'>>): Promise<void>
+  getPreferences(userId: string): Promise<IPreferences | undefined>
+  createPreferences(userId: string): Promise<IPreferences>
+  patch(userId: string, partial: Partial<IBasePreferences>): Promise<void>
 }

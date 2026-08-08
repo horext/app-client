@@ -5,10 +5,14 @@ import type {
 } from '../../shared/interfaces/subject'
 
 export interface ISubjectsService {
-  getAll(): Promise<ISubjectSchedules[]>
-  create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules>
-  delete(id: ISubjectSchedules['id']): Promise<void>
+  getAll(userId: string): Promise<ISubjectSchedules[]>
+  create(
+    userId: string,
+    subject: IBaseSubjectSchedules,
+  ): Promise<ISubjectSchedules>
+  delete(userId: string, id: ISubjectSchedules['id']): Promise<void>
   update(
+    userId: string,
     id: ISubjectSchedules['id'],
     subject: ISubjectSchedulesUpdate,
   ): Promise<ISubjectSchedules>

@@ -1,21 +1,22 @@
-import type {
-  IBaseScheduleGenerate,
-  IFavoriteSchedule,
-  IScheduleGenerate,
-} from '../../shared/interfaces/schedule'
+import type { UUID } from 'crypto'
+import type { Favorite, Schedule } from '../../shared/domain'
 
 export interface ISchedulesRepository {
-  getEntries(ids: IScheduleGenerate['id'][]): Promise<IScheduleGenerate[]>
-  getByKey(scheduleSubjectKey: string): Promise<IScheduleGenerate | undefined>
-  create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate>
-  update(schedule: IScheduleGenerate): Promise<IScheduleGenerate>
-  saveAll(schedules: IBaseScheduleGenerate[]): Promise<IScheduleGenerate[]>
-  deleteEntry(id: IScheduleGenerate['id']): Promise<void>
-  deleteEntries(ids: IScheduleGenerate['id'][]): Promise<void>
+  findAll(userId: string): Promise<Schedule[]>
+  getEntries(userId: string, ids: UUID[]): Promise<Schedule[]>
+  getByKey(
+    userId: string,
+    scheduleSubjectKey: string,
+  ): Promise<Schedule | undefined>
+  create(userId: string, schedule: Schedule): Promise<Schedule>
+  createAll(userId: string, schedules: Schedule[]): Promise<Schedule[]>
+  update(userId: string, schedule: Schedule): Promise<Schedule>
+  deleteEntry(userId: string, id: UUID): Promise<void>
+  deleteEntries(userId: string, ids: UUID[]): Promise<void>
 }
 export interface ISchedulesFavoritesRepository {
-  getIds(): Promise<IScheduleGenerate['id'][]>
-  findById(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule | undefined>
-  create(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule>
-  deleteById(id: IScheduleGenerate['id']): Promise<void>
+  findAll(userId: string): Promise<Favorite[]>
+  findById(userId: string, id: UUID): Promise<Favorite | undefined>
+  create(userId: string, favorite: Favorite): Promise<Favorite>
+  delete(userId: string, id: UUID): Promise<void>
 }

@@ -1,41 +1,48 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { IndexedDBAcademicConfigRepository } from '../indexed-db-academic-config.repository'
-import type { IUserAcademicConfig } from '../../../shared/interfaces/academic-config'
+import { AcademicConfig } from '../../../shared/domain'
+import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 
-const config: IUserAcademicConfig = { id: 'academic-config', hourlyLoad: null }
+const config = AcademicConfig.create({ hourlyLoad: null })
 
-const makeDb = () => ({
-  get: vi.fn(),
-  put: vi.fn(),
+const makePersistence = (): Mocked<AggregatePersistence> => ({
+  findAll: vi.fn(),
+  find: vi.fn(),
+  findByIndex: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
 })
 
 describe('IndexedDBAcademicConfigRepository', () => {
-  let db: ReturnType<typeof makeDb>
+  let persistence: ReturnType<typeof makePersistence>
   let repo: IndexedDBAcademicConfigRepository
 
   beforeEach(() => {
-    db = makeDb()
-    repo = new IndexedDBAcademicConfigRepository(() =>
-      Promise.resolve(db as never),
-    )
+    persistence = makePersistence()
+    repo = new IndexedDBAcademicConfigRepository(persistence)
   })
 
   describe('get', () => {
     it('returns the stored config', async () => {
-      db.get.mockResolvedValue(config)
-      expect(await repo.get()).toEqual(config)
+      persistence.find.mockResolvedValue(config.toSnapshot())
+      expect((await repo.get('user-1'))?.toSnapshot()).toMatchObject({
+        id: 'academic-config',
+      })
     })
 
     it('returns undefined when nothing stored', async () => {
-      db.get.mockResolvedValue(undefined)
-      expect(await repo.get()).toBeUndefined()
+      persistence.find.mockResolvedValue(undefined)
+      expect(await repo.get('user-1')).toBeUndefined()
     })
   })
 
-  describe('save', () => {
+  describe('create', () => {
     it('resolves without error', async () => {
-      db.put.mockResolvedValue(undefined)
-      await expect(repo.save(config)).resolves.toBeUndefined()
+      persistence.create.mockResolvedValue(config.toSnapshot())
+      await expect(repo.create('user-1', config)).resolves.toBeInstanceOf(
+        AcademicConfig,
+      )
     })
   })
 })

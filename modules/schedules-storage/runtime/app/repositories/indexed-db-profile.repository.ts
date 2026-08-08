@@ -1,19 +1,38 @@
-import type { IUserProfile } from '../../shared/interfaces/profile'
+import type { IProfile } from '../../shared/interfaces/profile'
+import { Profile } from '../../shared/domain'
 import type { IProfileRepository } from './profile-repository.interface'
-import { type DbFactory, StoresDB } from '../context/db'
+import type { AggregatePersistence } from '../persistence/aggregate-persistence'
+import { StoresDB } from '../context/db'
 
-const PROFILE_KEY: IUserProfile['id'] = 'profile'
+const PROFILE_KEY: IProfile['id'] = 'profile'
 
 export class IndexedDBProfileRepository implements IProfileRepository {
-  constructor(private readonly getDb: DbFactory) {}
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async get(): Promise<IUserProfile | undefined> {
-    const db = await this.getDb()
-    return db.get(StoresDB.PROFILE, PROFILE_KEY)
+  async get(userId: string): Promise<Profile | undefined> {
+    const record = await this.persistence.find(
+      StoresDB.PROFILE,
+      userId,
+      PROFILE_KEY,
+    )
+    return record ? Profile.restore(record) : undefined
   }
 
-  async save(profile: IUserProfile): Promise<void> {
-    const db = await this.getDb()
-    await db.put(StoresDB.PROFILE, profile)
+  async create(userId: string, profile: Profile): Promise<Profile> {
+    const stored = await this.persistence.create(
+      StoresDB.PROFILE,
+      profile.toSnapshot(),
+      userId,
+    )
+    return Profile.restore(stored)
+  }
+
+  async update(userId: string, profile: Profile): Promise<Profile> {
+    const stored = await this.persistence.update(
+      StoresDB.PROFILE,
+      profile.toSnapshot(),
+      userId,
+    )
+    return Profile.restore(stored)
   }
 }

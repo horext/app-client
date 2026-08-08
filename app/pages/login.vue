@@ -52,6 +52,7 @@ async function handleCredentialResponse(
 ) {
   const result = await $fetch<{
     body: {
+      id: string
       email?: string
       name?: string
       picture?: string

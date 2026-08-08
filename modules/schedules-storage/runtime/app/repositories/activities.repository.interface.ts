@@ -1,9 +1,10 @@
-import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
+import type { UUID } from 'crypto'
+import type { Activity } from '../../shared/domain'
 
 export interface IActivitiesRepository {
-  getAll(): Promise<Array<IActivity>>
-  get(id: IActivity['id']): Promise<IActivity | undefined>
-  create(activity: IBaseActivity): Promise<IActivity>
-  update(activity: IActivity): Promise<IActivity>
-  delete(id: IActivity['id']): Promise<void>
+  getAll(userId: string): Promise<Activity[]>
+  get(userId: string, id: UUID): Promise<Activity | undefined>
+  create(userId: string, activity: Activity): Promise<Activity>
+  update(userId: string, activity: Activity): Promise<Activity>
+  delete(userId: string, id: UUID): Promise<void>
 }

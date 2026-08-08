@@ -4,9 +4,10 @@ import type {
 } from '../../shared/interfaces/schedule'
 
 export interface IFavoritesSchedulesService {
-  getFavoriteSchedules(): Promise<IScheduleGenerate[]>
+  getFavoriteSchedules(userId: string): Promise<IScheduleGenerate[]>
   addFavorite(
+    userId: string,
     schedule: IBaseScheduleGenerate | IScheduleGenerate,
   ): Promise<IScheduleGenerate>
-  removeFavorite(id: string): Promise<void>
+  removeFavorite(userId: string, id: string): Promise<void>
 }

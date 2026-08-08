@@ -1,11 +1,7 @@
-import type { IUserProfile } from '../../shared/interfaces/profile'
+import type { IBaseProfile, IProfile } from '../../shared/interfaces/profile'
 
 export interface IProfileService {
-  getProfile(): Promise<IUserProfile | undefined>
-  createProfile(
-    initial: Omit<IUserProfile, 'id' | 'setupCompleted'> & {
-      setupCompleted?: boolean
-    },
-  ): Promise<IUserProfile>
-  patch(partial: Partial<Omit<IUserProfile, 'id'>>): Promise<void>
+  getProfile(userId: string): Promise<IProfile | undefined>
+  createProfile(userId: string, initial: IBaseProfile): Promise<IProfile>
+  patch(userId: string, partial: Partial<IBaseProfile>): Promise<void>
 }

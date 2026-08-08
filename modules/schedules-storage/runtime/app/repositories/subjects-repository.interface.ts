@@ -1,12 +1,10 @@
-import type {
-  IBaseSubjectSchedules,
-  ISubjectSchedules,
-} from '../../shared/interfaces/subject'
+import type { UUID } from 'crypto'
+import type { UserSubject } from '../../shared/domain'
 
 export interface ISubjectsRepository {
-  getAll(): Promise<ISubjectSchedules[]>
-  findById(id: ISubjectSchedules['id']): Promise<ISubjectSchedules | undefined>
-  create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules>
-  update(subject: ISubjectSchedules): Promise<ISubjectSchedules>
-  delete(id: ISubjectSchedules['id']): Promise<void>
+  getAll(userId: string): Promise<UserSubject[]>
+  findById(userId: string, id: UUID): Promise<UserSubject | undefined>
+  create(userId: string, subject: UserSubject): Promise<UserSubject>
+  update(userId: string, subject: UserSubject): Promise<UserSubject>
+  delete(userId: string, id: UUID): Promise<void>
 }

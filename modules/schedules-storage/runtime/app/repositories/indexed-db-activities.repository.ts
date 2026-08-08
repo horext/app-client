@@ -1,41 +1,42 @@
-import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
+import type { UUID } from 'crypto'
+import { Activity } from '../../shared/domain'
 import type { IActivitiesRepository } from './activities.repository.interface'
-import { type DbFactory, StoresDB } from '../context/db'
+import type { AggregatePersistence } from '../persistence/aggregate-persistence'
+import { StoresDB } from '../context/db'
 
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
-  constructor(private readonly getDb: DbFactory) {}
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(): Promise<Array<IActivity>> {
-    const db = await this.getDb()
-    return db.getAll(StoresDB.ACTIVITIES)
+  async getAll(userId: string): Promise<Activity[]> {
+    return (await this.persistence.findAll(StoresDB.ACTIVITIES, userId)).map(
+      Activity.restore,
+    )
   }
 
-  async get(id: IActivity['id']): Promise<IActivity | undefined> {
-    const db = await this.getDb()
-    return db.get(StoresDB.ACTIVITIES, id)
+  async get(userId: string, id: UUID): Promise<Activity | undefined> {
+    const record = await this.persistence.find(StoresDB.ACTIVITIES, userId, id)
+    return record ? Activity.restore(record) : undefined
   }
 
-  async create(activity: IBaseActivity): Promise<IActivity> {
-    const db = await this.getDb()
-    const id = crypto.randomUUID()
-    const newActivity: IActivity = {
-      ...activity,
-      id,
-      category: 'MY_EVENT',
-      type: 'MY_EVENT',
-    }
-    await db.put(StoresDB.ACTIVITIES, newActivity)
-    return newActivity
+  async create(userId: string, activity: Activity): Promise<Activity> {
+    const stored = await this.persistence.create(
+      StoresDB.ACTIVITIES,
+      activity.toSnapshot(),
+      userId,
+    )
+    return Activity.restore(stored)
   }
 
-  async update(activity: IActivity): Promise<IActivity> {
-    const db = await this.getDb()
-    await db.put(StoresDB.ACTIVITIES, activity)
-    return activity
+  async update(userId: string, activity: Activity): Promise<Activity> {
+    const stored = await this.persistence.update(
+      StoresDB.ACTIVITIES,
+      activity.toSnapshot(),
+      userId,
+    )
+    return Activity.restore(stored)
   }
 
-  async delete(id: IActivity['id']): Promise<void> {
-    const db = await this.getDb()
-    await db.delete(StoresDB.ACTIVITIES, id)
+  async delete(userId: string, id: UUID): Promise<void> {
+    await this.persistence.remove(StoresDB.ACTIVITIES, userId, id)
   }
 }

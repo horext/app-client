@@ -67,14 +67,14 @@ describe('useUserPreferences', () => {
     const { updateCrossings } = useUserPreferences()
     await updateCrossings(3)
     expect(store.preferences?.crossings).toBe(3)
-    expect(mockPatch).toHaveBeenCalledWith({ crossings: 3 })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
   })
 
   it('updateCrossings skips store update when preferences is undefined', async () => {
     mockPatch.mockResolvedValue(undefined)
     const { updateCrossings } = useUserPreferences()
     await updateCrossings(3)
-    expect(mockPatch).toHaveBeenCalledWith({ crossings: 3 })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
     expect(useUserPreferencesStore().preferences).toBeUndefined()
   })
 
@@ -90,14 +90,18 @@ describe('useUserPreferences', () => {
     const { saveWeekDays } = useUserPreferences()
     await saveWeekDays([1, 2, 3] as never)
     expect(store.preferences?.weekDays).toEqual([1, 2, 3])
-    expect(mockPatch).toHaveBeenCalledWith({ weekDays: [1, 2, 3] })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
+      weekDays: [1, 2, 3],
+    })
   })
 
   it('saveWeekDays skips store update when preferences is undefined', async () => {
     mockPatch.mockResolvedValue(undefined)
     const { saveWeekDays } = useUserPreferences()
     await saveWeekDays([1, 2] as never)
-    expect(mockPatch).toHaveBeenCalledWith({ weekDays: [1, 2] })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
+      weekDays: [1, 2],
+    })
   })
 
   it('updateMaxGenerationHistory updates preferences and patches service', async () => {
@@ -112,13 +116,17 @@ describe('useUserPreferences', () => {
     const { updateMaxGenerationHistory } = useUserPreferences()
     await updateMaxGenerationHistory(20)
     expect(store.preferences?.maxGenerationHistory).toBe(20)
-    expect(mockPatch).toHaveBeenCalledWith({ maxGenerationHistory: 20 })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
+      maxGenerationHistory: 20,
+    })
   })
 
   it('updateMaxGenerationHistory skips store update when preferences is undefined', async () => {
     mockPatch.mockResolvedValue(undefined)
     const { updateMaxGenerationHistory } = useUserPreferences()
     await updateMaxGenerationHistory(20)
-    expect(mockPatch).toHaveBeenCalledWith({ maxGenerationHistory: 20 })
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
+      maxGenerationHistory: 20,
+    })
   })
 })

@@ -1,86 +1,75 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import type { UUID } from 'crypto'
+import { Activity } from '../../../shared/domain'
 import { ActivitiesService } from '../activities.service'
 import type { IActivitiesRepository } from '../../repositories/activities.repository.interface'
 
 describe('ActivitiesService', () => {
   const makeRepo = (): Mocked<IActivitiesRepository> => ({
     getAll: vi.fn(),
-    create: vi.fn(),
-    delete: vi.fn(),
     get: vi.fn(),
+    create: vi.fn(),
     update: vi.fn(),
+    delete: vi.fn(),
   })
-
-  const makeActivity = (id = 'act-0-0-0-1' as UUID) => ({
-    id,
-    title: `Activity ${id}`,
-    color: '#fff',
-    sessions: [{ day: 1 as const, startTime: '08:00', endTime: '10:00' }],
-    type: 'MY_EVENT' as const,
-    category: 'MY_EVENT' as const,
-  })
-
+  const makeActivity = () =>
+    Activity.create({
+      title: 'Activity',
+      color: '#fff',
+      sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
+    })
   let repo: Mocked<IActivitiesRepository>
   let service: ActivitiesService
-
   beforeEach(() => {
     repo = makeRepo()
     service = new ActivitiesService(repo)
   })
-
   describe('getAll', () => {
     it('returns all activities', async () => {
-      repo.getAll.mockResolvedValue([
-        makeActivity(),
-        makeActivity('act-0-0-0-2' as UUID),
-      ])
-      const result = await service.getAll()
-      expect(result).toHaveLength(2)
+      repo.getAll.mockResolvedValue([makeActivity(), makeActivity()])
+      expect(await service.getAll('user-1')).toHaveLength(2)
     })
   })
-
   describe('create', () => {
     it('creates an activity', async () => {
       const activity = makeActivity()
       repo.create.mockResolvedValue(activity)
-      const { id: _, ...base } = activity
-      const result = await service.create(base)
-      expect(result).toEqual(activity)
+      const result = await service.create('user-1', {
+        title: 'Activity',
+        color: '#fff',
+        sessions: [],
+      })
+      expect(result).toMatchObject({ category: 'MY_EVENT', type: 'MY_EVENT' })
     })
   })
-
   describe('delete', () => {
     it('deletes an activity by id', async () => {
-      repo.delete.mockResolvedValue(undefined)
-      await service.delete('act-0-0-0-1' as UUID)
-      expect(repo.delete).toHaveBeenCalledWith('act-0-0-0-1')
+      const id = crypto.randomUUID()
+      await service.delete('user-1', id)
+      expect(repo.delete).toHaveBeenCalledWith('user-1', id)
     })
   })
-
   describe('updateById', () => {
     it('updates activity when it exists', async () => {
       const existing = makeActivity()
-      const updated = { ...existing, title: 'Updated' }
       repo.get.mockResolvedValue(existing)
-      repo.update.mockResolvedValue(updated)
-      const { id: _, ...base } = existing
-      const result = await service.updateById('act-0-0-0-1' as UUID, {
-        ...base,
+      repo.update.mockImplementation(async (_, activity) => activity)
+      const result = await service.updateById('user-1', existing.id, {
         title: 'Updated',
+        color: '#fff',
+        sessions: existing.toSnapshot().sessions,
       })
       expect(result.title).toBe('Updated')
     })
-
     it('throws when activity not found', async () => {
       repo.get.mockResolvedValue(undefined)
+      const id = crypto.randomUUID()
       await expect(
-        service.updateById('act-0-0-0-99' as UUID, {
+        service.updateById('user-1', id, {
           title: 'x',
           color: '#000',
-          sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
+          sessions: [],
         }),
-      ).rejects.toThrow('Activity with id act-0-0-0-99 not found')
+      ).rejects.toThrow(`Activity with id ${id} not found`)
     })
   })
 })

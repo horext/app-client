@@ -1,6 +1,7 @@
-import type { IUserProfile } from '../../shared/interfaces/profile'
+import type { Profile } from '../../shared/domain'
 
 export interface IProfileRepository {
-  get(): Promise<IUserProfile | undefined>
-  save(profile: IUserProfile): Promise<void>
+  get(userId: string): Promise<Profile | undefined>
+  create(userId: string, profile: Profile): Promise<Profile>
+  update(userId: string, profile: Profile): Promise<Profile>
 }

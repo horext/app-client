@@ -1,39 +1,40 @@
-import type { IUserProfile } from '../../shared/interfaces/profile'
+import type { IBaseProfile, IProfile } from '../../shared/interfaces/profile'
 import type { IProfileRepository } from '../repositories/profile-repository.interface'
 import type { IProfileService } from './profile.service.interface'
-import { UserProfile } from '../domain/UserProfile'
+import { Profile } from '../../shared/domain'
 
 export class ProfileService implements IProfileService {
   constructor(private readonly repo: IProfileRepository) {}
 
-  private async _load(): Promise<UserProfile | undefined> {
-    const data = await this.repo.get()
-    return data ? UserProfile.from(data) : undefined
+  private async _load(userId: string): Promise<Profile | undefined> {
+    return this.repo.get(userId)
   }
 
-  private async _save(profile: UserProfile): Promise<void> {
-    await this.repo.save(profile.toData())
+  private async _create(userId: string, profile: Profile): Promise<Profile> {
+    return this.repo.create(userId, profile)
   }
 
-  async getProfile(): Promise<IUserProfile | undefined> {
-    return (await this._load())?.toData()
+  private async _update(userId: string, profile: Profile): Promise<Profile> {
+    return this.repo.update(userId, profile)
+  }
+
+  async getProfile(userId: string): Promise<IProfile | undefined> {
+    return (await this._load(userId))?.toSnapshot()
   }
 
   async createProfile(
-    initial: Omit<IUserProfile, 'id' | 'setupCompleted'> & {
-      setupCompleted?: boolean
-    },
-  ): Promise<IUserProfile> {
-    const existing = await this._load()
-    if (existing) return existing.toData()
-    const profile = UserProfile.create(initial)
-    await this._save(profile)
-    return profile.toData()
+    userId: string,
+    initial: IBaseProfile,
+  ): Promise<IProfile> {
+    const existing = await this._load(userId)
+    if (existing) return existing.toSnapshot()
+    const profile = Profile.create({ setupCompleted: false, ...initial })
+    return (await this._create(userId, profile)).toSnapshot()
   }
 
-  async patch(partial: Partial<Omit<IUserProfile, 'id'>>): Promise<void> {
-    const profile = await this._load()
+  async patch(userId: string, partial: Partial<IBaseProfile>): Promise<void> {
+    const profile = await this._load(userId)
     if (!profile) return
-    await this._save(profile.patch(partial))
+    await this._update(userId, profile.update(partial))
   }
 }

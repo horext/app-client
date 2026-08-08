@@ -1,7 +1,7 @@
-import type { IUserPreferences } from '../../shared/interfaces/preferences'
-import type { UserPreferences } from '../domain/UserPreferences'
+import type { Preferences } from '../../shared/domain'
 
 export interface IPreferencesRepository {
-  get(): Promise<UserPreferences | undefined>
-  save(preferences: IUserPreferences): Promise<void>
+  get(userId: string): Promise<Preferences | undefined>
+  create(userId: string, preferences: Preferences): Promise<Preferences>
+  update(userId: string, preferences: Preferences): Promise<Preferences>
 }

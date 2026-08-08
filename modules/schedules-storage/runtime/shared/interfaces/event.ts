@@ -1,4 +1,5 @@
 import type { UUID } from 'crypto'
+import type { IEntityMetadata } from './entity-metadata'
 
 export type EventCategories = 'COURSE' | 'MY_EVENT'
 export type Weekdays = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -32,7 +33,7 @@ export interface IBaseActivity {
   sessions: IActivitySession[]
 }
 
-export interface IActivity extends IBaseActivity {
+export interface IActivity extends IBaseActivity, IEntityMetadata {
   id: UUID
   category: 'MY_EVENT'
   type: 'MY_EVENT'

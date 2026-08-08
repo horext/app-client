@@ -1,6 +1,7 @@
 import type { UUID } from 'crypto'
 import type { IEvent } from './event'
 import type { ISubject, ISubjectSchedule } from './subject'
+import type { IEntityMetadata } from './entity-metadata'
 
 export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: ISubject
@@ -13,10 +14,11 @@ export interface IBaseScheduleGenerate {
   events: IEvent[]
 }
 
-export interface IScheduleGenerate extends IBaseScheduleGenerate {
+export interface IScheduleGenerate
+  extends IBaseScheduleGenerate, IEntityMetadata {
   id: UUID
 }
- 
-export interface IFavoriteSchedule {
+
+export interface IFavoriteSchedule extends IEntityMetadata {
   id: IScheduleGenerate['id']
 }
