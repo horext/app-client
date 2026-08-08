@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { mdiStar } from '@mdi/js'
 
-const isFavorite = defineModel<boolean>('active' ,{
+const isFavorite = defineModel<boolean>('active', {
   required: true,
 })
 

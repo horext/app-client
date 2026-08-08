@@ -48,8 +48,8 @@ const highlightedType = computed(() => {
   if (selected.length === 0) return ''
 
   if (selected.includes(current.id)) return 'selected'
-  const selectedItems = selected.map(
-    (selectedId) => items.find((s) => s.id === selectedId)!,
+  const selectedItems = selected.map((selectedId) =>
+    items.find((s) => s.id === selectedId)!,
   )
   const isOpen = selectedItems.some((selectedItem) =>
     current.relationships.some(
