@@ -53,7 +53,7 @@ describe('useUserFavoriteSchedules', () => {
     const { saveNewFavoriteSchedule, favoritesSchedules } =
       useUserFavoriteSchedules()
     await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
-    expect(mockAddFavorite).toHaveBeenCalledWith(fav)
+    expect(mockAddFavorite).toHaveBeenCalledWith(expect.any(String), fav)
     expect(favoritesSchedules.value).toContainEqual(fav)
   })
 
@@ -65,8 +65,21 @@ describe('useUserFavoriteSchedules', () => {
     const { deleteFavoriteScheduleById, favoritesSchedules } =
       useUserFavoriteSchedules()
     await deleteFavoriteScheduleById(fav.id)
-    expect(mockRemoveFavorite).toHaveBeenCalledWith(fav.id)
+    expect(mockRemoveFavorite).toHaveBeenCalledWith(expect.any(String), fav.id)
     expect(favoritesSchedules.value).not.toContainEqual(fav)
+  })
+
+  it('does not remove another favorite when the id is missing from the store', async () => {
+    const first = makeFavorite()
+    const missingId = makeFavorite()
+    const store = useUserFavoritesStore()
+    store.favoritesSchedules = [first]
+    mockRemoveFavorite.mockResolvedValue(undefined)
+
+    const { deleteFavoriteScheduleById } = useUserFavoriteSchedules()
+    await deleteFavoriteScheduleById(missingId.id)
+
+    expect(store.favoritesSchedules).toEqual([first])
   })
 
   it('fetchFavoritesSchedules loads all favorites into store', async () => {

@@ -1,6 +1,7 @@
-import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
+import type { AcademicConfig } from '../../shared/domain'
 
 export interface IAcademicConfigRepository {
-  get(): Promise<IUserAcademicConfig | undefined>
-  save(config: IUserAcademicConfig): Promise<void>
+  get(userId: string): Promise<AcademicConfig | undefined>
+  create(userId: string, config: AcademicConfig): Promise<AcademicConfig>
+  update(userId: string, config: AcademicConfig): Promise<AcademicConfig>
 }

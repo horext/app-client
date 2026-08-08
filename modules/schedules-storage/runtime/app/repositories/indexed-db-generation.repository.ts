@@ -1,34 +1,33 @@
-import type {
-  IBaseGenerationRecord,
-  IGenerationRecord,
-} from '../../shared/interfaces/generation-record'
+import type { UUID } from 'crypto'
+import { Generation } from '../../shared/domain'
 import type { IGenerationRepository } from './generation.repository.interface'
-import { type DbFactory, StoresDB } from '../context/db'
+import type { AggregatePersistence } from '../persistence/aggregate-persistence'
+import { StoresDB } from '../context/db'
 
-export class IndexedDBGenerationRepository implements IGenerationRepository {
-  constructor(private readonly getDb: DbFactory) {}
+export class IndexedDBGenerationsRepository implements IGenerationRepository {
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(): Promise<IGenerationRecord[]> {
-    const db = await this.getDb()
-    return db.getAll(StoresDB.GENERATIONS)
+  async getAll(userId: string): Promise<Generation[]> {
+    return (await this.persistence.findAll(StoresDB.GENERATIONS, userId)).map(
+      Generation.restore,
+    )
   }
 
-  async get(
-    id: IGenerationRecord['id'],
-  ): Promise<IGenerationRecord | undefined> {
-    const db = await this.getDb()
-    return db.get(StoresDB.GENERATIONS, id)
+  async get(userId: string, id: UUID): Promise<Generation | undefined> {
+    const record = await this.persistence.find(StoresDB.GENERATIONS, userId, id)
+    return record ? Generation.restore(record) : undefined
   }
 
-  async create(record: IBaseGenerationRecord): Promise<IGenerationRecord> {
-    const db = await this.getDb()
-    const dbRecord = { ...record, id: crypto.randomUUID() }
-    await db.put(StoresDB.GENERATIONS, dbRecord)
-    return dbRecord
+  async create(userId: string, record: Generation): Promise<Generation> {
+    const stored = await this.persistence.create(
+      StoresDB.GENERATIONS,
+      record.toSnapshot(),
+      userId,
+    )
+    return Generation.restore(stored)
   }
 
-  async delete(id: IGenerationRecord['id']): Promise<void> {
-    const db = await this.getDb()
-    await db.delete(StoresDB.GENERATIONS, id)
+  async delete(userId: string, id: UUID): Promise<void> {
+    await this.persistence.remove(StoresDB.GENERATIONS, userId, id)
   }
 }

@@ -52,7 +52,7 @@ describe('useUserEvents', () => {
     mockCreate.mockResolvedValue(activity)
     const { createNewItem, items } = useUserEvents()
     await createNewItem(activity)
-    expect(mockCreate).toHaveBeenCalledWith(activity)
+    expect(mockCreate).toHaveBeenCalledWith(expect.any(String), activity)
     expect(items.value).toContainEqual(activity)
   })
 
@@ -63,7 +63,7 @@ describe('useUserEvents', () => {
     mockDelete.mockResolvedValue(undefined)
     const { deleteItemById, items } = useUserEvents()
     await deleteItemById(id)
-    expect(mockDelete).toHaveBeenCalledWith(id)
+    expect(mockDelete).toHaveBeenCalledWith(expect.any(String), id)
     expect(items.value).not.toContainEqual(expect.objectContaining({ id }))
   })
 

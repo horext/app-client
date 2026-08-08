@@ -1,44 +1,45 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
+import { Profile } from '../../../shared/domain'
+import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBProfileRepository } from '../indexed-db-profile.repository'
-import type { IUserProfile } from '../../../shared/interfaces/profile'
 
-const profile: IUserProfile = {
-  id: 'profile',
-  facultyId: 1,
-  specialityId: 2,
-  setupCompleted: false,
-}
-
-const makeDb = () => ({
-  get: vi.fn(),
-  put: vi.fn(),
+const makePersistence = (): Mocked<AggregatePersistence> => ({
+  find: vi.fn(),
+  findAll: vi.fn(),
+  findByIndex: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
 })
-
 describe('IndexedDBProfileRepository', () => {
-  let db: ReturnType<typeof makeDb>
+  let persistence: Mocked<AggregatePersistence>
   let repo: IndexedDBProfileRepository
-
   beforeEach(() => {
-    db = makeDb()
-    repo = new IndexedDBProfileRepository(() => Promise.resolve(db as never))
+    persistence = makePersistence()
+    repo = new IndexedDBProfileRepository(persistence)
   })
-
-  describe('get', () => {
-    it('returns the stored profile', async () => {
-      db.get.mockResolvedValue(profile)
-      expect(await repo.get()).toEqual(profile)
+  it('returns the stored profile', async () => {
+    const profile = Profile.create({
+      facultyId: 1,
+      specialityId: 2,
+      setupCompleted: false,
     })
-
-    it('returns undefined when nothing stored', async () => {
-      db.get.mockResolvedValue(undefined)
-      expect(await repo.get()).toBeUndefined()
+    persistence.find.mockResolvedValue(profile.toSnapshot())
+    expect((await repo.get('user-1'))?.toSnapshot()).toMatchObject({
+      id: 'profile',
     })
   })
-
-  describe('save', () => {
-    it('resolves without error', async () => {
-      db.put.mockResolvedValue(undefined)
-      await expect(repo.save(profile)).resolves.toBeUndefined()
+  it('returns undefined when nothing stored', async () => {
+    persistence.find.mockResolvedValue(undefined)
+    expect(await repo.get('user-1')).toBeUndefined()
+  })
+  it('resolves without error when saving', async () => {
+    const profile = Profile.create({
+      facultyId: 1,
+      specialityId: 2,
+      setupCompleted: false,
     })
+    persistence.create.mockResolvedValue(profile.toSnapshot())
+    await expect(repo.create('user-1', profile)).resolves.toBeDefined()
   })
 })

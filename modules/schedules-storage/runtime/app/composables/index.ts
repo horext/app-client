@@ -8,6 +8,7 @@ import {
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
   SUBJECTS_SERVICE_KEY,
+  USER_ID_KEY,
 } from '../context/keys'
 import type { IFavoritesSchedulesService } from '../services/favorites-schedules.service.interface'
 import type { IActivitiesService } from '../services/activities-service.interface'
@@ -24,6 +25,11 @@ const useService = <T>(key: InjectionKey<T>, name: string): T => {
       `${name}: service not provided. Is the schedules-storage plugin loaded?`,
     )
   return service
+}
+
+export const useSchedulesUserId = (): string => {
+  const userId = inject(USER_ID_KEY)
+  return userId?.() ?? 'anonymous'
 }
 
 export const useFavoritesSchedulesService = (): IFavoritesSchedulesService =>

@@ -2,10 +2,11 @@ import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './ocurrences'
 import type { IScheduleGenerate } from './schedule'
+import type { IEntityMetadata } from './entity-metadata'
 
 export type IGenerationMeta = Omit<
   IGenerationRecord,
-  'id' | 'scheduleIds' | 'resultCount' | 'occurrences'
+  'id' | 'scheduleIds' | 'resultCount' | 'occurrences' | keyof IEntityMetadata
 >
 
 export interface IBaseGenerationRecord {
@@ -18,7 +19,8 @@ export interface IBaseGenerationRecord {
   occurrences: IIntersectionOccurrence[]
 }
 
-export interface IGenerationRecord extends IBaseGenerationRecord {
+export interface IGenerationRecord
+  extends IBaseGenerationRecord, IEntityMetadata {
   id: UUID
 }
 

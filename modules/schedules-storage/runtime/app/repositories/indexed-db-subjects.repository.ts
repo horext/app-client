@@ -1,39 +1,42 @@
-import type {
-  IBaseSubjectSchedules,
-  ISubjectSchedules,
-} from '../../shared/interfaces/subject'
+import type { UUID } from 'crypto'
+import { UserSubject } from '../../shared/domain'
 import type { ISubjectsRepository } from './subjects-repository.interface'
-import { type DbFactory, StoresDB } from '../context/db'
+import type { AggregatePersistence } from '../persistence/aggregate-persistence'
+import { StoresDB } from '../context/db'
 
 export class IndexedDBSubjectsRepository implements ISubjectsRepository {
-  constructor(private readonly getDb: DbFactory) {}
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(): Promise<ISubjectSchedules[]> {
-    const db = await this.getDb()
-    return db.getAll(StoresDB.SUBJECTS)
+  async getAll(userId: string): Promise<UserSubject[]> {
+    return (await this.persistence.findAll(StoresDB.SUBJECTS, userId)).map(
+      UserSubject.restore,
+    )
   }
 
-  async findById(id: ISubjectSchedules['id']): Promise<ISubjectSchedules | undefined> {
-    const db = await this.getDb()
-    return db.get(StoresDB.SUBJECTS, id)
+  async findById(userId: string, id: UUID): Promise<UserSubject | undefined> {
+    const record = await this.persistence.find(StoresDB.SUBJECTS, userId, id)
+    return record ? UserSubject.restore(record) : undefined
   }
 
-  async create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules> {
-    const data = {
-      ...subject,
-      id: crypto.randomUUID(),
-    }
-    return this.update(data)
+  async delete(userId: string, id: UUID): Promise<void> {
+    await this.persistence.remove(StoresDB.SUBJECTS, userId, id)
   }
 
-  async delete(id: ISubjectSchedules['id']): Promise<void> {
-    const db = await this.getDb()
-    await db.delete(StoresDB.SUBJECTS, id)
+  async create(userId: string, subject: UserSubject): Promise<UserSubject> {
+    const stored = await this.persistence.create(
+      StoresDB.SUBJECTS,
+      subject.toSnapshot(),
+      userId,
+    )
+    return UserSubject.restore(stored)
   }
 
-  async update(subject: ISubjectSchedules): Promise<ISubjectSchedules> {
-    const db = await this.getDb()
-    await db.put(StoresDB.SUBJECTS, subject)
-    return subject
+  async update(userId: string, subject: UserSubject): Promise<UserSubject> {
+    const stored = await this.persistence.update(
+      StoresDB.SUBJECTS,
+      subject.toSnapshot(),
+      userId,
+    )
+    return UserSubject.restore(stored)
   }
 }

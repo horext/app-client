@@ -7,6 +7,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   const store = useUserProfileStore()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
+  const userId = useSchedulesUserId()
   const hourlyLoadApi = useHourlyLoadApi(apis)
   const {
     profile,
@@ -22,14 +23,14 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   async function fetchProfile() {
     try {
       loadingProfile.value = true
-      profile.value = await profileService.getProfile()
+      profile.value = await profileService.getProfile(userId)
     } finally {
       loadingProfile.value = false
     }
   }
 
   async function fetchAcademicConfig() {
-    const config = await academicConfigService.getAcademicConfig()
+    const config = await academicConfigService.getAcademicConfig(userId)
     if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
 
@@ -46,7 +47,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
       }
     }
     hourlyLoad.value = newHourlyLoad
-    await academicConfigService.patch({ hourlyLoad: newHourlyLoad })
+    await academicConfigService.patch(userId, { hourlyLoad: newHourlyLoad })
   }
 
   async function fetchLatestHourlyLoad(facultyId: number) {
@@ -55,19 +56,19 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   }
 
   async function updateFaculty(_facultyId: number) {
-    await profileService.patch({ facultyId: _facultyId })
+    await profileService.patch(userId, { facultyId: _facultyId })
     if (profile.value)
       profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
   async function updateSpeciality(_specialityId: number) {
-    await profileService.patch({ specialityId: _specialityId })
+    await profileService.patch(userId, { specialityId: _specialityId })
     if (profile.value)
       profile.value = { ...profile.value, specialityId: _specialityId }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
-    await profileService.patch({ setupCompleted: _setupCompleted })
+    await profileService.patch(userId, { setupCompleted: _setupCompleted })
     if (profile.value)
       profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
@@ -78,7 +79,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.patch({
+      profileService.patch(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
       }),
@@ -99,12 +100,14 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _hourlyLoad: IHourlyLoad,
   ) {
     await Promise.all([
-      profileService.createProfile({
+      profileService.createProfile(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
         setupCompleted: true,
       }),
-      academicConfigService.createAcademicConfig({ hourlyLoad: _hourlyLoad }),
+      academicConfigService.createAcademicConfig(userId, {
+        hourlyLoad: _hourlyLoad,
+      }),
       createPreferences(),
     ])
     profile.value = {

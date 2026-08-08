@@ -1,85 +1,68 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
+import { UserSubject } from '../../../shared/domain'
 import { SubjectsService } from '../subjects.service'
 import type { ISubjectsRepository } from '../../repositories/subjects-repository.interface'
-import type { ISubjectSchedules } from '~/interfaces/subject'
+import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
 
-const makeRepo = (): Mocked<ISubjectsRepository> => ({
-  getAll: vi.fn(),
-  findById: vi.fn(),
-  create: vi.fn(),
-  delete: vi.fn(),
-  update: vi.fn(),
-})
-
-const makeSubject = (id = crypto.randomUUID()): ISubjectSchedules => ({
-  id,
-  schedules: [],
+const subjectInput: IBaseSubjectSchedules = {
   subject: {
     id: 100,
     course: { id: 'CS101', name: 'Intro to CS' },
     credits: 3,
-    type: {
-      id: 0,
-      name: '',
-      code: '',
-    },
-    studyPlan: {
-      id: 0,
-      fromDate: '',
-      code: '',
-      organizationUnit: {
-        id: 0,
-      },
-    },
+    type: { id: 0, name: '', code: '' },
+    studyPlan: { id: 0, fromDate: '', code: '', organizationUnit: { id: 0 } },
     cycle: null,
   },
-})
-
+  schedules: [],
+}
 describe('SubjectsService', () => {
+  const makeRepo = (): Mocked<ISubjectsRepository> => ({
+    getAll: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  })
   let repo: Mocked<ISubjectsRepository>
   let service: SubjectsService
-
   beforeEach(() => {
     repo = makeRepo()
     service = new SubjectsService(repo)
   })
-
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      repo.getAll.mockResolvedValue([makeSubject()])
-      const result = await service.getAll()
-      expect(result).toHaveLength(1)
+      repo.getAll.mockResolvedValue([UserSubject.create(subjectInput)])
+      expect(await service.getAll('user-1')).toHaveLength(1)
     })
   })
-
   describe('create', () => {
     it('creates a subject', async () => {
-      const subject = makeSubject()
+      const subject = UserSubject.create(subjectInput)
       repo.create.mockResolvedValue(subject)
-      const { id: _, ...base } = subject
-      const result = await service.create(base)
-      expect(result).toEqual(subject)
+      const result = await service.create('user-1', subjectInput)
+      expect(result).toMatchObject({ id: subject.id })
     })
   })
-
   describe('delete', () => {
     it('deletes a subject by id', async () => {
-      repo.delete.mockResolvedValue(undefined)
       const id = crypto.randomUUID()
-      await service.delete(id)
-      expect(repo.delete).toHaveBeenCalledWith(id)
+      await service.delete('user-1', id)
+      expect(repo.delete).toHaveBeenCalledWith('user-1', id)
     })
   })
-
   describe('update', () => {
     it('updates a subject', async () => {
-      const subject = makeSubject()
+      const subject = UserSubject.create(subjectInput)
       repo.findById.mockResolvedValue(subject)
       repo.update.mockResolvedValue(subject)
-      const { id: id, ...base } = subject
-      const result = await service.update(id, base)
-      expect(repo.update).toHaveBeenCalledWith({ id, ...base })
-      expect(result).toEqual(subject)
+      const result = await service.update('user-1', subject.id, {
+        schedules: [],
+      })
+      expect(repo.update).toHaveBeenCalledWith(
+        'user-1',
+        expect.any(UserSubject),
+      )
+      expect(result).toMatchObject({ id: subject.id })
     })
   })
 })

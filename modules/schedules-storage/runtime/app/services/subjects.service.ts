@@ -1,37 +1,43 @@
-import type {
-  IBaseSubjectSchedules,
-  ISubjectSchedules,
-  ISubjectSchedulesUpdate,
-} from '../../shared/interfaces/subject'
+import type { ISubjectSchedules } from '../../shared/interfaces/subject'
+import {
+  UserSubject,
+  type IUserSubjectCreate,
+  type IUserSubjectUpdate,
+} from '../../shared/domain'
 import type { ISubjectsRepository } from '../repositories/subjects-repository.interface'
 import type { ISubjectsService } from './subjects.service.interface'
 
 export class SubjectsService implements ISubjectsService {
   constructor(private readonly repo: ISubjectsRepository) {}
 
-  getAll(): Promise<ISubjectSchedules[]> {
-    return this.repo.getAll()
+  getAll(userId: string): Promise<ISubjectSchedules[]> {
+    return this.repo
+      .getAll(userId)
+      .then((items) => items.map((item) => item.toSnapshot()))
   }
 
-  create(subject: IBaseSubjectSchedules): Promise<ISubjectSchedules> {
-    return this.repo.create(subject)
-  }
-
-  delete(id: ISubjectSchedules['id']): Promise<void> {
-    return this.repo.delete(id)
-  }
-  
-  async update(
-    id: ISubjectSchedules['id'],
-    subject: ISubjectSchedulesUpdate,
+  async create(
+    userId: string,
+    subject: IUserSubjectCreate,
   ): Promise<ISubjectSchedules> {
-    const data = await this.repo.findById(id)
+    const entity = UserSubject.create(subject)
+    return (await this.repo.create(userId, entity)).toSnapshot()
+  }
+
+  delete(userId: string, id: ISubjectSchedules['id']): Promise<void> {
+    return this.repo.delete(userId, id)
+  }
+
+  async update(
+    userId: string,
+    id: ISubjectSchedules['id'],
+    subject: IUserSubjectUpdate,
+  ): Promise<ISubjectSchedules> {
+    const data = await this.repo.findById(userId, id)
     if (!data) {
       throw new Error(`Subject with id ${id} not found`)
     }
-    return await this.repo.update({
-      ...data,
-      ...subject,
-    })
+    const updated = data.update(subject)
+    return (await this.repo.update(userId, updated)).toSnapshot()
   }
 }

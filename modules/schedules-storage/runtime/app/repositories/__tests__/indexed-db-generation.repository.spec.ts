@@ -1,80 +1,60 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { UUID } from 'crypto'
-import type { Weekdays } from '../../../shared/interfaces/event'
-import { IndexedDBGenerationRepository } from '../indexed-db-generation.repository'
-import type {
-  IBaseGenerationRecord,
-  IGenerationRecord,
-} from '../../../shared/interfaces/generation-record'
+import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
+import { Generation } from '../../../shared/domain'
+import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
+import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 
-const baseRecord: IBaseGenerationRecord = {
-  generatedAt: '2024-01-01T00:00:00Z',
-  scheduleIds: [],
-  crossingsSetting: 0,
-  weekDays: [1, 2, 3] as Weekdays[],
-  hourlyLoadId: 1,
-  resultCount: 0,
-  occurrences: [],
-}
-
-const record: IGenerationRecord = {
-  ...baseRecord,
-  id: 'rec-0-0-0-1' as UUID,
-}
-
-const makeDb = () => ({
-  getAll: vi.fn(),
-  get: vi.fn(),
-  put: vi.fn(),
-  delete: vi.fn(),
+const makeGeneration = () =>
+  Generation.create({
+    generatedAt: '2024-01-01T00:00:00Z',
+    scheduleIds: [],
+    crossingsSetting: 0,
+    weekDays: [1, 2, 3],
+    hourlyLoadId: 1,
+    resultCount: 0,
+    occurrences: [],
+  })
+const makePersistence = (): Mocked<AggregatePersistence> => ({
+  findAll: vi.fn(),
+  find: vi.fn(),
+  findByIndex: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
 })
-
-describe('IndexedDBGenerationRepository', () => {
-  let db: ReturnType<typeof makeDb>
-  let repo: IndexedDBGenerationRepository
-
+describe('IndexedDBGenerationsRepository', () => {
+  let persistence: Mocked<AggregatePersistence>
+  let repo: IndexedDBGenerationsRepository
   beforeEach(() => {
-    db = makeDb()
-    repo = new IndexedDBGenerationRepository(() => Promise.resolve(db as never))
+    persistence = makePersistence()
+    repo = new IndexedDBGenerationsRepository(persistence)
   })
-
-  describe('getAll', () => {
-    it('returns all records', async () => {
-      db.getAll.mockResolvedValue([record])
-      expect(await repo.getAll()).toEqual([record])
-    })
-
-    it('returns empty array when store is empty', async () => {
-      db.getAll.mockResolvedValue([])
-      expect(await repo.getAll()).toEqual([])
-    })
+  it('returns all records', async () => {
+    const value = makeGeneration()
+    persistence.findAll.mockResolvedValue([value.toSnapshot()])
+    expect(await repo.getAll('user-1')).toHaveLength(1)
   })
-
-  describe('get', () => {
-    it('returns record by id', async () => {
-      db.get.mockResolvedValue(record)
-      expect(await repo.get(record.id)).toEqual(record)
-    })
-
-    it('returns undefined when not found', async () => {
-      db.get.mockResolvedValue(undefined)
-      expect(await repo.get('rec-0-0-0-9' as UUID)).toBeUndefined()
-    })
+  it('returns empty array when store is empty', async () => {
+    persistence.findAll.mockResolvedValue([])
+    expect(await repo.getAll('user-1')).toEqual([])
   })
-
-  describe('create', () => {
-    it('returns a new record with generated id and input data', async () => {
-      db.put.mockResolvedValue(undefined)
-      const result = await repo.create(baseRecord)
-      expect(result.generatedAt).toBe(baseRecord.generatedAt)
-      expect(result.id).toMatch(/^[0-9a-f-]+$/)
-    })
+  it('returns record by id', async () => {
+    const value = makeGeneration()
+    persistence.find.mockResolvedValue(value.toSnapshot())
+    expect(await repo.get('user-1', value.id)).toBeDefined()
   })
-
-  describe('delete', () => {
-    it('resolves without error', async () => {
-      db.delete.mockResolvedValue(undefined)
-      await expect(repo.delete(record.id)).resolves.toBeUndefined()
-    })
+  it('returns undefined when not found', async () => {
+    persistence.find.mockResolvedValue(undefined)
+    expect(await repo.get('user-1', crypto.randomUUID())).toBeUndefined()
+  })
+  it('returns a created record', async () => {
+    const value = makeGeneration()
+    persistence.create.mockResolvedValue(value.toSnapshot())
+    const result = await repo.create('user-1', value)
+    expect(result.id).toBe(value.id)
+  })
+  it('resolves without error when deleting', async () => {
+    await expect(
+      repo.delete('user-1', crypto.randomUUID()),
+    ).resolves.toBeUndefined()
   })
 })

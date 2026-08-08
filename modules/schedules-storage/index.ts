@@ -14,6 +14,10 @@ export default defineNuxtModule({
 
     addImports([
       {
+        name: 'useSchedulesUserId',
+        from: resolver.resolve('runtime/app/composables/index'),
+      },
+      {
         name: 'useFavoritesSchedulesService',
         from: resolver.resolve('runtime/app/composables/index'),
       },

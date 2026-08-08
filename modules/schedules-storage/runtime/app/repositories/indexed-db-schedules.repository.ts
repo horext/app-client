@@ -1,105 +1,108 @@
-import type {
-  IBaseScheduleGenerate,
-  IFavoriteSchedule,
-  IScheduleGenerate,
-} from '../../shared/interfaces/schedule'
+import type { UUID } from 'crypto'
+import { Favorite, Schedule } from '../../shared/domain'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from './schedules-repository.interface'
-import { type DbFactory, StoresDB } from '../context/db'
+import type { AggregatePersistence } from '../persistence/aggregate-persistence'
+import { StoresDB } from '../context/db'
 
 export class IndexedDBSchedulesRepository implements ISchedulesRepository {
-  constructor(private readonly getDb: DbFactory) {}
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getEntries(
-    ids: IScheduleGenerate['id'][],
-  ): Promise<IScheduleGenerate[]> {
+  async findAll(userId: string): Promise<Schedule[]> {
+    return (await this.persistence.findAll(StoresDB.SCHEDULES, userId)).map(
+      Schedule.restore,
+    )
+  }
+
+  async getEntries(userId: string, ids: UUID[]): Promise<Schedule[]> {
     if (!ids.length) return []
-    const db = await this.getDb()
-    const tx = db.transaction(StoresDB.SCHEDULES, 'readonly')
-    const results = await Promise.all(ids.map((id) => tx.store.get(id)))
-    return results.filter((s): s is IScheduleGenerate => s !== undefined)
+    const results = await Promise.all(
+      ids.map((id) => this.persistence.find(StoresDB.SCHEDULES, userId, id)),
+    )
+    return results.filter((value) => value !== undefined).map(Schedule.restore)
   }
 
   async getByKey(
+    userId: string,
     scheduleSubjectKey: string,
-  ): Promise<IScheduleGenerate | undefined> {
-    const db = await this.getDb()
-    const result = await db
-      .transaction(StoresDB.SCHEDULES, 'readonly')
-      .store.index('scheduleSubjectKey')
-      .get(scheduleSubjectKey)
-    return result
-  }
-
-  async create(schedule: IBaseScheduleGenerate): Promise<IScheduleGenerate> {
-    const db = await this.getDb()
-    const result = { ...schedule, id: crypto.randomUUID() }
-    await db.put(StoresDB.SCHEDULES, result)
-    return result
-  }
-
-  async update(schedule: IScheduleGenerate): Promise<IScheduleGenerate> {
-    const db = await this.getDb()
-    await db.put(StoresDB.SCHEDULES, schedule)
-    return schedule
-  }
-
-  async saveAll(
-    schedules: IBaseScheduleGenerate[],
-  ): Promise<IScheduleGenerate[]> {
-    if (!schedules.length) return []
-    const db = await this.getDb()
-    const tx = db.transaction(StoresDB.SCHEDULES, 'readwrite')
-    const results = await Promise.all(
-      schedules.map((s) => {
-        const result = { ...s, id: crypto.randomUUID() }
-        tx.store.put(result)
-        return result
-      }),
+  ): Promise<Schedule | undefined> {
+    const result = await this.persistence.findByIndex(
+      StoresDB.SCHEDULES,
+      'scheduleSubjectKey',
+      [userId, scheduleSubjectKey],
     )
-    await tx.done
-    return results
+    return result ? Schedule.restore(result) : undefined
   }
 
-  async deleteEntry(id: IScheduleGenerate['id']): Promise<void> {
-    const db = await this.getDb()
-    await db.delete(StoresDB.SCHEDULES, id)
+  async create(userId: string, schedule: Schedule): Promise<Schedule> {
+    const stored = await this.persistence.create(
+      StoresDB.SCHEDULES,
+      schedule.toSnapshot(),
+      userId,
+    )
+    return Schedule.restore(stored)
   }
 
-  async deleteEntries(ids: IScheduleGenerate['id'][]): Promise<void> {
+  async createAll(userId: string, schedules: Schedule[]): Promise<Schedule[]> {
+    if (!schedules.length) return []
+    const stored: Schedule[] = []
+    for (const schedule of schedules) {
+      const record = await this.persistence.create(
+        StoresDB.SCHEDULES,
+        schedule.toSnapshot(),
+        userId,
+      )
+      stored.push(Schedule.restore(record))
+    }
+    return stored
+  }
+
+  async update(userId: string, schedule: Schedule): Promise<Schedule> {
+    const stored = await this.persistence.update(
+      StoresDB.SCHEDULES,
+      schedule.toSnapshot(),
+      userId,
+    )
+    return Schedule.restore(stored)
+  }
+
+  async deleteEntry(userId: string, id: UUID): Promise<void> {
+    await this.persistence.remove(StoresDB.SCHEDULES, userId, id)
+  }
+
+  async deleteEntries(userId: string, ids: UUID[]): Promise<void> {
     if (!ids.length) return
-    const db = await this.getDb()
-    const tx = db.transaction(StoresDB.SCHEDULES, 'readwrite')
-    await Promise.all(ids.map((id) => tx.store.delete(id)))
-    await tx.done
+    await Promise.all(
+      ids.map((id) => this.persistence.remove(StoresDB.SCHEDULES, userId, id)),
+    )
   }
 }
 
 export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavoritesRepository {
-  constructor(private readonly getDb: DbFactory) {}
+  constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getIds(): Promise<IScheduleGenerate['id'][]> {
-    const db = await this.getDb()
-    const records = await db.getAll(StoresDB.FAVORITES)
-    return records.map((r) => r.id)
+  async findAll(userId: string): Promise<Favorite[]> {
+    const records = await this.persistence.findAll(StoresDB.FAVORITES, userId)
+    return records.map(Favorite.restore)
   }
 
-  async findById(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule | undefined> {
-    const db = await this.getDb()
-    return await db.get(StoresDB.FAVORITES, id)
+  async findById(userId: string, id: UUID): Promise<Favorite | undefined> {
+    const record = await this.persistence.find(StoresDB.FAVORITES, userId, id)
+    return record ? Favorite.restore(record) : undefined
   }
 
-  async create(id: IScheduleGenerate['id']): Promise<IFavoriteSchedule> {
-    const db = await this.getDb()
-    const favorite: IFavoriteSchedule = { id }
-    await db.put(StoresDB.FAVORITES, favorite)
-    return favorite
+  async create(userId: string, favorite: Favorite): Promise<Favorite> {
+    const stored = await this.persistence.create(
+      StoresDB.FAVORITES,
+      favorite.toSnapshot(),
+      userId,
+    )
+    return Favorite.restore(stored)
   }
 
-  async deleteById(id: IScheduleGenerate['id']): Promise<void> {
-    const db = await this.getDb()
-    await db.delete(StoresDB.FAVORITES, id)
+  async delete(userId: string, id: UUID): Promise<void> {
+    await this.persistence.remove(StoresDB.FAVORITES, userId, id)
   }
 }

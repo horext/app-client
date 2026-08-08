@@ -50,7 +50,7 @@ describe('useUserSubjects', () => {
     mockCreate.mockResolvedValue(newSubject)
     const { saveNewSubject, mySubjects } = useUserSubjects()
     await saveNewSubject(newSubject)
-    expect(mockCreate).toHaveBeenCalledWith(newSubject)
+    expect(mockCreate).toHaveBeenCalledWith(expect.any(String), newSubject)
     expect(mySubjects.value).toContainEqual(newSubject)
   })
 
@@ -61,8 +61,21 @@ describe('useUserSubjects', () => {
     mockDelete.mockResolvedValue(undefined)
     const { deleteSubjectById, mySubjects } = useUserSubjects()
     await deleteSubjectById(subject.id as UUID)
-    expect(mockDelete).toHaveBeenCalledWith(subject.id)
+    expect(mockDelete).toHaveBeenCalledWith(expect.any(String), subject.id)
     expect(mySubjects.value).not.toContain(subject)
+  })
+
+  it('does not remove another subject when the id is missing from the store', async () => {
+    const first = makeSubject()
+    const missingId = makeSubject()
+    const store = useUserSubjectsStore()
+    store.subjects = [first]
+    mockDelete.mockResolvedValue(undefined)
+
+    const { deleteSubjectById } = useUserSubjects()
+    await deleteSubjectById(missingId.id)
+
+    expect(store.subjects).toEqual([first])
   })
 
   it('updateSubject updates in service and replaces in store', async () => {

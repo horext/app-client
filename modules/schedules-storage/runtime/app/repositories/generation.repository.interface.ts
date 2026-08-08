@@ -1,11 +1,9 @@
-import type {
-  IBaseGenerationRecord,
-  IGenerationRecord,
-} from '../../shared/interfaces/generation-record'
+import type { UUID } from 'crypto'
+import type { Generation } from '../../shared/domain'
 
 export interface IGenerationRepository {
-  getAll(): Promise<IGenerationRecord[]>
-  get(id: IGenerationRecord['id']): Promise<IGenerationRecord | undefined>
-  create(record: IBaseGenerationRecord): Promise<IGenerationRecord>
-  delete(id: IGenerationRecord['id']): Promise<void>
+  getAll(userId: string): Promise<Generation[]>
+  get(userId: string, id: UUID): Promise<Generation | undefined>
+  create(userId: string, record: Generation): Promise<Generation>
+  delete(userId: string, id: UUID): Promise<void>
 }

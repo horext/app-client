@@ -1,39 +1,56 @@
-import type { IUserAcademicConfig } from '../../shared/interfaces/academic-config'
+import type {
+  IAcademicConfig,
+  IBaseAcademicConfig,
+} from '../../shared/interfaces/academic-config'
 import type { IAcademicConfigRepository } from '../repositories/academic-config.repository.interface'
 import type { IAcademicConfigService } from './academic-config.service.interface'
-import { UserAcademicConfig } from '../domain/UserAcademicConfig'
+import { AcademicConfig } from '../../shared/domain'
 
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
 
-  private async _load(): Promise<UserAcademicConfig | undefined> {
-    const data = await this.repo.get()
-    return data ? UserAcademicConfig.from(data) : undefined
+  private async _load(userId: string): Promise<AcademicConfig | undefined> {
+    return this.repo.get(userId)
   }
 
-  private async _save(config: UserAcademicConfig): Promise<void> {
-    await this.repo.save(config.toData())
+  private async _create(
+    userId: string,
+    config: AcademicConfig,
+  ): Promise<AcademicConfig> {
+    return this.repo.create(userId, config)
   }
 
-  async getAcademicConfig(): Promise<IUserAcademicConfig | undefined> {
-    return (await this._load())?.toData()
+  private async _update(
+    userId: string,
+    config: AcademicConfig,
+  ): Promise<AcademicConfig> {
+    return this.repo.update(userId, config)
+  }
+
+  async getAcademicConfig(
+    userId: string,
+  ): Promise<IAcademicConfig | undefined> {
+    return (await this._load(userId))?.toSnapshot()
   }
 
   async createAcademicConfig(
-    initial?: Partial<Omit<IUserAcademicConfig, 'id'>>,
-  ): Promise<IUserAcademicConfig> {
-    const existing = await this._load()
-    if (existing) return existing.toData()
-    const config = UserAcademicConfig.create(initial)
-    await this._save(config)
-    return config.toData()
+    userId: string,
+    initial?: Partial<IBaseAcademicConfig>,
+  ): Promise<IAcademicConfig> {
+    const existing = await this._load(userId)
+    if (existing) return existing.toSnapshot()
+    const config = AcademicConfig.create({
+      hourlyLoad: initial?.hourlyLoad ?? null,
+    })
+    return (await this._create(userId, config)).toSnapshot()
   }
 
   async patch(
-    partial: Partial<Omit<IUserAcademicConfig, 'id'>>,
+    userId: string,
+    partial: Partial<IBaseAcademicConfig>,
   ): Promise<void> {
-    const config = await this._load()
+    const config = await this._load(userId)
     if (!config) return
-    await this._save(config.patch(partial))
+    await this._update(userId, config.update(partial))
   }
 }

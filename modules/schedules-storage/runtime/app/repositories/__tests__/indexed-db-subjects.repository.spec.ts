@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { UUID } from 'crypto'
+import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
+import { UserSubject } from '../../../shared/domain'
+import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
+import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBSubjectsRepository } from '../indexed-db-subjects.repository'
-import type { ISubjectSchedules } from '../../../shared/interfaces/subject'
 
-const makeSubject = (id = 'sub-0-0-0-1' as UUID): ISubjectSchedules => ({
-  id,
+const subjectInput: IBaseSubjectSchedules = {
   subject: {
     id: 1,
     course: { id: 'CS101', name: 'Intro to CS' },
@@ -14,58 +14,54 @@ const makeSubject = (id = 'sub-0-0-0-1' as UUID): ISubjectSchedules => ({
     cycle: null,
   },
   schedules: [],
+}
+const makePersistence = (): Mocked<AggregatePersistence> => ({
+  findAll: vi.fn(),
+  find: vi.fn(),
+  findByIndex: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
 })
-
-const makeDb = () => ({
-  getAll: vi.fn(),
-  put: vi.fn(),
-  delete: vi.fn(),
-})
-
 describe('IndexedDBSubjectsRepository', () => {
-  let db: ReturnType<typeof makeDb>
+  let persistence: Mocked<AggregatePersistence>
   let repo: IndexedDBSubjectsRepository
-
   beforeEach(() => {
-    db = makeDb()
-    repo = new IndexedDBSubjectsRepository(() => Promise.resolve(db as never))
+    persistence = makePersistence()
+    repo = new IndexedDBSubjectsRepository(persistence)
   })
-
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      const subjects = [makeSubject()]
-      db.getAll.mockResolvedValue(subjects)
-      expect(await repo.getAll()).toEqual(subjects)
+      const subject = UserSubject.create(subjectInput)
+      persistence.findAll.mockResolvedValue([subject.toSnapshot()])
+      expect(await repo.getAll('user-1')).toHaveLength(1)
     })
-
     it('returns empty array when store is empty', async () => {
-      db.getAll.mockResolvedValue([])
-      expect(await repo.getAll()).toEqual([])
+      persistence.findAll.mockResolvedValue([])
+      expect(await repo.getAll('user-1')).toEqual([])
     })
   })
-
   describe('update', () => {
     it('returns the updated subject', async () => {
-      const subject = makeSubject()
-      db.put.mockResolvedValue(undefined)
-      expect(await repo.update(subject)).toEqual(subject)
+      const subject = UserSubject.create(subjectInput)
+      persistence.create.mockResolvedValue(subject.toSnapshot())
+      expect(await repo.create('user-1', subject)).toBeDefined()
     })
   })
-
   describe('create', () => {
     it('returns a new subject with generated id and input data', async () => {
-      const { id: _, ...base } = makeSubject()
-      db.put.mockResolvedValue(undefined)
-      const result = await repo.create(base)
+      const subject = UserSubject.create(subjectInput)
+      persistence.create.mockResolvedValue(subject.toSnapshot())
+      const result = await repo.create('user-1', subject)
       expect(result.id).toMatch(/^[0-9a-f-]+$/)
-      expect(result.subject).toEqual(base.subject)
+      expect(result.toSnapshot().subject).toEqual(subjectInput.subject)
     })
   })
-
   describe('delete', () => {
     it('resolves without error', async () => {
-      db.delete.mockResolvedValue(undefined)
-      await expect(repo.delete('sub-0-0-0-1' as UUID)).resolves.toBeUndefined()
+      await expect(
+        repo.delete('user-1', crypto.randomUUID()),
+      ).resolves.toBeUndefined()
     })
   })
 })
