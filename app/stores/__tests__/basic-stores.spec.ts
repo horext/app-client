@@ -15,6 +15,7 @@ import { useUserSubjectsStore } from '~/stores/user-subjects'
 describe('useUserAuthStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    localStorage.clear()
   })
 
   it('starts with no user', () => {
@@ -25,17 +26,46 @@ describe('useUserAuthStore', () => {
 
   it('sets user and isLoggedIn becomes true', () => {
     const store = useUserAuthStore()
-    store.setUser({ email: 'test@example.com', name: 'Test' })
-    expect(store.user).toEqual({ email: 'test@example.com', name: 'Test' })
+    store.setUser({ id: 'user-1', email: 'test@example.com', name: 'Test' })
+    expect(store.user).toEqual({
+      id: 'user-1',
+      email: 'test@example.com',
+      name: 'Test',
+    })
     expect(store.isLoggedIn).toBe(true)
+    expect(JSON.parse(localStorage.getItem('horext-auth-user')!)).toEqual(
+      store.user,
+    )
+  })
+
+  it('restores the user from storage after a reload', () => {
+    localStorage.setItem(
+      'horext-auth-user',
+      JSON.stringify({ id: 'user-1', name: 'Test' }),
+    )
+
+    const store = useUserAuthStore()
+
+    expect(store.user).toEqual({ id: 'user-1', name: 'Test' })
+    expect(store.isLoggedIn).toBe(true)
+  })
+
+  it('ignores malformed stored users', () => {
+    localStorage.setItem('horext-auth-user', '{invalid-json')
+    expect(useUserAuthStore().user).toBeNull()
+
+    setActivePinia(createPinia())
+    localStorage.setItem('horext-auth-user', JSON.stringify({ name: 'Test' }))
+    expect(useUserAuthStore().user).toBeNull()
   })
 
   it('clears user', () => {
     const store = useUserAuthStore()
-    store.setUser({ name: 'Test' })
+    store.setUser({ id: 'user-1', name: 'Test' })
     store.clearUser()
     expect(store.user).toBeNull()
     expect(store.isLoggedIn).toBe(false)
+    expect(localStorage.getItem('horext-auth-user')).toBeNull()
   })
 })
 
