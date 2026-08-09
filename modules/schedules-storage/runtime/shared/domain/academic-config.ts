@@ -19,16 +19,14 @@ export class AcademicConfig<
     return AcademicConfig.build(input)
   }
 
-  private static build(
-    input: IAcademicConfigCreate,
-  ): AcademicConfig<IBaseAcademicConfig> {
-    return new AcademicConfig({
-      hourlyLoad: input.hourlyLoad ? structuredClone(input.hourlyLoad) : null,
-    })
+  private static build<T extends IBaseAcademicConfig | IAcademicConfig>(
+    input: T,
+  ): AcademicConfig<T> {
+    return new AcademicConfig(structuredClone(input))
   }
 
   static restore(snapshot: IAcademicConfig): AcademicConfig<IAcademicConfig> {
-    return new AcademicConfig(structuredClone(snapshot))
+    return AcademicConfig.build(snapshot)
   }
 
   get id(): UUID {
@@ -43,7 +41,7 @@ export class AcademicConfig<
       ...input,
       id: this.snapshot.id,
     }
-    return new AcademicConfig(snapshot)
+    return AcademicConfig.build(snapshot)
   }
 
   toSnapshot(): T {

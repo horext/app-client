@@ -4,20 +4,24 @@ import type { IActivityCreate, IActivityUpdate } from './domain-helpers'
 import { validateSessions } from './domain-helpers'
 
 export class Activity<T extends IBaseActivity | IActivity = IActivity> {
-  private constructor(private readonly snapshot: T) {
-    this.snapshot.sessions = validateSessions(this.snapshot.sessions)
-    this.snapshot.allowOverlap = this.snapshot.allowOverlap ?? false
+  private constructor(private readonly snapshot: T) {}
+
+  private static build<T extends IBaseActivity | IActivity>(
+    snapshot: T,
+  ): Activity<T> {
+    return new Activity({
+      ...snapshot,
+      allowOverlap: snapshot.allowOverlap ?? false,
+      sessions: validateSessions(snapshot.sessions),
+    })
   }
 
   static create(input: IActivityCreate): Activity<IBaseActivity> {
-    return new Activity(input)
+    return Activity.build(input)
   }
 
   static restore(snapshot: IActivity): Activity<IActivity> {
-    return new Activity({
-      ...snapshot,
-      sessions: validateSessions(snapshot.sessions),
-    })
+    return Activity.build(snapshot)
   }
 
   get id(): UUID {
@@ -30,11 +34,11 @@ export class Activity<T extends IBaseActivity | IActivity = IActivity> {
     this: Activity<IActivity>,
     input: IActivityUpdate,
   ): Activity<IActivity> {
-    return new Activity({
+    return Activity.build({
       ...this.snapshot,
       ...input,
-      allowOverlap: input.allowOverlap ?? false,
-      sessions: validateSessions(input.sessions),
+      allowOverlap: input.allowOverlap ?? this.snapshot.allowOverlap,
+      sessions: input.sessions ?? this.snapshot.sessions,
     })
   }
 
