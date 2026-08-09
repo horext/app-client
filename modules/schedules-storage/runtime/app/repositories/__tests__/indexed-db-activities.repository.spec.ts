@@ -62,8 +62,6 @@ describe('IndexedDBActivitiesRepository', () => {
       )
       const result = await repo.create('user-1', activity)
       expect(result.toSnapshot().title).toBe(baseActivity.title)
-      expect(result.toSnapshot().category).toBe('MY_EVENT')
-      expect(result.toSnapshot().type).toBe('MY_EVENT')
       expect(result.id).toMatch(/^[0-9a-f-]+$/)
     })
   })

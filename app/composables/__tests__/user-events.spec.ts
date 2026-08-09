@@ -27,8 +27,6 @@ function makeActivity(): IActivity {
     color: '#1976d2',
     id: crypto.randomUUID(),
     title: 'Test Activity',
-    type: 'MY_EVENT',
-    category: 'MY_EVENT',
   }
 }
 

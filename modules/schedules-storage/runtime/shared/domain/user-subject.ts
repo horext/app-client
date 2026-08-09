@@ -18,11 +18,7 @@ export class UserSubject<
         'The subject is invalid.',
         'subject',
       )
-    return new UserSubject({
-      subject: input.subject,
-      schedules: input.schedules,
-      color: input.color,
-    })
+    return new UserSubject(input)
   }
 
   static restore(snapshot: ISubjectSchedules): UserSubject<ISubjectSchedules> {

@@ -24,8 +24,6 @@ describe('Activity requests', () => {
       title: 'Study',
       color: '#1976d2',
       sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-      category: 'MY_EVENT',
-      type: 'MY_EVENT',
     } satisfies IActivity
 
     expect(new Activity(activity).toUpdateRequest().id).toBe(activity.id)
@@ -40,8 +38,6 @@ describe('Activity requests', () => {
         { day: 1, startTime: '08:00', endTime: '10:00' },
         { day: 3, startTime: '14:00', endTime: '16:00' },
       ],
-      category: 'MY_EVENT',
-      type: 'MY_EVENT',
     } satisfies IActivity
 
     const events = ActivitySessionEvent.buildActivitiesFrom(activity)
