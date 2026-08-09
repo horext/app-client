@@ -79,8 +79,6 @@ describe('CreateFormDialog', () => {
       id: crypto.randomUUID(),
       title: 'My Activity',
       color: '#ff0000',
-      type: 'MY_EVENT',
-      category: 'MY_EVENT',
       sessions: [{ day: 3, startTime: '09:00', endTime: '11:00' }],
       allowOverlap: false,
     }

@@ -67,8 +67,6 @@ function makeActivity(
     title: `Event ${id}`,
     sessions: [{ day, startTime, endTime }],
     color: '#ff0000',
-    type: 'MY_EVENT',
-    category: 'MY_EVENT',
     allowOverlap,
   }
 }
@@ -705,8 +703,6 @@ describe('getSchedules', () => {
           title: 'Legacy event',
           sessions: [{ day: MON, ...T_09_11 }],
           color: '#ff0000',
-          type: 'MY_EVENT',
-          category: 'MY_EVENT',
         }
         const result = getSchedules([subject], [legacyBaseEvent], {
           crossingSubjects: 1,
