@@ -126,7 +126,8 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('removes only the requested user entity', async () => {
-    await persistence.remove(StoresDB.PROFILE, 'user-1', 'profile')
-    expect(remove).toHaveBeenCalledWith(StoresDB.PROFILE, ['user-1', 'profile'])
+    const id = crypto.randomUUID()
+    await persistence.remove(StoresDB.PROFILE, 'user-1', id)
+    expect(remove).toHaveBeenCalledWith(StoresDB.PROFILE, ['user-1', id])
   })
 })
