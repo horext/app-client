@@ -6,15 +6,21 @@ import { Profile } from '../../shared/domain'
 export class ProfileService implements IProfileService {
   constructor(private readonly repo: IProfileRepository) {}
 
-  private async _load(userId: string): Promise<Profile | undefined> {
+  private async _load(userId: string): Promise<Profile<IProfile> | undefined> {
     return this.repo.get(userId)
   }
 
-  private async _create(userId: string, profile: Profile): Promise<Profile> {
+  private async _create(
+    userId: string,
+    profile: Profile<IBaseProfile>,
+  ): Promise<Profile<IProfile>> {
     return this.repo.create(userId, profile)
   }
 
-  private async _update(userId: string, profile: Profile): Promise<Profile> {
+  private async _update(
+    userId: string,
+    profile: Profile<IProfile>,
+  ): Promise<Profile<IProfile>> {
     return this.repo.update(userId, profile)
   }
 
@@ -28,7 +34,7 @@ export class ProfileService implements IProfileService {
   ): Promise<IProfile> {
     const existing = await this._load(userId)
     if (existing) return existing.toSnapshot()
-    const profile = Profile.create({ setupCompleted: false, ...initial })
+    const profile = Profile.create(initial)
     return (await this._create(userId, profile)).toSnapshot()
   }
 

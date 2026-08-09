@@ -6,14 +6,14 @@ export class NoopPreferencesRepository implements IPreferencesRepository {
   }
   create(
     _userId: string,
-    value: Parameters<IPreferencesRepository['create']>[1],
+    _value: Parameters<IPreferencesRepository['create']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(new Error('Preferences repository is unavailable.'))
   }
   update(
     _userId: string,
-    value: Parameters<IPreferencesRepository['update']>[1],
+    _value: Parameters<IPreferencesRepository['update']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(new Error('Preferences repository is unavailable.'))
   }
 }

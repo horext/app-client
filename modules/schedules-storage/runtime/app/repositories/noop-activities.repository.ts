@@ -9,9 +9,9 @@ export class NoopActivitiesRepository implements IActivitiesRepository {
   }
   create(
     _userId: string,
-    value: Parameters<IActivitiesRepository['create']>[1],
+    _value: Parameters<IActivitiesRepository['create']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(new Error('Activities repository is unavailable.'))
   }
   update(
     _userId: string,

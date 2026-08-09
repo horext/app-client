@@ -9,21 +9,23 @@ import { Preferences } from '../../shared/domain'
 export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
 
-  private async _load(userId: string): Promise<Preferences | undefined> {
+  private async _load(
+    userId: string,
+  ): Promise<Preferences<IPreferences> | undefined> {
     return await this.repo.get(userId)
   }
 
   private async _create(
     userId: string,
-    prefs: Preferences,
-  ): Promise<Preferences> {
+    prefs: Preferences<IBasePreferences>,
+  ): Promise<Preferences<IPreferences>> {
     return this.repo.create(userId, prefs)
   }
 
   private async _update(
     userId: string,
-    prefs: Preferences,
-  ): Promise<Preferences> {
+    prefs: Preferences<IPreferences>,
+  ): Promise<Preferences<IPreferences>> {
     return this.repo.update(userId, prefs)
   }
 

@@ -1,55 +1,31 @@
 import type { UUID } from 'crypto'
-import type { IScheduleGenerate } from '../interfaces/schedule'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
 import type {
-  IScheduleCreate,
-  IScheduleUpdate,
-  IdGenerator,
-  Clock,
-} from './domain-helpers'
-import {
-  created,
-  currentTime,
-  generateUuid,
-  required,
-  restored,
-  updated,
-} from './domain-helpers'
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../interfaces/schedule'
+import type { IScheduleCreate, IScheduleUpdate } from './domain-helpers'
 
-export class Schedule {
-  private constructor(private readonly snapshot: IScheduleGenerate) {}
+export class Schedule<
+  T extends IBaseScheduleGenerate | IScheduleGenerate = IScheduleGenerate,
+> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(
-    input: IScheduleCreate,
-    generateId: IdGenerator = generateUuid,
-    clock: Clock = currentTime,
-  ): Schedule {
-    return Schedule.build(generateId(), input, created(clock))
-  }
-
-  private static build(
-    id: UUID,
-    input: IScheduleCreate,
-    metadata: IEntityMetadata,
-  ): Schedule {
+  static create(input: IScheduleCreate): Schedule<IBaseScheduleGenerate> {
     return new Schedule({
-      id,
-      scheduleSubjectKey: required(
-        input.scheduleSubjectKey,
-        'scheduleSubjectKey',
-      ),
+      scheduleSubjectKey: input.scheduleSubjectKey,
       schedulesSubject: structuredClone(input.schedulesSubject),
       crossings: input.crossings,
       events: structuredClone(input.events),
-      ...metadata,
     })
   }
 
-  static restore(snapshot: IScheduleGenerate): Schedule {
-    return Schedule.build(snapshot.id, snapshot, restored(snapshot))
+  static restore(snapshot: IScheduleGenerate): Schedule<IScheduleGenerate> {
+    return new Schedule(structuredClone(snapshot))
   }
 
   get id(): UUID {
+    if (!('id' in this.snapshot))
+      throw new Error('The entity has not been persisted.')
     return this.snapshot.id
   }
 
@@ -57,11 +33,17 @@ export class Schedule {
     return this.snapshot.scheduleSubjectKey
   }
 
-  update(input: IScheduleUpdate, clock: Clock = currentTime): Schedule {
-    return Schedule.build(this.id, input, updated(this.snapshot, clock))
+  update(
+    this: Schedule<IScheduleGenerate>,
+    input: IScheduleUpdate,
+  ): Schedule<IScheduleGenerate> {
+    return new Schedule({
+      ...this.snapshot,
+      ...structuredClone(input),
+    })
   }
 
-  toSnapshot(): IScheduleGenerate {
+  toSnapshot(): T {
     return structuredClone(this.snapshot)
   }
 }

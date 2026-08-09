@@ -4,3 +4,5 @@ export interface IEntityMetadata {
   createdBy: string
   updatedBy: string
 }
+
+export type DomainSnapshot<T> = Omit<T, keyof IEntityMetadata>

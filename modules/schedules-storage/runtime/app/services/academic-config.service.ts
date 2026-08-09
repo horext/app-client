@@ -9,21 +9,23 @@ import { AcademicConfig } from '../../shared/domain'
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
 
-  private async _load(userId: string): Promise<AcademicConfig | undefined> {
+  private async _load(
+    userId: string,
+  ): Promise<AcademicConfig<IAcademicConfig> | undefined> {
     return this.repo.get(userId)
   }
 
   private async _create(
     userId: string,
-    config: AcademicConfig,
-  ): Promise<AcademicConfig> {
+    config: AcademicConfig<IBaseAcademicConfig>,
+  ): Promise<AcademicConfig<IAcademicConfig>> {
     return this.repo.create(userId, config)
   }
 
   private async _update(
     userId: string,
-    config: AcademicConfig,
-  ): Promise<AcademicConfig> {
+    config: AcademicConfig<IAcademicConfig>,
+  ): Promise<AcademicConfig<IAcademicConfig>> {
     return this.repo.update(userId, config)
   }
 

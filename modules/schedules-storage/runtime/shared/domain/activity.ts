@@ -1,69 +1,53 @@
 import type { UUID } from 'crypto'
-import type { IActivity } from '../interfaces/event'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
-import type {
-  IActivityCreate,
-  IActivityUpdate,
-  IdGenerator,
-  Clock,
-} from './domain-helpers'
-import {
-  created,
-  currentTime,
-  generateUuid,
-  optional,
-  required,
-  restored,
-  updated,
-  validateSessions,
-} from './domain-helpers'
+import type { IActivity, IBaseActivity } from '../interfaces/event'
+import type { IActivityCreate, IActivityUpdate } from './domain-helpers'
+import { validateSessions } from './domain-helpers'
 
-export class Activity {
-  private constructor(private readonly snapshot: IActivity) {}
+export class Activity<T extends IBaseActivity | IActivity = IActivity> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(
-    input: IActivityCreate,
-    generateId: IdGenerator = generateUuid,
-    clock: Clock = currentTime,
-  ): Activity {
-    return Activity.build(generateId(), input, created(clock))
-  }
-
-  private static build(
-    id: UUID,
-    input: IActivityCreate,
-    metadata: IEntityMetadata,
-  ): Activity {
+  static create(input: IActivityCreate): Activity<IBaseActivity> {
     return new Activity({
-      id,
-      title: required(input.title, 'title'),
-      description: optional(input.description),
-      location: optional(input.location),
-      color: required(input.color, 'color'),
+      title: input.title,
+      description: input.description,
+      location: input.location,
+      color: input.color,
       allowOverlap: input.allowOverlap ?? false,
       sessions: validateSessions(input.sessions),
       category: 'MY_EVENT',
       type: 'MY_EVENT',
-      ...metadata,
     })
   }
 
-  static restore(snapshot: IActivity): Activity {
-    return Activity.build(snapshot.id, snapshot, restored(snapshot))
+  static restore(snapshot: IActivity): Activity<IActivity> {
+    return new Activity({
+      ...snapshot,
+      sessions: validateSessions(snapshot.sessions),
+    })
   }
 
   get id(): UUID {
+    if (!('id' in this.snapshot))
+      throw new Error('The entity has not been persisted.')
     return this.snapshot.id
   }
 
-  update(input: IActivityUpdate, clock: Clock = currentTime): Activity {
-    return Activity.build(this.id, input, updated(this.snapshot, clock))
+  update(
+    this: Activity<IActivity>,
+    input: IActivityUpdate,
+  ): Activity<IActivity> {
+    return new Activity({
+      ...this.snapshot,
+      ...input,
+      allowOverlap: input.allowOverlap ?? false,
+      sessions: validateSessions(input.sessions),
+    })
   }
 
-  toSnapshot(): IActivity {
+  toSnapshot(): T {
     return {
       ...this.snapshot,
-      sessions: this.snapshot.sessions.map((x) => ({ ...x })),
+      sessions: this.snapshot.sessions.map((session) => ({ ...session })),
     }
   }
 }

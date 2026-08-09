@@ -6,14 +6,18 @@ export class NoopAcademicConfigRepository implements IAcademicConfigRepository {
   }
   create(
     _userId: string,
-    value: Parameters<IAcademicConfigRepository['create']>[1],
+    _value: Parameters<IAcademicConfigRepository['create']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(
+      new Error('Academic config repository is unavailable.'),
+    )
   }
   update(
     _userId: string,
-    value: Parameters<IAcademicConfigRepository['update']>[1],
+    _value: Parameters<IAcademicConfigRepository['update']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(
+      new Error('Academic config repository is unavailable.'),
+    )
   }
 }

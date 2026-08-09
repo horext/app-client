@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Generation } from '../../../shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makeGeneration = () =>
   Generation.create({
@@ -30,7 +31,9 @@ describe('IndexedDBGenerationsRepository', () => {
   })
   it('returns all records', async () => {
     const value = makeGeneration()
-    persistence.findAll.mockResolvedValue([value.toSnapshot()])
+    persistence.findAll.mockResolvedValue([
+      persistedSnapshot(value.toSnapshot()),
+    ])
     expect(await repo.getAll('user-1')).toHaveLength(1)
   })
   it('returns empty array when store is empty', async () => {
@@ -39,8 +42,9 @@ describe('IndexedDBGenerationsRepository', () => {
   })
   it('returns record by id', async () => {
     const value = makeGeneration()
-    persistence.find.mockResolvedValue(value.toSnapshot())
-    expect(await repo.get('user-1', value.id)).toBeDefined()
+    const stored = persistedSnapshot(value.toSnapshot())
+    persistence.find.mockResolvedValue(stored)
+    expect(await repo.get('user-1', stored.id)).toBeDefined()
   })
   it('returns undefined when not found', async () => {
     persistence.find.mockResolvedValue(undefined)
@@ -48,9 +52,10 @@ describe('IndexedDBGenerationsRepository', () => {
   })
   it('returns a created record', async () => {
     const value = makeGeneration()
-    persistence.create.mockResolvedValue(value.toSnapshot())
+    const stored = persistedSnapshot(value.toSnapshot())
+    persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
-    expect(result.id).toBe(value.id)
+    expect(result.id).toBe(stored.id)
   })
   it('resolves without error when deleting', async () => {
     await expect(

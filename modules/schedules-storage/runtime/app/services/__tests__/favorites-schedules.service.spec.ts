@@ -6,6 +6,7 @@ import type {
   ISchedulesFavoritesRepository,
 } from '../../repositories/schedules-repository.interface'
 import type { IGenerationRepository } from '../../repositories/generation.repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const input = {
   scheduleSubjectKey: 'key',
@@ -13,6 +14,16 @@ const input = {
   schedulesSubject: [],
   crossings: 0,
 }
+const createSchedule = () =>
+  Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
+const createFavorite = (scheduleId: ReturnType<typeof crypto.randomUUID>) =>
+  Favorite.restore({
+    id: scheduleId,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 describe('FavoritesSchedulesService', () => {
   const makeRepo = (): Mocked<ISchedulesRepository> => ({
     findAll: vi.fn(),
@@ -48,21 +59,17 @@ describe('FavoritesSchedulesService', () => {
   })
   describe('getFavoriteSchedules', () => {
     it('returns schedules by favorite ids', async () => {
-      const schedule = Schedule.create(input)
-      favRepo.findAll.mockResolvedValue([
-        Favorite.create({ scheduleId: schedule.id }),
-      ])
+      const schedule = createSchedule()
+      favRepo.findAll.mockResolvedValue([createFavorite(schedule.id)])
       repo.getEntries.mockResolvedValue([schedule])
       expect(await service.getFavoriteSchedules('user-1')).toHaveLength(1)
     })
   })
   describe('addFavorite', () => {
     it('adds to favorites when schedule has id and not in list', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(
-        Favorite.create({ scheduleId: schedule.id }),
-      )
+      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
       const result = await service.addFavorite('user-1', schedule.toSnapshot())
       expect(favRepo.create).toHaveBeenCalledWith(
         'user-1',
@@ -71,32 +78,26 @@ describe('FavoritesSchedulesService', () => {
       expect(result).toEqual(schedule.toSnapshot())
     })
     it('does not add to list when already in favorites', async () => {
-      const schedule = Schedule.create(input)
-      favRepo.findById.mockResolvedValue(
-        Favorite.create({ scheduleId: schedule.id }),
-      )
+      const schedule = createSchedule()
+      favRepo.findById.mockResolvedValue(createFavorite(schedule.id))
       await service.addFavorite('user-1', schedule.toSnapshot())
       expect(favRepo.create).not.toHaveBeenCalled()
     })
     it('uses existing schedule when events match (base schedule without id)', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       repo.getByKey.mockResolvedValue(schedule)
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(
-        Favorite.create({ scheduleId: schedule.id }),
-      )
+      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
       expect(await service.addFavorite('user-1', input)).toEqual(
         schedule.toSnapshot(),
       )
     })
     it('creates new schedule when no existing schedule found (base schedule without id)', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       repo.getByKey.mockResolvedValue(undefined)
       repo.create.mockResolvedValue(schedule)
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(
-        Favorite.create({ scheduleId: schedule.id }),
-      )
+      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
       await service.addFavorite('user-1', input)
       expect(repo.create).toHaveBeenCalledWith('user-1', expect.any(Schedule))
     })
@@ -113,15 +114,17 @@ describe('FavoritesSchedulesService', () => {
       const id = crypto.randomUUID()
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.getAll.mockResolvedValue([
-        Generation.create({
-          generatedAt: '',
-          scheduleIds: [id],
-          resultCount: 0,
-          occurrences: [],
-          crossingsSetting: 0,
-          weekDays: [],
-          hourlyLoadId: 0,
-        }),
+        Generation.restore(
+          persistedSnapshot({
+            generatedAt: '',
+            scheduleIds: [id],
+            resultCount: 0,
+            occurrences: [],
+            crossingsSetting: 0,
+            weekDays: [],
+            hourlyLoadId: 0,
+          }),
+        ),
       ])
       await service.removeFavorite('user-1', id)
       expect(repo.deleteEntry).not.toHaveBeenCalled()

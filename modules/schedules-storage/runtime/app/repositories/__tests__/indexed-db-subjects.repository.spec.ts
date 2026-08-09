@@ -3,6 +3,7 @@ import { UserSubject } from '../../../shared/domain'
 import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBSubjectsRepository } from '../indexed-db-subjects.repository'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const subjectInput: IBaseSubjectSchedules = {
   subject: {
@@ -22,6 +23,8 @@ const makePersistence = (): Mocked<AggregatePersistence> => ({
   create: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
+  saveRemote: vi.fn(),
+  replace: vi.fn(),
 })
 describe('IndexedDBSubjectsRepository', () => {
   let persistence: Mocked<AggregatePersistence>
@@ -32,8 +35,12 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      const subject = UserSubject.create(subjectInput)
-      persistence.findAll.mockResolvedValue([subject.toSnapshot()])
+      const subject = UserSubject.restore(
+        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      )
+      persistence.findAll.mockResolvedValue([
+        persistedSnapshot(subject.toSnapshot()),
+      ])
       expect(await repo.getAll('user-1')).toHaveLength(1)
     })
     it('returns empty array when store is empty', async () => {
@@ -43,15 +50,23 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('update', () => {
     it('returns the updated subject', async () => {
-      const subject = UserSubject.create(subjectInput)
-      persistence.create.mockResolvedValue(subject.toSnapshot())
+      const subject = UserSubject.restore(
+        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      )
+      persistence.create.mockResolvedValue(
+        persistedSnapshot(subject.toSnapshot()),
+      )
       expect(await repo.create('user-1', subject)).toBeDefined()
     })
   })
   describe('create', () => {
     it('returns a new subject with generated id and input data', async () => {
-      const subject = UserSubject.create(subjectInput)
-      persistence.create.mockResolvedValue(subject.toSnapshot())
+      const subject = UserSubject.restore(
+        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      )
+      persistence.create.mockResolvedValue(
+        persistedSnapshot(subject.toSnapshot()),
+      )
       const result = await repo.create('user-1', subject)
       expect(result.id).toMatch(/^[0-9a-f-]+$/)
       expect(result.toSnapshot().subject).toEqual(subjectInput.subject)

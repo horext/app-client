@@ -3,6 +3,7 @@ import { AcademicConfig } from '../../../shared/domain'
 import type { IHourlyLoad } from '../../../shared/interfaces/houly-load'
 import { AcademicConfigService } from '../academic-config.service'
 import type { IAcademicConfigRepository } from '../../repositories/academic-config.repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const hourlyLoad: IHourlyLoad = {
   id: 1,
@@ -18,6 +19,8 @@ const hourlyLoad: IHourlyLoad = {
     organizationUnit: { id: 0 },
   },
 }
+const makeConfig = (value: IHourlyLoad | null = null) =>
+  AcademicConfig.restore(persistedSnapshot({ hourlyLoad: value }))
 describe('AcademicConfigService', () => {
   const makeRepo = (): Mocked<IAcademicConfigRepository> => ({
     get: vi.fn(),
@@ -36,24 +39,24 @@ describe('AcademicConfigService', () => {
       expect(await service.getAcademicConfig('user-1')).toBeUndefined()
     })
     it('returns config data when stored', async () => {
-      const config = AcademicConfig.create({ hourlyLoad: null })
+      const config = makeConfig()
       repo.get.mockResolvedValue(config)
       expect(await service.getAcademicConfig('user-1')).toMatchObject({
-        id: 'academic-config',
+        id: config.id,
         hourlyLoad: null,
       })
     })
   })
   describe('createAcademicConfig', () => {
     it('returns existing config if already exists', async () => {
-      repo.get.mockResolvedValue(AcademicConfig.create({ hourlyLoad: null }))
+      repo.get.mockResolvedValue(makeConfig())
       const result = await service.createAcademicConfig('user-1')
       expect(repo.create).not.toHaveBeenCalled()
-      expect(result.id).toBe('academic-config')
+      expect(result.id).toBeDefined()
     })
     it('creates and saves new config when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
-      const config = AcademicConfig.create({ hourlyLoad: null })
+      const config = makeConfig()
       repo.create.mockResolvedValue(config)
       const result = await service.createAcademicConfig('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
@@ -61,7 +64,7 @@ describe('AcademicConfigService', () => {
     })
     it('creates config with initial values', async () => {
       repo.get.mockResolvedValue(undefined)
-      const config = AcademicConfig.create({ hourlyLoad })
+      const config = makeConfig(hourlyLoad)
       repo.create.mockResolvedValue(config)
       const result = await service.createAcademicConfig('user-1', {
         hourlyLoad,
@@ -76,7 +79,7 @@ describe('AcademicConfigService', () => {
       expect(repo.update).not.toHaveBeenCalled()
     })
     it('patches and saves when config exists', async () => {
-      const config = AcademicConfig.create({ hourlyLoad: null })
+      const config = makeConfig()
       repo.get.mockResolvedValue(config)
       repo.update.mockResolvedValue(config)
       await service.patch('user-1', { hourlyLoad })

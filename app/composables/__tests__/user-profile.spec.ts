@@ -166,7 +166,7 @@ describe('useUserProfile', () => {
   it('updateFaculty patches service and updates profile facultyId', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: 'profile',
+      id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -190,7 +190,7 @@ describe('useUserProfile', () => {
   it('updateSpeciality patches service and updates profile specialityId', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: 'profile',
+      id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -211,7 +211,7 @@ describe('useUserProfile', () => {
   it('updateSetupCompleted patches service and updates profile', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: 'profile',
+      id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -233,7 +233,7 @@ describe('useUserProfile', () => {
     const load = makeHourlyLoad(1)
     const store = useUserProfileStore()
     store.profile = {
-      id: 'profile',
+      id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -257,9 +257,22 @@ describe('useUserProfile', () => {
 
   it('completeSetup creates profile, academic config, preferences, and sets store values', async () => {
     const load = makeHourlyLoad(1)
-    mockCreateProfile.mockResolvedValue(undefined)
-    mockCreateAcademicConfig.mockResolvedValue(undefined)
-    mockCreatePreferences.mockResolvedValue(undefined)
+    mockCreateProfile.mockResolvedValue({
+      id: crypto.randomUUID(),
+      facultyId: 2,
+      specialityId: 3,
+      setupCompleted: true,
+    })
+    mockCreateAcademicConfig.mockResolvedValue({
+      id: crypto.randomUUID(),
+      hourlyLoad: load,
+    })
+    mockCreatePreferences.mockResolvedValue({
+      id: crypto.randomUUID(),
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+    })
     const { completeSetup } = useUserProfile()
     await completeSetup(2, 3, load)
     const store = useUserProfileStore()

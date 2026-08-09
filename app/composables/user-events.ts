@@ -9,7 +9,11 @@ export const useUserEvents = () => {
   const { items } = storeToRefs(store)
 
   async function createNewItem(item: IBaseActivity) {
-    const result = await service.create(userId, item)
+    const result = await service.create(userId, {
+      ...item,
+      category: 'MY_EVENT',
+      type: 'MY_EVENT',
+    })
     items.value.push(result)
   }
 
@@ -21,7 +25,11 @@ export const useUserEvents = () => {
   async function updateItem(item: IBaseActivity & { id?: IActivity['id'] }) {
     const itemId = item.id
     if (!itemId) return
-    const result = await service.updateById(userId, itemId, { ...item })
+    const result = await service.updateById(userId, itemId, {
+      ...item,
+      category: 'MY_EVENT',
+      type: 'MY_EVENT',
+    })
     store.updateItem(result)
   }
 

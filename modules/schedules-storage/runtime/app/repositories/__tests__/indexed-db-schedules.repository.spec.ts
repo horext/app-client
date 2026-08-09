@@ -35,18 +35,21 @@ describe('IndexedDBSchedulesRepository', () => {
     it('returns schedules by ids, filtering undefined results', async () => {
       const schedule = Schedule.create(baseSchedule)
       const missingId = crypto.randomUUID()
+      const stored = persistedSnapshot(schedule.toSnapshot())
       persistence.find
-        .mockResolvedValueOnce(schedule.toSnapshot())
+        .mockResolvedValueOnce(stored)
         .mockResolvedValueOnce(undefined)
       expect(
-        await repo.getEntries('user-1', [schedule.id, missingId]),
+        await repo.getEntries('user-1', [stored.id, missingId]),
       ).toHaveLength(1)
     })
   })
   describe('findByKey', () => {
     it('returns schedule matching the key', async () => {
       const schedule = Schedule.create(baseSchedule)
-      persistence.findByIndex.mockResolvedValue(schedule.toSnapshot())
+      persistence.findByIndex.mockResolvedValue(
+        persistedSnapshot(schedule.toSnapshot()),
+      )
       expect(await repo.getByKey('user-1', 'key-1')).toBeDefined()
     })
     it('returns undefined when key not found', async () => {
@@ -57,7 +60,9 @@ describe('IndexedDBSchedulesRepository', () => {
   describe('create', () => {
     it('returns a saved schedule', async () => {
       const schedule = Schedule.create(baseSchedule)
-      persistence.create.mockResolvedValue(schedule.toSnapshot())
+      persistence.create.mockResolvedValue(
+        persistedSnapshot(schedule.toSnapshot()),
+      )
       expect(await repo.create('user-1', schedule)).toBeDefined()
     })
   })
@@ -69,8 +74,8 @@ describe('IndexedDBSchedulesRepository', () => {
       const a = Schedule.create(baseSchedule)
       const b = Schedule.create(baseSchedule)
       persistence.create
-        .mockResolvedValueOnce(a.toSnapshot())
-        .mockResolvedValueOnce(b.toSnapshot())
+        .mockResolvedValueOnce(persistedSnapshot(a.toSnapshot()))
+        .mockResolvedValueOnce(persistedSnapshot(b.toSnapshot()))
       expect(await repo.createAll('user-1', [a, b])).toHaveLength(2)
     })
   })
@@ -106,15 +111,18 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   describe('findAll', () => {
     it('returns stored favorites', async () => {
       const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
-      persistence.findAll.mockResolvedValue([favorite.toSnapshot()])
+      persistence.findAll.mockResolvedValue([
+        persistedSnapshot(favorite.toSnapshot()),
+      ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
   })
   describe('findById', () => {
     it('returns favorite when present', async () => {
       const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
-      persistence.find.mockResolvedValue(favorite.toSnapshot())
-      expect(await repo.findById('user-1', favorite.scheduleId)).toBeDefined()
+      const stored = persistedSnapshot(favorite.toSnapshot())
+      persistence.find.mockResolvedValue(stored)
+      expect(await repo.findById('user-1', stored.id)).toBeDefined()
     })
     it('returns undefined when absent', async () => {
       persistence.find.mockResolvedValue(undefined)
@@ -124,7 +132,9 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   describe('create', () => {
     it('resolves without error', async () => {
       const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
-      persistence.create.mockResolvedValue(favorite.toSnapshot())
+      persistence.create.mockResolvedValue(
+        persistedSnapshot(favorite.toSnapshot()),
+      )
       await expect(repo.create('user-1', favorite)).resolves.toBeDefined()
     })
   })

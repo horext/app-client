@@ -2,6 +2,18 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBPreferencesRepository } from '../indexed-db-preferences.repository'
 import { Preferences } from '../../../shared/domain'
+import type { IPreferences } from '../../../shared/interfaces/preferences'
+
+const persistedPreferences: IPreferences = {
+  weekDays: [1, 2],
+  crossings: 0,
+  maxGenerationHistory: 10,
+  id: crypto.randomUUID(),
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  createdBy: 'user-1',
+  updatedBy: 'user-1',
+}
 
 const makePersistence = (): Mocked<AggregatePersistence> => ({
   findAll: vi.fn(),
@@ -23,19 +35,14 @@ describe('IndexedDBPreferencesRepository', () => {
 
   describe('get', () => {
     it('returns a UserPreferences instance when data exists', async () => {
-      const prefs = Preferences.create({
-        weekDays: [1, 2],
-        crossings: 0,
-        maxGenerationHistory: 10,
-      })
-      persistence.find.mockResolvedValue(prefs.toSnapshot())
+      persistence.findAll.mockResolvedValue([persistedPreferences])
       const result = await repo.get('user-1')
       expect(result).toBeInstanceOf(Preferences)
       expect(result!.toSnapshot().crossings).toBe(0)
     })
 
     it('returns undefined when nothing stored', async () => {
-      persistence.find.mockResolvedValue(undefined)
+      persistence.findAll.mockResolvedValue([])
       expect(await repo.get('user-1')).toBeUndefined()
     })
   })
@@ -47,7 +54,7 @@ describe('IndexedDBPreferencesRepository', () => {
         crossings: 0,
         maxGenerationHistory: 10,
       })
-      persistence.create.mockResolvedValue(prefs.toSnapshot())
+      persistence.create.mockResolvedValue(persistedPreferences)
       await expect(repo.create('user-1', prefs)).resolves.toBeInstanceOf(
         Preferences,
       )

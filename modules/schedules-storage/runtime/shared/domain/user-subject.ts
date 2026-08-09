@@ -1,38 +1,17 @@
 import type { UUID } from 'crypto'
-import type { ISubjectSchedules } from '../interfaces/subject'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
 import type {
-  IUserSubjectCreate,
-  IUserSubjectUpdate,
-  IdGenerator,
-  Clock,
-} from './domain-helpers'
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
+} from '../interfaces/subject'
+import type { IUserSubjectCreate, IUserSubjectUpdate } from './domain-helpers'
 import { DomainError } from './domain-error'
-import {
-  created,
-  currentTime,
-  generateUuid,
-  optional,
-  restored,
-  updated,
-} from './domain-helpers'
 
-export class UserSubject {
-  private constructor(private readonly snapshot: ISubjectSchedules) {}
+export class UserSubject<
+  T extends IBaseSubjectSchedules | ISubjectSchedules = ISubjectSchedules,
+> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(
-    input: IUserSubjectCreate,
-    generateId: IdGenerator = generateUuid,
-    clock: Clock = currentTime,
-  ): UserSubject {
-    return UserSubject.build(generateId(), input, created(clock))
-  }
-
-  private static build(
-    id: UUID,
-    input: IUserSubjectCreate,
-    metadata: IEntityMetadata,
-  ): UserSubject {
+  static create(input: IUserSubjectCreate): UserSubject<IBaseSubjectSchedules> {
     if (!input.subject || !Number.isFinite(input.subject.id))
       throw new DomainError(
         'invalid-reference',
@@ -40,35 +19,34 @@ export class UserSubject {
         'subject',
       )
     return new UserSubject({
-      id,
       subject: input.subject,
       schedules: input.schedules,
-      color: optional(input.color),
-      ...metadata,
+      color: input.color,
     })
   }
 
-  static restore(snapshot: ISubjectSchedules): UserSubject {
-    return UserSubject.build(snapshot.id, snapshot, restored(snapshot))
+  static restore(snapshot: ISubjectSchedules): UserSubject<ISubjectSchedules> {
+    return new UserSubject(structuredClone(snapshot))
   }
 
   get id(): UUID {
+    if (!('id' in this.snapshot))
+      throw new Error('The entity has not been persisted.')
     return this.snapshot.id
   }
 
-  update(input: IUserSubjectUpdate, clock: Clock = currentTime): UserSubject {
-    return UserSubject.build(
-      this.id,
-      {
-        subject: this.snapshot.subject,
-        schedules: input.schedules ?? this.snapshot.schedules,
-        color: input.color ?? this.snapshot.color,
-      },
-      updated(this.snapshot, clock),
-    )
+  update(
+    this: UserSubject<ISubjectSchedules>,
+    input: IUserSubjectUpdate,
+  ): UserSubject<ISubjectSchedules> {
+    return new UserSubject({
+      ...this.snapshot,
+      schedules: input.schedules ?? this.snapshot.schedules,
+      color: input.color ?? this.snapshot.color,
+    })
   }
 
-  toSnapshot(): ISubjectSchedules {
+  toSnapshot(): T {
     return structuredClone(this.snapshot)
   }
 }

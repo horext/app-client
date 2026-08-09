@@ -9,9 +9,9 @@ export class NoopGenerationRepository implements IGenerationRepository {
   }
   create(
     _userId: string,
-    value: Parameters<IGenerationRepository['create']>[1],
+    _value: Parameters<IGenerationRepository['create']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(new Error('Generation repository is unavailable.'))
   }
   delete(_userId: string, _id: Parameters<IGenerationRepository['delete']>[1]) {
     return Promise.resolve()

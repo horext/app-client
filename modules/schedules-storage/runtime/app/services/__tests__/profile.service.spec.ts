@@ -2,6 +2,16 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Profile } from '../../../shared/domain'
 import { ProfileService } from '../profile.service'
 import type { IProfileRepository } from '../../repositories/profile-repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+
+const makeProfile = (setupCompleted = false) =>
+  Profile.restore(
+    persistedSnapshot({
+      facultyId: 1,
+      specialityId: 2,
+      setupCompleted,
+    }),
+  )
 
 describe('ProfileService', () => {
   const makeRepo = (): Mocked<IProfileRepository> => ({
@@ -21,24 +31,22 @@ describe('ProfileService', () => {
       expect(await service.getProfile('user-1')).toBeUndefined()
     })
     it('returns profile data when stored', async () => {
-      const profile = Profile.create({
-        facultyId: 1,
-        specialityId: 2,
-        setupCompleted: false,
-      })
+      const profile = Profile.restore(
+        persistedSnapshot({
+          facultyId: 1,
+          specialityId: 2,
+          setupCompleted: false,
+        }),
+      )
       repo.get.mockResolvedValue(profile)
       expect(await service.getProfile('user-1')).toMatchObject({
-        id: 'profile',
+        id: profile.id,
       })
     })
   })
   describe('createProfile', () => {
     it('returns existing profile if already exists', async () => {
-      const profile = Profile.create({
-        facultyId: 1,
-        specialityId: 2,
-        setupCompleted: true,
-      })
+      const profile = makeProfile(true)
       repo.get.mockResolvedValue(profile)
       const result = await service.createProfile('user-1', {
         facultyId: 5,
@@ -49,11 +57,13 @@ describe('ProfileService', () => {
     })
     it('creates and saves new profile when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
-      const profile = Profile.create({
-        facultyId: 3,
-        specialityId: 4,
-        setupCompleted: false,
-      })
+      const profile = Profile.restore(
+        persistedSnapshot({
+          facultyId: 3,
+          specialityId: 4,
+          setupCompleted: false,
+        }),
+      )
       repo.create.mockResolvedValue(profile)
       const result = await service.createProfile('user-1', {
         facultyId: 3,
@@ -71,11 +81,7 @@ describe('ProfileService', () => {
       expect(repo.update).not.toHaveBeenCalled()
     })
     it('patches and saves when profile exists', async () => {
-      const profile = Profile.create({
-        facultyId: 1,
-        specialityId: 2,
-        setupCompleted: false,
-      })
+      const profile = makeProfile()
       repo.get.mockResolvedValue(profile)
       repo.update.mockResolvedValue(profile)
       await service.patch('user-1', { setupCompleted: true })
