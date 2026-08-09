@@ -1,6 +1,5 @@
 import type { IBaseProfile, IProfile } from '../interfaces/profile'
 import type { IProfileCreate, IProfileUpdate } from './domain-helpers'
-import { DomainError } from './domain-error'
 import type { UUID } from 'crypto'
 
 export class Profile<T extends IBaseProfile | IProfile = IProfile> {
@@ -10,15 +9,9 @@ export class Profile<T extends IBaseProfile | IProfile = IProfile> {
     return Profile.build(input)
   }
 
-  private static build(input: IProfileCreate): Profile<IBaseProfile> {
-    if (
-      !Number.isFinite(input.facultyId) ||
-      !Number.isFinite(input.specialityId)
-    )
-      throw new DomainError(
-        'invalid-reference',
-        'Profile references are invalid.',
-      )
+  private static build<T extends IBaseProfile | IProfile>(
+    input: T,
+  ): Profile<T> {
     return new Profile({
       ...input,
       setupCompleted: input.setupCompleted ?? false,
@@ -26,7 +19,7 @@ export class Profile<T extends IBaseProfile | IProfile = IProfile> {
   }
 
   static restore(snapshot: IProfile): Profile<IProfile> {
-    return new Profile({ ...snapshot })
+    return Profile.build(snapshot)
   }
 
   update(input: IProfileUpdate): Profile<IProfile> {
@@ -36,7 +29,7 @@ export class Profile<T extends IBaseProfile | IProfile = IProfile> {
       ...input,
       id: this.snapshot.id,
     }
-    return new Profile(snapshot)
+    return Profile.build(snapshot)
   }
 
   get id(): UUID {

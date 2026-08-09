@@ -1,6 +1,5 @@
 import type { IBasePreferences, IPreferences } from '../interfaces/preferences'
 import type { IPreferencesCreate, IPreferencesUpdate } from './domain-helpers'
-import { validWeekday } from './domain-helpers'
 import { DomainError } from './domain-error'
 import type { UUID } from 'crypto'
 
@@ -13,20 +12,14 @@ export class Preferences<
     return Preferences.build(input)
   }
 
-  private static build(
-    input: IPreferencesCreate,
-  ): Preferences<IBasePreferences> {
+  private static build<T extends IBasePreferences | IPreferences>(
+    input: T,
+  ): Preferences<T> {
     if (input.maxGenerationHistory < 1)
       throw new DomainError(
         'invalid-limit',
         'Generation history must be positive.',
         'maxGenerationHistory',
-      )
-    if (!input.weekDays.every(validWeekday))
-      throw new DomainError(
-        'invalid-weekday',
-        'A preference weekday is invalid.',
-        'weekDays',
       )
     return new Preferences({
       ...input,
@@ -34,17 +27,8 @@ export class Preferences<
     })
   }
 
-  private static buildFromSnapshot(
-    snapshot: IPreferences,
-  ): Preferences<IPreferences> {
-    return new Preferences({
-      ...snapshot,
-      weekDays: [...snapshot.weekDays],
-    })
-  }
-
   static restore(snapshot: IPreferences): Preferences<IPreferences> {
-    return Preferences.buildFromSnapshot(snapshot)
+    return Preferences.build(snapshot)
   }
 
   update(input: IPreferencesUpdate): Preferences<IPreferences> {
@@ -54,7 +38,7 @@ export class Preferences<
       ...input,
       id: this.snapshot.id,
     }
-    return new Preferences(snapshot)
+    return Preferences.build(snapshot)
   }
 
   get id(): UUID {
@@ -63,6 +47,6 @@ export class Preferences<
   }
 
   toSnapshot(): T {
-    return { ...this.snapshot, weekDays: [...this.snapshot.weekDays] } as T
+    return structuredClone(this.snapshot)
   }
 }

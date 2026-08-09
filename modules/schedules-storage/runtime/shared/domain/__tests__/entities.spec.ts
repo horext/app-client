@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Activity, DomainError, Preferences } from '../index'
+import type { IPreferences } from '../../interfaces/preferences'
 
 describe('shared domain entities', () => {
   it('round-trips an activity snapshot', () => {
@@ -62,5 +63,46 @@ describe('shared domain entities', () => {
         maxGenerationHistory: 0,
       }),
     ).toThrowError(DomainError)
+  })
+
+  it('applies partial activity updates and preserves omitted values', () => {
+    const activity = Activity.restore({
+      id: crypto.randomUUID(),
+      title: 'Study',
+      color: '#112233',
+      allowOverlap: true,
+      sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      createdBy: 'user-1',
+      updatedBy: 'user-1',
+    })
+
+    expect(activity.update({ title: 'Updated' }).toSnapshot()).toMatchObject({
+      title: 'Updated',
+      color: '#112233',
+      allowOverlap: true,
+    })
+  })
+
+  it('revalidates preference business limits when restoring and updating', () => {
+    const snapshot: IPreferences = {
+      id: crypto.randomUUID(),
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      createdBy: 'user-1',
+      updatedBy: 'user-1',
+    }
+    const preferences = Preferences.restore({
+      ...snapshot,
+      weekDays: [...snapshot.weekDays],
+    })
+
+    expect(() => preferences.update({ maxGenerationHistory: 0 })).toThrowError(
+      DomainError,
+    )
   })
 })

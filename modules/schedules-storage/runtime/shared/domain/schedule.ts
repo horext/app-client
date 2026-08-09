@@ -4,14 +4,27 @@ import type {
   IScheduleGenerate,
 } from '../interfaces/schedule'
 import type { IScheduleCreate, IScheduleUpdate } from './domain-helpers'
+import { DomainError } from './domain-error'
 
 export class Schedule<
   T extends IBaseScheduleGenerate | IScheduleGenerate = IScheduleGenerate,
 > {
   private constructor(private readonly snapshot: T) {}
 
+  private static build<T extends IBaseScheduleGenerate | IScheduleGenerate>(
+    input: T,
+  ): Schedule<T> {
+    if (!Number.isInteger(input.crossings) || input.crossings < 0)
+      throw new DomainError(
+        'invalid-limit',
+        'Schedule crossings cannot be negative.',
+        'crossings',
+      )
+    return new Schedule(structuredClone(input))
+  }
+
   static create(input: IScheduleCreate): Schedule<IBaseScheduleGenerate> {
-    return new Schedule({
+    return Schedule.build({
       scheduleSubjectKey: input.scheduleSubjectKey,
       schedulesSubject: structuredClone(input.schedulesSubject),
       crossings: input.crossings,
@@ -20,7 +33,7 @@ export class Schedule<
   }
 
   static restore(snapshot: IScheduleGenerate): Schedule<IScheduleGenerate> {
-    return new Schedule(structuredClone(snapshot))
+    return Schedule.build(snapshot)
   }
 
   get id(): UUID {
@@ -37,7 +50,7 @@ export class Schedule<
     this: Schedule<IScheduleGenerate>,
     input: IScheduleUpdate,
   ): Schedule<IScheduleGenerate> {
-    return new Schedule({
+    return Schedule.build({
       ...this.snapshot,
       ...structuredClone(input),
     })

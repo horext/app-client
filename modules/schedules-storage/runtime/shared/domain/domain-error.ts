@@ -3,6 +3,8 @@ export type DomainErrorCode =
   | 'invalid-weekday'
   | 'invalid-limit'
   | 'invalid-reference'
+  | 'invalid-title'
+  | 'invalid-color'
   | 'entity-not-found'
 
 export class DomainError extends Error {

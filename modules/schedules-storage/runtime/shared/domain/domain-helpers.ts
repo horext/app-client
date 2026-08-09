@@ -10,7 +10,7 @@ import type {
   IBaseSubjectSchedules,
   ISubjectSchedulesUpdate,
 } from '../interfaces/subject'
-import type { IActivitySession, Weekdays } from '../interfaces/event'
+import type { IActivitySession } from '../interfaces/event'
 import type { IBaseGenerationRecord } from '../interfaces/generation-record'
 import type { IEntityMetadata } from '../interfaces/entity-metadata'
 import { DomainError } from './domain-error'
@@ -24,16 +24,12 @@ export interface IActivityCreate {
   sessions: IActivitySession[]
 }
 
-export type IActivityUpdate = {
-  [Key in keyof IActivityCreate]: IActivityCreate[Key]
-}
+export type IActivityUpdate = Partial<IActivityCreate>
 
 export type IUserSubjectCreate = {
   [Key in keyof IBaseSubjectSchedules]: IBaseSubjectSchedules[Key]
 }
-export type IUserSubjectUpdate = {
-  [Key in keyof ISubjectSchedulesUpdate]: ISubjectSchedulesUpdate[Key]
-}
+export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate>
 
 export interface IScheduleCreate {
   scheduleSubjectKey: string
@@ -42,16 +38,12 @@ export interface IScheduleCreate {
   events: IScheduleGenerate['events']
 }
 
-export type IScheduleUpdate = {
-  [Key in keyof IScheduleCreate]: IScheduleCreate[Key]
-}
+export type IScheduleUpdate = Partial<IScheduleCreate>
 
 export type IGenerationCreate = {
   [Key in keyof IBaseGenerationRecord]: IBaseGenerationRecord[Key]
 }
-export type IGenerationUpdate = {
-  [Key in keyof IBaseGenerationRecord]: IBaseGenerationRecord[Key]
-}
+export type IGenerationUpdate = Partial<IBaseGenerationRecord>
 
 export type IProfileCreate = Omit<
   IProfile,
@@ -80,20 +72,10 @@ export type IFavoriteUpdate = {
   [Key in keyof IFavoriteCreate]: IFavoriteCreate[Key]
 }
 
-export function validWeekday(value: number): value is Weekdays {
-  return Number.isInteger(value) && value >= 0 && value <= 6
-}
-
 export function validateSessions(
   sessions: IActivitySession[],
 ): IActivitySession[] {
   return sessions.map((session, index) => {
-    if (!validWeekday(session.day))
-      throw new DomainError(
-        'invalid-weekday',
-        'The session weekday is invalid.',
-        `sessions.${index}.day`,
-      )
     if (session.startTime >= session.endTime)
       throw new DomainError(
         'invalid-time-range',

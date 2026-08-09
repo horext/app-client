@@ -4,25 +4,24 @@ import type {
   ISubjectSchedules,
 } from '../interfaces/subject'
 import type { IUserSubjectCreate, IUserSubjectUpdate } from './domain-helpers'
-import { DomainError } from './domain-error'
 
 export class UserSubject<
   T extends IBaseSubjectSchedules | ISubjectSchedules = ISubjectSchedules,
 > {
   private constructor(private readonly snapshot: T) {}
 
+  private static build<T extends IBaseSubjectSchedules | ISubjectSchedules>(
+    input: T,
+  ): UserSubject<T> {
+    return new UserSubject(structuredClone(input))
+  }
+
   static create(input: IUserSubjectCreate): UserSubject<IBaseSubjectSchedules> {
-    if (!input.subject || !Number.isFinite(input.subject.id))
-      throw new DomainError(
-        'invalid-reference',
-        'The subject is invalid.',
-        'subject',
-      )
-    return new UserSubject(input)
+    return UserSubject.build(input)
   }
 
   static restore(snapshot: ISubjectSchedules): UserSubject<ISubjectSchedules> {
-    return new UserSubject(structuredClone(snapshot))
+    return UserSubject.build(snapshot)
   }
 
   get id(): UUID {
@@ -35,7 +34,7 @@ export class UserSubject<
     this: UserSubject<ISubjectSchedules>,
     input: IUserSubjectUpdate,
   ): UserSubject<ISubjectSchedules> {
-    return new UserSubject({
+    return UserSubject.build({
       ...this.snapshot,
       schedules: input.schedules ?? this.snapshot.schedules,
       color: input.color ?? this.snapshot.color,
