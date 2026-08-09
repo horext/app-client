@@ -17,15 +17,15 @@ export interface AggregatePersistence {
   ): Promise<Schemas[S]['value'] | undefined>
   create<S extends Stores>(
     store: S,
-    value: Exclude<
+    value: Omit<
       Schemas[S]['value'],
-      'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
+      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
     >,
     userId: string,
   ): Promise<Schemas[S]['value']>
   update<S extends Stores>(
     store: S,
-    value: Exclude<Schemas[S]['value'], 'updatedAt' | 'updatedBy'>,
+    value: Omit<Schemas[S]['value'], 'updatedAt' | 'updatedBy'>,
     userId: string,
   ): Promise<Schemas[S]['value']>
   remove<S extends Stores>(
@@ -70,9 +70,9 @@ export class IndexedDbAggregatePersistence implements AggregatePersistence {
 
   async create<S extends Stores>(
     store: S,
-    value: Exclude<
+    value: Omit<
       Schemas[S]['value'],
-      'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
+      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
     >,
     userId: string,
   ) {
@@ -84,6 +84,7 @@ export class IndexedDbAggregatePersistence implements AggregatePersistence {
       updatedAt: timestamp,
       createdBy: userId,
       updatedBy: userId,
+      id: crypto.randomUUID(),
     }
     await db.put(store, record)
     return record
@@ -91,7 +92,7 @@ export class IndexedDbAggregatePersistence implements AggregatePersistence {
 
   async update<S extends Stores>(
     store: S,
-    value: Exclude<Schemas[S]['value'], 'updatedAt' | 'updatedBy'>,
+    value: Omit<Schemas[S]['value'], 'updatedAt' | 'updatedBy'>,
     userId: string,
   ) {
     const db = await this.getDb()
