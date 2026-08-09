@@ -33,6 +33,4 @@ export interface IEvent {
 
 export interface IActivity extends IBaseActivity {
   id: UUID
-  category: 'MY_EVENT'
-  type: 'MY_EVENT'
 }

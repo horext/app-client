@@ -101,7 +101,7 @@ export class ActivitySessionEvent<
     return false
   }
 
-  static buildActivitiesFrom(event: Omit<IActivity, 'category' | 'type'>) {
+  static buildActivitiesFrom(event: IActivity) {
     const sessions = event.sessions
 
     return sessions.map(

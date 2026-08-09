@@ -43,7 +43,7 @@ describe('ActivitiesService', () => {
         color: '#fff',
         sessions: [],
       })
-      expect(result).toMatchObject({ category: 'MY_EVENT', type: 'MY_EVENT' })
+      expect(result).toMatchObject({ title: 'Activity' })
     })
   })
   describe('delete', () => {

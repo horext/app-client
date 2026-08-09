@@ -4,19 +4,13 @@ import type { IActivityCreate, IActivityUpdate } from './domain-helpers'
 import { validateSessions } from './domain-helpers'
 
 export class Activity<T extends IBaseActivity | IActivity = IActivity> {
-  private constructor(private readonly snapshot: T) {}
+  private constructor(private readonly snapshot: T) {
+    this.snapshot.sessions = validateSessions(this.snapshot.sessions)
+    this.snapshot.allowOverlap = this.snapshot.allowOverlap ?? false
+  }
 
   static create(input: IActivityCreate): Activity<IBaseActivity> {
-    return new Activity({
-      title: input.title,
-      description: input.description,
-      location: input.location,
-      color: input.color,
-      allowOverlap: input.allowOverlap ?? false,
-      sessions: validateSessions(input.sessions),
-      category: 'MY_EVENT',
-      type: 'MY_EVENT',
-    })
+    return new Activity(input)
   }
 
   static restore(snapshot: IActivity): Activity<IActivity> {

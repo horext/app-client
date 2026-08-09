@@ -139,8 +139,6 @@ describe('useUserEventsStore', () => {
         title: 'event',
         color: '#fff',
         sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-        type: 'MY_EVENT',
-        category: 'MY_EVENT',
       } satisfies IActivity,
     ])
     expect(store.items).toHaveLength(1)
@@ -153,8 +151,6 @@ describe('useUserEventsStore', () => {
       title: 'event',
       color: '#fff',
       sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-      type: 'MY_EVENT',
-      category: 'MY_EVENT',
     }
     store.setItems([item])
     store.updateItem({ ...item, title: 'updated' })
@@ -169,8 +165,6 @@ describe('useUserEventsStore', () => {
         title: 'event',
         color: '#fff',
         sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-        type: 'MY_EVENT',
-        category: 'MY_EVENT',
       } satisfies IActivity,
     ])
     store.updateItem({
@@ -178,8 +172,6 @@ describe('useUserEventsStore', () => {
       title: 'x',
       color: '#000',
       sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-      type: 'MY_EVENT',
-      category: 'MY_EVENT',
     })
     expect(store.items[0]!.title).toBe('event')
   })
@@ -192,8 +184,6 @@ describe('useUserEventsStore', () => {
         title: 'event',
         color: '#fff',
         sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-        type: 'MY_EVENT',
-        category: 'MY_EVENT',
       } satisfies IActivity,
     ])
     store.deleteItemById('1' as UUID)
