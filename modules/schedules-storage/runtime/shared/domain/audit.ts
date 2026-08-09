@@ -1,12 +1,12 @@
 import type { IEntityMetadata } from '../interfaces/entity-metadata'
 
-export function auditEntity<Value extends IEntityMetadata>(
-  value: Value,
+export function auditEntity<T extends Partial<IEntityMetadata>>(
+  value: T,
   userId: string,
-): Value {
+): T & Partial<IEntityMetadata> {
   return {
     ...value,
-    createdBy: value.createdBy === 'local' ? userId : value.createdBy,
+    createdBy: value.createdBy ?? userId,
     updatedBy: userId,
   }
 }

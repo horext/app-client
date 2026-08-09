@@ -19,6 +19,9 @@ export interface IScheduleGenerate
   id: UUID
 }
 
-export interface IFavoriteSchedule extends IEntityMetadata {
+export interface IBaseFavoriteSchedule {
   id: IScheduleGenerate['id']
 }
+
+export interface IFavoriteSchedule
+  extends IBaseFavoriteSchedule, IEntityMetadata {}

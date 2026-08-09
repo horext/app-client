@@ -45,20 +45,19 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('finds an entity using the compound user and entity key', async () => {
-    get.mockResolvedValue({ id: 'profile', createdBy: 'user-1' })
+    const id = crypto.randomUUID()
+    const stored = { id, createdBy: 'user-1' }
+    get.mockResolvedValue(stored)
 
     await expect(
-      persistence.find(StoresDB.PROFILE, 'user-1', 'profile'),
-    ).resolves.toEqual({
-      id: 'profile',
-      createdBy: 'user-1',
-    })
+      persistence.find(StoresDB.PROFILE, 'user-1', id),
+    ).resolves.toEqual(stored)
     expect(transaction).toHaveBeenCalledWith('profile', 'readonly')
-    expect(get).toHaveBeenCalledWith(['user-1', 'profile'])
+    expect(get).toHaveBeenCalledWith(['user-1', id])
   })
 
   it('lists only entities owned by the requested user', async () => {
-    getAll.mockResolvedValue([{ id: 'profile', createdBy: 'user-1' }])
+    getAll.mockResolvedValue([{ id: crypto.randomUUID(), createdBy: 'user-1' }])
     const globalScope = globalThis as typeof globalThis & {
       IDBKeyRange?: unknown
     }
@@ -70,7 +69,7 @@ describe('IndexedDbAggregatePersistence', () => {
     try {
       await expect(
         persistence.findAll(StoresDB.PROFILE, 'user-1'),
-      ).resolves.toEqual([{ id: 'profile', createdBy: 'user-1' }])
+      ).resolves.toHaveLength(1)
       expect(index).toHaveBeenCalledWith('createdBy')
       expect(getAll).toHaveBeenCalledWith('user-1')
     } finally {
@@ -85,16 +84,17 @@ describe('IndexedDbAggregatePersistence', () => {
   it('stamps ownership and timestamps when creating', async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-01-02T03:04:05.000Z'))
-    const value = { id: 'profile', facultyId: 1 }
+    const value = { facultyId: 1, specialityId: 2, setupCompleted: false }
 
     await expect(
-      persistence.create(StoresDB.PROFILE, value as never, 'user-1'),
+      persistence.create(StoresDB.PROFILE, value, 'user-1'),
     ).resolves.toEqual({
       ...value,
       createdAt: '2026-01-02T03:04:05.000Z',
       updatedAt: '2026-01-02T03:04:05.000Z',
       createdBy: 'user-1',
       updatedBy: 'user-1',
+      id: expect.any(String),
     })
     expect(put).toHaveBeenCalledWith(
       StoresDB.PROFILE,
@@ -105,7 +105,7 @@ describe('IndexedDbAggregatePersistence', () => {
 
   it('updates metadata while preserving the original creator', async () => {
     const value = {
-      id: 'profile',
+      id: crypto.randomUUID(),
       facultyId: 2,
       createdAt: '2026-01-01T00:00:00.000Z',
       createdBy: 'user-1',
@@ -126,7 +126,8 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('removes only the requested user entity', async () => {
-    await persistence.remove(StoresDB.PROFILE, 'user-1', 'profile')
-    expect(remove).toHaveBeenCalledWith(StoresDB.PROFILE, ['user-1', 'profile'])
+    const id = crypto.randomUUID()
+    await persistence.remove(StoresDB.PROFILE, 'user-1', id)
+    expect(remove).toHaveBeenCalledWith(StoresDB.PROFILE, ['user-1', id])
   })
 })

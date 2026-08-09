@@ -58,7 +58,7 @@ describe('useUserPreferences', () => {
   it('updateCrossings updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: 'preferences',
+      id: crypto.randomUUID(),
       crossings: 0,
       weekDays: [1, 2],
       maxGenerationHistory: 5,
@@ -81,7 +81,7 @@ describe('useUserPreferences', () => {
   it('saveWeekDays updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: 'preferences',
+      id: crypto.randomUUID(),
       crossings: 0,
       weekDays: [1],
       maxGenerationHistory: 5,
@@ -107,7 +107,7 @@ describe('useUserPreferences', () => {
   it('updateMaxGenerationHistory updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: 'preferences',
+      id: crypto.randomUUID(),
       crossings: 0,
       weekDays: [1],
       maxGenerationHistory: 5,

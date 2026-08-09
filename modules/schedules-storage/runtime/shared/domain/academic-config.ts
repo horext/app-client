@@ -1,48 +1,52 @@
-import type { IAcademicConfig } from '../interfaces/academic-config'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
+import type {
+  IBaseAcademicConfig,
+  IAcademicConfig,
+} from '../interfaces/academic-config'
 import type {
   IAcademicConfigCreate,
   IAcademicConfigUpdate,
-  Clock,
 } from './domain-helpers'
-import { created, currentTime, restored, updated } from './domain-helpers'
+import type { UUID } from 'crypto'
 
-export class AcademicConfig {
-  private constructor(private readonly snapshot: IAcademicConfig) {}
+export class AcademicConfig<
+  T extends IBaseAcademicConfig | IAcademicConfig = IAcademicConfig,
+> {
+  private constructor(private readonly snapshot: T) {}
 
   static create(
     input: IAcademicConfigCreate,
-    clock: Clock = currentTime,
-  ): AcademicConfig {
-    return AcademicConfig.build(input, created(clock))
+  ): AcademicConfig<IBaseAcademicConfig> {
+    return AcademicConfig.build(input)
   }
 
   private static build(
     input: IAcademicConfigCreate,
-    metadata: IEntityMetadata,
-  ): AcademicConfig {
+  ): AcademicConfig<IBaseAcademicConfig> {
     return new AcademicConfig({
-      id: 'academic-config',
       hourlyLoad: input.hourlyLoad ? structuredClone(input.hourlyLoad) : null,
-      ...metadata,
     })
   }
 
-  static restore(snapshot: IAcademicConfig): AcademicConfig {
-    return AcademicConfig.build(snapshot, restored(snapshot))
+  static restore(snapshot: IAcademicConfig): AcademicConfig<IAcademicConfig> {
+    return new AcademicConfig(structuredClone(snapshot))
   }
 
-  update(
-    input: IAcademicConfigUpdate,
-    clock: Clock = currentTime,
-  ): AcademicConfig {
-    return AcademicConfig.build(
-      { ...this.snapshot, ...input },
-      updated(this.snapshot, clock),
-    )
+  get id(): UUID {
+    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
+    return this.snapshot.id
   }
 
-  toSnapshot(): IAcademicConfig {
+  update(input: IAcademicConfigUpdate): AcademicConfig<IAcademicConfig> {
+    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
+    const snapshot: IAcademicConfig = {
+      ...this.snapshot,
+      ...input,
+      id: this.snapshot.id,
+    }
+    return new AcademicConfig(snapshot)
+  }
+
+  toSnapshot(): T {
     return structuredClone(this.snapshot)
   }
 }

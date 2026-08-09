@@ -1,6 +1,7 @@
 import type { IHourlyLoad } from './houly-load'
+import type { UUID } from 'crypto'
 
 export interface IUserAcademicConfig {
-  id: 'academic-config'
+  id: UUID
   hourlyLoad: IHourlyLoad | null
 }

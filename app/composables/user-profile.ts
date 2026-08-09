@@ -99,7 +99,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
   ) {
-    await Promise.all([
+    const [createdProfile] = await Promise.all([
       profileService.createProfile(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
@@ -110,12 +110,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
       }),
       createPreferences(),
     ])
-    profile.value = {
-      id: 'profile',
-      facultyId: _facultyId,
-      specialityId: _specialityId,
-      setupCompleted: true,
-    }
+    profile.value = createdProfile
     hourlyLoad.value = _hourlyLoad
   }
 

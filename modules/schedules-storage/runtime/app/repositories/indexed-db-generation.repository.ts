@@ -1,5 +1,9 @@
 import type { UUID } from 'crypto'
 import { Generation } from '../../shared/domain'
+import type {
+  IBaseGenerationRecord,
+  IGenerationRecord,
+} from '../../shared/interfaces/generation-record'
 import type { IGenerationRepository } from './generation.repository.interface'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
@@ -18,7 +22,10 @@ export class IndexedDBGenerationsRepository implements IGenerationRepository {
     return record ? Generation.restore(record) : undefined
   }
 
-  async create(userId: string, record: Generation): Promise<Generation> {
+  async create(
+    userId: string,
+    record: Generation<IBaseGenerationRecord>,
+  ): Promise<Generation<IGenerationRecord>> {
     const stored = await this.persistence.create(
       StoresDB.GENERATIONS,
       record.toSnapshot(),

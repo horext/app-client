@@ -10,8 +10,11 @@ export class NoopSubjectsRepository implements ISubjectsRepository {
   ) {
     return Promise.resolve(undefined)
   }
-  create(_userId: string, value: Parameters<ISubjectsRepository['create']>[1]) {
-    return Promise.resolve(value)
+  create(
+    _userId: string,
+    _value: Parameters<ISubjectsRepository['create']>[1],
+  ) {
+    return Promise.reject(new Error('Subjects repository is unavailable.'))
   }
   update(_userId: string, value: Parameters<ISubjectsRepository['update']>[1]) {
     return Promise.resolve(value)

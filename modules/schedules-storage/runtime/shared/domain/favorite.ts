@@ -1,31 +1,32 @@
 import type { UUID } from 'crypto'
-import type { IFavoriteSchedule } from '../interfaces/schedule'
-import type { IFavoriteCreate, IFavoriteUpdate, Clock } from './domain-helpers'
-import { created, currentTime, restored, updated } from './domain-helpers'
+import type {
+  IBaseFavoriteSchedule,
+  IFavoriteSchedule,
+} from '../interfaces/schedule'
+import type { IFavoriteCreate, IFavoriteUpdate } from './domain-helpers'
 
-export class Favorite {
-  private constructor(private readonly snapshot: IFavoriteSchedule) {}
+export class Favorite<
+  T extends IBaseFavoriteSchedule | IFavoriteSchedule = IFavoriteSchedule,
+> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(input: IFavoriteCreate, clock: Clock = currentTime): Favorite {
-    return new Favorite({ id: input.scheduleId, ...created(clock) })
+  static create(input: IFavoriteCreate): Favorite<IBaseFavoriteSchedule> {
+    return new Favorite({ id: input.scheduleId })
   }
 
-  static restore(snapshot: IFavoriteSchedule): Favorite {
-    return new Favorite({ ...snapshot, ...restored(snapshot) })
+  static restore(snapshot: IFavoriteSchedule): Favorite<IFavoriteSchedule> {
+    return new Favorite({ ...snapshot })
   }
 
   get scheduleId(): UUID {
     return this.snapshot.id
   }
 
-  update(input: IFavoriteUpdate, clock: Clock = currentTime): Favorite {
-    return new Favorite({
-      id: input.scheduleId,
-      ...updated(this.snapshot, clock),
-    })
+  update(input: IFavoriteUpdate): Favorite<IBaseFavoriteSchedule> {
+    return Favorite.create(input)
   }
 
-  toSnapshot(): IFavoriteSchedule {
+  toSnapshot(): T {
     return { ...this.snapshot }
   }
 }

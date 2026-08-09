@@ -1,7 +1,5 @@
 import type { UUID } from 'crypto'
 import type { IAcademicConfig } from '../interfaces/academic-config'
-import type { IActivitySession, Weekdays } from '../interfaces/event'
-import type { IBaseGenerationRecord } from '../interfaces/generation-record'
 import type { IPreferences } from '../interfaces/preferences'
 import type { IProfile } from '../interfaces/profile'
 import type {
@@ -12,8 +10,10 @@ import type {
   IBaseSubjectSchedules,
   ISubjectSchedulesUpdate,
 } from '../interfaces/subject'
-import { DomainError } from './domain-error'
+import type { IActivitySession, Weekdays } from '../interfaces/event'
+import type { IBaseGenerationRecord } from '../interfaces/generation-record'
 import type { IEntityMetadata } from '../interfaces/entity-metadata'
+import { DomainError } from './domain-error'
 
 export interface IActivityCreate {
   title: string
@@ -53,7 +53,12 @@ export type IGenerationUpdate = {
   [Key in keyof IBaseGenerationRecord]: IBaseGenerationRecord[Key]
 }
 
-export type IProfileCreate = Omit<IProfile, 'id' | keyof IEntityMetadata>
+export type IProfileCreate = Omit<
+  IProfile,
+  'id' | keyof IEntityMetadata | 'setupCompleted'
+> & {
+  setupCompleted?: boolean
+}
 export type IProfileUpdate = Partial<IProfileCreate>
 
 export type IPreferencesCreate = Omit<
@@ -73,60 +78,6 @@ export interface IFavoriteCreate {
 }
 export type IFavoriteUpdate = {
   [Key in keyof IFavoriteCreate]: IFavoriteCreate[Key]
-}
-
-export type IdGenerator = () => UUID
-export type Clock = () => string
-
-export const generateUuid: IdGenerator = () => crypto.randomUUID()
-export const currentTime: Clock = () => new Date().toISOString()
-
-export function created(clock: Clock): IEntityMetadata {
-  const timestamp = clock()
-  return {
-    createdAt: timestamp,
-    updatedAt: timestamp,
-    createdBy: 'local',
-    updatedBy: 'local',
-  }
-}
-
-export function updated(
-  metadata: IEntityMetadata,
-  clock: Clock,
-): IEntityMetadata {
-  return {
-    createdAt: metadata.createdAt,
-    updatedAt: clock(),
-    createdBy: metadata.createdBy,
-    updatedBy: metadata.updatedBy,
-  }
-}
-
-export function restored(metadata: IEntityMetadata): IEntityMetadata {
-  const now = currentTime()
-  return {
-    createdAt:
-      typeof metadata.createdAt === 'string' ? metadata.createdAt : now,
-    updatedAt:
-      typeof metadata.updatedAt === 'string' ? metadata.updatedAt : now,
-    createdBy:
-      typeof metadata.createdBy === 'string' ? metadata.createdBy : 'local',
-    updatedBy:
-      typeof metadata.updatedBy === 'string' ? metadata.updatedBy : 'local',
-  }
-}
-
-export function required(value: string, field: string): string {
-  const normalized = value.trim()
-  if (!normalized)
-    throw new DomainError('required-field', `${field} is required.`, field)
-  return normalized
-}
-
-export function optional(value: string | undefined): string | undefined {
-  const normalized = value?.trim()
-  return normalized || undefined
 }
 
 export function validWeekday(value: number): value is Weekdays {

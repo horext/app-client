@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Activity } from '../../../shared/domain'
 import { ActivitiesService } from '../activities.service'
 import type { IActivitiesRepository } from '../../repositories/activities.repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 describe('ActivitiesService', () => {
   const makeRepo = (): Mocked<IActivitiesRepository> => ({
@@ -12,11 +13,15 @@ describe('ActivitiesService', () => {
     delete: vi.fn(),
   })
   const makeActivity = () =>
-    Activity.create({
-      title: 'Activity',
-      color: '#fff',
-      sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-    })
+    Activity.restore(
+      persistedSnapshot(
+        Activity.create({
+          title: 'Activity',
+          color: '#fff',
+          sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
+        }).toSnapshot(),
+      ),
+    )
   let repo: Mocked<IActivitiesRepository>
   let service: ActivitiesService
   beforeEach(() => {

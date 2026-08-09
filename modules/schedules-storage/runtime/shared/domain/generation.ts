@@ -1,38 +1,18 @@
 import type { UUID } from 'crypto'
-import type { IGenerationRecord } from '../interfaces/generation-record'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
 import type {
-  IGenerationCreate,
-  IGenerationUpdate,
-  Clock,
-  IdGenerator,
-} from './domain-helpers'
+  IBaseGenerationRecord,
+  IGenerationRecord,
+} from '../interfaces/generation-record'
+import type { IGenerationCreate, IGenerationUpdate } from './domain-helpers'
 import { DomainError } from './domain-error'
-import {
-  created,
-  currentTime,
-  generateUuid,
-  restored,
-  updated,
-  validWeekday,
-} from './domain-helpers'
+import { validWeekday } from './domain-helpers'
 
-export class Generation {
-  private constructor(private readonly snapshot: IGenerationRecord) {}
+export class Generation<
+  T extends IBaseGenerationRecord | IGenerationRecord = IGenerationRecord,
+> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(
-    input: IGenerationCreate,
-    generateId: IdGenerator = generateUuid,
-    clock: Clock = currentTime,
-  ): Generation {
-    return Generation.build(generateId(), input, created(clock))
-  }
-
-  private static build(
-    id: UUID,
-    input: IGenerationCreate,
-    metadata: IEntityMetadata,
-  ): Generation {
+  static create(input: IGenerationCreate): Generation<IBaseGenerationRecord> {
     if (input.resultCount < 0)
       throw new DomainError(
         'invalid-limit',
@@ -45,30 +25,34 @@ export class Generation {
         'A generation weekday is invalid.',
         'weekDays',
       )
-    return new Generation({ ...structuredClone(input), id, ...metadata })
+    return new Generation(structuredClone(input))
   }
 
-  static restore(snapshot: IGenerationRecord): Generation {
-    return Generation.build(snapshot.id, snapshot, restored(snapshot))
+  static restore(snapshot: IGenerationRecord): Generation<IGenerationRecord> {
+    return new Generation(structuredClone(snapshot))
   }
 
   get id(): UUID {
+    if (!('id' in this.snapshot))
+      throw new Error('The entity has not been persisted.')
     return this.snapshot.id
   }
 
   get generatedAt(): string {
     return this.snapshot.generatedAt
   }
-
   get scheduleIds(): UUID[] {
     return [...this.snapshot.scheduleIds]
   }
 
-  update(input: IGenerationUpdate, clock: Clock = currentTime): Generation {
-    return Generation.build(this.id, input, updated(this.snapshot, clock))
+  update(
+    this: Generation<IGenerationRecord>,
+    input: IGenerationUpdate,
+  ): Generation<IGenerationRecord> {
+    return new Generation({ ...this.snapshot, ...structuredClone(input) })
   }
 
-  toSnapshot(): IGenerationRecord {
+  toSnapshot(): T {
     return structuredClone(this.snapshot)
   }
 }

@@ -1,5 +1,4 @@
 export type DomainErrorCode =
-  | 'required-field'
   | 'invalid-time-range'
   | 'invalid-weekday'
   | 'invalid-limit'

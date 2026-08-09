@@ -31,10 +31,10 @@ export interface IBaseActivity {
   color: string
   allowOverlap?: boolean
   sessions: IActivitySession[]
+  category: 'MY_EVENT'
+  type: 'MY_EVENT'
 }
 
 export interface IActivity extends IBaseActivity, IEntityMetadata {
   id: UUID
-  category: 'MY_EVENT'
-  type: 'MY_EVENT'
 }

@@ -1,13 +1,13 @@
+import type { IActivity } from '../interfaces/event'
+import type { ISubjectSchedules } from '../interfaces/subject'
 import type {
-  IActivity,
-  ISubjectSchedules,
   IScheduleGenerate,
-  IGenerationRecord,
-  IProfile,
-  IPreferences,
-  IAcademicConfig,
   IFavoriteSchedule,
-} from '../domain-snapshots'
+} from '../interfaces/schedule'
+import type { IGenerationRecord } from '../interfaces/generation-record'
+import type { IProfile } from '../interfaces/profile'
+import type { IPreferences } from '../interfaces/preferences'
+import type { IAcademicConfig } from '../interfaces/academic-config'
 import type { Activity } from './activity'
 import type { UserSubject } from './user-subject'
 import type { Schedule } from './schedule'

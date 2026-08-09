@@ -1,20 +1,16 @@
-import type { IProfile } from '../interfaces/profile'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
-import type { IProfileCreate, IProfileUpdate, Clock } from './domain-helpers'
+import type { IBaseProfile, IProfile } from '../interfaces/profile'
+import type { IProfileCreate, IProfileUpdate } from './domain-helpers'
 import { DomainError } from './domain-error'
-import { created, currentTime, restored, updated } from './domain-helpers'
+import type { UUID } from 'crypto'
 
-export class Profile {
-  private constructor(private readonly snapshot: IProfile) {}
+export class Profile<T extends IBaseProfile | IProfile = IProfile> {
+  private constructor(private readonly snapshot: T) {}
 
-  static create(input: IProfileCreate, clock: Clock = currentTime): Profile {
-    return Profile.build(input, created(clock))
+  static create(input: IProfileCreate): Profile<IBaseProfile> {
+    return Profile.build(input)
   }
 
-  private static build(
-    input: IProfileCreate,
-    metadata: IEntityMetadata,
-  ): Profile {
+  private static build(input: IProfileCreate): Profile<IBaseProfile> {
     if (
       !Number.isFinite(input.facultyId) ||
       !Number.isFinite(input.specialityId)
@@ -23,21 +19,34 @@ export class Profile {
         'invalid-reference',
         'Profile references are invalid.',
       )
-    return new Profile({ id: 'profile', ...input, ...metadata })
+    return new Profile({
+      ...input,
+      setupCompleted: input.setupCompleted ?? false,
+    })
   }
 
-  static restore(snapshot: IProfile): Profile {
-    return Profile.build(snapshot, restored(snapshot))
+  static restore(snapshot: IProfile): Profile<IProfile> {
+    return new Profile({ ...snapshot })
   }
 
-  update(input: IProfileUpdate, clock: Clock = currentTime): Profile {
-    return Profile.build(
-      { ...this.snapshot, ...input },
-      updated(this.snapshot, clock),
-    )
+  update(input: IProfileUpdate): Profile<IProfile> {
+    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
+    const snapshot: IProfile = {
+      ...this.snapshot,
+      ...input,
+      id: this.snapshot.id,
+    }
+    return new Profile(snapshot)
   }
 
-  toSnapshot(): IProfile {
-    return { ...this.snapshot }
+  get id(): UUID {
+    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
+    return this.snapshot.id
+  }
+
+  toSnapshot() {
+    return {
+      ...this.snapshot,
+    }
   }
 }

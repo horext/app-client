@@ -3,6 +3,7 @@ import { UserSubject } from '../../../shared/domain'
 import { SubjectsService } from '../subjects.service'
 import type { ISubjectsRepository } from '../../repositories/subjects-repository.interface'
 import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const subjectInput: IBaseSubjectSchedules = {
   subject: {
@@ -15,6 +16,10 @@ const subjectInput: IBaseSubjectSchedules = {
   },
   schedules: [],
 }
+const createSubject = () =>
+  UserSubject.restore(
+    persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+  )
 describe('SubjectsService', () => {
   const makeRepo = (): Mocked<ISubjectsRepository> => ({
     getAll: vi.fn(),
@@ -31,13 +36,13 @@ describe('SubjectsService', () => {
   })
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      repo.getAll.mockResolvedValue([UserSubject.create(subjectInput)])
+      repo.getAll.mockResolvedValue([createSubject()])
       expect(await service.getAll('user-1')).toHaveLength(1)
     })
   })
   describe('create', () => {
     it('creates a subject', async () => {
-      const subject = UserSubject.create(subjectInput)
+      const subject = createSubject()
       repo.create.mockResolvedValue(subject)
       const result = await service.create('user-1', subjectInput)
       expect(result).toMatchObject({ id: subject.id })
@@ -52,7 +57,7 @@ describe('SubjectsService', () => {
   })
   describe('update', () => {
     it('updates a subject', async () => {
-      const subject = UserSubject.create(subjectInput)
+      const subject = createSubject()
       repo.findById.mockResolvedValue(subject)
       repo.update.mockResolvedValue(subject)
       const result = await service.update('user-1', subject.id, {

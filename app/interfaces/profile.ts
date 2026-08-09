@@ -1,5 +1,6 @@
+import type { UUID } from 'crypto'
 export interface IUserProfile {
-  id: 'profile'
+  id: UUID
   facultyId: number
   specialityId: number
   setupCompleted: boolean

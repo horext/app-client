@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Activity, type IActivityCreate } from '../../../shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const baseActivity: IActivityCreate = {
   title: 'Math',
@@ -29,7 +30,9 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('getAll', () => {
     it('returns all activities', async () => {
       const activity = Activity.create(baseActivity)
-      persistence.findAll.mockResolvedValue([activity.toSnapshot()])
+      persistence.findAll.mockResolvedValue([
+        persistedSnapshot(activity.toSnapshot()),
+      ])
       expect(await repo.getAll('user-1')).toHaveLength(1)
     })
     it('returns empty array when store is empty', async () => {
@@ -40,9 +43,10 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('get', () => {
     it('returns activity by id', async () => {
       const activity = Activity.create(baseActivity)
-      persistence.find.mockResolvedValue(activity.toSnapshot())
-      expect(await repo.get('user-1', activity.id)).toMatchObject({
-        id: activity.id,
+      const stored = persistedSnapshot(activity.toSnapshot())
+      persistence.find.mockResolvedValue(stored)
+      expect(await repo.get('user-1', stored.id)).toMatchObject({
+        id: stored.id,
       })
     })
     it('returns undefined when not found', async () => {
@@ -53,7 +57,9 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('create', () => {
     it('returns a new activity with generated id, MY_EVENT category and type', async () => {
       const activity = Activity.create(baseActivity)
-      persistence.create.mockResolvedValue(activity.toSnapshot())
+      persistence.create.mockResolvedValue(
+        persistedSnapshot(activity.toSnapshot()),
+      )
       const result = await repo.create('user-1', activity)
       expect(result.toSnapshot().title).toBe(baseActivity.title)
       expect(result.toSnapshot().category).toBe('MY_EVENT')
@@ -64,10 +70,9 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('update', () => {
     it('returns the updated activity', async () => {
       const activity = Activity.create(baseActivity)
-      persistence.create.mockResolvedValue(activity.toSnapshot())
-      expect(await repo.create('user-1', activity)).toMatchObject({
-        id: activity.id,
-      })
+      const stored = persistedSnapshot(activity.toSnapshot())
+      persistence.create.mockResolvedValue(stored)
+      expect((await repo.create('user-1', activity)).id).toBe(stored.id)
     })
   })
   describe('delete', () => {

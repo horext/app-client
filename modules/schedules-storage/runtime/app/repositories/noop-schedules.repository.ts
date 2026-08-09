@@ -18,15 +18,15 @@ export class NoopSchedulesRepository implements ISchedulesRepository {
   }
   create(
     _userId: string,
-    value: Parameters<ISchedulesRepository['create']>[1],
+    _value: Parameters<ISchedulesRepository['create']>[1],
   ) {
-    return Promise.resolve(value)
+    return Promise.reject(new Error('Schedules repository is unavailable.'))
   }
   createAll(
     _userId: string,
-    values: Parameters<ISchedulesRepository['createAll']>[1],
+    _values: Parameters<ISchedulesRepository['createAll']>[1],
   ) {
-    return Promise.resolve(values)
+    return Promise.reject(new Error('Schedules repository is unavailable.'))
   }
   update(
     _userId: string,

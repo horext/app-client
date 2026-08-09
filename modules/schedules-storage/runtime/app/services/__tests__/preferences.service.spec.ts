@@ -2,13 +2,16 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Preferences } from '../../../shared/domain'
 import { PreferencesService } from '../preferences.service'
 import type { IPreferencesRepository } from '../../repositories/preferences-repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makePreferences = () =>
-  Preferences.create({
-    weekDays: [1, 2, 3],
-    crossings: 0,
-    maxGenerationHistory: 10,
-  })
+  Preferences.restore(
+    persistedSnapshot({
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+    }),
+  )
 describe('PreferencesService', () => {
   const makeRepo = (): Mocked<IPreferencesRepository> => ({
     get: vi.fn(),
@@ -30,7 +33,7 @@ describe('PreferencesService', () => {
       const prefs = makePreferences()
       repo.get.mockResolvedValue(prefs)
       expect(await service.getPreferences('user-1')).toMatchObject({
-        id: 'preferences',
+        id: prefs.id,
       })
     })
   })
@@ -40,7 +43,7 @@ describe('PreferencesService', () => {
       repo.get.mockResolvedValue(prefs)
       const result = await service.createPreferences('user-1')
       expect(repo.create).not.toHaveBeenCalled()
-      expect(result.id).toBe('preferences')
+      expect(result.id).toBe(prefs.id)
     })
     it('creates and saves new preferences when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
@@ -48,7 +51,7 @@ describe('PreferencesService', () => {
       repo.create.mockResolvedValue(prefs)
       const result = await service.createPreferences('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.id).toBe('preferences')
+      expect(result.id).toBe(prefs.id)
       expect(result.crossings).toBe(0)
     })
   })

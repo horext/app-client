@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from 'vitest'
-import { Activity, auditEntity, DomainError, Preferences } from '../index'
+import { describe, expect, it } from 'vitest'
+import { Activity, DomainError, Preferences } from '../index'
 
 describe('shared domain entities', () => {
-  it('normalizes an activity and round-trips its snapshot', () => {
+  it('round-trips an activity snapshot', () => {
     const activity = Activity.create({
       title: '  Study  ',
       description: '  Notes  ',
@@ -10,9 +10,18 @@ describe('shared domain entities', () => {
       sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
     })
     const snapshot = activity.toSnapshot()
-    expect(snapshot.title).toBe('Study')
-    expect(snapshot.description).toBe('Notes')
-    expect(Activity.restore(snapshot).toSnapshot()).toEqual(snapshot)
+    expect(snapshot.title).toBe('  Study  ')
+    expect(snapshot.description).toBe('  Notes  ')
+    expect(
+      Activity.restore({
+        ...snapshot,
+        id: crypto.randomUUID(),
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        createdBy: 'user-1',
+        updatedBy: 'user-1',
+      }).toSnapshot(),
+    ).toMatchObject(snapshot)
   })
 
   it('rejects invalid activity time ranges', () => {
@@ -25,62 +34,24 @@ describe('shared domain entities', () => {
     ).toThrowError(DomainError)
   })
 
-  it('generates identity only when creating a new entity', () => {
-    const id = crypto.randomUUID()
-    const generateId = vi.fn(() => id)
-    const activity = Activity.create(
-      {
-        title: 'Study',
-        color: '#112233',
-        sessions: [],
-      },
-      generateId,
-    )
-
-    expect(activity.id).toBe(id)
-    expect(generateId).toHaveBeenCalledOnce()
-    expect(
-      activity.update({
-        title: 'Updated',
-        color: '#112233',
-        sessions: [],
-      }).id,
-    ).toBe(id)
-    expect(Activity.restore(activity.toSnapshot()).id).toBe(id)
-    expect(generateId).toHaveBeenCalledOnce()
-  })
-
-  it('preserves createdAt and advances updatedAt on update', () => {
-    const activity = Activity.create(
-      { title: 'Study', color: '#112233', sessions: [] },
-      () => crypto.randomUUID(),
-      () => '2026-08-08T13:00:00.000Z',
-    )
-    const updated = activity.update(
-      { title: 'Updated', color: '#112233', sessions: [] },
-      () => '2026-08-08T15:00:00.000Z',
-    )
-
-    expect(activity.toSnapshot().createdAt).toBe('2026-08-08T13:00:00.000Z')
-    expect(updated.toSnapshot()).toMatchObject({
-      createdAt: '2026-08-08T13:00:00.000Z',
-      updatedAt: '2026-08-08T15:00:00.000Z',
+  it('leaves identity creation to the repository', () => {
+    const activity = Activity.create({
+      title: 'Study',
+      color: '#112233',
+      sessions: [],
     })
-  })
 
-  it('assigns ownership once and records the latest actor', () => {
-    const created = auditEntity(
-      Activity.create({
-        title: 'Study',
-        color: '#112233',
-        sessions: [],
-      }).toSnapshot(),
-      'user-1',
-    )
-    const updated = auditEntity(created, 'user-1')
-
-    expect(updated.createdBy).toBe('user-1')
-    expect(updated.updatedBy).toBe('user-1')
+    expect(() => activity.id).toThrow()
+    expect(
+      Activity.restore({
+        ...activity.toSnapshot(),
+        id: crypto.randomUUID(),
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        createdBy: 'user-1',
+        updatedBy: 'user-1',
+      }).id,
+    ).toBeDefined()
   })
 
   it('rejects an empty generation-history limit', () => {

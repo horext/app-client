@@ -1,5 +1,5 @@
 import type { IEntityMetadata } from './entity-metadata'
-
+import type { UUID } from 'crypto'
 export interface IBaseProfile {
   facultyId: number
   specialityId: number
@@ -7,6 +7,6 @@ export interface IBaseProfile {
 }
 
 export interface IProfile extends IBaseProfile, IEntityMetadata {
-  id: 'profile'
+  id: UUID
   setupCompleted: boolean
 }

@@ -1,6 +1,11 @@
 import type { UUID } from 'crypto'
 import { Favorite, Schedule } from '../../shared/domain'
 import type {
+  IBaseFavoriteSchedule,
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '../../shared/interfaces/schedule'
+import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from './schedules-repository.interface'
@@ -36,7 +41,10 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return result ? Schedule.restore(result) : undefined
   }
 
-  async create(userId: string, schedule: Schedule): Promise<Schedule> {
+  async create(
+    userId: string,
+    schedule: Schedule<IBaseScheduleGenerate>,
+  ): Promise<Schedule<IScheduleGenerate>> {
     const stored = await this.persistence.create(
       StoresDB.SCHEDULES,
       schedule.toSnapshot(),
@@ -45,9 +53,12 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return Schedule.restore(stored)
   }
 
-  async createAll(userId: string, schedules: Schedule[]): Promise<Schedule[]> {
+  async createAll(
+    userId: string,
+    schedules: Schedule<IBaseScheduleGenerate>[],
+  ): Promise<Schedule<IScheduleGenerate>[]> {
     if (!schedules.length) return []
-    const stored: Schedule[] = []
+    const stored: Schedule<IScheduleGenerate>[] = []
     for (const schedule of schedules) {
       const record = await this.persistence.create(
         StoresDB.SCHEDULES,
@@ -59,7 +70,10 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return stored
   }
 
-  async update(userId: string, schedule: Schedule): Promise<Schedule> {
+  async update(
+    userId: string,
+    schedule: Schedule<IScheduleGenerate>,
+  ): Promise<Schedule<IScheduleGenerate>> {
     const stored = await this.persistence.update(
       StoresDB.SCHEDULES,
       schedule.toSnapshot(),
@@ -93,7 +107,10 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     return record ? Favorite.restore(record) : undefined
   }
 
-  async create(userId: string, favorite: Favorite): Promise<Favorite> {
+  async create(
+    userId: string,
+    favorite: Favorite<IBaseFavoriteSchedule>,
+  ): Promise<Favorite> {
     const stored = await this.persistence.create(
       StoresDB.FAVORITES,
       favorite.toSnapshot(),

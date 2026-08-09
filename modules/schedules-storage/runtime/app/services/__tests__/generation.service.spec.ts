@@ -10,6 +10,7 @@ import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from '../../repositories/schedules-repository.interface'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const input = {
   scheduleSubjectKey: 'k',
@@ -31,6 +32,16 @@ const idFor = (name: string) => {
   ids.set(name, generated)
   return generated
 }
+const createSchedule = () =>
+  Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
+const createFavorite = (scheduleId: ReturnType<typeof crypto.randomUUID>) =>
+  Favorite.restore({
+    id: scheduleId,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 const makeRecord = (
   id: string,
   scheduleIds: string[] = [],
@@ -103,7 +114,7 @@ describe('GenerationService', () => {
     it('returns latest generation with schedules', async () => {
       const record = makeRecord('gen1', ['s1'])
       genRepo.getAll.mockResolvedValue([record])
-      schedulesRepo.getEntries.mockResolvedValue([Schedule.create(input)])
+      schedulesRepo.getEntries.mockResolvedValue([createSchedule()])
       const result = await service.getLatestGeneration('user-1')
       expect(result).toBeDefined()
       expect(result!.id).toBe(idFor('gen1'))
@@ -114,8 +125,8 @@ describe('GenerationService', () => {
     it('returns schedules for a given generation record', async () => {
       const record = makeRecord('gen1', ['s1', 's2'])
       schedulesRepo.getEntries.mockResolvedValue([
-        Schedule.create(input),
-        Schedule.create(input),
+        createSchedule(),
+        createSchedule(),
       ])
       const result = await service.getSchedulesForGeneration(
         'user-1',
@@ -126,7 +137,7 @@ describe('GenerationService', () => {
   })
   describe('saveGeneration', () => {
     it('saves schedules and creates generation record', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       const generation = makeRecord('gen1', [schedule.id])
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(generation)
@@ -142,7 +153,7 @@ describe('GenerationService', () => {
       expect(result.schedules).toHaveLength(1)
     })
     it('trims history when exceeding maxHistory', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(
         makeRecord('g3', [schedule.id], '2024-01-03'),
@@ -157,7 +168,7 @@ describe('GenerationService', () => {
       expect(genRepo.delete).toHaveBeenCalledWith('user-1', idFor('g1'))
     })
     it('does not delete schedules when all removed schedules are favorites', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(
         makeRecord('g3', [schedule.id], '2024-01-03'),
@@ -167,15 +178,12 @@ describe('GenerationService', () => {
         makeRecord('g2', ['s2'], '2024-01-02'),
         makeRecord('g3', ['s3'], '2024-01-03'),
       ])
-      favoritesRepo.findAll.mockResolvedValue([
-        Favorite.create({ scheduleId: idFor('s1') }),
-        Favorite.create({ scheduleId: idFor('s2') }),
-      ])
+      favoritesRepo.findAll.mockResolvedValue([createFavorite(idFor('s1'))])
       await service.saveGeneration('user-1', meta, [input], [], 2)
       expect(schedulesRepo.deleteEntries).not.toHaveBeenCalled()
     })
     it('does not trim when within maxHistory', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(makeRecord('g1', [schedule.id]))
       genRepo.getAll.mockResolvedValue([makeRecord('g1', ['s1'])])
@@ -183,7 +191,7 @@ describe('GenerationService', () => {
       expect(genRepo.delete).not.toHaveBeenCalled()
     })
     it('cleans saved schedules if generation creation fails', async () => {
-      const schedule = Schedule.create(input)
+      const schedule = createSchedule()
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockRejectedValue(new Error('failed'))
       await expect(
