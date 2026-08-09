@@ -62,8 +62,6 @@ function makeActivity(
       { day: day as 0 | 1 | 2 | 3 | 4 | 5 | 6, startTime: start, endTime: end },
     ],
     color: '#f00',
-    type: 'MY_EVENT',
-    category: 'MY_EVENT',
   }
 }
 
