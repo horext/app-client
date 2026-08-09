@@ -5,6 +5,7 @@ import {
   IndexedDBSchedulesRepository,
   IndexedDBScheduleFavoritesRepository,
 } from '../indexed-db-schedules.repository'
+import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const baseSchedule = {
   scheduleSubjectKey: 'key-1',

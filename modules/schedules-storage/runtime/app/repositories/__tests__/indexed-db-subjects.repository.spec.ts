@@ -23,8 +23,6 @@ const makePersistence = (): Mocked<AggregatePersistence> => ({
   create: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
-  saveRemote: vi.fn(),
-  replace: vi.fn(),
 })
 describe('IndexedDBSubjectsRepository', () => {
   let persistence: Mocked<AggregatePersistence>
