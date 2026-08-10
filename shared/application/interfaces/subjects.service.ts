@@ -3,25 +3,26 @@ import type {
   ISubjectSchedules,
   ISubjectSchedulesUpdate,
 } from '#shared/domain/types/subject'
+import type { UserSubject } from '#shared/domain'
 
 export interface ISubjectsService {
-  getAll(userId: string): Promise<ISubjectSchedules[]>
+  getAll(userId: string): Promise<UserSubject<ISubjectSchedules>[]>
   get(
     userId: string,
     id: ISubjectSchedules['id'],
-  ): Promise<ISubjectSchedules | undefined>
+  ): Promise<UserSubject<ISubjectSchedules> | undefined>
   create(
     userId: string,
     subject: IBaseSubjectSchedules,
-  ): Promise<ISubjectSchedules>
+  ): Promise<UserSubject<ISubjectSchedules>>
   delete(
     userId: string,
     id: ISubjectSchedules['id'],
     expectedRevision?: number,
   ): Promise<void>
-  update(
+  patch(
     userId: string,
     id: ISubjectSchedules['id'],
     subject: ISubjectSchedulesUpdate,
-  ): Promise<ISubjectSchedules>
+  ): Promise<UserSubject<ISubjectSchedules>>
 }

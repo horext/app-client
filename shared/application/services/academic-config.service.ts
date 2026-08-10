@@ -5,6 +5,7 @@ import type {
 import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import type { IAcademicConfigService } from '../interfaces/academic-config.service'
 import { AcademicConfig } from '#shared/domain'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
@@ -29,22 +30,14 @@ export class AcademicConfigService implements IAcademicConfigService {
     return this.repo.update(userId, config)
   }
 
-  async getAcademicConfig(
-    userId: string,
-  ): Promise<IAcademicConfig | undefined> {
+  async get(userId: string): Promise<IAcademicConfig | undefined> {
     return (await this._load(userId))?.toSnapshot()
   }
 
-  async createAcademicConfig(
+  async create(
     userId: string,
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
-    const existing = await this._load(userId)
-    if (existing && initial?.revision !== undefined)
-      return (
-        await this._update(userId, existing.update(initial ?? {}))
-      ).toSnapshot()
-    if (existing) return existing.toSnapshot()
     const config = AcademicConfig.create({
       ...initial,
       hourlyLoad: initial?.hourlyLoad ?? null,
@@ -54,10 +47,10 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   async patch(
     userId: string,
-    partial: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig | undefined> {
-    const config = await this._load(userId)
-    if (!config) return undefined
-    return (await this._update(userId, config.update(partial))).toSnapshot()
+    value: Partial<IBaseAcademicConfig>,
+  ): Promise<IAcademicConfig> {
+    const existing = await this._load(userId)
+    if (!existing) throw new ResourceNotFoundError('academic-config')
+    return (await this._update(userId, existing.update(value))).toSnapshot()
   }
 }

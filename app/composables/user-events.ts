@@ -12,7 +12,7 @@ export const useUserEvents = () => {
     const result = await service.create(userId, {
       ...item,
     })
-    items.value.push(result)
+    items.value.push(result.toSnapshot())
   }
 
   async function deleteItemById(id: UUID) {
@@ -23,16 +23,16 @@ export const useUserEvents = () => {
   async function updateItem(item: IBaseActivity & { id?: IActivity['id'] }) {
     const itemId = item.id
     if (!itemId) return
-    const result = await service.updateById(userId, itemId, {
+    const result = await service.patch(userId, itemId, {
       ...item,
     })
-    store.updateItem(result)
+    store.updateItem(result.toSnapshot())
   }
 
   async function fetchItems() {
     if (!service) return
     const data = await service.getAll(userId)
-    store.setItems(data)
+    store.setItems(data.map((entity) => entity.toSnapshot()))
   }
 
   return {

@@ -27,38 +27,41 @@ describe('PreferencesService', () => {
   describe('getPreferences', () => {
     it('returns undefined when no preferences stored', async () => {
       repo.get.mockResolvedValue(undefined)
-      expect(await service.getPreferences('user-1')).toBeUndefined()
+      expect(await service.get('user-1')).toBeUndefined()
     })
     it('returns preferences data when stored', async () => {
       const prefs = makePreferences()
       repo.get.mockResolvedValue(prefs)
-      expect(await service.getPreferences('user-1')).toMatchObject({
+      expect(await service.get('user-1')).toMatchObject({
         id: prefs.id,
       })
     })
   })
   describe('createPreferences', () => {
-    it('returns existing preferences if already exists', async () => {
+    it('delegates creation even when preferences already exist', async () => {
+      repo.get.mockResolvedValue(makePreferences())
       const prefs = makePreferences()
-      repo.get.mockResolvedValue(prefs)
-      const result = await service.createPreferences('user-1')
-      expect(repo.create).not.toHaveBeenCalled()
+      repo.create.mockResolvedValue(prefs)
+      const result = await service.create('user-1')
+      expect(repo.create).toHaveBeenCalledOnce()
       expect(result.id).toBe(prefs.id)
     })
     it('creates and saves new preferences when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
       const prefs = makePreferences()
       repo.create.mockResolvedValue(prefs)
-      const result = await service.createPreferences('user-1')
+      const result = await service.create('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
       expect(result.id).toBe(prefs.id)
       expect(result.crossings).toBe(0)
     })
   })
   describe('patch', () => {
-    it('does nothing when no preferences exist', async () => {
+    it('throws when no preferences exist', async () => {
       repo.get.mockResolvedValue(undefined)
-      await service.patch('user-1', { crossings: 2 })
+      await expect(service.patch('user-1', { crossings: 2 })).rejects.toThrow(
+        'The preferences does not exist.',
+      )
       expect(repo.update).not.toHaveBeenCalled()
     })
     it('patches and saves when preferences exist', async () => {

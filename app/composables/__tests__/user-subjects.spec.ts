@@ -9,14 +9,14 @@ import { useUserSubjects } from '../user-subjects'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
-const mockUpdate = vi.fn()
+const mockPatch = vi.fn()
 const mockGetAll = vi.fn()
 
 mockNuxtImport('useSubjectsService', () =>
   vi.fn(() => ({
     create: mockCreate,
     delete: mockDelete,
-    update: mockUpdate,
+    patch: mockPatch,
     getAll: mockGetAll,
   })),
 )
@@ -29,6 +29,10 @@ function makeSubject(id: UUID = crypto.randomUUID()): ISubjectSchedules {
     sections: [],
   } as ISubjectSchedules
 }
+
+const asEntity = (subject: ISubjectSchedules) => ({
+  toSnapshot: () => subject,
+})
 
 describe('useUserSubjects', () => {
   beforeEach(() => {
@@ -47,7 +51,7 @@ describe('useUserSubjects', () => {
 
   it('saveNewSubject creates a subject and pushes to store', async () => {
     const newSubject = makeSubject()
-    mockCreate.mockResolvedValue(newSubject)
+    mockCreate.mockResolvedValue(asEntity(newSubject))
     const { saveNewSubject, mySubjects } = useUserSubjects()
     await saveNewSubject(newSubject)
     expect(mockCreate).toHaveBeenCalledWith(expect.any(String), newSubject)
@@ -86,10 +90,10 @@ describe('useUserSubjects', () => {
     } as ISubjectSchedules
     const store = useUserSubjectsStore()
     store.subjects = [original]
-    mockUpdate.mockResolvedValue(updated)
+    mockPatch.mockResolvedValue(asEntity(updated))
     const { updateSubject, mySubjects } = useUserSubjects()
     await updateSubject(original)
-    expect(mockUpdate).toHaveBeenCalled()
+    expect(mockPatch).toHaveBeenCalled()
     expect(mySubjects.value[0]).toEqual(updated)
   })
 
@@ -99,7 +103,9 @@ describe('useUserSubjects', () => {
       ...makeSubject(),
       schedules: [],
     } as ISubjectSchedules
-    mockGetAll.mockResolvedValue([withSchedules, withoutSchedules])
+    mockGetAll.mockResolvedValue(
+      [withSchedules, withoutSchedules].map(asEntity),
+    )
     const { fetchSubjects, mySubjects } = useUserSubjects()
     await fetchSubjects()
     expect(mySubjects.value).toContainEqual(

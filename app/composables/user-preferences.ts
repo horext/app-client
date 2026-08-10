@@ -9,12 +9,12 @@ export const useUserPreferences = () => {
     storeToRefs(store)
 
   async function fetchPreferences() {
-    const prefs = await service.getPreferences(userId)
+    const prefs = await service.get(userId)
     if (prefs) preferences.value = prefs
   }
 
   async function createPreferences() {
-    await service.createPreferences(userId)
+    await service.create(userId)
   }
 
   async function updateCrossings(_crossings: number) {

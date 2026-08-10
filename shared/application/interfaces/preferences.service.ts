@@ -4,13 +4,10 @@ import type {
 } from '#shared/domain/types/preferences'
 
 export interface IPreferencesService {
-  getPreferences(userId: string): Promise<IPreferences | undefined>
-  createPreferences(
+  get(userId: string): Promise<IPreferences | undefined>
+  create(
     userId: string,
     initial?: Partial<IBasePreferences>,
   ): Promise<IPreferences>
-  patch(
-    userId: string,
-    partial: Partial<IBasePreferences>,
-  ): Promise<IPreferences | undefined>
+  patch(userId: string, value: Partial<IBasePreferences>): Promise<IPreferences>
 }

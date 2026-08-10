@@ -23,14 +23,14 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   async function fetchProfile() {
     try {
       loadingProfile.value = true
-      profile.value = await profileService.getProfile(userId)
+      profile.value = await profileService.get(userId)
     } finally {
       loadingProfile.value = false
     }
   }
 
   async function fetchAcademicConfig() {
-    const config = await academicConfigService.getAcademicConfig(userId)
+    const config = await academicConfigService.get(userId)
     if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
   }
 
@@ -100,12 +100,12 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _hourlyLoad: IHourlyLoad,
   ) {
     const [createdProfile] = await Promise.all([
-      profileService.createProfile(userId, {
+      profileService.create(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
         setupCompleted: true,
       }),
-      academicConfigService.createAcademicConfig(userId, {
+      academicConfigService.create(userId, {
         hourlyLoad: _hourlyLoad,
       }),
       createPreferences(),

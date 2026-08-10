@@ -6,29 +6,24 @@ import {
 } from '#shared/domain'
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 import type { ISubjectsService } from '../interfaces/subjects.service'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 export class SubjectsService implements ISubjectsService {
   constructor(private readonly repo: ISubjectsRepository) {}
 
-  getAll(userId: string): Promise<ISubjectSchedules[]> {
-    return this.repo
-      .getAll(userId)
-      .then((items) => items.map((item) => item.toSnapshot()))
+  getAll(userId: string): Promise<UserSubject<ISubjectSchedules>[]> {
+    return this.repo.getAll(userId)
   }
 
   async get(
     userId: string,
     id: ISubjectSchedules['id'],
-  ): Promise<ISubjectSchedules | undefined> {
-    return (await this.repo.findById(userId, id))?.toSnapshot()
+  ): Promise<UserSubject<ISubjectSchedules> | undefined> {
+    return this.repo.findById(userId, id)
   }
 
-  async create(
-    userId: string,
-    subject: IUserSubjectCreate,
-  ): Promise<ISubjectSchedules> {
-    const entity = UserSubject.create(subject)
-    return (await this.repo.create(userId, entity)).toSnapshot()
+  async create(userId: string, subject: IUserSubjectCreate) {
+    return this.repo.create(userId, UserSubject.create(subject))
   }
 
   delete(
@@ -39,16 +34,16 @@ export class SubjectsService implements ISubjectsService {
     return this.repo.delete(userId, id, expectedRevision)
   }
 
-  async update(
+  async patch(
     userId: string,
     id: ISubjectSchedules['id'],
     subject: IUserSubjectUpdate,
-  ): Promise<ISubjectSchedules> {
+  ): Promise<UserSubject<ISubjectSchedules>> {
     const data = await this.repo.findById(userId, id)
     if (!data) {
-      throw new Error(`Subject with id ${id} not found`)
+      throw new ResourceNotFoundError('subject')
     }
     const updated = data.update(subject)
-    return (await this.repo.update(userId, updated)).toSnapshot()
+    return this.repo.update(userId, updated)
   }
 }

@@ -13,6 +13,12 @@ export class NoopGenerationRepository implements IGenerationRepository {
   ) {
     return Promise.reject(new Error('Generation repository is unavailable.'))
   }
+  update(
+    _userId: string,
+    _value: Parameters<IGenerationRepository['update']>[1],
+  ) {
+    return Promise.reject(new Error('Generation repository is unavailable.'))
+  }
   delete(_userId: string, _id: Parameters<IGenerationRepository['delete']>[1]) {
     return Promise.resolve()
   }

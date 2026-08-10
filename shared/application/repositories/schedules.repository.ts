@@ -8,6 +8,7 @@ import type {
 
 export interface ISchedulesRepository {
   findAll(userId: string): Promise<Schedule[]>
+  findBy(userId: string, id: UUID): Promise<Schedule | undefined>
   getEntries(userId: string, ids: UUID[]): Promise<Schedule[]>
   getByKey(
     userId: string,

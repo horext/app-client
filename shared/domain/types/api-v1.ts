@@ -30,8 +30,8 @@ type SyncBodyMap = {
   favorites: IFavoriteSchedule
 }
 
-type PutOperation<R extends SyncResource> = {
-  method: 'PUT'
+type SaveOperation<R extends SyncResource> = {
+  method: 'POST' | 'PATCH'
   resource: R
   entityId: string
   externalId?: string
@@ -53,7 +53,7 @@ type DeleteOperation = {
 
 export type SyncOperationDto =
   | {
-      [R in SyncResource]: PutOperation<R>
+      [R in SyncResource]: SaveOperation<R>
     }[SyncResource]
   | DeleteOperation
 

@@ -1,15 +1,15 @@
 import type { UUID } from 'crypto'
 import type { IActivity, IBaseActivity } from '#shared/domain/types/event'
-import type { IActivityUpdate } from '#shared/domain'
+import type { Activity, IActivityUpdate } from '#shared/domain'
 
 export interface IActivitiesService {
-  getAll(userId: string): Promise<Array<IActivity>>
-  get(userId: string, id: UUID): Promise<IActivity | undefined>
-  create(userId: string, activity: IBaseActivity): Promise<IActivity>
+  getAll(userId: string): Promise<Array<Activity<IActivity>>>
+  get(userId: string, id: UUID): Promise<Activity<IActivity> | undefined>
+  create(userId: string, activity: IBaseActivity): Promise<Activity<IActivity>>
   delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
-  updateById(
+  patch(
     userId: string,
     id: UUID,
     activity: IActivityUpdate,
-  ): Promise<IActivity>
+  ): Promise<Activity<IActivity>>
 }

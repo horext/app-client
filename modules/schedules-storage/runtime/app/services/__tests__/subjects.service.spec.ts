@@ -55,12 +55,12 @@ describe('SubjectsService', () => {
       expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })
   })
-  describe('update', () => {
+  describe('patch', () => {
     it('updates a subject', async () => {
       const subject = createSubject()
       repo.findById.mockResolvedValue(subject)
       repo.update.mockResolvedValue(subject)
-      const result = await service.update('user-1', subject.id, {
+      const result = await service.patch('user-1', subject.id, {
         schedules: [],
       })
       expect(repo.update).toHaveBeenCalledWith(

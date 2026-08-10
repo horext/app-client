@@ -4,13 +4,13 @@ import type {
 } from '#shared/domain/types/academic-config'
 
 export interface IAcademicConfigService {
-  getAcademicConfig(userId: string): Promise<IAcademicConfig | undefined>
-  createAcademicConfig(
+  get(userId: string): Promise<IAcademicConfig | undefined>
+  create(
     userId: string,
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig>
   patch(
     userId: string,
-    partial: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig | undefined>
+    value: Partial<IBaseAcademicConfig>,
+  ): Promise<IAcademicConfig>
 }
