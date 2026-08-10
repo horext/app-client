@@ -8,23 +8,23 @@ import {
   GENERATION_SERVICE_KEY,
   SUBJECTS_SERVICE_KEY,
 } from '../app/context/keys'
-import type { IAcademicConfigRepository } from '../app/repositories/academic-config.repository.interface'
-import type { IActivitiesRepository } from '../app/repositories/activities.repository.interface'
-import type { IGenerationRepository } from '../app/repositories/generation.repository.interface'
-import type { IPreferencesRepository } from '../app/repositories/preferences-repository.interface'
-import type { IProfileRepository } from '../app/repositories/profile-repository.interface'
+import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
+import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
+import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
+import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
+import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 import type {
   ISchedulesRepository,
   ISchedulesFavoritesRepository,
-} from '../app/repositories/schedules-repository.interface'
-import type { ISubjectsRepository } from '../app/repositories/subjects-repository.interface'
-import { AcademicConfigService } from '../app/services/academic-config.service'
-import { ActivitiesService } from '../app/services/activities.service'
-import { FavoritesSchedulesService } from '../app/services/favorites-schedules.service'
-import { GenerationService } from '../app/services/generation.service'
-import { PreferencesService } from '../app/services/preferences.service'
-import { ProfileService } from '../app/services/profile.service'
-import { SubjectsService } from '../app/services/subjects.service'
+} from '#shared/application/repositories/schedules.repository'
+import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
+import { AcademicConfigService } from '#shared/application/services/academic-config.service'
+import { ActivitiesService } from '#shared/application/services/activities.service'
+import { FavoritesSchedulesService } from '#shared/application/services/favorites-schedules.service'
+import { GenerationService } from '#shared/application/services/generation.service'
+import { PreferencesService } from '#shared/application/services/preferences.service'
+import { ProfileService } from '#shared/application/services/profile.service'
+import { SubjectsService } from '#shared/application/services/subjects.service'
 
 interface SchedulesStorage {
   schedulesRepository: ISchedulesRepository

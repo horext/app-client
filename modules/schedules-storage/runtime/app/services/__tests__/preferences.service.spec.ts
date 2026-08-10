@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Preferences } from '../../../shared/domain'
-import { PreferencesService } from '../preferences.service'
-import type { IPreferencesRepository } from '../../repositories/preferences-repository.interface'
+import { Preferences } from '#shared/domain'
+import { PreferencesService } from '#shared/application/services/preferences.service'
+import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makePreferences = () =>

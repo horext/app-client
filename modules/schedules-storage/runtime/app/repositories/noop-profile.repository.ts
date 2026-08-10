@@ -1,4 +1,4 @@
-import type { IProfileRepository } from './profile-repository.interface'
+import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 
 export class NoopProfileRepository implements IProfileRepository {
   get(_userId: string) {

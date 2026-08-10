@@ -26,6 +26,7 @@ export default defineConfig({
         resolve: {
           alias: {
             '~': path.resolve(__dirname, './app'),
+            '#shared': path.resolve(__dirname, './shared'),
           },
         },
         plugins: [vue()],
@@ -44,6 +45,7 @@ export default defineConfig({
         resolve: {
           alias: {
             '~': path.resolve(__dirname, './app'),
+            '#shared': path.resolve(__dirname, './shared'),
           },
         },
       },

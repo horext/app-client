@@ -1,6 +1,6 @@
-import type { IBaseProfile, IProfile } from '../../shared/interfaces/profile'
-import { Profile } from '../../shared/domain'
-import type { IProfileRepository } from './profile-repository.interface'
+import type { IBaseProfile, IProfile } from '#shared/domain/types/profile'
+import { Profile } from '#shared/domain'
+import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

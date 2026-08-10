@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { IndexedDBAcademicConfigRepository } from '../indexed-db-academic-config.repository'
-import { AcademicConfig } from '../../../shared/domain'
+import { AcademicConfig } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
-import type { IAcademicConfig } from '../../../shared/interfaces/academic-config'
+import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 
 const config = AcademicConfig.create({ hourlyLoad: null })
 const persistedConfig: IAcademicConfig = {

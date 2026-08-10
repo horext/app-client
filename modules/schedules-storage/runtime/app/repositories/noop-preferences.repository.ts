@@ -1,4 +1,4 @@
-import type { IPreferencesRepository } from './preferences-repository.interface'
+import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 
 export class NoopPreferencesRepository implements IPreferencesRepository {
   get(_userId: string) {

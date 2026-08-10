@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { UserSubject } from '../../../shared/domain'
-import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
+import { UserSubject } from '#shared/domain'
+import type { IBaseSubjectSchedules } from '#shared/domain/types/subject'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBSubjectsRepository } from '../indexed-db-subjects.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'

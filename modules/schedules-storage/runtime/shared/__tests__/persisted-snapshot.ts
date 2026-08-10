@@ -1,5 +1,5 @@
 import type { UUID } from 'crypto'
-import type { IEntityMetadata } from '../interfaces/entity-metadata'
+import type { IEntityMetadata } from '#shared/domain/types/entity-metadata'
 
 export function persistedSnapshot<T extends object>(
   snapshot: T,

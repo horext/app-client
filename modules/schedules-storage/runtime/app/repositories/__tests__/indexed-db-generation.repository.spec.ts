@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Generation } from '../../../shared/domain'
+import { Generation } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'

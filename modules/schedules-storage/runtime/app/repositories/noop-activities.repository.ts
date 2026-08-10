@@ -1,4 +1,4 @@
-import type { IActivitiesRepository } from './activities.repository.interface'
+import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 
 export class NoopActivitiesRepository implements IActivitiesRepository {
   getAll(_userId: string) {

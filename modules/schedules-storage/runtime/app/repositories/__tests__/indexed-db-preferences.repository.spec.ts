@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBPreferencesRepository } from '../indexed-db-preferences.repository'
-import { Preferences } from '../../../shared/domain'
-import type { IPreferences } from '../../../shared/interfaces/preferences'
+import { Preferences } from '#shared/domain'
+import type { IPreferences } from '#shared/domain/types/preferences'
 
 const persistedPreferences: IPreferences = {
   weekDays: [1, 2],
