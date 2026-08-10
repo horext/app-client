@@ -1,7 +1,8 @@
+import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
-import type { IEntityMetadata } from './entity-metadata'
-import type { UUID } from 'crypto'
+import type { IAuditable } from './entity-metadata'
+import type { ReplicatedIdentity } from './replicated-identity'
 
 export interface ICourse {
   id: string
@@ -68,6 +69,8 @@ export interface ISubjectSchedule {
 }
 
 export interface IBaseSubjectSchedules {
+  externalId?: UUID
+  expectedRevision?: number
   subject: ISubject
   schedules: Pick<
     ISubjectSchedule,
@@ -85,9 +88,11 @@ export interface ISubjectSchedulesUpdate {
 }
 
 export interface ISubjectSchedules
-  extends IBaseSubjectSchedules, IEntityMetadata {
-  id: UUID
-}
+  extends IBaseSubjectSchedules, IAuditable, ReplicatedIdentity {}
+
+export type IUserSubjectCreate = IBaseSubjectSchedules
+export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &
+  Pick<IBaseSubjectSchedules, 'externalId' | 'expectedRevision'>
 
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {

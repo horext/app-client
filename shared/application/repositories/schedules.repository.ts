@@ -25,8 +25,16 @@ export interface ISchedulesRepository {
     userId: string,
     schedule: Schedule<IScheduleGenerate>,
   ): Promise<Schedule<IScheduleGenerate>>
-  deleteEntry(userId: string, id: UUID): Promise<void>
-  deleteEntries(userId: string, ids: UUID[]): Promise<void>
+  deleteEntry(
+    userId: string,
+    id: UUID,
+    expectedRevision?: number,
+  ): Promise<void>
+  deleteEntries(
+    userId: string,
+    ids: UUID[],
+    expectedRevision?: number,
+  ): Promise<void>
 }
 export interface ISchedulesFavoritesRepository {
   findAll(userId: string): Promise<Favorite[]>
@@ -35,5 +43,5 @@ export interface ISchedulesFavoritesRepository {
     userId: string,
     favorite: Favorite<IBaseFavoriteSchedule>,
   ): Promise<Favorite>
-  delete(userId: string, id: UUID): Promise<void>
+  delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
 }

@@ -16,5 +16,5 @@ export interface ISubjectsRepository {
     userId: string,
     subject: UserSubject<ISubjectSchedules>,
   ): Promise<UserSubject<ISubjectSchedules>>
-  delete(userId: string, id: UUID): Promise<void>
+  delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
 }

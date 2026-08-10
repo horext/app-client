@@ -33,13 +33,17 @@ export class PreferencesService implements IPreferencesService {
     return (await this._load(userId))?.toSnapshot()
   }
 
-  async createPreferences(userId: string): Promise<IPreferences> {
+  async createPreferences(
+    userId: string,
+    initial: Partial<IBasePreferences> = {},
+  ): Promise<IPreferences> {
     const existing = await this._load(userId)
-    if (existing) return existing.toSnapshot()
+    if (existing)
+      return (await this._update(userId, existing.update(initial))).toSnapshot()
     const prefs = Preferences.create({
-      weekDays: [1, 2, 3, 4, 5, 6],
-      crossings: 0,
-      maxGenerationHistory: 10,
+      weekDays: initial.weekDays ?? [1, 2, 3, 4, 5, 6],
+      crossings: initial.crossings ?? 0,
+      maxGenerationHistory: initial.maxGenerationHistory ?? 10,
     })
     return (await this._create(userId, prefs)).toSnapshot()
   }
@@ -47,9 +51,9 @@ export class PreferencesService implements IPreferencesService {
   async patch(
     userId: string,
     partial: Partial<IBasePreferences>,
-  ): Promise<void> {
+  ): Promise<IPreferences | undefined> {
     const prefs = await this._load(userId)
-    if (!prefs) return
-    await this._update(userId, prefs.update(partial))
+    if (!prefs) return undefined
+    return (await this._update(userId, prefs.update(partial))).toSnapshot()
   }
 }

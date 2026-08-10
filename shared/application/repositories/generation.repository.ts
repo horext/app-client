@@ -12,5 +12,5 @@ export interface IGenerationRepository {
     userId: string,
     record: Generation<IBaseGenerationRecord>,
   ): Promise<Generation<IGenerationRecord>>
-  delete(userId: string, id: UUID): Promise<void>
+  delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
 }

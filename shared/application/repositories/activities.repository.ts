@@ -13,5 +13,5 @@ export interface IActivitiesRepository {
     userId: string,
     activity: Activity<IActivity>,
   ): Promise<Activity<IActivity>>
-  delete(userId: string, id: UUID): Promise<void>
+  delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
 }

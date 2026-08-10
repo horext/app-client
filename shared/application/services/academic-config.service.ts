@@ -40,8 +40,12 @@ export class AcademicConfigService implements IAcademicConfigService {
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
     const existing = await this._load(userId)
-    if (existing) return existing.toSnapshot()
+    if (existing)
+      return (
+        await this._update(userId, existing.update(initial ?? {}))
+      ).toSnapshot()
     const config = AcademicConfig.create({
+      ...initial,
       hourlyLoad: initial?.hourlyLoad ?? null,
     })
     return (await this._create(userId, config)).toSnapshot()
@@ -50,9 +54,9 @@ export class AcademicConfigService implements IAcademicConfigService {
   async patch(
     userId: string,
     partial: Partial<IBaseAcademicConfig>,
-  ): Promise<void> {
+  ): Promise<IAcademicConfig | undefined> {
     const config = await this._load(userId)
-    if (!config) return
-    await this._update(userId, config.update(partial))
+    if (!config) return undefined
+    return (await this._update(userId, config.update(partial))).toSnapshot()
   }
 }

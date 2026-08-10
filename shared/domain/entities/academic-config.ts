@@ -1,11 +1,9 @@
 import type {
   IBaseAcademicConfig,
   IAcademicConfig,
-} from '../types/academic-config'
-import type {
   IAcademicConfigCreate,
   IAcademicConfigUpdate,
-} from '../types/domain-helpers'
+} from '../types/academic-config'
 import type { UUID } from 'crypto'
 
 export class AcademicConfig<

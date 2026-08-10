@@ -33,14 +33,18 @@ export class ProfileService implements IProfileService {
     initial: IBaseProfile,
   ): Promise<IProfile> {
     const existing = await this._load(userId)
-    if (existing) return existing.toSnapshot()
+    if (existing)
+      return (await this._update(userId, existing.update(initial))).toSnapshot()
     const profile = Profile.create(initial)
     return (await this._create(userId, profile)).toSnapshot()
   }
 
-  async patch(userId: string, partial: Partial<IBaseProfile>): Promise<void> {
+  async patch(
+    userId: string,
+    partial: Partial<IBaseProfile>,
+  ): Promise<IProfile | undefined> {
     const profile = await this._load(userId)
-    if (!profile) return
-    await this._update(userId, profile.update(partial))
+    if (!profile) return undefined
+    return (await this._update(userId, profile.update(partial))).toSnapshot()
   }
 }

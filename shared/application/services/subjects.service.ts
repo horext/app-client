@@ -16,6 +16,13 @@ export class SubjectsService implements ISubjectsService {
       .then((items) => items.map((item) => item.toSnapshot()))
   }
 
+  async get(
+    userId: string,
+    id: ISubjectSchedules['id'],
+  ): Promise<ISubjectSchedules | undefined> {
+    return (await this.repo.findById(userId, id))?.toSnapshot()
+  }
+
   async create(
     userId: string,
     subject: IUserSubjectCreate,
@@ -24,8 +31,12 @@ export class SubjectsService implements ISubjectsService {
     return (await this.repo.create(userId, entity)).toSnapshot()
   }
 
-  delete(userId: string, id: ISubjectSchedules['id']): Promise<void> {
-    return this.repo.delete(userId, id)
+  delete(
+    userId: string,
+    id: ISubjectSchedules['id'],
+    expectedRevision?: number,
+  ): Promise<void> {
+    return this.repo.delete(userId, id, expectedRevision)
   }
 
   async update(

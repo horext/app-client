@@ -1,7 +1,11 @@
 import type { UUID } from 'crypto'
-import type { IActivity, IBaseActivity } from '../types/event'
-import type { IActivityCreate, IActivityUpdate } from '../types/domain-helpers'
-import { validateSessions } from '../types/domain-helpers'
+import type {
+  IActivity,
+  IBaseActivity,
+  IActivityCreate,
+  IActivityUpdate,
+} from '../types/event'
+import { validateSessions } from '../types/event'
 
 export class Activity<T extends IBaseActivity | IActivity = IActivity> {
   private constructor(private readonly snapshot: T) {}

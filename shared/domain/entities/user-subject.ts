@@ -1,9 +1,10 @@
 import type { UUID } from 'crypto'
-import type { IBaseSubjectSchedules, ISubjectSchedules } from '../types/subject'
 import type {
+  IBaseSubjectSchedules,
+  ISubjectSchedules,
   IUserSubjectCreate,
   IUserSubjectUpdate,
-} from '../types/domain-helpers'
+} from '../types/subject'
 
 export class UserSubject<
   T extends IBaseSubjectSchedules | ISubjectSchedules = ISubjectSchedules,
