@@ -33,8 +33,9 @@ export class ProfileService implements IProfileService {
     initial: IBaseProfile,
   ): Promise<IProfile> {
     const existing = await this._load(userId)
-    if (existing)
+    if (existing && initial.expectedRevision !== undefined)
       return (await this._update(userId, existing.update(initial))).toSnapshot()
+    if (existing) return existing.toSnapshot()
     const profile = Profile.create(initial)
     return (await this._create(userId, profile)).toSnapshot()
   }

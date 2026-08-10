@@ -55,7 +55,7 @@ describe('IndexedDBActivitiesRepository', () => {
     })
   })
   describe('create', () => {
-    it('returns a new activity with generated id, MY_EVENT category and type', async () => {
+    it('returns a new activity with generated id', async () => {
       const activity = Activity.create(baseActivity)
       persistence.create.mockResolvedValue(
         persistedSnapshot(activity.toSnapshot()),

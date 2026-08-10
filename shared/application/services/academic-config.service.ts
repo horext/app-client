@@ -40,10 +40,11 @@ export class AcademicConfigService implements IAcademicConfigService {
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
     const existing = await this._load(userId)
-    if (existing)
+    if (existing && initial?.expectedRevision !== undefined)
       return (
         await this._update(userId, existing.update(initial ?? {}))
       ).toSnapshot()
+    if (existing) return existing.toSnapshot()
     const config = AcademicConfig.create({
       ...initial,
       hourlyLoad: initial?.hourlyLoad ?? null,

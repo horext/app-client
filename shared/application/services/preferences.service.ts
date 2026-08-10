@@ -38,8 +38,9 @@ export class PreferencesService implements IPreferencesService {
     initial: Partial<IBasePreferences> = {},
   ): Promise<IPreferences> {
     const existing = await this._load(userId)
-    if (existing)
+    if (existing && initial.expectedRevision !== undefined)
       return (await this._update(userId, existing.update(initial))).toSnapshot()
+    if (existing) return existing.toSnapshot()
     const prefs = Preferences.create({
       weekDays: initial.weekDays ?? [1, 2, 3, 4, 5, 6],
       crossings: initial.crossings ?? 0,
