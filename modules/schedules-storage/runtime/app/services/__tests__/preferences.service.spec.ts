@@ -38,13 +38,12 @@ describe('PreferencesService', () => {
     })
   })
   describe('createPreferences', () => {
-    it('delegates creation even when preferences already exist', async () => {
+    it('rejects creation when preferences already exist', async () => {
       repo.get.mockResolvedValue(makePreferences())
-      const prefs = makePreferences()
-      repo.create.mockResolvedValue(prefs)
-      const result = await service.create('user-1')
-      expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.id).toBe(prefs.id)
+      await expect(service.create('user-1')).rejects.toThrow(
+        'The preferences already exists.',
+      )
+      expect(repo.create).not.toHaveBeenCalled()
     })
     it('creates and saves new preferences when none exist', async () => {
       repo.get.mockResolvedValue(undefined)

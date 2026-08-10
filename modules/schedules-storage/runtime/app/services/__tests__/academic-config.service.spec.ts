@@ -48,12 +48,12 @@ describe('AcademicConfigService', () => {
     })
   })
   describe('createAcademicConfig', () => {
-    it('delegates creation even when config already exists', async () => {
+    it('rejects creation when config already exists', async () => {
       repo.get.mockResolvedValue(makeConfig())
-      repo.create.mockResolvedValue(makeConfig())
-      const result = await service.create('user-1')
-      expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.id).toBeDefined()
+      await expect(service.create('user-1')).rejects.toThrow(
+        'The academic-config already exists.',
+      )
+      expect(repo.create).not.toHaveBeenCalled()
     })
     it('creates and saves new config when none exist', async () => {
       repo.get.mockResolvedValue(undefined)

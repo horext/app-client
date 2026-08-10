@@ -6,6 +6,7 @@ import type { IAcademicConfigRepository } from '#shared/application/repositories
 import type { IAcademicConfigService } from '../interfaces/academic-config.service'
 import { AcademicConfig } from '#shared/domain'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
@@ -38,6 +39,8 @@ export class AcademicConfigService implements IAcademicConfigService {
     userId: string,
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
+    if (await this._load(userId))
+      throw new ResourceAlreadyExistsError('academic-config')
     const config = AcademicConfig.create({
       ...initial,
       hourlyLoad: initial?.hourlyLoad ?? null,

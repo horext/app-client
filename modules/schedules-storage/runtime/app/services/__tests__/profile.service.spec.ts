@@ -45,16 +45,15 @@ describe('ProfileService', () => {
     })
   })
   describe('createProfile', () => {
-    it('delegates creation even when a profile already exists', async () => {
+    it('rejects creation when a profile already exists', async () => {
       repo.get.mockResolvedValue(makeProfile(true))
-      const created = makeProfile(false)
-      repo.create.mockResolvedValue(created)
-      const result = await service.create('user-1', {
-        facultyId: 5,
-        specialityId: 6,
-      })
-      expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.id).toBe(created.id)
+      await expect(
+        service.create('user-1', {
+          facultyId: 5,
+          specialityId: 6,
+        }),
+      ).rejects.toThrow('The profile already exists.')
+      expect(repo.create).not.toHaveBeenCalled()
     })
     it('creates and saves new profile when none exist', async () => {
       repo.get.mockResolvedValue(undefined)

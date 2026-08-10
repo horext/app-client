@@ -6,6 +6,7 @@ import type { IPreferencesRepository } from '#shared/application/repositories/pr
 import type { IPreferencesService } from '../interfaces/preferences.service'
 import { Preferences } from '#shared/domain'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
@@ -38,6 +39,8 @@ export class PreferencesService implements IPreferencesService {
     userId: string,
     initial: Partial<IBasePreferences> = {},
   ): Promise<IPreferences> {
+    if (await this._load(userId))
+      throw new ResourceAlreadyExistsError('preferences')
     const prefs = Preferences.create({
       weekDays: initial.weekDays ?? [1, 2, 3, 4, 5, 6],
       crossings: initial.crossings ?? 0,
