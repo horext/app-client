@@ -37,27 +37,23 @@ const {
   favoritesSchedules: favoritesSchedulesSync,
 } = toRefs(props)
 
-const indexSchedule = computed(() => {
+const favoriteSchedule = computed(() => {
   const current = currentSchedule.value
-  if (currentSchedule.value) {
-    return favoritesSchedulesSync.value.findIndex(
-      (e) =>
-        e &&
-        (e.id === current.id ||
-          (e.scheduleSubjectKey === current.scheduleSubjectKey &&
-            e.events.length === current.events.length)),
-    )
-  } else {
-    return -1
-  }
+  return favoritesSchedulesSync.value.find(
+    (e) =>
+      e &&
+      (e.id === current.id ||
+        (e.scheduleSubjectKey === current.scheduleSubjectKey &&
+          e.events.length === current.events.length)),
+  )
 })
 
-const isFavorite = computed(() => indexSchedule.value > -1)
+const isFavorite = computed(() => !!favoriteSchedule.value)
 const changeFavoriteState = (isFavorite: boolean) => {
   if (isFavorite) {
     emit('click:addFavorite', currentSchedule.value)
-  } else {
-    emit('click:removeFavorite', currentSchedule.value)
+  } else if (favoriteSchedule.value) {
+    emit('click:removeFavorite', favoriteSchedule.value)
   }
 }
 </script>
