@@ -63,7 +63,8 @@ export interface HorextDB extends DBSchema {
     indexes: { createdBy: string }
   }
 }
-export type Stores =
+/** Stores containing domain aggregates that can be replicated with the cloud. */
+export type ReplicableStore =
   | StoresDB.ACADEMIC_CONFIG
   | StoresDB.ACTIVITIES
   | StoresDB.FAVORITES
@@ -73,7 +74,10 @@ export type Stores =
   | StoresDB.SCHEDULES
   | StoresDB.SUBJECTS
 
-export type Schemas = HorextDB
+export type ReplicableSchemas = Pick<HorextDB, ReplicableStore>
+export type ReplicableStoreValue<S extends ReplicableStore> =
+  HorextDB[S]['value']
+
 export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>
 
 export function createDbFactory(
