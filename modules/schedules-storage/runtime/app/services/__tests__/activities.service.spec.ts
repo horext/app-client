@@ -43,7 +43,7 @@ describe('ActivitiesService', () => {
         color: '#fff',
         sessions: [],
       })
-      expect(result).toMatchObject({ title: 'Activity' })
+      expect(result.toSnapshot()).toMatchObject({ title: 'Activity' })
     })
   })
   describe('delete', () => {
@@ -53,28 +53,28 @@ describe('ActivitiesService', () => {
       expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })
   })
-  describe('updateById', () => {
+  describe('patch', () => {
     it('updates activity when it exists', async () => {
       const existing = makeActivity()
       repo.get.mockResolvedValue(existing)
       repo.update.mockImplementation(async (_, activity) => activity)
-      const result = await service.updateById('user-1', existing.id, {
+      const result = await service.patch('user-1', existing.id, {
         title: 'Updated',
         color: '#fff',
         sessions: existing.toSnapshot().sessions,
       })
-      expect(result.title).toBe('Updated')
+      expect(result.toSnapshot().title).toBe('Updated')
     })
     it('throws when activity not found', async () => {
       repo.get.mockResolvedValue(undefined)
       const id = crypto.randomUUID()
       await expect(
-        service.updateById('user-1', id, {
+        service.patch('user-1', id, {
           title: 'x',
           color: '#000',
           sessions: [],
         }),
-      ).rejects.toThrow(`Activity with id ${id} not found`)
+      ).rejects.toThrow('The activity does not exist.')
     })
   })
 })

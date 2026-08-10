@@ -34,6 +34,19 @@ export class IndexedDBGenerationsRepository implements IGenerationRepository {
     return Generation.restore(stored)
   }
 
+  async update(
+    userId: string,
+    record: Generation<IGenerationRecord>,
+  ): Promise<Generation<IGenerationRecord>> {
+    return Generation.restore(
+      await this.persistence.update(
+        StoresDB.GENERATIONS,
+        record.toSnapshot(),
+        userId,
+      ),
+    )
+  }
+
   async delete(userId: string, id: UUID): Promise<void> {
     await this.persistence.remove(StoresDB.GENERATIONS, userId, id)
   }

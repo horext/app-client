@@ -16,6 +16,8 @@ import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
+import type { UUID } from 'crypto'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 export class GenerationService implements IGenerationService {
   constructor(
@@ -23,6 +25,30 @@ export class GenerationService implements IGenerationService {
     private readonly schedulesRepo: ISchedulesRepository,
     private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
+
+  get(userId: string, id: string) {
+    return this.generationRepo.get(userId, id as UUID)
+  }
+
+  create(userId: string, value: unknown, id?: string) {
+    return this.generationRepo.create(
+      userId,
+      Generation.create({
+        ...(value as Parameters<typeof Generation.create>[0]),
+        ...(id ? { externalId: id as UUID } : {}),
+      }),
+    )
+  }
+
+  async patch(userId: string, id: string, value: { revision: number }) {
+    const current = await this.get(userId, id)
+    if (!current) throw new ResourceNotFoundError('generation')
+    return this.generationRepo.update(userId, current.update(value))
+  }
+
+  delete(userId: string, id: string, revision?: number) {
+    return this.generationRepo.delete(userId, id as UUID, revision)
+  }
 
   async getGenerations(userId: string): Promise<IGenerationRecord[]> {
     const records = await this.generationRepo.getAll(userId)

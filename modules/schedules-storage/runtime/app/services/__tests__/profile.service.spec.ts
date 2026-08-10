@@ -28,7 +28,7 @@ describe('ProfileService', () => {
   describe('getProfile', () => {
     it('returns undefined when no profile stored', async () => {
       repo.get.mockResolvedValue(undefined)
-      expect(await service.getProfile('user-1')).toBeUndefined()
+      expect(await service.get('user-1')).toBeUndefined()
     })
     it('returns profile data when stored', async () => {
       const profile = Profile.restore(
@@ -39,21 +39,21 @@ describe('ProfileService', () => {
         }),
       )
       repo.get.mockResolvedValue(profile)
-      expect(await service.getProfile('user-1')).toMatchObject({
+      expect(await service.get('user-1')).toMatchObject({
         id: profile.id,
       })
     })
   })
   describe('createProfile', () => {
-    it('returns existing profile if already exists', async () => {
-      const profile = makeProfile(true)
-      repo.get.mockResolvedValue(profile)
-      const result = await service.createProfile('user-1', {
-        facultyId: 5,
-        specialityId: 6,
-      })
+    it('rejects creation when a profile already exists', async () => {
+      repo.get.mockResolvedValue(makeProfile(true))
+      await expect(
+        service.create('user-1', {
+          facultyId: 5,
+          specialityId: 6,
+        }),
+      ).rejects.toThrow('El recurso profile ya existe.')
       expect(repo.create).not.toHaveBeenCalled()
-      expect(result.facultyId).toBe(1)
     })
     it('creates and saves new profile when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
@@ -65,7 +65,7 @@ describe('ProfileService', () => {
         }),
       )
       repo.create.mockResolvedValue(profile)
-      const result = await service.createProfile('user-1', {
+      const result = await service.create('user-1', {
         facultyId: 3,
         specialityId: 4,
       })
@@ -75,9 +75,11 @@ describe('ProfileService', () => {
     })
   })
   describe('patch', () => {
-    it('does nothing when no profile exists', async () => {
+    it('throws when no profile exists', async () => {
       repo.get.mockResolvedValue(undefined)
-      await service.patch('user-1', { setupCompleted: true })
+      await expect(
+        service.patch('user-1', { setupCompleted: true }),
+      ).rejects.toThrow('The profile does not exist.')
       expect(repo.update).not.toHaveBeenCalled()
     })
     it('patches and saves when profile exists', async () => {

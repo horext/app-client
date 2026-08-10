@@ -4,6 +4,8 @@ import { setActivePinia, createPinia } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IUserProfile } from '~/interfaces/profile'
 import { useUserProfileStore } from '~/stores/user-profile'
+import type { IProfileService } from '#shared/application/interfaces/profile.service'
+import type { IAcademicConfigService } from '#shared/application/interfaces/academic-config.service'
 
 import { useUserProfile } from '../user-profile'
 
@@ -20,19 +22,25 @@ const mockGetLatestByFaculty = vi.fn()
 const mockCreatePreferences = vi.fn()
 
 mockNuxtImport('useProfileService', () =>
-  vi.fn(() => ({
-    getProfile: mockGetProfile,
-    patch: mockProfilePatch,
-    createProfile: mockCreateProfile,
-  })),
+  vi.fn(
+    () =>
+      ({
+        get: mockGetProfile,
+        patch: mockProfilePatch,
+        create: mockCreateProfile,
+      }) satisfies IProfileService,
+  ),
 )
 
 mockNuxtImport('useAcademicConfigService', () =>
-  vi.fn(() => ({
-    getAcademicConfig: mockGetAcademicConfig,
-    patch: mockAcademicPatch,
-    createAcademicConfig: mockCreateAcademicConfig,
-  })),
+  vi.fn(
+    () =>
+      ({
+        get: mockGetAcademicConfig,
+        patch: mockAcademicPatch,
+        create: mockCreateAcademicConfig,
+      }) satisfies IAcademicConfigService,
+  ),
 )
 
 mockNuxtImport('useUserPreferences', () =>

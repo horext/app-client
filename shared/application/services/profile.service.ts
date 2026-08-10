@@ -2,6 +2,8 @@ import type { IBaseProfile, IProfile } from '#shared/domain/types/profile'
 import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 import type { IProfileService } from '../interfaces/profile.service'
 import { Profile } from '#shared/domain'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class ProfileService implements IProfileService {
   constructor(private readonly repo: IProfileRepository) {}
@@ -24,28 +26,20 @@ export class ProfileService implements IProfileService {
     return this.repo.update(userId, profile)
   }
 
-  async getProfile(userId: string): Promise<IProfile | undefined> {
+  async get(userId: string): Promise<IProfile | undefined> {
     return (await this._load(userId))?.toSnapshot()
   }
 
-  async createProfile(
-    userId: string,
-    initial: IBaseProfile,
-  ): Promise<IProfile> {
-    const existing = await this._load(userId)
-    if (existing && initial.revision !== undefined)
-      return (await this._update(userId, existing.update(initial))).toSnapshot()
-    if (existing) return existing.toSnapshot()
+  async create(userId: string, initial: IBaseProfile): Promise<IProfile> {
+    if (await this._load(userId))
+      throw new ResourceAlreadyExistsError('profile')
     const profile = Profile.create(initial)
     return (await this._create(userId, profile)).toSnapshot()
   }
 
-  async patch(
-    userId: string,
-    partial: Partial<IBaseProfile>,
-  ): Promise<IProfile | undefined> {
-    const profile = await this._load(userId)
-    if (!profile) return undefined
-    return (await this._update(userId, profile.update(partial))).toSnapshot()
+  async patch(userId: string, value: Partial<IBaseProfile>): Promise<IProfile> {
+    const existing = await this._load(userId)
+    if (!existing) throw new ResourceNotFoundError('profile')
+    return (await this._update(userId, existing.update(value))).toSnapshot()
   }
 }

@@ -6,26 +6,24 @@ import {
 } from '#shared/domain'
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 import type { IActivitiesService } from '../interfaces/activities.service'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 export class ActivitiesService implements IActivitiesService {
   constructor(private readonly repo: IActivitiesRepository) {}
 
-  async getAll(userId: string): Promise<Array<IActivity>> {
-    return (await this.repo.getAll(userId)).map((activity) =>
-      activity.toSnapshot(),
-    )
+  getAll(userId: string): Promise<Array<Activity<IActivity>>> {
+    return this.repo.getAll(userId)
   }
 
   async get(
     userId: string,
     id: IActivity['id'],
-  ): Promise<IActivity | undefined> {
-    return (await this.repo.get(userId, id))?.toSnapshot()
+  ): Promise<Activity<IActivity> | undefined> {
+    return this.repo.get(userId, id)
   }
 
-  async create(userId: string, activity: IActivityCreate): Promise<IActivity> {
-    const entity = Activity.create(activity)
-    return (await this.repo.create(userId, entity)).toSnapshot()
+  create(userId: string, activity: IActivityCreate) {
+    return this.repo.create(userId, Activity.create(activity))
   }
 
   async delete(
@@ -36,16 +34,16 @@ export class ActivitiesService implements IActivitiesService {
     await this.repo.delete(userId, id, expectedRevision)
   }
 
-  async updateById(
+  async patch(
     userId: string,
     id: IActivity['id'],
     activity: IActivityUpdate,
-  ): Promise<IActivity> {
+  ): Promise<Activity<IActivity>> {
     const existingActivity = await this.repo.get(userId, id)
     if (!existingActivity) {
-      throw new Error(`Activity with id ${id} not found`)
+      throw new ResourceNotFoundError('activity')
     }
     const updated = existingActivity.update(activity)
-    return (await this.repo.update(userId, updated)).toSnapshot()
+    return this.repo.update(userId, updated)
   }
 }

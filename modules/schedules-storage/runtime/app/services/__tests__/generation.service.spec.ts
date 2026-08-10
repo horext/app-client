@@ -66,10 +66,12 @@ describe('GenerationService', () => {
     getAll: vi.fn(),
     get: vi.fn(),
     create: vi.fn(),
+    update: vi.fn(),
     delete: vi.fn(),
   })
   const makeSchedulesRepo = (): Mocked<ISchedulesRepository> => ({
     findAll: vi.fn(),
+    findBy: vi.fn(),
     getEntries: vi.fn(),
     getByKey: vi.fn(),
     create: vi.fn(),

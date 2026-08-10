@@ -26,6 +26,8 @@ export class Schedule<
 
   static create(input: IScheduleCreate): Schedule<IBaseScheduleGenerate> {
     return Schedule.build({
+      ...(input.externalId ? { externalId: input.externalId } : {}),
+      ...(input.revision !== undefined ? { revision: input.revision } : {}),
       scheduleSubjectKey: input.scheduleSubjectKey,
       schedulesSubject: structuredClone(input.schedulesSubject),
       crossings: input.crossings,

@@ -4,6 +4,9 @@ export class NoopSchedulesRepository implements ISchedulesRepository {
   findAll(_userId: string) {
     return Promise.resolve([])
   }
+  findBy(_userId: string, _id: Parameters<ISchedulesRepository['findBy']>[1]) {
+    return Promise.resolve(undefined)
+  }
   getEntries(
     _userId: string,
     _ids: Parameters<ISchedulesRepository['getEntries']>[1],

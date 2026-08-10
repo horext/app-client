@@ -5,6 +5,8 @@ import type {
 import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import type { IPreferencesService } from '../interfaces/preferences.service'
 import { Preferences } from '#shared/domain'
+import { ResourceNotFoundError } from '../errors/resource-not-found.error'
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
@@ -29,18 +31,16 @@ export class PreferencesService implements IPreferencesService {
     return this.repo.update(userId, prefs)
   }
 
-  async getPreferences(userId: string): Promise<IPreferences | undefined> {
+  async get(userId: string): Promise<IPreferences | undefined> {
     return (await this._load(userId))?.toSnapshot()
   }
 
-  async createPreferences(
+  async create(
     userId: string,
     initial: Partial<IBasePreferences> = {},
   ): Promise<IPreferences> {
-    const existing = await this._load(userId)
-    if (existing && initial.revision !== undefined)
-      return (await this._update(userId, existing.update(initial))).toSnapshot()
-    if (existing) return existing.toSnapshot()
+    if (await this._load(userId))
+      throw new ResourceAlreadyExistsError('preferences')
     const prefs = Preferences.create({
       weekDays: initial.weekDays ?? [1, 2, 3, 4, 5, 6],
       crossings: initial.crossings ?? 0,
@@ -51,10 +51,10 @@ export class PreferencesService implements IPreferencesService {
 
   async patch(
     userId: string,
-    partial: Partial<IBasePreferences>,
-  ): Promise<IPreferences | undefined> {
-    const prefs = await this._load(userId)
-    if (!prefs) return undefined
-    return (await this._update(userId, prefs.update(partial))).toSnapshot()
+    value: Partial<IBasePreferences>,
+  ): Promise<IPreferences> {
+    const existing = await this._load(userId)
+    if (!existing) throw new ResourceNotFoundError('preferences')
+    return (await this._update(userId, existing.update(value))).toSnapshot()
   }
 }

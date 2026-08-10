@@ -21,6 +21,12 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     )
   }
 
+  async findBy(userId: string, id: UUID) {
+    return this.persistence
+      .find(StoresDB.SCHEDULES, userId, id)
+      .then((record) => (record ? Schedule.restore(record) : undefined))
+  }
+
   async getEntries(userId: string, ids: UUID[]): Promise<Schedule[]> {
     if (!ids.length) return []
     const results = await Promise.all(

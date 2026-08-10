@@ -9,14 +9,14 @@ import { useUserEvents } from '../user-events'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
-const mockUpdateById = vi.fn()
+const mockPatch = vi.fn()
 const mockGetAll = vi.fn()
 
 mockNuxtImport('useActivitiesService', () =>
   vi.fn(() => ({
     create: mockCreate,
     delete: mockDelete,
-    updateById: mockUpdateById,
+    patch: mockPatch,
     getAll: mockGetAll,
   })),
 )
@@ -29,6 +29,10 @@ function makeActivity(): IActivity {
     title: 'Test Activity',
   }
 }
+
+const asEntity = (activity: IActivity) => ({
+  toSnapshot: () => activity,
+})
 
 describe('useUserEvents', () => {
   beforeEach(() => {
@@ -47,7 +51,7 @@ describe('useUserEvents', () => {
 
   it('createNewItem calls service.create and pushes result to store', async () => {
     const activity = makeActivity()
-    mockCreate.mockResolvedValue(activity)
+    mockCreate.mockResolvedValue(asEntity(activity))
     const { createNewItem, items } = useUserEvents()
     await createNewItem(activity)
     expect(mockCreate).toHaveBeenCalledWith(expect.any(String), activity)
@@ -65,15 +69,15 @@ describe('useUserEvents', () => {
     expect(items.value).not.toContainEqual(expect.objectContaining({ id }))
   })
 
-  it('updateItem calls service.updateById and updates item in store', async () => {
+  it('updateItem calls service.patch and updates item in store', async () => {
     const activity = makeActivity()
     const activityWithId = { ...activity, id: crypto.randomUUID() as UUID }
     const store = useUserEventsStore()
     store.items = [activityWithId as IActivity]
-    mockUpdateById.mockResolvedValue(activityWithId)
+    mockPatch.mockResolvedValue(asEntity(activityWithId))
     const { updateItem, items } = useUserEvents()
     await updateItem(activityWithId)
-    expect(mockUpdateById).toHaveBeenCalled()
+    expect(mockPatch).toHaveBeenCalled()
     expect(items.value).toContainEqual(activityWithId)
   })
 
@@ -81,12 +85,12 @@ describe('useUserEvents', () => {
     const activityNoId = { ...makeActivity(), id: undefined }
     const { updateItem } = useUserEvents()
     await updateItem(activityNoId)
-    expect(mockUpdateById).not.toHaveBeenCalled()
+    expect(mockPatch).not.toHaveBeenCalled()
   })
 
   it('fetchItems calls service.getAll and updates the store', async () => {
     const items: IActivity[] = []
-    mockGetAll.mockResolvedValue(items)
+    mockGetAll.mockResolvedValue(items.map(asEntity))
     const { fetchItems, items: storeItems } = useUserEvents()
     await fetchItems()
     expect(mockGetAll).toHaveBeenCalled()
