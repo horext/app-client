@@ -2,7 +2,7 @@ import type { IAuditable } from './entity-metadata'
 import type { UUID } from 'crypto'
 export interface IBaseProfile {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   facultyId: number
   specialityId: number
   setupCompleted?: boolean

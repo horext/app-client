@@ -28,7 +28,7 @@ export interface IEvent extends IBaseEvent {
 
 export interface IBaseActivity {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   title: string
   description?: string
   location?: string

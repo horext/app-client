@@ -4,7 +4,7 @@ import type { UUID } from 'crypto'
 
 export interface IBaseAcademicConfig {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   hourlyLoad: IHourlyLoad | null
 }
 
