@@ -52,7 +52,7 @@ describe('ProfileService', () => {
           facultyId: 5,
           specialityId: 6,
         }),
-      ).rejects.toThrow('The profile already exists.')
+      ).rejects.toThrow('El recurso profile ya existe.')
       expect(repo.create).not.toHaveBeenCalled()
     })
     it('creates and saves new profile when none exist', async () => {

@@ -51,7 +51,7 @@ describe('AcademicConfigService', () => {
     it('rejects creation when config already exists', async () => {
       repo.get.mockResolvedValue(makeConfig())
       await expect(service.create('user-1')).rejects.toThrow(
-        'The academic-config already exists.',
+        'El recurso academic-config ya existe.',
       )
       expect(repo.create).not.toHaveBeenCalled()
     })

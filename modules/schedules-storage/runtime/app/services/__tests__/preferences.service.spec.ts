@@ -41,7 +41,7 @@ describe('PreferencesService', () => {
     it('rejects creation when preferences already exist', async () => {
       repo.get.mockResolvedValue(makePreferences())
       await expect(service.create('user-1')).rejects.toThrow(
-        'The preferences already exists.',
+        'El recurso preferences ya existe.',
       )
       expect(repo.create).not.toHaveBeenCalled()
     })
