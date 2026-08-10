@@ -1,5 +1,7 @@
 import type { UUID } from 'crypto'
-import type { IEntityMetadata } from './entity-metadata'
+import type { IAuditable } from './entity-metadata'
+import type { ReplicatedIdentity } from './replicated-identity'
+import { DomainError } from '../errors/domain-error'
 
 export type EventCategories = 'COURSE' | 'MY_EVENT'
 export type Weekdays = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -25,6 +27,8 @@ export interface IEvent extends IBaseEvent {
 }
 
 export interface IBaseActivity {
+  externalId?: UUID
+  expectedRevision?: number
   title: string
   description?: string
   location?: string
@@ -33,6 +37,22 @@ export interface IBaseActivity {
   sessions: IActivitySession[]
 }
 
-export interface IActivity extends IBaseActivity, IEntityMetadata {
-  id: UUID
+export interface IActivity
+  extends IBaseActivity, IAuditable, ReplicatedIdentity {}
+
+export type IActivityCreate = IBaseActivity
+export type IActivityUpdate = Partial<IActivityCreate>
+
+export function validateSessions(
+  sessions: IActivitySession[],
+): IActivitySession[] {
+  return sessions.map((session, index) => {
+    if (session.startTime >= session.endTime)
+      throw new DomainError(
+        'invalid-time-range',
+        'The session start time must be before its end time.',
+        `sessions.${index}`,
+      )
+    return { ...session }
+  })
 }

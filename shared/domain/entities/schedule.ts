@@ -2,8 +2,9 @@ import type { UUID } from 'crypto'
 import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
+  IScheduleCreate,
+  IScheduleUpdate,
 } from '../types/schedule'
-import type { IScheduleCreate, IScheduleUpdate } from '../types/domain-helpers'
 import { DomainError } from '../errors/domain-error'
 
 export class Schedule<

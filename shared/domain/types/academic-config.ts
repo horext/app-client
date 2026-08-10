@@ -1,11 +1,16 @@
 import type { IHourlyLoad } from './hourly-load'
-import type { IEntityMetadata } from './entity-metadata'
+import type { IAuditable } from './entity-metadata'
 import type { UUID } from 'crypto'
 
 export interface IBaseAcademicConfig {
+  externalId?: UUID
+  expectedRevision?: number
   hourlyLoad: IHourlyLoad | null
 }
 
-export interface IAcademicConfig extends IBaseAcademicConfig, IEntityMetadata {
+export interface IAcademicConfig extends IBaseAcademicConfig, IAuditable {
   id: UUID
 }
+
+export type IAcademicConfigCreate = IBaseAcademicConfig
+export type IAcademicConfigUpdate = Partial<IAcademicConfigCreate>

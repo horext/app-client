@@ -1,9 +1,9 @@
 import type { UUID } from 'crypto'
-import type { IEntityMetadata } from '#shared/domain/types/entity-metadata'
+import type { IAuditable } from '#shared/domain/types/entity-metadata'
 
 export function persistedSnapshot<T extends object>(
   snapshot: T,
-): T & { id: UUID } & IEntityMetadata {
+): T & { id: UUID } & IAuditable {
   return {
     ...snapshot,
     id: crypto.randomUUID(),

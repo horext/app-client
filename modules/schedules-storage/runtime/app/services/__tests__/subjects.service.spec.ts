@@ -52,7 +52,7 @@ describe('SubjectsService', () => {
     it('deletes a subject by id', async () => {
       const id = crypto.randomUUID()
       await service.delete('user-1', id)
-      expect(repo.delete).toHaveBeenCalledWith('user-1', id)
+      expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })
   })
   describe('update', () => {

@@ -28,8 +28,12 @@ export class ActivitiesService implements IActivitiesService {
     return (await this.repo.create(userId, entity)).toSnapshot()
   }
 
-  async delete(userId: string, id: IActivity['id']): Promise<void> {
-    await this.repo.delete(userId, id)
+  async delete(
+    userId: string,
+    id: IActivity['id'],
+    expectedRevision?: number,
+  ): Promise<void> {
+    await this.repo.delete(userId, id, expectedRevision)
   }
 
   async updateById(

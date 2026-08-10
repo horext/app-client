@@ -1,8 +1,9 @@
-import type { IBasePreferences, IPreferences } from '../types/preferences'
 import type {
+  IBasePreferences,
+  IPreferences,
   IPreferencesCreate,
   IPreferencesUpdate,
-} from '../types/domain-helpers'
+} from '../types/preferences'
 import { DomainError } from '../errors/domain-error'
 import type { UUID } from 'crypto'
 

@@ -5,6 +5,9 @@ import type { ISubjectSchedules } from './subject'
 import type { IAcademicConfig } from './academic-config'
 import type { IPreferences } from './preferences'
 import type { IProfile } from './profile'
+import type { ReplicatedIdentity } from './replicated-identity'
+
+export type ApiEntityIdentity = ReplicatedIdentity
 
 export type SyncResource =
   | 'profile'
@@ -31,9 +34,10 @@ type PutOperation<R extends SyncResource> = {
   method: 'PUT'
   resource: R
   entityId: string
+  externalId?: string
   body: SyncBodyMap[R]
   operationId: string
-  etag?: string
+  revision?: number
 }
 
 type DeleteOperation = {
@@ -41,8 +45,9 @@ type DeleteOperation = {
     method: 'DELETE'
     resource: R
     entityId: string
+    externalId?: string
     operationId: string
-    etag?: string
+    revision?: number
   }
 }[Exclude<SyncResource, 'profile' | 'preferences' | 'academic-config'>]
 
@@ -63,7 +68,7 @@ export interface SyncConflictRecord {
   key: string
   operation: PersistedSyncOperation
   cloud?: unknown
-  cloudEtag?: string
+  cloudRevision?: number
   createdAt: string
 }
 
@@ -71,7 +76,7 @@ export interface SyncConflictRecord {
 export interface AggregateSnapshot<T> {
   id: string
   data: T
-  etag?: string
+  revision?: number
   createdAt?: string
   updatedAt?: string
 }

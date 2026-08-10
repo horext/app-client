@@ -1,5 +1,9 @@
-import type { IBaseProfile, IProfile } from '../types/profile'
-import type { IProfileCreate, IProfileUpdate } from '../types/domain-helpers'
+import type {
+  IBaseProfile,
+  IProfile,
+  IProfileCreate,
+  IProfileUpdate,
+} from '../types/profile'
 import type { UUID } from 'crypto'
 
 export class Profile<T extends IBaseProfile | IProfile = IProfile> {

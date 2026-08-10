@@ -9,5 +9,8 @@ export interface IAcademicConfigService {
     userId: string,
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig>
-  patch(userId: string, partial: Partial<IBaseAcademicConfig>): Promise<void>
+  patch(
+    userId: string,
+    partial: Partial<IBaseAcademicConfig>,
+  ): Promise<IAcademicConfig | undefined>
 }

@@ -2,11 +2,9 @@ import type { UUID } from 'crypto'
 import type {
   IBaseGenerationRecord,
   IGenerationRecord,
-} from '../types/generation-record'
-import type {
   IGenerationCreate,
   IGenerationUpdate,
-} from '../types/domain-helpers'
+} from '../types/generation-record'
 import { DomainError } from '../errors/domain-error'
 
 export class Generation<

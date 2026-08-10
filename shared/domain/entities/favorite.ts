@@ -2,8 +2,9 @@ import type { UUID } from 'crypto'
 import type {
   IBaseFavoriteSchedule,
   IFavoriteSchedule,
+  IFavoriteCreate,
+  IFavoriteUpdate,
 } from '../types/schedule'
-import type { IFavoriteCreate, IFavoriteUpdate } from '../types/domain-helpers'
 
 export class Favorite<
   T extends IBaseFavoriteSchedule | IFavoriteSchedule = IFavoriteSchedule,

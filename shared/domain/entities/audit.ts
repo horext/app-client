@@ -1,9 +1,9 @@
-import type { IEntityMetadata } from '../types/entity-metadata'
+import type { IAuditable } from '../types/entity-metadata'
 
-export function auditEntity<T extends Partial<IEntityMetadata>>(
+export function auditEntity<T extends Partial<IAuditable>>(
   value: T,
   userId: string,
-): T & Partial<IEntityMetadata> {
+): T & Partial<IAuditable> {
   return {
     ...value,
     createdBy: value.createdBy ?? userId,
