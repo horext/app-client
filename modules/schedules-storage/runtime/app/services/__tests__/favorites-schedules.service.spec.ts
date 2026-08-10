@@ -39,7 +39,7 @@ describe('FavoritesSchedulesService', () => {
   const makeFavoritesRepo = (): Mocked<ISchedulesFavoritesRepository> => ({
     findAll: vi.fn(),
     findById: vi.fn(),
-    create: vi.fn(),
+    update: vi.fn(),
     delete: vi.fn(),
   })
   const makeGenerationRepo = (): Mocked<IGenerationRepository> => ({
@@ -71,9 +71,9 @@ describe('FavoritesSchedulesService', () => {
     it('adds to favorites when schedule has id and not in list', async () => {
       const schedule = createSchedule()
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
+      favRepo.update.mockResolvedValue(createFavorite(schedule.id))
       const result = await service.addFavorite('user-1', schedule.toSnapshot())
-      expect(favRepo.create).toHaveBeenCalledWith(
+      expect(favRepo.update).toHaveBeenCalledWith(
         'user-1',
         expect.any(Favorite),
       )
@@ -83,13 +83,13 @@ describe('FavoritesSchedulesService', () => {
       const schedule = createSchedule()
       favRepo.findById.mockResolvedValue(createFavorite(schedule.id))
       await service.addFavorite('user-1', schedule.toSnapshot())
-      expect(favRepo.create).not.toHaveBeenCalled()
+      expect(favRepo.update).not.toHaveBeenCalled()
     })
     it('uses existing schedule when events match (base schedule without id)', async () => {
       const schedule = createSchedule()
       repo.getByKey.mockResolvedValue(schedule)
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
+      favRepo.update.mockResolvedValue(createFavorite(schedule.id))
       expect(await service.addFavorite('user-1', input)).toEqual(
         schedule.toSnapshot(),
       )
@@ -99,7 +99,7 @@ describe('FavoritesSchedulesService', () => {
       repo.getByKey.mockResolvedValue(undefined)
       repo.create.mockResolvedValue(schedule)
       favRepo.findById.mockResolvedValue(undefined)
-      favRepo.create.mockResolvedValue(createFavorite(schedule.id))
+      favRepo.update.mockResolvedValue(createFavorite(schedule.id))
       await service.addFavorite('user-1', input)
       expect(repo.create).toHaveBeenCalledWith('user-1', expect.any(Schedule))
     })

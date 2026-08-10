@@ -20,7 +20,7 @@ export class FavoritesService {
   }
 
   create(userId: string, id: string) {
-    return this.favorites.create(
+    return this.favorites.update(
       userId,
       Favorite.create({ scheduleId: id as UUID }),
     )

@@ -83,7 +83,7 @@ describe('GenerationService', () => {
   const makeFavoritesRepo = (): Mocked<ISchedulesFavoritesRepository> => ({
     findAll: vi.fn(),
     findById: vi.fn(),
-    create: vi.fn(),
+    update: vi.fn(),
     delete: vi.fn(),
   })
   let genRepo: Mocked<IGenerationRepository>

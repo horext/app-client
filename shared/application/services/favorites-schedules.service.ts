@@ -35,7 +35,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
       createdSchedule.id,
     )
     if (!existingFavoriteSchedule) {
-      await this.favoritesRepo.create(
+      await this.favoritesRepo.update(
         userId,
         Favorite.create({ scheduleId: createdSchedule.id }),
       )

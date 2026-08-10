@@ -22,6 +22,7 @@ const makePersistence = (): Mocked<AggregatePersistence> => ({
   create: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
+  findAllByIndex: vi.fn(),
 })
 
 describe('IndexedDBPreferencesRepository', () => {
