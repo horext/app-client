@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
+import type { IPreferencesService } from '#shared/application/interfaces/preferences.service'
 
 import { useUserPreferences } from '../user-preferences'
 
@@ -10,11 +11,14 @@ const mockCreatePreferences = vi.fn()
 const mockPatch = vi.fn()
 
 mockNuxtImport('usePreferencesService', () =>
-  vi.fn(() => ({
-    get: mockGetPreferences,
-    create: mockCreatePreferences,
-    patch: mockPatch,
-  })),
+  vi.fn(
+    () =>
+      ({
+        get: mockGetPreferences,
+        create: mockCreatePreferences,
+        patch: mockPatch,
+      }) satisfies IPreferencesService,
+  ),
 )
 
 describe('useUserPreferences', () => {
