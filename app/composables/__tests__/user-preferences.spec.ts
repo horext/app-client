@@ -11,8 +11,8 @@ const mockPatch = vi.fn()
 
 mockNuxtImport('usePreferencesService', () =>
   vi.fn(() => ({
-    getPreferences: mockGetPreferences,
-    createPreferences: mockCreatePreferences,
+    get: mockGetPreferences,
+    create: mockCreatePreferences,
     patch: mockPatch,
   })),
 )
@@ -32,7 +32,7 @@ describe('useUserPreferences', () => {
     expect(maxGenerationHistory).toBeDefined()
   })
 
-  it('fetchPreferences calls service.getPreferences and sets preferences when result is truthy', async () => {
+  it('fetchPreferences calls service.get and sets preferences when result is truthy', async () => {
     const prefs = { crossings: 2, weekDays: [1, 2], maxGenerationHistory: 10 }
     mockGetPreferences.mockResolvedValue(prefs)
     const { fetchPreferences } = useUserPreferences()
@@ -48,7 +48,7 @@ describe('useUserPreferences', () => {
     expect(useUserPreferencesStore().preferences).toBeUndefined()
   })
 
-  it('createPreferences calls service.createPreferences', async () => {
+  it('createPreferences calls service.create', async () => {
     mockCreatePreferences.mockResolvedValue(undefined)
     const { createPreferences } = useUserPreferences()
     await createPreferences()

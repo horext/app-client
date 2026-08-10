@@ -21,17 +21,17 @@ const mockCreatePreferences = vi.fn()
 
 mockNuxtImport('useProfileService', () =>
   vi.fn(() => ({
-    getProfile: mockGetProfile,
+    get: mockGetProfile,
     patch: mockProfilePatch,
-    createProfile: mockCreateProfile,
+    create: mockCreateProfile,
   })),
 )
 
 mockNuxtImport('useAcademicConfigService', () =>
   vi.fn(() => ({
-    getAcademicConfig: mockGetAcademicConfig,
+    get: mockGetAcademicConfig,
     patch: mockAcademicPatch,
-    createAcademicConfig: mockCreateAcademicConfig,
+    create: mockCreateAcademicConfig,
   })),
 )
 
