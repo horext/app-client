@@ -38,7 +38,7 @@ export class PreferencesService implements IPreferencesService {
     initial: Partial<IBasePreferences> = {},
   ): Promise<IPreferences> {
     const existing = await this._load(userId)
-    if (existing && initial.expectedRevision !== undefined)
+    if (existing && initial.revision !== undefined)
       return (await this._update(userId, existing.update(initial))).toSnapshot()
     if (existing) return existing.toSnapshot()
     const prefs = Preferences.create({

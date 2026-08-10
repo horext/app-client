@@ -10,7 +10,7 @@ export interface IScheduleSubjectGenerate extends ISubjectSchedule {
 
 export interface IBaseScheduleGenerate {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   scheduleSubjectKey: string
   schedulesSubject: IScheduleSubjectGenerate[]
   crossings: number
@@ -23,7 +23,7 @@ export interface IScheduleGenerate
 export interface IBaseFavoriteSchedule {
   id: IScheduleGenerate['id']
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
 }
 
 export interface IFavoriteSchedule

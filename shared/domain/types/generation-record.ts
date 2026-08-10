@@ -12,7 +12,7 @@ export type IGenerationMeta = Omit<
 
 export interface IBaseGenerationRecord {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   generatedAt: string
   scheduleIds: UUID[]
   crossingsSetting: number

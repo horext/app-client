@@ -70,7 +70,7 @@ export interface ISubjectSchedule {
 
 export interface IBaseSubjectSchedules {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   subject: ISubject
   schedules: Pick<
     ISubjectSchedule,
@@ -92,7 +92,7 @@ export interface ISubjectSchedules
 
 export type IUserSubjectCreate = IBaseSubjectSchedules
 export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &
-  Pick<IBaseSubjectSchedules, 'externalId' | 'expectedRevision'>
+  Pick<IBaseSubjectSchedules, 'externalId' | 'revision'>
 
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {

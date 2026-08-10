@@ -4,7 +4,7 @@ import type { UUID } from 'crypto'
 
 export interface IBasePreferences {
   externalId?: UUID
-  expectedRevision?: number
+  revision?: number
   weekDays: Weekdays[]
   crossings: number
   maxGenerationHistory: number
