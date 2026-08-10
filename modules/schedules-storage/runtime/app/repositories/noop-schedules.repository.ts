@@ -1,4 +1,4 @@
-import type { ISchedulesRepository } from './schedules-repository.interface'
+import type { ISchedulesRepository } from '#shared/application/repositories/schedules.repository'
 
 export class NoopSchedulesRepository implements ISchedulesRepository {
   findAll(_userId: string) {

@@ -2,13 +2,13 @@ import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
 import type {
   IFavoriteSchedule,
   IScheduleGenerate,
-} from '../../shared/interfaces/schedule'
-import type { IActivity } from '../../shared/interfaces/event'
-import type { IProfile } from '../../shared/interfaces/profile'
-import type { IAcademicConfig } from '../../shared/interfaces/academic-config'
-import type { IPreferences } from '../../shared/interfaces/preferences'
-import type { IGenerationRecord } from '../../shared/interfaces/generation-record'
-import type { ISubjectSchedules } from '../../shared/interfaces/subject'
+} from '#shared/domain/types/schedule'
+import type { IActivity } from '#shared/domain/types/event'
+import type { IProfile } from '#shared/domain/types/profile'
+import type { IAcademicConfig } from '#shared/domain/types/academic-config'
+import type { IPreferences } from '#shared/domain/types/preferences'
+import type { IGenerationRecord } from '#shared/domain/types/generation-record'
+import type { ISubjectSchedules } from '#shared/domain/types/subject'
 import { schemaMigrations } from '../migrations/schema'
 
 export const enum StoresDB {

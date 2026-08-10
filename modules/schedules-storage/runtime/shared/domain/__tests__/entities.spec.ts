@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { Activity, DomainError, Preferences } from '../index'
-import type { IPreferences } from '../../interfaces/preferences'
+import { Activity, DomainError, Preferences } from '#shared/domain'
+import type { IPreferences } from '#shared/domain/types/preferences'
 
 describe('shared domain entities', () => {
   it('round-trips an activity snapshot', () => {

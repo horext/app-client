@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Favorite, Generation, Schedule } from '../../../shared/domain'
-import { FavoritesSchedulesService } from '../favorites-schedules.service'
+import { Favorite, Generation, Schedule } from '#shared/domain'
+import { FavoritesSchedulesService } from '#shared/application/services/favorites-schedules.service'
 import type {
   ISchedulesRepository,
   ISchedulesFavoritesRepository,
-} from '../../repositories/schedules-repository.interface'
-import type { IGenerationRepository } from '../../repositories/generation.repository.interface'
+} from '#shared/application/repositories/schedules.repository'
+import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const input = {

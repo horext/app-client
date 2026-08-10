@@ -1,6 +1,6 @@
 import type { UUID } from 'crypto'
-import { UserSubject } from '../../shared/domain'
-import type { ISubjectsRepository } from './subjects-repository.interface'
+import { UserSubject } from '#shared/domain'
+import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

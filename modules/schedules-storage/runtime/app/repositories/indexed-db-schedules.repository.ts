@@ -1,14 +1,14 @@
 import type { UUID } from 'crypto'
-import { Favorite, Schedule } from '../../shared/domain'
+import { Favorite, Schedule } from '#shared/domain'
 import type {
   IBaseFavoriteSchedule,
   IBaseScheduleGenerate,
   IScheduleGenerate,
-} from '../../shared/interfaces/schedule'
+} from '#shared/domain/types/schedule'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
-} from './schedules-repository.interface'
+} from '#shared/application/repositories/schedules.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

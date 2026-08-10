@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { UserSubject } from '../../../shared/domain'
-import { SubjectsService } from '../subjects.service'
-import type { ISubjectsRepository } from '../../repositories/subjects-repository.interface'
-import type { IBaseSubjectSchedules } from '../../../shared/interfaces/subject'
+import { UserSubject } from '#shared/domain'
+import { SubjectsService } from '#shared/application/services/subjects.service'
+import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
+import type { IBaseSubjectSchedules } from '#shared/domain/types/subject'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const subjectInput: IBaseSubjectSchedules = {

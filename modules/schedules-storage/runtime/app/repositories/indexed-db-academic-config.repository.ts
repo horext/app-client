@@ -1,9 +1,9 @@
 import type {
   IBaseAcademicConfig,
   IAcademicConfig,
-} from '../../shared/interfaces/academic-config'
-import { AcademicConfig } from '../../shared/domain'
-import type { IAcademicConfigRepository } from './academic-config.repository.interface'
+} from '#shared/domain/types/academic-config'
+import { AcademicConfig } from '#shared/domain'
+import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

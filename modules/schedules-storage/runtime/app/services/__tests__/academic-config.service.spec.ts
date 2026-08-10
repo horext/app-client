@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { AcademicConfig } from '../../../shared/domain'
-import type { IHourlyLoad } from '../../../shared/interfaces/houly-load'
-import { AcademicConfigService } from '../academic-config.service'
-import type { IAcademicConfigRepository } from '../../repositories/academic-config.repository.interface'
+import { AcademicConfig } from '#shared/domain'
+import type { IHourlyLoad } from '#shared/domain/types/hourly-load'
+import { AcademicConfigService } from '#shared/application/services/academic-config.service'
+import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const hourlyLoad: IHourlyLoad = {

@@ -1,4 +1,4 @@
-import type { ISubjectsRepository } from './subjects-repository.interface'
+import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 
 export class NoopSubjectsRepository implements ISubjectsRepository {
   getAll(_userId: string) {

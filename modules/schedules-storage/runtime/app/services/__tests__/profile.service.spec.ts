@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Profile } from '../../../shared/domain'
-import { ProfileService } from '../profile.service'
-import type { IProfileRepository } from '../../repositories/profile-repository.interface'
+import { Profile } from '#shared/domain'
+import { ProfileService } from '#shared/application/services/profile.service'
+import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makeProfile = (setupCompleted = false) =>

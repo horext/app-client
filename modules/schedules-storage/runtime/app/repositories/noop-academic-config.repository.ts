@@ -1,4 +1,4 @@
-import type { IAcademicConfigRepository } from './academic-config.repository.interface'
+import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 
 export class NoopAcademicConfigRepository implements IAcademicConfigRepository {
   get(_userId: string) {

@@ -10,13 +10,13 @@ import {
   SUBJECTS_SERVICE_KEY,
   USER_ID_KEY,
 } from '../context/keys'
-import type { IFavoritesSchedulesService } from '../services/favorites-schedules.service.interface'
-import type { IActivitiesService } from '../services/activities-service.interface'
-import type { IProfileService } from '../services/profile.service.interface'
-import type { IAcademicConfigService } from '../services/academic-config.service.interface'
-import type { IPreferencesService } from '../services/preferences.service.interface'
-import type { IGenerationService } from '../services/generation.service.interface'
-import type { ISubjectsService } from '../services/subjects.service.interface'
+import type { IFavoritesSchedulesService } from '#shared/application/interfaces/favorites-schedules.service'
+import type { IActivitiesService } from '#shared/application/interfaces/activities.service'
+import type { IProfileService } from '#shared/application/interfaces/profile.service'
+import type { IAcademicConfigService } from '#shared/application/interfaces/academic-config.service'
+import type { IPreferencesService } from '#shared/application/interfaces/preferences.service'
+import type { IGenerationService } from '#shared/application/interfaces/generation.service'
+import type { ISubjectsService } from '#shared/application/interfaces/subjects.service'
 
 const useService = <T>(key: InjectionKey<T>, name: string): T => {
   const service = inject(key)

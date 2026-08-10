@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Activity, type IActivityCreate } from '../../../shared/domain'
+import { Activity, type IActivityCreate } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'

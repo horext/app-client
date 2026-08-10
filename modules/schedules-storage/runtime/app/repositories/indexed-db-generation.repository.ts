@@ -1,10 +1,10 @@
 import type { UUID } from 'crypto'
-import { Generation } from '../../shared/domain'
+import { Generation } from '#shared/domain'
 import type {
   IBaseGenerationRecord,
   IGenerationRecord,
-} from '../../shared/interfaces/generation-record'
-import type { IGenerationRepository } from './generation.repository.interface'
+} from '#shared/domain/types/generation-record'
+import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

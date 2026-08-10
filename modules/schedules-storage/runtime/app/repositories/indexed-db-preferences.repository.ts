@@ -1,9 +1,9 @@
 import type {
   IBasePreferences,
   IPreferences,
-} from '../../shared/interfaces/preferences'
-import { Preferences } from '../../shared/domain'
-import type { IPreferencesRepository } from './preferences-repository.interface'
+} from '#shared/domain/types/preferences'
+import { Preferences } from '#shared/domain'
+import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

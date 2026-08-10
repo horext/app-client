@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Profile } from '../../../shared/domain'
+import { Profile } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBProfileRepository } from '../indexed-db-profile.repository'
-import type { IProfile } from '../../../shared/interfaces/profile'
+import type { IProfile } from '#shared/domain/types/profile'
 
 const persistedProfile: IProfile = {
   facultyId: 1,

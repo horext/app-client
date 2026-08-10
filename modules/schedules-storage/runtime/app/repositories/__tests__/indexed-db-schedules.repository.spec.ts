@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Favorite, Schedule } from '../../../shared/domain'
+import { Favorite, Schedule } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import {
   IndexedDBSchedulesRepository,

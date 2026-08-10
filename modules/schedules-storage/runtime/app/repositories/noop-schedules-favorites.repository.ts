@@ -1,4 +1,4 @@
-import type { ISchedulesFavoritesRepository } from './schedules-repository.interface'
+import type { ISchedulesFavoritesRepository } from '#shared/application/repositories/schedules.repository'
 
 export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepository {
   findAll(_userId: string) {

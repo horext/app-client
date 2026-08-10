@@ -1,7 +1,7 @@
 import type { UUID } from 'crypto'
-import { Activity } from '../../shared/domain'
-import type { IActivity, IBaseActivity } from '../../shared/interfaces/event'
-import type { IActivitiesRepository } from './activities.repository.interface'
+import { Activity } from '#shared/domain'
+import type { IActivity, IBaseActivity } from '#shared/domain/types/event'
+import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 

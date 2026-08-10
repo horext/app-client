@@ -1,4 +1,4 @@
-import type { IGenerationRepository } from './generation.repository.interface'
+import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 
 export class NoopGenerationRepository implements IGenerationRepository {
   getAll(_userId: string) {
