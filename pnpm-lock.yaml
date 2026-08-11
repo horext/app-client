@@ -75,8 +75,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@4.0.2(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3)))(rolldown@1.2.3)(rollup@4.62.4)(vite@8.2.0)(vue@3.5.41(typescript@6.0.3))(webpack@5.107.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.25))
       vuetify:
-        specifier: ^4.1.7
-        version: 4.1.7(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))
+        specifier: ^4.1.8
+        version: 4.1.8(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))
     devDependencies:
       '@mdi/js':
         specifier: ^7.4.47
@@ -6072,12 +6072,12 @@ packages:
       typescript:
         optional: true
 
-  vuetify@4.1.7:
-    resolution: {integrity: sha512-07qxu0S1oxPjmknP/Yn5276PtIhlCvHnpcp7HuOKEHni89/6BGiM2aVdKlEGeyM5RfytDkiv0SNieabGT2D8qQ==}
+  vuetify@4.1.8:
+    resolution: {integrity: sha512-003D/8b5462uZCD5CMRTZF3smADmOn47mzthNY0aP/xkslovR5yIc1qXjPdFN0LHcu+p3GEAVmMQabldaIQ5pg==}
     peerDependencies:
       typescript: '>=4.7'
       vite-plugin-vuetify: '>=2.1.0'
-      vue: ^3.5.0
+      vue: ^3.5.0 || ^3.6.0-0
       webpack-plugin-vuetify: '>=3.1.0'
     peerDependenciesMeta:
       typescript:
@@ -13096,7 +13096,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  vuetify@4.1.7(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3)):
+  vuetify@4.1.8(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3)):
     dependencies:
       vue: 3.5.41(typescript@6.0.3)
     optionalDependencies:
