@@ -126,7 +126,7 @@ export class IndexedDbAggregatePersistence
       updatedBy: userId,
       id: crypto.randomUUID(),
     }
-    await db.put(store, record)
+    await db.add(store, record)
     return record
   }
 
