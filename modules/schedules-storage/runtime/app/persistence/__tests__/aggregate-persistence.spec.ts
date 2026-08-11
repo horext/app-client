@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import {
-  IndexedDbAggregatePersistence,
-  type AggregatePersistence,
-} from '../aggregate-persistence'
+import type { AggregatePersistence } from '../aggregate-persistence'
+import { IndexedDbAggregatePersistence } from '../indexed-db-aggregate-persistence'
 import { StoresDB } from '../../context/db'
 
 describe('IndexedDbAggregatePersistence', () => {

@@ -1,5 +1,5 @@
 import { createDbFactory } from '../app/context/db'
-import { IndexedDbAggregatePersistence } from '../app/persistence/aggregate-persistence'
+import { IndexedDbAggregatePersistence } from '../app/persistence/indexed-db-aggregate-persistence'
 import { schemaMigrations } from '../app/migrations/schema'
 import {
   SCHEDULES_DB_KEY,
