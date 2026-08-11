@@ -5,8 +5,11 @@ import type {
   IProfileUpdate,
 } from '../types/profile'
 import type { UUID } from 'crypto'
+import type { IEntitySnapshot } from './snapshot'
 
-export class Profile<T extends IBaseProfile | IProfile = IProfile> {
+export class Profile<
+  T extends IBaseProfile | IProfile = IProfile,
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   static create(input: IProfileCreate): Profile<IBaseProfile> {

@@ -6,10 +6,11 @@ import type {
   IGenerationUpdate,
 } from '../types/generation-record'
 import { DomainError } from '../errors/domain-error'
+import type { IEntitySnapshot } from './snapshot'
 
 export class Generation<
   T extends IBaseGenerationRecord | IGenerationRecord = IGenerationRecord,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   private static build<T extends IBaseGenerationRecord | IGenerationRecord>(

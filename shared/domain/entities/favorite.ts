@@ -5,10 +5,11 @@ import type {
   IFavoriteCreate,
   IFavoriteUpdate,
 } from '../types/schedule'
+import type { IEntitySnapshot } from './snapshot'
 
 export class Favorite<
   T extends IBaseFavoriteSchedule | IFavoriteSchedule = IFavoriteSchedule,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   static create(input: IFavoriteCreate): Favorite<IBaseFavoriteSchedule> {
@@ -19,7 +20,7 @@ export class Favorite<
     return new Favorite({ ...snapshot })
   }
 
-  get scheduleId(): UUID {
+  get id(): UUID {
     return this.snapshot.id
   }
 

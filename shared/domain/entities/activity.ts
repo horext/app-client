@@ -6,8 +6,11 @@ import type {
   IActivityUpdate,
 } from '../types/event'
 import { validateSessions } from '../types/event'
+import type { IEntitySnapshot } from './snapshot'
 
-export class Activity<T extends IBaseActivity | IActivity = IActivity> {
+export class Activity<
+  T extends IBaseActivity | IActivity = IActivity,
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   private static build<T extends IBaseActivity | IActivity>(

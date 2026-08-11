@@ -152,7 +152,7 @@ export class GenerationService implements IGenerationService {
 
     // Also keep favorites
     const favoriteIds = (await this.favoritesRepo.findAll(userId)).map(
-      (favorite) => favorite.scheduleId,
+      (favorite) => favorite.id,
     )
     for (const id of favoriteIds) referencedIds.add(id)
 

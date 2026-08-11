@@ -6,10 +6,11 @@ import type {
   IScheduleUpdate,
 } from '../types/schedule'
 import { DomainError } from '../errors/domain-error'
+import type { IEntitySnapshot } from './snapshot'
 
 export class Schedule<
   T extends IBaseScheduleGenerate | IScheduleGenerate = IScheduleGenerate,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   private static build<T extends IBaseScheduleGenerate | IScheduleGenerate>(

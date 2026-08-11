@@ -6,10 +6,11 @@ import type {
 } from '../types/preferences'
 import { DomainError } from '../errors/domain-error'
 import type { UUID } from 'crypto'
+import type { IEntitySnapshot } from './snapshot'
 
 export class Preferences<
   T extends IBasePreferences | IPreferences = IPreferences,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   static create(input: IPreferencesCreate): Preferences<IBasePreferences> {
