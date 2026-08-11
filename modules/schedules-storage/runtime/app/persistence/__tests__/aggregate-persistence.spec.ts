@@ -14,11 +14,13 @@ describe('IndexedDbAggregatePersistence', () => {
   const objectStore = vi.fn()
   const index = vi.fn()
   const getFromIndex = vi.fn()
+  const add = vi.fn()
   const db = {
     transaction,
     getFromIndex,
     put,
     delete: remove,
+    add,
   }
   let persistence: AggregatePersistence
 
@@ -42,6 +44,7 @@ describe('IndexedDbAggregatePersistence', () => {
     getFromIndex.mockResolvedValue(undefined)
     put.mockResolvedValue(undefined)
     remove.mockResolvedValue(undefined)
+    add.mockReset()
   })
 
   it('finds an entity using the compound user and entity key', async () => {
@@ -96,7 +99,7 @@ describe('IndexedDbAggregatePersistence', () => {
       updatedBy: 'user-1',
       id: expect.any(String),
     })
-    expect(put).toHaveBeenCalledWith(
+    expect(add).toHaveBeenCalledWith(
       StoresDB.PROFILE,
       expect.objectContaining({ createdBy: 'user-1' }),
     )
@@ -109,13 +112,11 @@ describe('IndexedDbAggregatePersistence', () => {
       facultyId: 2,
       createdAt: '2026-01-01T00:00:00.000Z',
       createdBy: 'user-1',
+      setupCompleted: true,
+      specialityId: 1,
     }
 
-    const result = await persistence.update(
-      StoresDB.PROFILE,
-      value as never,
-      'user-2',
-    )
+    const result = await persistence.update(StoresDB.PROFILE, value, 'user-2')
 
     expect(result).toMatchObject({
       ...value,
