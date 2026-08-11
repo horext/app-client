@@ -20,6 +20,12 @@ export interface AggregatePersistence {
     index: keyof ReplicableSchemas[S]['indexes'] & string,
     key: IDBValidKey,
   ): Promise<ReplicableSchemas[S]['value'] | undefined>
+
+  findAllByIndex<S extends ReplicableStore>(
+    store: S,
+    index: keyof ReplicableSchemas[S]['indexes'] & string,
+    key: IDBValidKey,
+  ): Promise<ReplicableSchemas[S]['value'][]>
   create<S extends ReplicableStore>(
     store: S,
     value: Omit<
@@ -91,6 +97,15 @@ export class IndexedDbAggregatePersistence
   ) {
     const db = await this.getDb()
     return db.getFromIndex(store, index, IDBKeyRange.only(key))
+  }
+
+  async findAllByIndex<S extends ReplicableStore>(
+    store: S,
+    index: keyof ReplicableSchemas[S]['indexes'] & string,
+    key: IDBValidKey,
+  ) {
+    const db = await this.getDb()
+    return db.getAllFromIndex(store, index, IDBKeyRange.only(key))
   }
 
   async create<S extends ReplicableStore>(
@@ -171,7 +186,7 @@ export class IndexedDbAggregatePersistence
         ...item.data,
         createdBy: userId,
         updatedBy: userId,
-        revision: item.revision ?? null,
+        revision: item.revision,
         syncedAt: new Date().toISOString(),
         localSequence: 0,
       } satisfies ReplicableSchemas[S]['value'])

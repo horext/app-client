@@ -17,6 +17,7 @@ const makePersistence = (): Mocked<AggregatePersistence> => ({
   findAll: vi.fn(),
   find: vi.fn(),
   findByIndex: vi.fn(),
+  findAllByIndex: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
   remove: vi.fn(),
@@ -136,7 +137,7 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
       persistence.create.mockResolvedValue(
         persistedSnapshot(favorite.toSnapshot()),
       )
-      await expect(repo.create('user-1', favorite)).resolves.toBeDefined()
+      await expect(repo.update('user-1', favorite)).resolves.toBeDefined()
     })
   })
   describe('delete', () => {

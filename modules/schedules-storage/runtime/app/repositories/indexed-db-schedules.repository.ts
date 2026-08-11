@@ -113,7 +113,7 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     return record ? Favorite.restore(record) : undefined
   }
 
-  async create(
+  async update(
     userId: string,
     favorite: Favorite<IBaseFavoriteSchedule>,
   ): Promise<Favorite> {

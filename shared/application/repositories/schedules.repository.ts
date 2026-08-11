@@ -40,7 +40,7 @@ export interface ISchedulesRepository {
 export interface ISchedulesFavoritesRepository {
   findAll(userId: string): Promise<Favorite[]>
   findById(userId: string, id: UUID): Promise<Favorite | undefined>
-  create(
+  update(
     userId: string,
     favorite: Favorite<IBaseFavoriteSchedule>,
   ): Promise<Favorite>
