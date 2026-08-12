@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Activity } from '#shared/domain'
+import { Activity, type ActivityID } from '#shared/domain'
 import { ActivitiesService } from '#shared/application/services/activities.service'
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 describe('ActivitiesService', () => {
   const makeRepo = (): Mocked<IActivitiesRepository> => ({
@@ -48,7 +49,7 @@ describe('ActivitiesService', () => {
   })
   describe('delete', () => {
     it('deletes an activity by id', async () => {
-      const id = crypto.randomUUID()
+      const id: ActivityID = makeUUID()
       await service.delete('user-1', id)
       expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })
@@ -67,7 +68,7 @@ describe('ActivitiesService', () => {
     })
     it('throws when activity not found', async () => {
       repo.findById.mockResolvedValue(undefined)
-      const id = crypto.randomUUID()
+      const id: ActivityID = makeUUID()
       await expect(
         service.patch('user-1', id, {
           title: 'x',

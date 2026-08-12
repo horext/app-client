@@ -2,6 +2,7 @@ import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
   ISubjectSchedulesUpdate,
+  SubjectScheduleId,
 } from '#shared/domain/types/subject'
 import type { UserSubject } from '#shared/domain'
 
@@ -9,7 +10,7 @@ export interface ISubjectsService {
   getAll(userId: string): Promise<UserSubject<ISubjectSchedules>[]>
   get(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
   ): Promise<UserSubject<ISubjectSchedules> | undefined>
   create(
     userId: string,
@@ -17,12 +18,12 @@ export interface ISubjectsService {
   ): Promise<UserSubject<ISubjectSchedules>>
   delete(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
     expectedRevision?: number,
   ): Promise<void>
   patch(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
     subject: ISubjectSchedulesUpdate,
   ): Promise<UserSubject<ISubjectSchedules>>
 }

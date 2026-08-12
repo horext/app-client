@@ -1,6 +1,6 @@
-import type { UUID } from 'crypto'
 import { Generation } from '#shared/domain'
 import type {
+  GenerationId,
   IBaseGenerationRecord,
   IGenerationRecord,
 } from '#shared/domain/types/generation-record'
@@ -17,7 +17,10 @@ export class IndexedDBGenerationsRepository implements IGenerationRepository {
     )
   }
 
-  async findById(userId: string, id: UUID): Promise<Generation | undefined> {
+  async findById(
+    userId: string,
+    id: GenerationId,
+  ): Promise<Generation | undefined> {
     const record = await this.persistence.find(StoresDB.GENERATIONS, userId, id)
     return record ? Generation.restore(record) : undefined
   }
@@ -47,7 +50,7 @@ export class IndexedDBGenerationsRepository implements IGenerationRepository {
     )
   }
 
-  async delete(userId: string, id: UUID): Promise<void> {
+  async delete(userId: string, id: GenerationId): Promise<void> {
     await this.persistence.remove(StoresDB.GENERATIONS, userId, id)
   }
 }

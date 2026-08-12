@@ -1,5 +1,4 @@
-import type { UUID } from 'crypto'
-import { Favorite } from '#shared/domain'
+import { Favorite, type ScheduleGenerateId } from '#shared/domain'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -11,26 +10,26 @@ export class FavoritesService {
     private readonly schedules: ISchedulesRepository,
   ) {}
 
-  get(userId: string, id: string) {
-    return this.favorites.findById(userId, id as UUID)
+  get(userId: string, id: ScheduleGenerateId) {
+    return this.favorites.findById(userId, id)
   }
 
-  findByScheduleId(userId: string, scheduleId: string) {
-    return this.favorites.findByScheduleId(userId, scheduleId as UUID)
+  findByScheduleId(userId: string, scheduleId: ScheduleGenerateId) {
+    return this.favorites.findByScheduleId(userId, scheduleId)
   }
 
-  async scheduleExists(userId: string, id: string) {
-    return Boolean(await this.schedules.findBy(userId, id as UUID))
+  async scheduleExists(userId: string, id: ScheduleGenerateId) {
+    return Boolean(await this.schedules.findBy(userId, id))
   }
 
-  create(userId: string, scheduleId: string) {
+  create(userId: string, scheduleId: ScheduleGenerateId) {
     return this.favorites.create(
       userId,
-      Favorite.create({ scheduleId: scheduleId as UUID }),
+      Favorite.create({ scheduleId: scheduleId }),
     )
   }
 
-  delete(userId: string, id: string, revision: number) {
-    return this.favorites.delete(userId, id as UUID, revision)
+  delete(userId: string, id: ScheduleGenerateId, revision: number) {
+    return this.favorites.delete(userId, id, revision)
   }
 }

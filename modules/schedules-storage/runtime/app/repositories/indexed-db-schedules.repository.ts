@@ -1,9 +1,9 @@
-import type { UUID } from 'crypto'
 import { Favorite, Schedule } from '#shared/domain'
 import type {
   IBaseFavoriteSchedule,
   IBaseScheduleGenerate,
   IScheduleGenerate,
+  ScheduleGenerateId,
 } from '#shared/domain/types/schedule'
 import type {
   ISchedulesFavoritesRepository,
@@ -21,13 +21,16 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     )
   }
 
-  async findBy(userId: string, id: UUID) {
+  async findBy(userId: string, id: ScheduleGenerateId) {
     return this.persistence
       .find(StoresDB.SCHEDULES, userId, id)
       .then((record) => (record ? Schedule.restore(record) : undefined))
   }
 
-  async getEntries(userId: string, ids: UUID[]): Promise<Schedule[]> {
+  async getEntries(
+    userId: string,
+    ids: ScheduleGenerateId[],
+  ): Promise<Schedule[]> {
     if (!ids.length) return []
     const results = await Promise.all(
       ids.map((id) => this.persistence.find(StoresDB.SCHEDULES, userId, id)),
@@ -88,11 +91,14 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return Schedule.restore(stored)
   }
 
-  async deleteEntry(userId: string, id: UUID): Promise<void> {
+  async deleteEntry(userId: string, id: ScheduleGenerateId): Promise<void> {
     await this.persistence.remove(StoresDB.SCHEDULES, userId, id)
   }
 
-  async deleteEntries(userId: string, ids: UUID[]): Promise<void> {
+  async deleteEntries(
+    userId: string,
+    ids: ScheduleGenerateId[],
+  ): Promise<void> {
     if (!ids.length) return
     await Promise.all(
       ids.map((id) => this.persistence.remove(StoresDB.SCHEDULES, userId, id)),
@@ -108,14 +114,17 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     return records.map(Favorite.restore)
   }
 
-  async findById(userId: string, id: UUID): Promise<Favorite | undefined> {
+  async findById(
+    userId: string,
+    id: ScheduleGenerateId,
+  ): Promise<Favorite | undefined> {
     const record = await this.persistence.find(StoresDB.FAVORITES, userId, id)
     return record ? Favorite.restore(record) : undefined
   }
 
   async findByScheduleId(
     userId: string,
-    scheduleId: UUID,
+    scheduleId: ScheduleGenerateId,
   ): Promise<Favorite | undefined> {
     return this.findById(userId, scheduleId)
   }
@@ -132,7 +141,7 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     return Favorite.restore(stored)
   }
 
-  async delete(userId: string, id: UUID): Promise<void> {
+  async delete(userId: string, id: ScheduleGenerateId): Promise<void> {
     await this.persistence.remove(StoresDB.FAVORITES, userId, id)
   }
 }

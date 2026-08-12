@@ -1,6 +1,9 @@
-import type { UUID } from 'crypto'
 import { Activity } from '#shared/domain'
-import type { IActivity, IBaseActivity } from '#shared/domain/types/event'
+import type {
+  ActivityID,
+  IActivity,
+  IBaseActivity,
+} from '#shared/domain/types/event'
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
@@ -16,7 +19,7 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
 
   async findById(
     userId: string,
-    id: UUID,
+    id: ActivityID,
   ): Promise<Activity<IActivity> | undefined> {
     const record = await this.persistence.find(StoresDB.ACTIVITIES, userId, id)
     return record ? Activity.restore(record) : undefined
@@ -46,7 +49,7 @@ export class IndexedDBActivitiesRepository implements IActivitiesRepository {
     return Activity.restore(stored)
   }
 
-  async delete(userId: string, id: UUID): Promise<void> {
+  async delete(userId: string, id: ActivityID): Promise<void> {
     await this.persistence.remove(StoresDB.ACTIVITIES, userId, id)
   }
 }

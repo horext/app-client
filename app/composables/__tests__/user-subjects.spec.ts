@@ -2,10 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import type { ISubjectSchedules } from '~/interfaces/subject'
-import type { UUID } from 'crypto'
 import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
+import type { SubjectScheduleId } from '~~/shared/domain'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -21,13 +22,12 @@ mockNuxtImport('useSubjectsService', () =>
   })),
 )
 
-function makeSubject(id: UUID = crypto.randomUUID()): ISubjectSchedules {
+function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
   return {
     id,
     schedules: [{ id: 1 } as never],
     subject: { id: 1, course: { id: 'CS101', name: 'CS' } } as never,
-    sections: [],
-  } as ISubjectSchedules
+  }
 }
 
 const asEntity = (subject: ISubjectSchedules) => ({
@@ -64,7 +64,7 @@ describe('useUserSubjects', () => {
     store.subjects = [subject]
     mockDelete.mockResolvedValue(undefined)
     const { deleteSubjectById, mySubjects } = useUserSubjects()
-    await deleteSubjectById(subject.id as UUID)
+    await deleteSubjectById(subject.id)
     expect(mockDelete).toHaveBeenCalledWith(expect.any(String), subject.id)
     expect(mySubjects.value).not.toContain(subject)
   })

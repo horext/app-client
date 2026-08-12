@@ -1,12 +1,12 @@
-import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './occurrences'
-import type { IScheduleGenerate } from './schedule'
+import type { IScheduleGenerate, ScheduleGenerateId } from './schedule'
 import type { IAuditable } from './entity-metadata'
 import type {
   ReplicatedIdentity,
   ReplicationState,
 } from './replicated-identity'
+import type { BrandUUID } from './ids'
 
 export type IGenerationMeta = Omit<
   IGenerationRecord,
@@ -15,7 +15,7 @@ export type IGenerationMeta = Omit<
 
 export interface IBaseGenerationRecord extends ReplicationState {
   generatedAt: string
-  scheduleIds: UUID[]
+  scheduleIds: ScheduleGenerateId[]
   crossingsSetting: number
   weekDays: Weekdays[]
   hourlyLoadId: number
@@ -23,8 +23,10 @@ export interface IBaseGenerationRecord extends ReplicationState {
   occurrences: IIntersectionOccurrence[]
 }
 
+export type GenerationId = BrandUUID<'GenerationId'>
+
 export interface IGenerationRecord
-  extends IBaseGenerationRecord, IAuditable, ReplicatedIdentity {}
+  extends IBaseGenerationRecord, IAuditable, ReplicatedIdentity<GenerationId> {}
 
 export interface IGenerationResult extends IGenerationRecord {
   schedules: IScheduleGenerate[]

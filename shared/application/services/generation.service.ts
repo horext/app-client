@@ -1,4 +1,5 @@
 import type {
+  GenerationId,
   IBaseGenerationRecord,
   IGenerationMeta,
   IGenerationRecord,
@@ -26,8 +27,8 @@ export class GenerationService implements IGenerationService {
     private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
 
-  get(userId: string, id: string) {
-    return this.generationRepo.findById(userId, id as UUID)
+  get(userId: string, id: GenerationId) {
+    return this.generationRepo.findById(userId, id)
   }
 
   create(userId: string, value: unknown, id?: string) {
@@ -40,14 +41,14 @@ export class GenerationService implements IGenerationService {
     )
   }
 
-  async patch(userId: string, id: string, value: { revision: number }) {
+  async patch(userId: string, id: GenerationId, value: { revision: number }) {
     const current = await this.get(userId, id)
     if (!current) throw new ResourceNotFoundError('generation')
     return this.generationRepo.update(userId, current.update(value))
   }
 
-  delete(userId: string, id: string, revision?: number) {
-    return this.generationRepo.delete(userId, id as UUID, revision)
+  delete(userId: string, id: GenerationId, revision?: number) {
+    return this.generationRepo.delete(userId, id, revision)
   }
 
   async getGenerations(userId: string): Promise<IGenerationRecord[]> {

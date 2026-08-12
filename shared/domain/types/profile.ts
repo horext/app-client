@@ -1,4 +1,5 @@
 import type { IAuditable } from './entity-metadata'
+import type { BrandUUID } from './ids'
 import type {
   ReplicatedIdentity,
   ReplicationState,
@@ -10,7 +11,9 @@ export interface IBaseProfile extends ReplicationState {
   setupCompleted?: boolean
 }
 
-export interface IProfile extends IBaseProfile, IAuditable, ReplicatedIdentity {
+export type ProfileId = BrandUUID<'ProfileId'>
+export interface IProfile
+  extends IBaseProfile, IAuditable, ReplicatedIdentity<ProfileId> {
   setupCompleted: boolean
 }
 

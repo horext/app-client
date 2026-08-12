@@ -1,10 +1,10 @@
-import type { UUID } from 'crypto'
 import type {
   IBaseSubjectSchedules,
   ISubject,
   ISubjectSchedule,
   ISubjectSchedules,
 } from '~/interfaces/subject'
+import type { SubjectScheduleId } from '~~/shared/domain'
 
 const convertSubject = (subject: ISubject): ISubject => ({
   id: subject.id,
@@ -61,7 +61,9 @@ const convertSchedule = (s: ISubjectSchedule): ISubjectSchedule => ({
     id: session.id,
   })),
 })
-export class SubjectSchedules<ID extends UUID | undefined = UUID> {
+export class SubjectSchedules<
+  ID extends SubjectScheduleId | undefined = SubjectScheduleId,
+> {
   id: ID
   subject: ISubject
   schedules: ISubjectSchedule[]
@@ -98,7 +100,7 @@ export class SubjectSchedules<ID extends UUID | undefined = UUID> {
     data:
       | (IBaseSubjectSchedules & { currentSchedules: ISubjectSchedule[] })
       | (ISubjectSchedules & { currentSchedules: ISubjectSchedule[] }),
-  ): SubjectSchedules<UUID> | SubjectSchedules<undefined> {
+  ): SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined> {
     if ('id' in data) {
       return new SubjectSchedules(
         data.id,

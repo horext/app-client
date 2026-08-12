@@ -61,7 +61,7 @@ import type {
   ISubjectSchedules,
 } from '~/interfaces/subject'
 import { SubjectSchedules } from '~/models/subject-schedules'
-import type { UUID } from 'crypto'
+import type { SubjectScheduleId } from '~~/shared/domain'
 
 const props = defineProps<{
   subjectSchedules: IBaseSubjectSchedules | ISubjectSchedules
@@ -72,7 +72,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (
     event: 'save',
-    value: SubjectSchedules<UUID> | SubjectSchedules<undefined>,
+    value: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
   ): void
   (event: 'cancel'): void
 }>()

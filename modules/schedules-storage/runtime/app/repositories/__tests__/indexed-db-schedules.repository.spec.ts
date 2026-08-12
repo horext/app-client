@@ -1,11 +1,17 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Favorite, Schedule } from '#shared/domain'
+import {
+  Favorite,
+  Schedule,
+  type IScheduleGenerate,
+  type ScheduleGenerateId,
+} from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import {
   IndexedDBSchedulesRepository,
   IndexedDBScheduleFavoritesRepository,
 } from '../indexed-db-schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const baseSchedule = {
   scheduleSubjectKey: 'key-1',
@@ -36,8 +42,10 @@ describe('IndexedDBSchedulesRepository', () => {
     })
     it('returns schedules by ids, filtering undefined results', async () => {
       const schedule = Schedule.create(baseSchedule)
-      const missingId = crypto.randomUUID()
-      const stored = persistedSnapshot(schedule.toSnapshot())
+      const missingId: ScheduleGenerateId = makeUUID()
+      const stored = persistedSnapshot(
+        schedule.toSnapshot(),
+      ) satisfies IScheduleGenerate
       persistence.find
         .mockResolvedValueOnce(stored)
         .mockResolvedValueOnce(undefined)
@@ -50,7 +58,7 @@ describe('IndexedDBSchedulesRepository', () => {
     it('returns schedule matching the key', async () => {
       const schedule = Schedule.create(baseSchedule)
       persistence.findByIndex.mockResolvedValue(
-        persistedSnapshot(schedule.toSnapshot()),
+        persistedSnapshot(schedule.toSnapshot()) satisfies IScheduleGenerate,
       )
       expect(await repo.getByKey('user-1', 'key-1')).toBeDefined()
     })
@@ -84,7 +92,7 @@ describe('IndexedDBSchedulesRepository', () => {
   describe('delete', () => {
     it('resolves without error', async () => {
       await expect(
-        repo.deleteEntry('user-1', crypto.randomUUID()),
+        repo.deleteEntry('user-1', makeUUID()),
       ).resolves.toBeUndefined()
     })
   })
@@ -94,10 +102,7 @@ describe('IndexedDBSchedulesRepository', () => {
     })
     it('resolves without error for multiple ids', async () => {
       await expect(
-        repo.deleteEntries('user-1', [
-          crypto.randomUUID(),
-          crypto.randomUUID(),
-        ]),
+        repo.deleteEntries('user-1', [makeUUID(), makeUUID()]),
       ).resolves.toBeUndefined()
     })
   })
@@ -112,7 +117,7 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   })
   describe('findAll', () => {
     it('returns stored favorites', async () => {
-      const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
+      const favorite = Favorite.create({ scheduleId: makeUUID() })
       persistence.findAll.mockResolvedValue([
         persistedSnapshot(favorite.toSnapshot()),
       ])
@@ -121,19 +126,19 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   })
   describe('findById', () => {
     it('returns favorite when present', async () => {
-      const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
+      const favorite = Favorite.create({ scheduleId: makeUUID() })
       const stored = persistedSnapshot(favorite.toSnapshot())
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toBeDefined()
     })
     it('returns undefined when absent', async () => {
       persistence.find.mockResolvedValue(undefined)
-      expect(await repo.findById('user-1', crypto.randomUUID())).toBeUndefined()
+      expect(await repo.findById('user-1', makeUUID())).toBeUndefined()
     })
   })
   describe('create', () => {
     it('persists the schedule id as the favorite id', async () => {
-      const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
+      const favorite = Favorite.create({ scheduleId: makeUUID() })
       persistence.create.mockResolvedValue(
         persistedSnapshot(favorite.toSnapshot()),
       )
@@ -142,9 +147,7 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   })
   describe('delete', () => {
     it('resolves without error', async () => {
-      await expect(
-        repo.delete('user-1', crypto.randomUUID()),
-      ).resolves.toBeUndefined()
+      await expect(repo.delete('user-1', makeUUID())).resolves.toBeUndefined()
     })
   })
 })

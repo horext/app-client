@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Activity, type IActivityCreate } from '#shared/domain'
+import { Activity, type IActivity, type IActivityCreate } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const baseActivity: IActivityCreate = {
   title: 'Math',
@@ -32,7 +33,7 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns all activities', async () => {
       const activity = Activity.create(baseActivity)
       persistence.findAll.mockResolvedValue([
-        persistedSnapshot(activity.toSnapshot()),
+        persistedSnapshot(activity.toSnapshot()) satisfies IActivity,
       ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
@@ -44,7 +45,9 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('get', () => {
     it('returns activity by id', async () => {
       const activity = Activity.create(baseActivity)
-      const stored = persistedSnapshot(activity.toSnapshot())
+      const stored = persistedSnapshot(
+        activity.toSnapshot(),
+      ) satisfies IActivity
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toMatchObject({
         id: stored.id,
@@ -52,7 +55,7 @@ describe('IndexedDBActivitiesRepository', () => {
     })
     it('returns undefined when not found', async () => {
       persistence.find.mockResolvedValue(undefined)
-      expect(await repo.findById('user-1', crypto.randomUUID())).toBeUndefined()
+      expect(await repo.findById('user-1', makeUUID())).toBeUndefined()
     })
   })
   describe('create', () => {
@@ -69,16 +72,16 @@ describe('IndexedDBActivitiesRepository', () => {
   describe('update', () => {
     it('returns the updated activity', async () => {
       const activity = Activity.create(baseActivity)
-      const stored = persistedSnapshot(activity.toSnapshot())
+      const stored = persistedSnapshot(
+        activity.toSnapshot(),
+      ) satisfies IActivity
       persistence.create.mockResolvedValue(stored)
       expect((await repo.create('user-1', activity)).id).toBe(stored.id)
     })
   })
   describe('delete', () => {
     it('resolves without error', async () => {
-      await expect(
-        repo.delete('user-1', crypto.randomUUID()),
-      ).resolves.toBeUndefined()
+      await expect(repo.delete('user-1', makeUUID())).resolves.toBeUndefined()
     })
   })
 })

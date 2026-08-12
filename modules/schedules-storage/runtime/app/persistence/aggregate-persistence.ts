@@ -1,6 +1,36 @@
 import type { AggregateSnapshot } from '#shared/domain/synchronization'
-import type { ReplicableSchemas, ReplicableStore } from '../context/db'
+import type {
+  ReplicableSchemas,
+  ReplicableStore,
+  ReplicableStoreValue,
+} from '../context/db'
 
+export type ReplicableStoreCreate<S extends ReplicableStore = ReplicableStore> =
+  Omit<
+    ReplicableStoreValue<S>,
+    'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
+  > &
+    Partial<Pick<ReplicableStoreValue<S>, 'id'>>
+
+export type ReplicableStoreCreateResult<
+  S extends ReplicableStore = ReplicableStore,
+> = ReplicableStoreCreate<S> & {
+  id: ReplicableStoreValue<S>['id']
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
+}
+
+export type ReplicableStoreUpdate<S extends ReplicableStore = ReplicableStore> =
+  Omit<ReplicableSchemas[S]['value'], 'updatedAt' | 'updatedBy'>
+
+export type ReplicableStoreUpdateResult<
+  S extends ReplicableStore = ReplicableStore,
+> = ReplicableStoreUpdate<S> & {
+  updatedAt: string
+  updatedBy: string
+}
 export interface AggregatePersistence {
   find<S extends ReplicableStore>(
     store: S,
@@ -23,17 +53,14 @@ export interface AggregatePersistence {
   ): Promise<ReplicableSchemas[S]['value'][]>
   create<S extends ReplicableStore>(
     store: S,
-    value: Omit<
-      ReplicableSchemas[S]['value'],
-      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
-    >,
+    value: ReplicableStoreCreate<S>,
     userId: string,
-  ): Promise<ReplicableSchemas[S]['value']>
+  ): Promise<ReplicableStoreCreateResult<S>>
   update<S extends ReplicableStore>(
     store: S,
-    value: Omit<ReplicableSchemas[S]['value'], 'updatedAt' | 'updatedBy'>,
+    value: ReplicableStoreUpdate<S>,
     userId: string,
-  ): Promise<ReplicableSchemas[S]['value']>
+  ): Promise<ReplicableStoreUpdateResult<S>>
   remove<S extends ReplicableStore>(
     store: S,
     userId: string,

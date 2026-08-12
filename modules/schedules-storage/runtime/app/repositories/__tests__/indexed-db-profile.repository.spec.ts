@@ -3,12 +3,13 @@ import { Profile } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBProfileRepository } from '../indexed-db-profile.repository'
 import type { IProfile } from '#shared/domain/types/profile'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const persistedProfile: IProfile = {
   facultyId: 1,
   specialityId: 2,
   setupCompleted: false,
-  id: crypto.randomUUID(),
+  id: makeUUID(),
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   createdBy: 'user-1',
