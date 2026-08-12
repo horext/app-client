@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Activity, type IActivityCreate } from '#shared/domain'
+import { Activity, type IActivity, type IActivityCreate } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
-import type { ActivitySyncable } from '../../context/db'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const baseActivity: IActivityCreate = {
@@ -34,7 +33,7 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns all activities', async () => {
       const activity = Activity.create(baseActivity)
       persistence.findAll.mockResolvedValue([
-        persistedSnapshot(activity.toSnapshot()) satisfies ActivitySyncable,
+        persistedSnapshot(activity.toSnapshot()) satisfies IActivity,
       ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
@@ -48,7 +47,7 @@ describe('IndexedDBActivitiesRepository', () => {
       const activity = Activity.create(baseActivity)
       const stored = persistedSnapshot(
         activity.toSnapshot(),
-      ) satisfies ActivitySyncable
+      ) satisfies IActivity
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toMatchObject({
         id: stored.id,
@@ -75,7 +74,7 @@ describe('IndexedDBActivitiesRepository', () => {
       const activity = Activity.create(baseActivity)
       const stored = persistedSnapshot(
         activity.toSnapshot(),
-      ) satisfies ActivitySyncable
+      ) satisfies IActivity
       persistence.create.mockResolvedValue(stored)
       expect((await repo.create('user-1', activity)).id).toBe(stored.id)
     })

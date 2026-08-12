@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Generation } from '#shared/domain'
+import { Generation, type IGenerationRecord } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
@@ -35,7 +35,7 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns all records', async () => {
     const value = makeGeneration()
     persistence.findAll.mockResolvedValue([
-      persistedSnapshot(value.toSnapshot()) satisfies GenerationRecordSyncable,
+      persistedSnapshot(value.toSnapshot()) satisfies IGenerationRecord,
     ])
     expect(await repo.findAll('user-1')).toHaveLength(1)
   })
@@ -47,7 +47,7 @@ describe('IndexedDBGenerationsRepository', () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
       value.toSnapshot(),
-    ) satisfies GenerationRecordSyncable
+    ) satisfies IGenerationRecord
     persistence.find.mockResolvedValue(stored)
     expect(await repo.findById('user-1', stored.id)).toBeDefined()
   })

@@ -1,12 +1,16 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Favorite, Schedule, type ScheduleGenerateId } from '#shared/domain'
+import {
+  Favorite,
+  Schedule,
+  type IScheduleGenerate,
+  type ScheduleGenerateId,
+} from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import {
   IndexedDBSchedulesRepository,
   IndexedDBScheduleFavoritesRepository,
 } from '../indexed-db-schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
-import type { ScheduleGenerateSyncable } from '../../context/db'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const baseSchedule = {
@@ -41,7 +45,7 @@ describe('IndexedDBSchedulesRepository', () => {
       const missingId: ScheduleGenerateId = makeUUID()
       const stored = persistedSnapshot(
         schedule.toSnapshot(),
-      ) satisfies ScheduleGenerateSyncable
+      ) satisfies IScheduleGenerate
       persistence.find
         .mockResolvedValueOnce(stored)
         .mockResolvedValueOnce(undefined)
@@ -54,9 +58,7 @@ describe('IndexedDBSchedulesRepository', () => {
     it('returns schedule matching the key', async () => {
       const schedule = Schedule.create(baseSchedule)
       persistence.findByIndex.mockResolvedValue(
-        persistedSnapshot(
-          schedule.toSnapshot(),
-        ) satisfies ScheduleGenerateSyncable,
+        persistedSnapshot(schedule.toSnapshot()) satisfies IScheduleGenerate,
       )
       expect(await repo.getByKey('user-1', 'key-1')).toBeDefined()
     })
