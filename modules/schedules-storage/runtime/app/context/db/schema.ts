@@ -1,4 +1,4 @@
-import { openDB, type IDBPDatabase, type DBSchema } from 'idb'
+import type { DBSchema } from 'idb'
 import type {
   IFavoriteSchedule,
   IScheduleGenerate,
@@ -9,7 +9,6 @@ import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 import type { IPreferences } from '#shared/domain/types/preferences'
 import type { IGenerationRecord } from '#shared/domain/types/generation-record'
 import type { ISubjectSchedules } from '#shared/domain/types/subject'
-import { schemaMigrations } from '../migrations/schema'
 
 export const enum StoresDB {
   SCHEDULES = 'schedules',
@@ -77,22 +76,3 @@ export type ReplicableStore =
 export type ReplicableSchemas = Pick<HorextDB, ReplicableStore>
 export type ReplicableStoreValue<S extends ReplicableStore> =
   HorextDB[S]['value']
-
-export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>
-
-export function createDbFactory(
-  dbName: string,
-  schemaVersion: number,
-): DbFactory {
-  let _db: Promise<IDBPDatabase<HorextDB>> | undefined
-  return () =>
-    (_db ??= openDB<HorextDB>(dbName, schemaVersion, {
-      upgrade(db, oldVersion, _newVersion, transaction) {
-        for (const migration of schemaMigrations) {
-          if (oldVersion < migration.version) {
-            migration.up(db, transaction)
-          }
-        }
-      },
-    }))
-}
