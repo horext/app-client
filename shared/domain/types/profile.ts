@@ -1,15 +1,16 @@
 import type { IAuditable } from './entity-metadata'
-import type { UUID } from 'crypto'
-export interface IBaseProfile {
-  externalId?: UUID
-  revision?: number
+import type {
+  ReplicatedIdentity,
+  ReplicationState,
+} from './replicated-identity'
+
+export interface IBaseProfile extends ReplicationState {
   facultyId: number
   specialityId: number
   setupCompleted?: boolean
 }
 
-export interface IProfile extends IBaseProfile, IAuditable {
-  id: UUID
+export interface IProfile extends IBaseProfile, IAuditable, ReplicatedIdentity {
   setupCompleted: boolean
 }
 

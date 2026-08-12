@@ -1,4 +1,4 @@
-import type { AggregateSnapshot } from '#shared/domain/types/api-v1'
+import type { AggregateSnapshot } from '#shared/domain/synchronization'
 import type { ReplicableSchemas, ReplicableStore } from '../context/db'
 
 export interface AggregatePersistence {
@@ -41,7 +41,7 @@ export interface AggregatePersistence {
   ): Promise<void>
 }
 
-/** Application port used when applying cloud state to local records. */
+/** Application port used when applying remote state to local records. */
 export interface RemoteAggregatePersistence {
   remove<S extends ReplicableStore>(
     store: S,

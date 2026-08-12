@@ -1,20 +1,13 @@
 import type { UUID } from 'crypto'
 
-export interface ReplicatedIdentity {
-  id: UUID
+export interface ReplicaReference {
   externalId?: UUID
 }
 
-export type UnsynchronizedEntity<T> = T & {
-  id: UUID
-  externalId?: undefined
+export interface ReplicationState extends ReplicaReference {
+  revision?: number
 }
 
-export type SynchronizedEntity<T> = T & {
+export interface ReplicatedIdentity extends ReplicaReference {
   id: UUID
-  externalId: UUID
-}
-
-export interface RepositoryCreateContext {
-  externalId?: UUID
 }

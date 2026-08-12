@@ -2,15 +2,16 @@ import type { UUID } from 'crypto'
 import type { IEvent } from './event'
 import type { ISubject, ISubjectSchedule } from './subject'
 import type { IAuditable } from './entity-metadata'
-import type { ReplicatedIdentity } from './replicated-identity'
+import type {
+  ReplicatedIdentity,
+  ReplicationState,
+} from './replicated-identity'
 
 export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: ISubject
 }
 
-export interface IBaseScheduleGenerate {
-  externalId?: UUID
-  revision?: number
+export interface IBaseScheduleGenerate extends ReplicationState {
   scheduleSubjectKey: string
   schedulesSubject: IScheduleSubjectGenerate[]
   crossings: number
@@ -20,10 +21,8 @@ export interface IBaseScheduleGenerate {
 export interface IScheduleGenerate
   extends IBaseScheduleGenerate, IAuditable, ReplicatedIdentity {}
 
-export interface IBaseFavoriteSchedule {
+export interface IBaseFavoriteSchedule extends ReplicationState {
   id: IScheduleGenerate['id']
-  externalId?: UUID
-  revision?: number
 }
 
 export interface IFavoriteSchedule

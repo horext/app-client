@@ -3,16 +3,17 @@ import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './occurrences'
 import type { IScheduleGenerate } from './schedule'
 import type { IAuditable } from './entity-metadata'
-import type { ReplicatedIdentity } from './replicated-identity'
+import type {
+  ReplicatedIdentity,
+  ReplicationState,
+} from './replicated-identity'
 
 export type IGenerationMeta = Omit<
   IGenerationRecord,
   'id' | 'scheduleIds' | 'resultCount' | 'occurrences' | keyof IAuditable
 >
 
-export interface IBaseGenerationRecord {
-  externalId?: UUID
-  revision?: number
+export interface IBaseGenerationRecord extends ReplicationState {
   generatedAt: string
   scheduleIds: UUID[]
   crossingsSetting: number
