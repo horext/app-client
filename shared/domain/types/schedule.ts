@@ -34,4 +34,3 @@ export type IScheduleUpdate = Partial<IScheduleCreate>
 export interface IFavoriteCreate {
   scheduleId: UUID
 }
-export type IFavoriteUpdate = IFavoriteCreate

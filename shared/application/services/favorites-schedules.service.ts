@@ -30,12 +30,12 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     userId: string,
     createdSchedule: IScheduleGenerate,
   ) {
-    const existingFavoriteSchedule = await this.favoritesRepo.findById(
+    const existingFavoriteSchedule = await this.favoritesRepo.findByScheduleId(
       userId,
       createdSchedule.id,
     )
     if (!existingFavoriteSchedule) {
-      await this.favoritesRepo.update(
+      await this.favoritesRepo.create(
         userId,
         Favorite.create({ scheduleId: createdSchedule.id }),
       )
@@ -67,7 +67,8 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     userId: string,
     id: IScheduleGenerate['id'],
   ): Promise<void> {
-    await this.favoritesRepo.delete(userId, id)
+    const favorite = await this.favoritesRepo.findByScheduleId(userId, id)
+    if (favorite) await this.favoritesRepo.delete(userId, favorite.id)
     const allRecords = await this.generationRepo.findAll(userId)
     const referencedInGenerations = allRecords.some((r) =>
       r.scheduleIds.includes(id),

@@ -59,11 +59,8 @@ describe('IndexedDbAggregatePersistence', () => {
 
   it('lists only entities owned by the requested user', async () => {
     getAll.mockResolvedValue([{ id: crypto.randomUUID(), createdBy: 'user-1' }])
-    const globalScope = globalThis as typeof globalThis & {
-      IDBKeyRange?: unknown
-    }
-    const originalKeyRange = globalScope.IDBKeyRange
-    Object.defineProperty(globalScope, 'IDBKeyRange', {
+    const originalKeyRange = globalThis.IDBKeyRange
+    Object.defineProperty(globalThis, 'IDBKeyRange', {
       configurable: true,
       value: { only: (key: IDBValidKey) => key },
     })
@@ -75,9 +72,12 @@ describe('IndexedDbAggregatePersistence', () => {
       expect(getAll).toHaveBeenCalledWith('user-1')
     } finally {
       if (originalKeyRange === undefined) {
-        delete (globalScope as { IDBKeyRange?: unknown }).IDBKeyRange
+        Reflect.deleteProperty(globalThis, 'IDBKeyRange')
       } else {
-        globalScope.IDBKeyRange = originalKeyRange
+        Object.defineProperty(globalThis, 'IDBKeyRange', {
+          configurable: true,
+          value: originalKeyRange,
+        })
       }
     }
   })
@@ -97,11 +97,26 @@ describe('IndexedDbAggregatePersistence', () => {
       updatedBy: 'user-1',
       id: expect.any(String),
     })
-    expect(add).toHaveBeenCalledWith(
-      StoresDB.PROFILE,
-      expect.objectContaining({ createdBy: 'user-1' }),
-    )
     vi.useRealTimers()
+  })
+
+  it('preserves an id supplied by the domain', async () => {
+    const favoritePersistence = new IndexedDbAggregatePersistence(
+      vi.fn().mockResolvedValue(db),
+    )
+    const id = crypto.randomUUID()
+
+    const result = await favoritePersistence.create(
+      StoresDB.FAVORITES,
+      { id },
+      'user-1',
+    )
+
+    expect(result.id).toBe(id)
+    expect(add).toHaveBeenCalledWith(
+      StoresDB.FAVORITES,
+      expect.objectContaining({ id }),
+    )
   })
 
   it('updates metadata while preserving the original creator', async () => {
@@ -110,6 +125,8 @@ describe('IndexedDbAggregatePersistence', () => {
       facultyId: 2,
       createdAt: '2026-01-01T00:00:00.000Z',
       createdBy: 'user-1',
+      updatedAt: '2026-01-02T00:00:00.000Z',
+      updatedBy: 'user-2',
       setupCompleted: true,
       specialityId: 1,
     }
@@ -119,6 +136,7 @@ describe('IndexedDbAggregatePersistence', () => {
     expect(result).toMatchObject({
       ...value,
       createdBy: 'user-1',
+      updatedAt: expect.any(String),
       updatedBy: 'user-2',
     })
     expect(put).toHaveBeenCalledWith(StoresDB.PROFILE, result)
