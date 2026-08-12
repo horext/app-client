@@ -1,6 +1,8 @@
-export type GenerationOccurrences =
-  import('../types/occurrences').IIntersectionOccurrence[]
-export type AcademicLoad = import('../types/hourly-load').IHourlyLoad
+import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IIntersectionOccurrence } from '../types/occurrences'
+
+export type GenerationOccurrences = IIntersectionOccurrence[]
+export type AcademicLoad = IHourlyLoad
 
 export * from './activity'
 export * from './user-subject'

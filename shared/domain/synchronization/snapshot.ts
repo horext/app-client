@@ -7,6 +7,8 @@ export interface AggregateSnapshot<T> {
   updatedAt?: string
 }
 
+export type Snapshot<T> = Required<AggregateSnapshot<T>>
+
 export interface SnapshotSource<T> {
   toSnapshot(): T
 }
