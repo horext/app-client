@@ -3,12 +3,13 @@ import type { AggregatePersistence } from '../../persistence/aggregate-persisten
 import { IndexedDBPreferencesRepository } from '../indexed-db-preferences.repository'
 import { Preferences } from '#shared/domain'
 import type { IPreferences } from '#shared/domain/types/preferences'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const persistedPreferences: IPreferences = {
   weekDays: [1, 2],
   crossings: 0,
   maxGenerationHistory: 10,
-  id: crypto.randomUUID(),
+  id: makeUUID(),
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   createdBy: 'user-1',

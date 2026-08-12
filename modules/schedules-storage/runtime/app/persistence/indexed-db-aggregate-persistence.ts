@@ -8,7 +8,12 @@ import type { AggregateSnapshot } from '#shared/domain/synchronization'
 import type {
   AggregatePersistence,
   RemoteAggregatePersistence,
+  ReplicableStoreCreate,
+  ReplicableStoreCreateResult,
+  ReplicableStoreUpdate,
+  ReplicableStoreUpdateResult,
 } from './aggregate-persistence'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 export class IndexedDbAggregatePersistence
   implements AggregatePersistence, RemoteAggregatePersistence
@@ -56,18 +61,14 @@ export class IndexedDbAggregatePersistence
 
   async create<S extends ReplicableStore>(
     store: S,
-    value: Omit<
-      ReplicableStoreValue<S>,
-      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
-    > &
-      Partial<Pick<ReplicableStoreValue<S>, 'id'>>,
+    value: ReplicableStoreCreate<S>,
     userId: string,
-  ): Promise<ReplicableStoreValue<S>> {
+  ): Promise<ReplicableStoreCreateResult<S>> {
     const db = await this.getDb()
     const timestamp = new Date().toISOString()
     const record = {
       ...value,
-      id: value.id ?? crypto.randomUUID(),
+      id: value.id ?? makeUUID(),
       createdAt: timestamp,
       updatedAt: timestamp,
       createdBy: userId,
@@ -79,9 +80,9 @@ export class IndexedDbAggregatePersistence
 
   async update<S extends ReplicableStore>(
     store: S,
-    value: Omit<ReplicableSchemas[S]['value'], 'updatedAt' | 'updatedBy'>,
+    value: ReplicableStoreUpdate<S>,
     userId: string,
-  ): Promise<ReplicableStoreValue<S>> {
+  ): Promise<ReplicableStoreUpdateResult<S>> {
     const db = await this.getDb()
     const record = {
       ...value,

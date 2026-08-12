@@ -3,11 +3,12 @@ import { IndexedDBAcademicConfigRepository } from '../indexed-db-academic-config
 import { AcademicConfig } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import type { IAcademicConfig } from '#shared/domain/types/academic-config'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const config = AcademicConfig.create({ hourlyLoad: null })
 const persistedConfig: IAcademicConfig = {
   ...config.toSnapshot(),
-  id: crypto.randomUUID(),
+  id: makeUUID(),
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   createdBy: 'user-1',

@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Generation, Schedule, Favorite } from '#shared/domain'
+import {
+  Generation,
+  Schedule,
+  Favorite,
+  type ScheduleGenerateId,
+} from '#shared/domain'
 import type {
+  GenerationId,
   IGenerationMeta,
   IGenerationRecord,
 } from '#shared/domain/types/generation-record'
@@ -11,6 +17,7 @@ import type {
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const input = {
   scheduleSubjectKey: 'k',
@@ -24,17 +31,19 @@ const meta: IGenerationMeta = {
   weekDays: [1, 2, 3, 4, 5],
   hourlyLoadId: 1,
 }
-const ids = new Map<string, ReturnType<typeof crypto.randomUUID>>()
-const idFor = (name: string) => {
+const ids = new Map<string, GenerationId | ScheduleGenerateId>()
+const idFor = <T extends GenerationId | ScheduleGenerateId>(
+  name: string,
+): T => {
   const existing = ids.get(name)
-  if (existing) return existing
-  const generated = crypto.randomUUID()
+  if (existing) return existing as T
+  const generated: T = makeUUID()
   ids.set(name, generated)
   return generated
 }
 const createSchedule = () =>
   Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
-const createFavorite = (scheduleId: ReturnType<typeof crypto.randomUUID>) =>
+const createFavorite = (scheduleId: ScheduleGenerateId) =>
   Favorite.restore({
     id: scheduleId,
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -48,10 +57,10 @@ const makeRecord = (
   generatedAt = '2024-01-01',
 ) => {
   return Generation.restore({
-    id: idFor(id),
+    id: idFor<GenerationId>(id),
     ...meta,
     generatedAt,
-    scheduleIds: scheduleIds.map(idFor),
+    scheduleIds: scheduleIds.map<ScheduleGenerateId>(idFor),
     resultCount: scheduleIds.length,
     occurrences: [],
     createdAt: generatedAt,

@@ -1,4 +1,7 @@
-import type { ISubjectSchedules } from '#shared/domain/types/subject'
+import type {
+  ISubjectSchedules,
+  SubjectScheduleId,
+} from '#shared/domain/types/subject'
 import {
   UserSubject,
   type IUserSubjectCreate,
@@ -17,7 +20,7 @@ export class SubjectsService implements ISubjectsService {
 
   async get(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
   ): Promise<UserSubject<ISubjectSchedules> | undefined> {
     return this.repo.findById(userId, id)
   }
@@ -28,7 +31,7 @@ export class SubjectsService implements ISubjectsService {
 
   delete(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
     expectedRevision?: number,
   ): Promise<void> {
     return this.repo.delete(userId, id, expectedRevision)
@@ -36,7 +39,7 @@ export class SubjectsService implements ISubjectsService {
 
   async patch(
     userId: string,
-    id: ISubjectSchedules['id'],
+    id: SubjectScheduleId,
     subject: IUserSubjectUpdate,
   ): Promise<UserSubject<ISubjectSchedules>> {
     const data = await this.repo.findById(userId, id)

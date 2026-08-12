@@ -4,6 +4,7 @@ import type {
   ReplicatedIdentity,
   ReplicationState,
 } from './replicated-identity'
+import type { BrandUUID } from './ids'
 
 export interface IBasePreferences extends ReplicationState {
   weekDays: Weekdays[]
@@ -11,8 +12,9 @@ export interface IBasePreferences extends ReplicationState {
   maxGenerationHistory: number
 }
 
+export type PreferenceID = BrandUUID<'PreferenceID'>
 export interface IPreferences
-  extends IBasePreferences, IAuditable, ReplicatedIdentity {}
+  extends IBasePreferences, IAuditable, ReplicatedIdentity<PreferenceID> {}
 
 export type IPreferencesCreate = IBasePreferences
 export type IPreferencesUpdate = Partial<IPreferencesCreate>

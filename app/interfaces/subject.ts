@@ -1,6 +1,6 @@
-import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
+import type { SubjectScheduleId } from '~~/shared/domain'
 
 export interface ICourse {
   id: string
@@ -73,7 +73,7 @@ export interface IBaseSubjectSchedules {
 }
 
 export interface ISubjectSchedules extends IBaseSubjectSchedules {
-  id: UUID
+  id: SubjectScheduleId
 }
 
 export interface ISubjectStudyPlan extends ISubject {

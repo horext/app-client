@@ -20,7 +20,8 @@ export const enum StoresDB {
   GENERATIONS = 'generations',
   SUBJECTS = 'subjects',
 }
-export interface HorextDB extends DBSchema {
+
+export type ReplicableSchemas = {
   [StoresDB.SCHEDULES]: {
     key: [string, IScheduleGenerate['id']]
     value: IScheduleGenerate
@@ -62,7 +63,9 @@ export interface HorextDB extends DBSchema {
     indexes: { createdBy: string }
   }
 }
-/** Stores containing domain aggregates that can be replicated with the cloud. */
+
+export type HorextDB = DBSchema & ReplicableSchemas
+
 export type ReplicableStore =
   | StoresDB.ACADEMIC_CONFIG
   | StoresDB.ACTIVITIES
@@ -73,6 +76,7 @@ export type ReplicableStore =
   | StoresDB.SCHEDULES
   | StoresDB.SUBJECTS
 
-export type ReplicableSchemas = Pick<HorextDB, ReplicableStore>
-export type ReplicableStoreValue<S extends ReplicableStore> =
-  HorextDB[S]['value']
+export type ReplicableStoreValue<S extends ReplicableStore = ReplicableStore> =
+  ReplicableSchemas[S]['value']
+export type ReplicableStoreKey<S extends ReplicableStore = ReplicableStore> =
+  ReplicableSchemas[S]['key']

@@ -4,6 +4,7 @@ import type { IBaseSubjectSchedules } from '#shared/domain/types/subject'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBSubjectsRepository } from '../indexed-db-subjects.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const subjectInput: IBaseSubjectSchedules = {
   subject: {
@@ -73,9 +74,7 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('delete', () => {
     it('resolves without error', async () => {
-      await expect(
-        repo.delete('user-1', crypto.randomUUID()),
-      ).resolves.toBeUndefined()
+      await expect(repo.delete('user-1', makeUUID())).resolves.toBeUndefined()
     })
   })
 })

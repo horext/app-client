@@ -1,9 +1,9 @@
-import type { UUID } from 'crypto'
 import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
   IScheduleCreate,
   IScheduleUpdate,
+  ScheduleGenerateId,
 } from '../types/schedule'
 import { DomainError } from '../errors/domain-error'
 import type { IEntitySnapshot } from './snapshot'
@@ -40,7 +40,7 @@ export class Schedule<
     return Schedule.build(snapshot)
   }
 
-  get id(): UUID {
+  get id(): ScheduleGenerateId {
     if (!('id' in this.snapshot))
       throw new Error('The entity has not been persisted.')
     return this.snapshot.id

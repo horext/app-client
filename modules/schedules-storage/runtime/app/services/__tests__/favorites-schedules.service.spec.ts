@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Favorite, Generation, Schedule } from '#shared/domain'
+import {
+  Favorite,
+  Generation,
+  Schedule,
+  type ScheduleGenerateId,
+} from '#shared/domain'
 import { FavoritesSchedulesService } from '#shared/application/services/favorites-schedules.service'
 import type {
   ISchedulesRepository,
@@ -7,6 +12,7 @@ import type {
 } from '#shared/application/repositories/schedules.repository'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const input = {
   scheduleSubjectKey: 'key',
@@ -16,7 +22,7 @@ const input = {
 }
 const createSchedule = () =>
   Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
-const createFavorite = (scheduleId: ReturnType<typeof crypto.randomUUID>) =>
+const createFavorite = (scheduleId: ScheduleGenerateId) =>
   Favorite.restore({
     id: scheduleId,
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -107,7 +113,7 @@ describe('FavoritesSchedulesService', () => {
   })
   describe('removeFavorite', () => {
     it('removes from list and deletes when not in any generation', async () => {
-      const id = crypto.randomUUID()
+      const id: ScheduleGenerateId = makeUUID()
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(id))
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.findAll.mockResolvedValue([])
@@ -115,7 +121,7 @@ describe('FavoritesSchedulesService', () => {
       expect(repo.deleteEntry).toHaveBeenCalledWith('user-1', id)
     })
     it('does not delete when schedule is referenced in a generation', async () => {
-      const id = crypto.randomUUID()
+      const id: ScheduleGenerateId = makeUUID()
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(id))
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.findAll.mockResolvedValue([

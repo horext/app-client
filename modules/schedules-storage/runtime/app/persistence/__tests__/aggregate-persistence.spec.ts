@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { AggregatePersistence } from '../aggregate-persistence'
 import { IndexedDbAggregatePersistence } from '../indexed-db-aggregate-persistence'
 import { StoresDB } from '../../context/db'
+import { makeUUID } from '~~/shared/domain/types/ids'
+import type { IProfile, ProfileId, ScheduleGenerateId } from '~~/shared/domain'
 
 describe('IndexedDbAggregatePersistence', () => {
   const get = vi.fn()
@@ -46,7 +48,7 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('finds an entity using the compound user and entity key', async () => {
-    const id = crypto.randomUUID()
+    const id: ProfileId = makeUUID()
     const stored = { id, createdBy: 'user-1' }
     get.mockResolvedValue(stored)
 
@@ -104,7 +106,7 @@ describe('IndexedDbAggregatePersistence', () => {
     const favoritePersistence = new IndexedDbAggregatePersistence(
       vi.fn().mockResolvedValue(db),
     )
-    const id = crypto.randomUUID()
+    const id: ScheduleGenerateId = makeUUID()
 
     const result = await favoritePersistence.create(
       StoresDB.FAVORITES,
@@ -120,8 +122,8 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('updates metadata while preserving the original creator', async () => {
-    const value = {
-      id: crypto.randomUUID(),
+    const value: IProfile = {
+      id: makeUUID(),
       facultyId: 2,
       createdAt: '2026-01-01T00:00:00.000Z',
       createdBy: 'user-1',
@@ -143,7 +145,7 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('removes only the requested user entity', async () => {
-    const id = crypto.randomUUID()
+    const id: ProfileId = makeUUID()
     await persistence.remove(StoresDB.PROFILE, 'user-1', id)
     expect(remove).toHaveBeenCalledWith(StoresDB.PROFILE, ['user-1', id])
   })

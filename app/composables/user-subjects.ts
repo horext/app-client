@@ -1,9 +1,9 @@
-import type { UUID } from 'crypto'
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
 } from '~/interfaces/subject'
 import { EVENT_COLORS } from '~/constants/event'
+import type { SubjectScheduleId } from '~~/shared/domain'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()
@@ -16,7 +16,7 @@ export const useUserSubjects = () => {
     subjects.value.push(created.toSnapshot())
   }
 
-  async function deleteSubjectById(id: UUID) {
+  async function deleteSubjectById(id: SubjectScheduleId) {
     await service.delete(userId, id)
     const index = subjects.value.findIndex((s) => s.id === id)
     if (index >= 0) subjects.value.splice(index, 1)

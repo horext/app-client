@@ -4,6 +4,8 @@ import type {
   ReplicationState,
 } from './replicated-identity'
 import { DomainError } from '../errors/domain-error'
+import type { UUID } from 'crypto'
+import type { Brand } from './ids'
 
 export type EventCategories = 'COURSE' | 'MY_EVENT'
 export type Weekdays = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -37,8 +39,10 @@ export interface IBaseActivity extends ReplicationState {
   sessions: IActivitySession[]
 }
 
+export type ActivityID = Brand<UUID, 'ActivityID'>
+
 export interface IActivity
-  extends IBaseActivity, IAuditable, ReplicatedIdentity {}
+  extends IBaseActivity, IAuditable, ReplicatedIdentity<ActivityID> {}
 
 export type IActivityCreate = IBaseActivity
 export type IActivityUpdate = Partial<IActivityCreate>

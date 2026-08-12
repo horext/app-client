@@ -5,6 +5,7 @@ import type {
   ReplicatedIdentity,
   ReplicationState,
 } from './replicated-identity'
+import type { BrandUUID } from './ids'
 
 export interface ICourse {
   id: string
@@ -87,8 +88,13 @@ export interface ISubjectSchedulesUpdate {
   color?: string
 }
 
+export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
+
 export interface ISubjectSchedules
-  extends IBaseSubjectSchedules, IAuditable, ReplicatedIdentity {}
+  extends
+    IBaseSubjectSchedules,
+    IAuditable,
+    ReplicatedIdentity<SubjectScheduleId> {}
 
 export type IUserSubjectCreate = IBaseSubjectSchedules
 export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &

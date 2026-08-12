@@ -3,6 +3,8 @@ import { Generation } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import type { GenerationRecordSyncable } from '../../context/db'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const makeGeneration = () =>
   Generation.create({
@@ -33,7 +35,7 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns all records', async () => {
     const value = makeGeneration()
     persistence.findAll.mockResolvedValue([
-      persistedSnapshot(value.toSnapshot()),
+      persistedSnapshot(value.toSnapshot()) satisfies GenerationRecordSyncable,
     ])
     expect(await repo.findAll('user-1')).toHaveLength(1)
   })
@@ -43,24 +45,26 @@ describe('IndexedDBGenerationsRepository', () => {
   })
   it('returns record by id', async () => {
     const value = makeGeneration()
-    const stored = persistedSnapshot(value.toSnapshot())
+    const stored = persistedSnapshot(
+      value.toSnapshot(),
+    ) satisfies GenerationRecordSyncable
     persistence.find.mockResolvedValue(stored)
     expect(await repo.findById('user-1', stored.id)).toBeDefined()
   })
   it('returns undefined when not found', async () => {
     persistence.find.mockResolvedValue(undefined)
-    expect(await repo.findById('user-1', crypto.randomUUID())).toBeUndefined()
+    expect(await repo.findById('user-1', makeUUID())).toBeUndefined()
   })
   it('returns a created record', async () => {
     const value = makeGeneration()
-    const stored = persistedSnapshot(value.toSnapshot())
+    const stored = persistedSnapshot(
+      value.toSnapshot(),
+    ) satisfies GenerationRecordSyncable
     persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
     expect(result.id).toBe(stored.id)
   })
   it('resolves without error when deleting', async () => {
-    await expect(
-      repo.delete('user-1', crypto.randomUUID()),
-    ).resolves.toBeUndefined()
+    await expect(repo.delete('user-1', makeUUID())).resolves.toBeUndefined()
   })
 })

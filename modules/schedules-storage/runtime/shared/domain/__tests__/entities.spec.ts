@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Activity, DomainError, Preferences } from '#shared/domain'
 import type { IPreferences } from '#shared/domain/types/preferences'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 describe('shared domain entities', () => {
   it('round-trips an activity snapshot', () => {
@@ -16,7 +17,7 @@ describe('shared domain entities', () => {
     expect(
       Activity.restore({
         ...snapshot,
-        id: crypto.randomUUID(),
+        id: makeUUID(),
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
         createdBy: 'user-1',
@@ -46,7 +47,7 @@ describe('shared domain entities', () => {
     expect(
       Activity.restore({
         ...activity.toSnapshot(),
-        id: crypto.randomUUID(),
+        id: makeUUID(),
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
         createdBy: 'user-1',
@@ -67,7 +68,7 @@ describe('shared domain entities', () => {
 
   it('applies partial activity updates and preserves omitted values', () => {
     const activity = Activity.restore({
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       title: 'Study',
       color: '#112233',
       allowOverlap: true,
@@ -87,7 +88,7 @@ describe('shared domain entities', () => {
 
   it('revalidates preference business limits when restoring and updating', () => {
     const snapshot: IPreferences = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       weekDays: [1, 2, 3],
       crossings: 0,
       maxGenerationHistory: 10,

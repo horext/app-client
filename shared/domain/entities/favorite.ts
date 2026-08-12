@@ -1,8 +1,8 @@
-import type { UUID } from 'crypto'
 import type {
   IBaseFavoriteSchedule,
   IFavoriteSchedule,
   IFavoriteCreate,
+  ScheduleGenerateId,
 } from '../types/schedule'
 import type { IEntitySnapshot } from './snapshot'
 
@@ -19,7 +19,7 @@ export class Favorite<
     return new Favorite({ ...snapshot })
   }
 
-  get id(): UUID {
+  get id(): ScheduleGenerateId {
     return this.snapshot.id
   }
 

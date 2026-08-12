@@ -1,13 +1,16 @@
-import type { UUID } from 'crypto'
 import type { UserSubject } from '#shared/domain'
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
+  SubjectScheduleId,
 } from '#shared/domain/types/subject'
 
 export interface ISubjectsRepository {
   findAll(userId: string): Promise<UserSubject[]>
-  findById(userId: string, id: UUID): Promise<UserSubject | undefined>
+  findById(
+    userId: string,
+    id: SubjectScheduleId,
+  ): Promise<UserSubject | undefined>
   create(
     userId: string,
     subject: UserSubject<IBaseSubjectSchedules>,
@@ -16,5 +19,9 @@ export interface ISubjectsRepository {
     userId: string,
     subject: UserSubject<ISubjectSchedules>,
   ): Promise<UserSubject<ISubjectSchedules>>
-  delete(userId: string, id: UUID, expectedRevision?: number): Promise<void>
+  delete(
+    userId: string,
+    id: SubjectScheduleId,
+    expectedRevision?: number,
+  ): Promise<void>
 }

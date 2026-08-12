@@ -116,7 +116,7 @@ import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
 import type { SubjectSchedules } from '~/models/subject-schedules'
-import type { UUID } from 'crypto'
+import type { SubjectScheduleId } from '~~/shared/domain'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -222,7 +222,7 @@ const closeDelete = () => {
 
 const succcesUpdateCourse = ref(false)
 const save = async (
-  data: SubjectSchedules<UUID> | SubjectSchedules<undefined>,
+  data: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
 ) => {
   succcesAddCourse.value = false
   if (data.id) {

@@ -1,9 +1,9 @@
-import type { UUID } from 'crypto'
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
   IUserSubjectCreate,
   IUserSubjectUpdate,
+  SubjectScheduleId,
 } from '../types/subject'
 import type { IEntitySnapshot } from './snapshot'
 
@@ -26,7 +26,7 @@ export class UserSubject<
     return UserSubject.build(snapshot)
   }
 
-  get id(): UUID {
+  get id(): SubjectScheduleId {
     if (!('id' in this.snapshot))
       throw new Error('The entity has not been persisted.')
     return this.snapshot.id

@@ -2,8 +2,12 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { UserSubject } from '#shared/domain'
 import { SubjectsService } from '#shared/application/services/subjects.service'
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
-import type { IBaseSubjectSchedules } from '#shared/domain/types/subject'
+import type {
+  IBaseSubjectSchedules,
+  SubjectScheduleId,
+} from '#shared/domain/types/subject'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const subjectInput: IBaseSubjectSchedules = {
   subject: {
@@ -50,7 +54,7 @@ describe('SubjectsService', () => {
   })
   describe('delete', () => {
     it('deletes a subject by id', async () => {
-      const id = crypto.randomUUID()
+      const id: SubjectScheduleId = makeUUID()
       await service.delete('user-1', id)
       expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })

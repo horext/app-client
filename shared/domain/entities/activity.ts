@@ -1,9 +1,9 @@
-import type { UUID } from 'crypto'
 import type {
   IActivity,
   IBaseActivity,
   IActivityCreate,
   IActivityUpdate,
+  ActivityID,
 } from '../types/event'
 import { validateSessions } from '../types/event'
 import type { IEntitySnapshot } from './snapshot'
@@ -31,7 +31,7 @@ export class Activity<
     return Activity.build(snapshot)
   }
 
-  get id(): UUID {
+  get id(): ActivityID {
     if (!('id' in this.snapshot))
       throw new Error('The entity has not been persisted.')
     return this.snapshot.id
