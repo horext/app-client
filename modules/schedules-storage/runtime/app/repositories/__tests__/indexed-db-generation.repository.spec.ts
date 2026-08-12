@@ -35,21 +35,21 @@ describe('IndexedDBGenerationsRepository', () => {
     persistence.findAll.mockResolvedValue([
       persistedSnapshot(value.toSnapshot()),
     ])
-    expect(await repo.getAll('user-1')).toHaveLength(1)
+    expect(await repo.findAll('user-1')).toHaveLength(1)
   })
   it('returns empty array when store is empty', async () => {
     persistence.findAll.mockResolvedValue([])
-    expect(await repo.getAll('user-1')).toEqual([])
+    expect(await repo.findAll('user-1')).toEqual([])
   })
   it('returns record by id', async () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(value.toSnapshot())
     persistence.find.mockResolvedValue(stored)
-    expect(await repo.get('user-1', stored.id)).toBeDefined()
+    expect(await repo.findById('user-1', stored.id)).toBeDefined()
   })
   it('returns undefined when not found', async () => {
     persistence.find.mockResolvedValue(undefined)
-    expect(await repo.get('user-1', crypto.randomUUID())).toBeUndefined()
+    expect(await repo.findById('user-1', crypto.randomUUID())).toBeUndefined()
   })
   it('returns a created record', async () => {
     const value = makeGeneration()

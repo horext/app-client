@@ -8,13 +8,13 @@ import { StoresDB } from '../context/db'
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(userId: string): Promise<Activity<IActivity>[]> {
+  async findAll(userId: string): Promise<Activity<IActivity>[]> {
     return (await this.persistence.findAll(StoresDB.ACTIVITIES, userId)).map(
       Activity.restore,
     )
   }
 
-  async get(
+  async findById(
     userId: string,
     id: UUID,
   ): Promise<Activity<IActivity> | undefined> {

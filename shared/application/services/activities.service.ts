@@ -12,14 +12,14 @@ export class ActivitiesService implements IActivitiesService {
   constructor(private readonly repo: IActivitiesRepository) {}
 
   getAll(userId: string): Promise<Array<Activity<IActivity>>> {
-    return this.repo.getAll(userId)
+    return this.repo.findAll(userId)
   }
 
   async get(
     userId: string,
     id: IActivity['id'],
   ): Promise<Activity<IActivity> | undefined> {
-    return this.repo.get(userId, id)
+    return this.repo.findById(userId, id)
   }
 
   create(userId: string, activity: IActivityCreate) {
@@ -39,7 +39,7 @@ export class ActivitiesService implements IActivitiesService {
     id: IActivity['id'],
     activity: IActivityUpdate,
   ): Promise<Activity<IActivity>> {
-    const existingActivity = await this.repo.get(userId, id)
+    const existingActivity = await this.repo.findById(userId, id)
     if (!existingActivity) {
       throw new ResourceNotFoundError('activity')
     }

@@ -27,7 +27,7 @@ export class GenerationService implements IGenerationService {
   ) {}
 
   get(userId: string, id: string) {
-    return this.generationRepo.get(userId, id as UUID)
+    return this.generationRepo.findById(userId, id as UUID)
   }
 
   create(userId: string, value: unknown, id?: string) {
@@ -51,7 +51,7 @@ export class GenerationService implements IGenerationService {
   }
 
   async getGenerations(userId: string): Promise<IGenerationRecord[]> {
-    const records = await this.generationRepo.getAll(userId)
+    const records = await this.generationRepo.findAll(userId)
     return records
       .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
       .map((record) => record.toSnapshot())

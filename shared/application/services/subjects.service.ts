@@ -12,7 +12,7 @@ export class SubjectsService implements ISubjectsService {
   constructor(private readonly repo: ISubjectsRepository) {}
 
   getAll(userId: string): Promise<UserSubject<ISubjectSchedules>[]> {
-    return this.repo.getAll(userId)
+    return this.repo.findAll(userId)
   }
 
   async get(

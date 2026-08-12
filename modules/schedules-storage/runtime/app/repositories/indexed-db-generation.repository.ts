@@ -11,13 +11,13 @@ import { StoresDB } from '../context/db'
 export class IndexedDBGenerationsRepository implements IGenerationRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(userId: string): Promise<Generation[]> {
+  async findAll(userId: string): Promise<Generation[]> {
     return (await this.persistence.findAll(StoresDB.GENERATIONS, userId)).map(
       Generation.restore,
     )
   }
 
-  async get(userId: string, id: UUID): Promise<Generation | undefined> {
+  async findById(userId: string, id: UUID): Promise<Generation | undefined> {
     const record = await this.persistence.find(StoresDB.GENERATIONS, userId, id)
     return record ? Generation.restore(record) : undefined
   }

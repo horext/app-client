@@ -40,11 +40,11 @@ describe('IndexedDBSubjectsRepository', () => {
       persistence.findAll.mockResolvedValue([
         persistedSnapshot(subject.toSnapshot()),
       ])
-      expect(await repo.getAll('user-1')).toHaveLength(1)
+      expect(await repo.findAll('user-1')).toHaveLength(1)
     })
     it('returns empty array when store is empty', async () => {
       persistence.findAll.mockResolvedValue([])
-      expect(await repo.getAll('user-1')).toEqual([])
+      expect(await repo.findAll('user-1')).toEqual([])
     })
   })
   describe('update', () => {

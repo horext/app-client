@@ -1,10 +1,13 @@
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 
 export class NoopActivitiesRepository implements IActivitiesRepository {
-  getAll(_userId: string) {
+  findAll(_userId: string) {
     return Promise.resolve([])
   }
-  get(_userId: string, _id: Parameters<IActivitiesRepository['get']>[1]) {
+  findById(
+    _userId: string,
+    _id: Parameters<IActivitiesRepository['findById']>[1],
+  ) {
     return Promise.resolve(undefined)
   }
   create(

@@ -1,7 +1,7 @@
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 
 export class NoopSubjectsRepository implements ISubjectsRepository {
-  getAll(_userId: string) {
+  findAll(_userId: string) {
     return Promise.resolve([])
   }
   findById(

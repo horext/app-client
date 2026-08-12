@@ -18,8 +18,8 @@ describe('noop repositories', () => {
     await expect(academicConfig.update('user', {} as never)).rejects.toThrow()
 
     const activities = new NoopActivitiesRepository()
-    expect(await activities.getAll('user')).toEqual([])
-    expect(await activities.get('user', 'id' as never)).toBeUndefined()
+    expect(await activities.findAll('user')).toEqual([])
+    expect(await activities.findById('user', 'id' as never)).toBeUndefined()
     await expect(activities.create('user', {} as never)).rejects.toThrow()
     await expect(activities.update('user', {} as never)).resolves.toEqual({})
     await expect(
@@ -27,8 +27,8 @@ describe('noop repositories', () => {
     ).resolves.toBeUndefined()
 
     const generations = new NoopGenerationRepository()
-    expect(await generations.getAll('user')).toEqual([])
-    expect(await generations.get('user', 'id' as never)).toBeUndefined()
+    expect(await generations.findAll('user')).toEqual([])
+    expect(await generations.findById('user', 'id' as never)).toBeUndefined()
     await expect(generations.create('user', {} as never)).rejects.toThrow()
     await expect(
       generations.delete('user', 'id' as never),
@@ -65,7 +65,7 @@ describe('noop repositories', () => {
     await expect(schedules.deleteEntries('user', [])).resolves.toBeUndefined()
 
     const subjects = new NoopSubjectsRepository()
-    expect(await subjects.getAll('user')).toEqual([])
+    expect(await subjects.findAll('user')).toEqual([])
     expect(await subjects.findById('user', 'id' as never)).toBeUndefined()
     await expect(subjects.create('user', {} as never)).rejects.toThrow()
     await expect(subjects.update('user', {} as never)).resolves.toEqual({})

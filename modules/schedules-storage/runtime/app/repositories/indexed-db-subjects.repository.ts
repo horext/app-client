@@ -7,7 +7,7 @@ import { StoresDB } from '../context/db'
 export class IndexedDBSubjectsRepository implements ISubjectsRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
-  async getAll(userId: string): Promise<UserSubject[]> {
+  async findAll(userId: string): Promise<UserSubject[]> {
     return (await this.persistence.findAll(StoresDB.SUBJECTS, userId)).map(
       UserSubject.restore,
     )

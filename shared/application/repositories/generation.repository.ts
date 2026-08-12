@@ -6,8 +6,8 @@ import type {
 } from '#shared/domain/types/generation-record'
 
 export interface IGenerationRepository {
-  getAll(userId: string): Promise<Generation[]>
-  get(userId: string, id: UUID): Promise<Generation | undefined>
+  findAll(userId: string): Promise<Generation[]>
+  findById(userId: string, id: UUID): Promise<Generation | undefined>
   create(
     userId: string,
     record: Generation<IBaseGenerationRecord>,
