@@ -19,7 +19,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
 
   async getFavoriteSchedules(userId: string): Promise<IScheduleGenerate[]> {
     const ids = (await this.favoritesRepo.findAll(userId)).map(
-      (favorite) => favorite.scheduleId,
+      (favorite) => favorite.id,
     )
     return (await this.repo.getEntries(userId, ids)).map((schedule) =>
       schedule.toSnapshot(),

@@ -5,10 +5,11 @@ import type {
   IAcademicConfigUpdate,
 } from '../types/academic-config'
 import type { UUID } from 'crypto'
+import type { IEntitySnapshot } from './snapshot'
 
 export class AcademicConfig<
   T extends IBaseAcademicConfig | IAcademicConfig = IAcademicConfig,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   static create(

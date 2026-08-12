@@ -5,10 +5,11 @@ import type {
   IUserSubjectCreate,
   IUserSubjectUpdate,
 } from '../types/subject'
+import type { IEntitySnapshot } from './snapshot'
 
 export class UserSubject<
   T extends IBaseSubjectSchedules | ISubjectSchedules = ISubjectSchedules,
-> {
+> implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
   private static build<T extends IBaseSubjectSchedules | ISubjectSchedules>(
