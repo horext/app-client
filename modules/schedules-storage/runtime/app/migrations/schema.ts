@@ -1,15 +1,17 @@
-import type { IDBPDatabase, IDBPTransaction, StoreNames } from 'idb'
+import type { DBSchema, IDBPDatabase, IDBPTransaction, StoreNames } from 'idb'
 import { StoresDB, type HorextDB } from '../context/db'
 
-export type SchemaMigration = {
+export type RunSchemaMigration<DB extends DBSchema> = (
+  db: IDBPDatabase<DB>,
+  tx: IDBPTransaction<DB, StoreNames<DB>[], 'versionchange'>,
+) => void
+
+export type SchemaMigration<DB extends DBSchema> = {
   version: number
-  up: (
-    db: IDBPDatabase<HorextDB>,
-    tx: IDBPTransaction<HorextDB, StoreNames<HorextDB>[], 'versionchange'>,
-  ) => void
+  up: RunSchemaMigration<DB>
 }
 
-export const schemaMigrations: SchemaMigration[] = [
+export const schemaMigrations: SchemaMigration<HorextDB>[] = [
   {
     version: 1,
     up(db, tx) {

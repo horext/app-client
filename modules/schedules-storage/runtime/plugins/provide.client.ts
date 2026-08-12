@@ -27,7 +27,16 @@ export default defineNuxtPlugin({
   name: 'schedules-storage:provide-repos',
   order: 1,
   setup(nuxtApp) {
-    const dbFactory = createDbFactory(DB_NAME, SCHEMA_VERSION)
+    const dbFactory = createDbFactory(
+      DB_NAME,
+      SCHEMA_VERSION,
+      (database, oldVersion, _newVersion, transaction) => {
+        for (const migration of schemaMigrations) {
+          if (oldVersion < migration.version)
+            migration.up(database, transaction)
+        }
+      },
+    )
     const persistence = new IndexedDbAggregatePersistence(dbFactory)
     const auth = useUserAuthStore()
     const userId = () => auth.user?.id ?? ANONYMOUS_USER_ID
