@@ -3,7 +3,7 @@ import type {
   ReplicableSchemas,
   ReplicableStore,
 } from '../context/db'
-import type { AggregateSnapshot } from '#shared/domain/types/api-v1'
+import type { AggregateSnapshot } from '#shared/domain/synchronization'
 import type {
   AggregatePersistence,
   RemoteAggregatePersistence,

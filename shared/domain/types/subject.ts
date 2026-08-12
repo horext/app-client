@@ -1,8 +1,10 @@
-import type { UUID } from 'crypto'
 import type { Weekdays } from './event'
 import type { IScheduleSubject } from './schedule-subject'
 import type { IAuditable } from './entity-metadata'
-import type { ReplicatedIdentity } from './replicated-identity'
+import type {
+  ReplicatedIdentity,
+  ReplicationState,
+} from './replicated-identity'
 
 export interface ICourse {
   id: string
@@ -68,9 +70,7 @@ export interface ISubjectSchedule {
   sessions: ISession[]
 }
 
-export interface IBaseSubjectSchedules {
-  externalId?: UUID
-  revision?: number
+export interface IBaseSubjectSchedules extends ReplicationState {
   subject: ISubject
   schedules: Pick<
     ISubjectSchedule,

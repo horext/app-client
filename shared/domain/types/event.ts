@@ -1,6 +1,8 @@
-import type { UUID } from 'crypto'
 import type { IAuditable } from './entity-metadata'
-import type { ReplicatedIdentity } from './replicated-identity'
+import type {
+  ReplicatedIdentity,
+  ReplicationState,
+} from './replicated-identity'
 import { DomainError } from '../errors/domain-error'
 
 export type EventCategories = 'COURSE' | 'MY_EVENT'
@@ -26,9 +28,7 @@ export interface IEvent extends IBaseEvent {
   id: string
 }
 
-export interface IBaseActivity {
-  externalId?: UUID
-  revision?: number
+export interface IBaseActivity extends ReplicationState {
   title: string
   description?: string
   location?: string
