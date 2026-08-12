@@ -3,7 +3,6 @@ import { Generation, type IGenerationRecord } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
-import type { GenerationRecordSyncable } from '../../context/db'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const makeGeneration = () =>
@@ -59,7 +58,7 @@ describe('IndexedDBGenerationsRepository', () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
       value.toSnapshot(),
-    ) satisfies GenerationRecordSyncable
+    ) satisfies IGenerationRecord
     persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
     expect(result.id).toBe(stored.id)
