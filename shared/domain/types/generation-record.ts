@@ -13,7 +13,10 @@ export type IGenerationMeta = Omit<
   'id' | 'scheduleIds' | 'resultCount' | 'occurrences' | keyof IAuditable
 >
 
-export interface IBaseGenerationRecord extends ReplicationState {
+export type GenerationId = BrandUUID<'GenerationId'>
+export interface IBaseGenerationRecord<
+  T extends GenerationId = GenerationId,
+> extends ReplicationState<T> {
   generatedAt: string
   scheduleIds: ScheduleGenerateId[]
   crossingsSetting: number
@@ -22,8 +25,6 @@ export interface IBaseGenerationRecord extends ReplicationState {
   resultCount: number
   occurrences: IIntersectionOccurrence[]
 }
-
-export type GenerationId = BrandUUID<'GenerationId'>
 
 export interface IGenerationRecord
   extends IBaseGenerationRecord, IAuditable, ReplicatedIdentity<GenerationId> {}

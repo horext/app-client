@@ -5,13 +5,13 @@ import type {
   ReplicationState,
 } from './replicated-identity'
 
-export interface IBaseProfile extends ReplicationState {
+export type ProfileId = BrandUUID<'ProfileId'>
+export interface IBaseProfile extends ReplicationState<ProfileId> {
   facultyId: number
   specialityId: number
   setupCompleted?: boolean
 }
 
-export type ProfileId = BrandUUID<'ProfileId'>
 export interface IProfile
   extends IBaseProfile, IAuditable, ReplicatedIdentity<ProfileId> {
   setupCompleted: boolean

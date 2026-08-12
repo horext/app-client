@@ -30,7 +30,9 @@ export interface IEvent extends IBaseEvent {
   id: string
 }
 
-export interface IBaseActivity extends ReplicationState {
+export type ActivityID = Brand<UUID, 'ActivityID'>
+
+export interface IBaseActivity extends ReplicationState<ActivityID> {
   title: string
   description?: string
   location?: string
@@ -38,8 +40,6 @@ export interface IBaseActivity extends ReplicationState {
   allowOverlap?: boolean
   sessions: IActivitySession[]
 }
-
-export type ActivityID = Brand<UUID, 'ActivityID'>
 
 export interface IActivity
   extends IBaseActivity, IAuditable, ReplicatedIdentity<ActivityID> {}

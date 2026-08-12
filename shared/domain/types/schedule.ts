@@ -11,21 +11,22 @@ export interface IScheduleSubjectGenerate extends ISubjectSchedule {
   subject: ISubject
 }
 
-export interface IBaseScheduleGenerate extends ReplicationState {
+export type ScheduleGenerateId = BrandUUID<'ScheduleGenerateId'>
+
+export interface IBaseScheduleGenerate extends ReplicationState<ScheduleGenerateId> {
   scheduleSubjectKey: string
   schedulesSubject: IScheduleSubjectGenerate[]
   crossings: number
   events: IEvent[]
 }
 
-export type ScheduleGenerateId = BrandUUID<'ScheduleGenerateId'>
 export interface IScheduleGenerate
   extends
     IBaseScheduleGenerate,
     IAuditable,
     ReplicatedIdentity<ScheduleGenerateId> {}
 
-export interface IBaseFavoriteSchedule extends ReplicationState {
+export interface IBaseFavoriteSchedule extends ReplicationState<ScheduleGenerateId> {
   id: ScheduleGenerateId
 }
 
