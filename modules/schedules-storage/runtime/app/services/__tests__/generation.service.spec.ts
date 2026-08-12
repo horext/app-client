@@ -63,8 +63,8 @@ const makeRecord = (
 
 describe('GenerationService', () => {
   const makeGenRepo = (): Mocked<IGenerationRepository> => ({
-    getAll: vi.fn(),
-    get: vi.fn(),
+    findAll: vi.fn(),
+    findById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -99,7 +99,7 @@ describe('GenerationService', () => {
 
   describe('getGenerations', () => {
     it('returns records sorted by generatedAt', async () => {
-      genRepo.getAll.mockResolvedValue([
+      genRepo.findAll.mockResolvedValue([
         makeRecord('b', [], '2024-01-02'),
         makeRecord('a', [], '2024-01-01'),
       ])
@@ -110,12 +110,12 @@ describe('GenerationService', () => {
   })
   describe('getLatestGeneration', () => {
     it('returns undefined when no records', async () => {
-      genRepo.getAll.mockResolvedValue([])
+      genRepo.findAll.mockResolvedValue([])
       expect(await service.getLatestGeneration('user-1')).toBeUndefined()
     })
     it('returns latest generation with schedules', async () => {
       const record = makeRecord('gen1', ['s1'])
-      genRepo.getAll.mockResolvedValue([record])
+      genRepo.findAll.mockResolvedValue([record])
       schedulesRepo.getEntries.mockResolvedValue([createSchedule()])
       const result = await service.getLatestGeneration('user-1')
       expect(result).toBeDefined()
@@ -143,7 +143,7 @@ describe('GenerationService', () => {
       const generation = makeRecord('gen1', [schedule.id])
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(generation)
-      genRepo.getAll.mockResolvedValue([])
+      genRepo.findAll.mockResolvedValue([])
       const result = await service.saveGeneration(
         'user-1',
         meta,
@@ -160,7 +160,7 @@ describe('GenerationService', () => {
       genRepo.create.mockResolvedValue(
         makeRecord('g3', [schedule.id], '2024-01-03'),
       )
-      genRepo.getAll.mockResolvedValue([
+      genRepo.findAll.mockResolvedValue([
         makeRecord('g1', ['s1'], '2024-01-01'),
         makeRecord('g2', ['s2'], '2024-01-02'),
         makeRecord('g3', ['s3'], '2024-01-03'),
@@ -175,7 +175,7 @@ describe('GenerationService', () => {
       genRepo.create.mockResolvedValue(
         makeRecord('g3', [schedule.id], '2024-01-03'),
       )
-      genRepo.getAll.mockResolvedValue([
+      genRepo.findAll.mockResolvedValue([
         makeRecord('g1', ['s1'], '2024-01-01'),
         makeRecord('g2', ['s2'], '2024-01-02'),
         makeRecord('g3', ['s3'], '2024-01-03'),
@@ -188,7 +188,7 @@ describe('GenerationService', () => {
       const schedule = createSchedule()
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(makeRecord('g1', [schedule.id]))
-      genRepo.getAll.mockResolvedValue([makeRecord('g1', ['s1'])])
+      genRepo.findAll.mockResolvedValue([makeRecord('g1', ['s1'])])
       await service.saveGeneration('user-1', meta, [input], [], 5)
       expect(genRepo.delete).not.toHaveBeenCalled()
     })

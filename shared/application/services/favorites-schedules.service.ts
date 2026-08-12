@@ -68,7 +68,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     id: IScheduleGenerate['id'],
   ): Promise<void> {
     await this.favoritesRepo.delete(userId, id)
-    const allRecords = await this.generationRepo.getAll(userId)
+    const allRecords = await this.generationRepo.findAll(userId)
     const referencedInGenerations = allRecords.some((r) =>
       r.scheduleIds.includes(id),
     )

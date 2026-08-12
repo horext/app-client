@@ -22,7 +22,7 @@ const createSubject = () =>
   )
 describe('SubjectsService', () => {
   const makeRepo = (): Mocked<ISubjectsRepository> => ({
-    getAll: vi.fn(),
+    findAll: vi.fn(),
     findById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -36,7 +36,7 @@ describe('SubjectsService', () => {
   })
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      repo.getAll.mockResolvedValue([createSubject()])
+      repo.findAll.mockResolvedValue([createSubject()])
       expect(await service.getAll('user-1')).toHaveLength(1)
     })
   })

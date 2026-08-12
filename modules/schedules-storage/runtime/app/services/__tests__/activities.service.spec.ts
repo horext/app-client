@@ -6,8 +6,8 @@ import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 describe('ActivitiesService', () => {
   const makeRepo = (): Mocked<IActivitiesRepository> => ({
-    getAll: vi.fn(),
-    get: vi.fn(),
+    findAll: vi.fn(),
+    findById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -30,7 +30,7 @@ describe('ActivitiesService', () => {
   })
   describe('getAll', () => {
     it('returns all activities', async () => {
-      repo.getAll.mockResolvedValue([makeActivity(), makeActivity()])
+      repo.findAll.mockResolvedValue([makeActivity(), makeActivity()])
       expect(await service.getAll('user-1')).toHaveLength(2)
     })
   })
@@ -56,7 +56,7 @@ describe('ActivitiesService', () => {
   describe('patch', () => {
     it('updates activity when it exists', async () => {
       const existing = makeActivity()
-      repo.get.mockResolvedValue(existing)
+      repo.findById.mockResolvedValue(existing)
       repo.update.mockImplementation(async (_, activity) => activity)
       const result = await service.patch('user-1', existing.id, {
         title: 'Updated',
@@ -66,7 +66,7 @@ describe('ActivitiesService', () => {
       expect(result.toSnapshot().title).toBe('Updated')
     })
     it('throws when activity not found', async () => {
-      repo.get.mockResolvedValue(undefined)
+      repo.findById.mockResolvedValue(undefined)
       const id = crypto.randomUUID()
       await expect(
         service.patch('user-1', id, {

@@ -1,10 +1,13 @@
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 
 export class NoopGenerationRepository implements IGenerationRepository {
-  getAll(_userId: string) {
+  findAll(_userId: string) {
     return Promise.resolve([])
   }
-  get(_userId: string, _id: Parameters<IGenerationRepository['get']>[1]) {
+  findById(
+    _userId: string,
+    _id: Parameters<IGenerationRepository['findById']>[1],
+  ) {
     return Promise.resolve(undefined)
   }
   create(

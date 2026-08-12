@@ -6,7 +6,7 @@ import type {
 } from '#shared/domain/types/subject'
 
 export interface ISubjectsRepository {
-  getAll(userId: string): Promise<UserSubject[]>
+  findAll(userId: string): Promise<UserSubject[]>
   findById(userId: string, id: UUID): Promise<UserSubject | undefined>
   create(
     userId: string,

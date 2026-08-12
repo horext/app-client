@@ -34,11 +34,11 @@ describe('IndexedDBActivitiesRepository', () => {
       persistence.findAll.mockResolvedValue([
         persistedSnapshot(activity.toSnapshot()),
       ])
-      expect(await repo.getAll('user-1')).toHaveLength(1)
+      expect(await repo.findAll('user-1')).toHaveLength(1)
     })
     it('returns empty array when store is empty', async () => {
       persistence.findAll.mockResolvedValue([])
-      expect(await repo.getAll('user-1')).toEqual([])
+      expect(await repo.findAll('user-1')).toEqual([])
     })
   })
   describe('get', () => {
@@ -46,13 +46,13 @@ describe('IndexedDBActivitiesRepository', () => {
       const activity = Activity.create(baseActivity)
       const stored = persistedSnapshot(activity.toSnapshot())
       persistence.find.mockResolvedValue(stored)
-      expect(await repo.get('user-1', stored.id)).toMatchObject({
+      expect(await repo.findById('user-1', stored.id)).toMatchObject({
         id: stored.id,
       })
     })
     it('returns undefined when not found', async () => {
       persistence.find.mockResolvedValue(undefined)
-      expect(await repo.get('user-1', crypto.randomUUID())).toBeUndefined()
+      expect(await repo.findById('user-1', crypto.randomUUID())).toBeUndefined()
     })
   })
   describe('create', () => {

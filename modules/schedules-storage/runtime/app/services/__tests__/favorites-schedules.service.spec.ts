@@ -43,8 +43,8 @@ describe('FavoritesSchedulesService', () => {
     delete: vi.fn(),
   })
   const makeGenerationRepo = (): Mocked<IGenerationRepository> => ({
-    getAll: vi.fn(),
-    get: vi.fn(),
+    findAll: vi.fn(),
+    findById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -108,14 +108,14 @@ describe('FavoritesSchedulesService', () => {
     it('removes from list and deletes when not in any generation', async () => {
       const id = crypto.randomUUID()
       favRepo.delete.mockResolvedValue(undefined)
-      genRepo.getAll.mockResolvedValue([])
+      genRepo.findAll.mockResolvedValue([])
       await service.removeFavorite('user-1', id)
       expect(repo.deleteEntry).toHaveBeenCalledWith('user-1', id)
     })
     it('does not delete when schedule is referenced in a generation', async () => {
       const id = crypto.randomUUID()
       favRepo.delete.mockResolvedValue(undefined)
-      genRepo.getAll.mockResolvedValue([
+      genRepo.findAll.mockResolvedValue([
         Generation.restore(
           persistedSnapshot({
             generatedAt: '',
