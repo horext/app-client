@@ -1,22 +1,24 @@
-import { openDB, type IDBPDatabase } from 'idb'
+import {
+  openDB,
+  type DBSchema,
+  type IDBPDatabase,
+  type OpenDBCallbacks,
+} from 'idb'
 
-import { schemaMigrations } from '../../migrations/schema'
 import type { HorextDB } from './schema'
 
-export type DbFactory = () => Promise<IDBPDatabase<HorextDB>>
+export type DbFactory<DB extends DBSchema = HorextDB> = () => Promise<
+  IDBPDatabase<DB>
+>
 
-export function createDbFactory(
+export function createDbFactory<DB extends DBSchema = HorextDB>(
   dbName: string,
   schemaVersion: number,
-): DbFactory {
-  let db: Promise<IDBPDatabase<HorextDB>> | undefined
+  upgrade: OpenDBCallbacks<DB>['upgrade'],
+): DbFactory<DB> {
+  let db: Promise<IDBPDatabase<DB>> | undefined
   return () =>
-    (db ??= openDB<HorextDB>(dbName, schemaVersion, {
-      upgrade(database, oldVersion, _newVersion, transaction) {
-        for (const migration of schemaMigrations) {
-          if (oldVersion < migration.version)
-            migration.up(database, transaction)
-        }
-      },
+    (db ??= openDB<DB>(dbName, schemaVersion, {
+      upgrade,
     }))
 }
