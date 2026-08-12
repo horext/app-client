@@ -64,7 +64,7 @@ export type ReplicableSchemas = {
   }
 }
 
-export type HorextDB = DBSchema & ReplicableSchemas
+export type HorextDB = DBSchema | ReplicableSchemas
 
 export type ReplicableStore =
   | StoresDB.ACADEMIC_CONFIG
