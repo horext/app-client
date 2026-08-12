@@ -3,7 +3,6 @@ import type {
   IBaseFavoriteSchedule,
   IFavoriteSchedule,
   IFavoriteCreate,
-  IFavoriteUpdate,
 } from '../types/schedule'
 import type { IEntitySnapshot } from './snapshot'
 
@@ -22,10 +21,6 @@ export class Favorite<
 
   get id(): UUID {
     return this.snapshot.id
-  }
-
-  update(input: IFavoriteUpdate): Favorite<IBaseFavoriteSchedule> {
-    return Favorite.create(input)
   }
 
   toSnapshot(): T {

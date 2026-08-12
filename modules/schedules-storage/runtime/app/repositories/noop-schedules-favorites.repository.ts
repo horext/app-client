@@ -10,9 +10,17 @@ export class NoopSchedulesFavoritesRepository implements ISchedulesFavoritesRepo
   ) {
     return Promise.resolve(undefined)
   }
-  update(
+  findByScheduleId(
     _userId: string,
-    _value: Parameters<ISchedulesFavoritesRepository['update']>[1],
+    _scheduleId: Parameters<
+      ISchedulesFavoritesRepository['findByScheduleId']
+    >[1],
+  ) {
+    return Promise.resolve(undefined)
+  }
+  create(
+    _userId: string,
+    _value: Parameters<ISchedulesFavoritesRepository['create']>[1],
   ) {
     return Promise.reject(new Error('Favorites repository is unavailable.'))
   }

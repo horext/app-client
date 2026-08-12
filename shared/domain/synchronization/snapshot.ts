@@ -6,3 +6,7 @@ export interface AggregateSnapshot<T> {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface SnapshotSource<T> {
+  toSnapshot(): T
+}

@@ -15,14 +15,18 @@ export class FavoritesService {
     return this.favorites.findById(userId, id as UUID)
   }
 
+  findByScheduleId(userId: string, scheduleId: string) {
+    return this.favorites.findByScheduleId(userId, scheduleId as UUID)
+  }
+
   async scheduleExists(userId: string, id: string) {
     return Boolean(await this.schedules.findBy(userId, id as UUID))
   }
 
-  create(userId: string, id: string) {
-    return this.favorites.update(
+  create(userId: string, scheduleId: string) {
+    return this.favorites.create(
       userId,
-      Favorite.create({ scheduleId: id as UUID }),
+      Favorite.create({ scheduleId: scheduleId as UUID }),
     )
   }
 

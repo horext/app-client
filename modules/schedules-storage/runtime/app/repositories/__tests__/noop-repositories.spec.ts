@@ -47,7 +47,10 @@ describe('noop repositories', () => {
     const favorites = new NoopSchedulesFavoritesRepository()
     expect(await favorites.findAll('user')).toEqual([])
     expect(await favorites.findById('user', 'id' as never)).toBeUndefined()
-    await expect(favorites.update('user', {} as never)).rejects.toThrow()
+    expect(
+      await favorites.findByScheduleId('user', 'id' as never),
+    ).toBeUndefined()
+    await expect(favorites.create('user', {} as never)).rejects.toThrow()
     await expect(
       favorites.delete('user', 'id' as never),
     ).resolves.toBeUndefined()

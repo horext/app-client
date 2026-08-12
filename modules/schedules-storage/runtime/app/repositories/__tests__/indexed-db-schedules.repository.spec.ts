@@ -132,12 +132,12 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
     })
   })
   describe('create', () => {
-    it('resolves without error', async () => {
+    it('persists the schedule id as the favorite id', async () => {
       const favorite = Favorite.create({ scheduleId: crypto.randomUUID() })
       persistence.create.mockResolvedValue(
         persistedSnapshot(favorite.toSnapshot()),
       )
-      await expect(repo.update('user-1', favorite)).resolves.toBeDefined()
+      await expect(repo.create('user-1', favorite)).resolves.toBeDefined()
     })
   })
   describe('delete', () => {

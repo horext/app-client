@@ -2,6 +2,7 @@ import type {
   DbFactory,
   ReplicableSchemas,
   ReplicableStore,
+  ReplicableStoreValue,
 } from '../context/db'
 import type { AggregateSnapshot } from '#shared/domain/synchronization'
 import type {
@@ -56,20 +57,21 @@ export class IndexedDbAggregatePersistence
   async create<S extends ReplicableStore>(
     store: S,
     value: Omit<
-      ReplicableSchemas[S]['value'],
+      ReplicableStoreValue<S>,
       'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'
-    >,
+    > &
+      Partial<Pick<ReplicableStoreValue<S>, 'id'>>,
     userId: string,
-  ) {
+  ): Promise<ReplicableStoreValue<S>> {
     const db = await this.getDb()
     const timestamp = new Date().toISOString()
     const record = {
       ...value,
+      id: value.id ?? crypto.randomUUID(),
       createdAt: timestamp,
       updatedAt: timestamp,
       createdBy: userId,
       updatedBy: userId,
-      id: crypto.randomUUID(),
     }
     await db.add(store, record)
     return record
@@ -79,7 +81,7 @@ export class IndexedDbAggregatePersistence
     store: S,
     value: Omit<ReplicableSchemas[S]['value'], 'updatedAt' | 'updatedBy'>,
     userId: string,
-  ) {
+  ): Promise<ReplicableStoreValue<S>> {
     const db = await this.getDb()
     const record = {
       ...value,
@@ -101,7 +103,7 @@ export class IndexedDbAggregatePersistence
 
   async saveRemote<S extends ReplicableStore>(
     store: S,
-    value: ReplicableSchemas[S]['value'],
+    value: ReplicableStoreValue<S>,
     userId: string,
   ) {
     const db = await this.getDb()
@@ -111,13 +113,13 @@ export class IndexedDbAggregatePersistence
       updatedBy: userId,
       syncedAt: new Date().toISOString(),
       localSequence: 0,
-    } satisfies ReplicableSchemas[S]['value'])
+    })
   }
 
   async replace<S extends ReplicableStore>(
     store: S,
     userId: string,
-    items: AggregateSnapshot<ReplicableSchemas[S]['value']>[],
+    items: AggregateSnapshot<ReplicableStoreValue<S>>[],
   ) {
     const db = await this.getDb()
     const tx = db.transaction(store, 'readwrite')
@@ -134,7 +136,7 @@ export class IndexedDbAggregatePersistence
         revision: item.revision,
         syncedAt: new Date().toISOString(),
         localSequence: 0,
-      } satisfies ReplicableSchemas[S]['value'])
+      })
     await tx.done
   }
 }
