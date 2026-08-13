@@ -1,6 +1,7 @@
 import type {
   GenerationId,
   IBaseGenerationRecord,
+  IGenerationCreate,
   IGenerationMeta,
   IGenerationRecord,
   IGenerationResult,
@@ -17,7 +18,6 @@ import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
-import type { UUID } from 'crypto'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
 export class GenerationService implements IGenerationService {
@@ -31,12 +31,12 @@ export class GenerationService implements IGenerationService {
     return this.generationRepo.findById(userId, id)
   }
 
-  create(userId: string, value: unknown, id?: string) {
+  create(userId: string, value: IGenerationCreate, id?: GenerationId) {
     return this.generationRepo.create(
       userId,
       Generation.create({
-        ...(value as Parameters<typeof Generation.create>[0]),
-        ...(id ? { externalId: id as UUID } : {}),
+        ...value,
+        ...(id ? { externalId: id } : {}),
       }),
     )
   }

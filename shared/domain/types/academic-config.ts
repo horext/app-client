@@ -6,10 +6,11 @@ import type {
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
 
-export interface IBaseAcademicConfig extends ReplicationState {
+export type AcademicConfigId = BrandUUID<'AcademicConfigId'>
+
+export interface IBaseAcademicConfig extends ReplicationState<AcademicConfigId> {
   hourlyLoad: IHourlyLoad | null
 }
-export type AcademicConfigId = BrandUUID<'AcademicConfigId'>
 
 export interface IAcademicConfig
   extends

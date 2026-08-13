@@ -1,5 +1,8 @@
-import type { UUID } from 'crypto'
-import { Schedule, type ScheduleGenerateId } from '#shared/domain'
+import {
+  Schedule,
+  type IScheduleCreate,
+  type ScheduleGenerateId,
+} from '#shared/domain'
 import type { ISchedulesRepository } from '../repositories/schedules.repository'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 
@@ -10,12 +13,12 @@ export class SchedulesService {
     return this.repository.findBy(userId, id)
   }
 
-  create(userId: string, value: unknown, id?: string) {
+  create(userId: string, value: IScheduleCreate, id?: ScheduleGenerateId) {
     return this.repository.create(
       userId,
       Schedule.create({
-        ...(value as Parameters<typeof Schedule.create>[0]),
-        ...(id ? { externalId: id as UUID } : {}),
+        ...value,
+        ...(id ? { externalId: id } : {}),
       }),
     )
   }

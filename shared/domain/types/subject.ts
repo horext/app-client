@@ -71,7 +71,9 @@ export interface ISubjectSchedule {
   sessions: ISession[]
 }
 
-export interface IBaseSubjectSchedules extends ReplicationState {
+export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
+
+export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleId> {
   subject: ISubject
   schedules: Pick<
     ISubjectSchedule,
@@ -87,8 +89,6 @@ export interface ISubjectSchedulesUpdate {
   >[]
   color?: string
 }
-
-export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
 
 export interface ISubjectSchedules
   extends
