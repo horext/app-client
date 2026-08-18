@@ -190,7 +190,7 @@ export class SubjectSessionEvent extends Event implements IEvent {
         session.endTime,
         course.id + ' ' + section + ' - ' + course.name,
         ` Docente: ${session.teacher?.fullName}\n Curso: ${course.id} - ${course.name}\n Sección: ${section}`,
-        session.classroom?.code,
+        session.classroom?.name ?? session.classroom?.code,
         color,
         session.type.code,
         String(session.id),

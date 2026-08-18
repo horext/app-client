@@ -25,8 +25,37 @@ mockNuxtImport('useSubjectsService', () =>
 function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
   return {
     id,
-    schedules: [{ id: 1 } as never],
-    subject: { id: 1, course: { id: 'CS101', name: 'CS' } } as never,
+    schedules: [
+      {
+        id: 1,
+        section: {
+          id: '',
+        },
+        scheduleSubject: {
+          id: 0,
+        },
+        sessions: [],
+      },
+    ],
+    subject: {
+      id: 1,
+      course: { id: 'CS101', name: 'CS' },
+      type: {
+        id: 0,
+        name: '',
+        code: '',
+      },
+      studyPlan: {
+        id: 0,
+        fromDate: '',
+        code: '',
+        organizationUnit: {
+          id: 0,
+        },
+      },
+      credits: 0,
+      cycle: null,
+    },
   }
 }
 
@@ -86,8 +115,7 @@ describe('useUserSubjects', () => {
     const original = makeSubject()
     const updated = {
       ...original,
-      sections: [{ id: 'A' }],
-    } as ISubjectSchedules
+    } satisfies ISubjectSchedules
     const store = useUserSubjectsStore()
     store.subjects = [original]
     mockPatch.mockResolvedValue(asEntity(updated))
@@ -102,7 +130,7 @@ describe('useUserSubjects', () => {
     const withoutSchedules = {
       ...makeSubject(),
       schedules: [],
-    } as ISubjectSchedules
+    } satisfies ISubjectSchedules
     mockGetAll.mockResolvedValue(
       [withSchedules, withoutSchedules].map(asEntity),
     )

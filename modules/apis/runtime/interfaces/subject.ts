@@ -23,6 +23,7 @@ export interface IStudyPlanResponse {
 export interface IClassroomResponse {
   id: number
   code: string
+  name: string | null
 }
 
 export interface ITeacherResponse {

@@ -25,6 +25,7 @@ export interface IStudyPlan {
 export interface IClassroom {
   id: number
   code: string
+  name?: string | null
 }
 
 export interface ITeacher {
