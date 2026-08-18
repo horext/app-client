@@ -34,7 +34,10 @@ const dayWeek = computed(() =>
     .toUpperCase(),
 )
 
-const type = computed(() => session.value?.type?.code)
+const type = computed(() => {
+  const type = session.value?.type
+  return type?.name || type?.code
+})
 
 const teacherFullName = computed(() => session.value?.teacher?.fullName)
 
