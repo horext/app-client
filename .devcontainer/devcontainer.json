@@ -20,12 +20,8 @@
       ]
     }
   },
-  "mounts": [
-    "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,consistency=cached"
-  ],
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "corepack install && pnpm install",
-  "postStartCommand": "git config --global user.signingkey ~/.ssh/id_ed25519.pub || true"
+  "postCreateCommand": "corepack install && pnpm install"
   // Configure tool-specific properties.
   // "customizations": {},
 
