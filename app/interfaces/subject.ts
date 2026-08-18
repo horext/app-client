@@ -55,6 +55,8 @@ export interface ISubject {
   studyPlan: IStudyPlan
   credits: number
   cycle: number | null
+  specialityCodes?: string[]
+  recommended?: boolean
 }
 
 export interface ISubjectSchedule {

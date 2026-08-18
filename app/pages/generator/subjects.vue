@@ -89,6 +89,16 @@
       <base-snackbar v-model="succcesDeleteCourse">
         Curso Eliminado correctamente!
       </base-snackbar>
+      <base-confirm-dialog
+        v-if="pendingUnrecommendedSubject"
+        v-model="confirmUnrecommended"
+        @click:confirm="confirmAddUnrecommended"
+        @click:reject="cancelAddUnrecommended"
+      >
+        {{ pendingUnrecommendedSubject.course.name }} no figura en la malla
+        conocida de tu carrera. La información puede estar desactualizada.
+        ¿Deseas agregarlo de todas formas?
+      </base-confirm-dialog>
     </template>
   </v-data-table>
 </template>
@@ -145,9 +155,20 @@ const dialogDelete = ref(false)
 const subjectSchedules = shallowRef<IBaseSubjectSchedules | ISubjectSchedules>()
 
 const openSearchMenu = ref(false)
+const pendingUnrecommendedSubject = shallowRef<ISubject>()
+const confirmUnrecommended = ref(false)
 
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
+  if (item.recommended === false) {
+    pendingUnrecommendedSubject.value = item
+    confirmUnrecommended.value = true
+    return
+  }
+  openSubject(item)
+}
+
+const openSubject = (item: ISubject) => {
   openSearchMenu.value = false
   editItem({
     subject: item,
@@ -156,7 +177,26 @@ const addNewSubject = (item?: ISubject) => {
   })
 }
 
+const confirmAddUnrecommended = () => {
+  if (pendingUnrecommendedSubject.value)
+    openSubject(pendingUnrecommendedSubject.value)
+  cancelAddUnrecommended()
+}
+
+const cancelAddUnrecommended = () => {
+  confirmUnrecommended.value = false
+  pendingUnrecommendedSubject.value = undefined
+  selectedSubject.value = undefined
+}
+
 const scheduleSubjectApi = useScheduleSubjectApi()
+const {
+  dataset: localDataset,
+  ensureLoaded: ensureLocalHourlyLoad,
+  searchSubjects,
+  schedulesForSubject,
+} = useLocalHourlyLoad()
+await ensureLocalHourlyLoad()
 
 const {
   data: schedules,
@@ -165,9 +205,13 @@ const {
 } = useAsyncData<ISubjectSchedule[]>(
   'generator-subject-schedules',
   async () => {
-    const _hourlyLoadId = hourlyLoad.value?.id
     const subject = subjectSchedules.value?.subject
-    if (!_hourlyLoadId || !subject) return []
+    if (!subject) return []
+
+    if (localDataset.value) return schedulesForSubject(subject.id)
+
+    const _hourlyLoadId = hourlyLoad.value?.id
+    if (!_hourlyLoadId) return []
 
     const schedulesSubject =
       await scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
@@ -184,7 +228,7 @@ const {
   },
   {
     default: () => [],
-    watch: [hourlyLoad],
+    watch: [hourlyLoad, localDataset],
     immediate: false,
     server: false,
   },
@@ -247,9 +291,11 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
   async () => {
     const _search = search.value
     if (!_search) return []
-    const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
-    if (!_hourlyLoadId || !_specialityId) return []
+    if (localDataset.value) return searchSubjects(_search)
+    const _hourlyLoadId = hourlyLoad.value?.id
+    if (!_hourlyLoadId) return []
+    if (!_specialityId) return []
     const response = await courseApi.findBySearch(
       _search,
       _specialityId,
@@ -258,7 +304,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     return response.content
   },
   {
-    watch: [search],
+    watch: [search, hourlyLoad, localDataset],
     default: () => [],
   },
 )
