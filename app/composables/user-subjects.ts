@@ -21,7 +21,7 @@ export const useUserSubjects = () => {
         ...session,
         classroom: {
           ...session.classroom,
-          name: session.classroom.name ?? undefined,
+          name: session.classroom?.name ?? undefined,
         },
       })),
     }))

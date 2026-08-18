@@ -44,7 +44,7 @@ const convertSchedule = (s: ISubjectSchedule): ISubjectSchedule => ({
     classroom: {
       id: session.classroom.id,
       code: session.classroom.code,
-      name: session.classroom.name,
+      name: session.classroom?.name,
     },
     teacher: session.teacher
       ? {
