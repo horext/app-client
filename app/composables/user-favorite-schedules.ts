@@ -12,10 +12,21 @@ export const useUserFavoriteSchedules = () => {
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
   ) {
-    const result = await favoritesStorage.addFavorite(
-      userId,
-      _favoritesSchedule,
-    )
+    const result = await favoritesStorage.addFavorite(userId, {
+      ..._favoritesSchedule,
+      schedulesSubject: _favoritesSchedule.schedulesSubject.map(
+        (scheduleSubject) => ({
+          ...scheduleSubject,
+          sessions: scheduleSubject.sessions.map((session) => ({
+            ...session,
+            classroom: {
+              ...session.classroom,
+              name: session.classroom.name ?? undefined,
+            },
+          })),
+        }),
+      ),
+    })
     favoritesSchedules.value.push(result)
   }
 

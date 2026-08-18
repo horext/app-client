@@ -19,7 +19,19 @@ export const useGeneration = () => {
     const _result = await service.saveGeneration(
       userId,
       meta,
-      newSchedules,
+      newSchedules.map((schedule) => ({
+        ...schedule,
+        schedulesSubject: schedule.schedulesSubject.map((scheduleSubject) => ({
+          ...scheduleSubject,
+          sessions: scheduleSubject.sessions.map((session) => ({
+            ...session,
+            classroom: {
+              ...session.classroom,
+              name: session.classroom.name ?? undefined,
+            },
+          })),
+        })),
+      })),
       newOccurrences,
       preferencesStore.maxGenerationHistory,
     )
