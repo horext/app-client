@@ -33,6 +33,11 @@ export interface ITeacher {
   fullName: string
 }
 
+export interface ISessionType {
+  id: number
+  code: string
+  name?: string
+}
 export interface ISession {
   id: number
   schedule: {
@@ -40,10 +45,7 @@ export interface ISession {
   }
   classroom: IClassroom
   teacher?: ITeacher
-  type: {
-    id: number
-    code: string
-  }
+  type: ISessionType
   day: Weekdays
   startTime: string
   endTime: string
