@@ -55,11 +55,17 @@ const { fetchSubjects } = useUserSubjects()
 const { fetchSchedules, mySchedules } = useUserSchedules()
 
 const { fetchFavoritesSchedules } = useUserFavoriteSchedules()
+const { ensureLoaded: ensureLocalHourlyLoad } = useLocalHourlyLoad()
 
 onMounted(async () => {
   await Promise.all([fetchProfile(), fetchAcademicConfig(), fetchPreferences()])
-  if (profileStore.facultyId) {
-    await fetchLatestHourlyLoad(profileStore.facultyId)
+  const localHourlyLoad = await ensureLocalHourlyLoad()
+  if (!localHourlyLoad && profileStore.facultyId) {
+    try {
+      await fetchLatestHourlyLoad(profileStore.facultyId)
+    } catch {
+      // No hourly load available yet for this faculty — non-blocking
+    }
   }
   await Promise.all([
     fetchSubjects(),

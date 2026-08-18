@@ -1,5 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { createVuetify } from 'vuetify'
 import Initial from '~/components/setting/Initial.vue'
 
@@ -21,15 +22,19 @@ vi.mock('pinia', async (importOriginal) => {
 
 vi.mock('~~/modules/apis/runtime/composables', () => ({
   useFacultyApi: vi.fn(() => ({
-    get: vi.fn().mockResolvedValue([]),
+    getAll: vi.fn().mockResolvedValue([]),
   })),
   useHourlyLoadApi: vi.fn(() => ({
-    getByFacultyId: vi.fn().mockResolvedValue(null),
+    getAllByFaculty: vi.fn().mockResolvedValue([]),
   })),
   useSpecialityApi: vi.fn(() => ({
-    getByFacultyId: vi.fn().mockResolvedValue([]),
+    getAllByFaculty: vi.fn().mockResolvedValue([]),
   })),
 }))
+
+mockNuxtImport('useLocalHourlyLoad', () =>
+  vi.fn(() => ({ ensureLoaded: vi.fn().mockResolvedValue(null) })),
+)
 
 const vuetify = createVuetify()
 

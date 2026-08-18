@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import InitialForm from '~/components/setting/Initial.vue'
+import type { HourlyLoadSelection } from '~/interfaces/hourly-load-selection'
 
 definePageMeta({
   layout: 'app',
@@ -45,14 +45,14 @@ const router = useRouter()
 
 const loading = ref(false)
 
-const onSubmit = async (
-  facultyId: number,
-  specialityId: number,
-  hourlyLoad: IHourlyLoad,
-) => {
+const onSubmit = async (selection: HourlyLoadSelection) => {
   loading.value = true
   try {
-    await completeSetup(facultyId, specialityId, hourlyLoad)
+    await completeSetup(
+      selection.facultyId,
+      selection.specialityId,
+      selection.source === 'official' ? selection.hourlyLoad : null,
+    )
     await router.push('/generator/subjects')
   } finally {
     loading.value = false

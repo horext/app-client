@@ -31,7 +31,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
 
   async function fetchAcademicConfig() {
     const config = await academicConfigService.get(userId)
-    if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
+    hourlyLoad.value = config?.hourlyLoad ?? undefined
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
@@ -89,14 +89,18 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   async function updateBasicSettings(
     _facultyId: number,
     _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
+    _hourlyLoad: IHourlyLoad | null,
   ) {
     await Promise.all([
       profileService.patch(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
       }),
-      updateHourlyLoad(_hourlyLoad),
+      _hourlyLoad
+        ? updateHourlyLoad(_hourlyLoad)
+        : academicConfigService.patch(userId, { hourlyLoad: null }).then(() => {
+            hourlyLoad.value = undefined
+          }),
     ])
     if (profile.value)
       profile.value = {
@@ -110,7 +114,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   async function completeSetup(
     _facultyId: number,
     _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
+    _hourlyLoad: IHourlyLoad | null,
   ) {
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {
@@ -124,7 +128,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
       createPreferences(),
     ])
     profile.value = createdProfile
-    hourlyLoad.value = _hourlyLoad
+    hourlyLoad.value = _hourlyLoad ?? undefined
   }
 
   return {

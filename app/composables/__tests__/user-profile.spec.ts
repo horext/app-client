@@ -365,6 +365,17 @@ describe('useUserProfile', () => {
     expect(mockProfilePatch).toHaveBeenCalled()
   })
 
+  it('updateBasicSettings clears the official hourly load for a local dataset', async () => {
+    mockProfilePatch.mockResolvedValue(undefined)
+    mockAcademicPatch.mockResolvedValue(undefined)
+    const { updateBasicSettings } = useUserProfile()
+    await updateBasicSettings(3, 4, null)
+    expect(mockAcademicPatch).toHaveBeenCalledWith(expect.any(String), {
+      hourlyLoad: null,
+    })
+    expect(useUserProfileStore().hourlyLoad).toBeUndefined()
+  })
+
   it('completeSetup creates profile, academic config, preferences, and sets store values', async () => {
     const load = makeHourlyLoad(1)
     mockCreateProfile.mockResolvedValue({
@@ -391,5 +402,30 @@ describe('useUserProfile', () => {
     expect(mockCreatePreferences).toHaveBeenCalled()
     expect(store.profile?.facultyId).toBe(2)
     expect(store.hourlyLoad).toEqual(load)
+  })
+
+  it('completeSetup stores a null official load when using a local dataset', async () => {
+    mockCreateProfile.mockResolvedValue({
+      id: crypto.randomUUID(),
+      facultyId: 2,
+      specialityId: 3,
+      setupCompleted: true,
+    })
+    mockCreateAcademicConfig.mockResolvedValue({
+      id: crypto.randomUUID(),
+      hourlyLoad: null,
+    })
+    mockCreatePreferences.mockResolvedValue({
+      id: crypto.randomUUID(),
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+    })
+    const { completeSetup } = useUserProfile()
+    await completeSetup(2, 3, null)
+    expect(mockCreateAcademicConfig).toHaveBeenCalledWith(expect.any(String), {
+      hourlyLoad: null,
+    })
+    expect(useUserProfileStore().hourlyLoad).toBeUndefined()
   })
 })
