@@ -6,44 +6,44 @@ import type {
 import { EVENT_COLORS } from '~/constants/event'
 import type { SubjectScheduleId } from '~~/shared/domain'
 
+export function toScheduleDomain(
+  schedules: ISubjectSchedule[],
+): import('~~/shared/domain').ISubjectSchedule[] {
+  return schedules.map((schedule) => ({
+    ...schedule,
+    sessions: schedule.sessions.map((session) => ({
+      ...session,
+      classroom: {
+        ...session.classroom,
+        name: session.classroom?.name ?? undefined,
+      },
+    })),
+  }))
+}
+
+function toCreateDomain(
+  _subject: IBaseSubjectSchedules,
+): import('~~/shared/domain').IBaseSubjectSchedules {
+  return {
+    ..._subject,
+    schedules: toScheduleDomain(_subject.schedules),
+  }
+}
+
+function toUpdateDomnain(
+  _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
+): import('~~/shared/domain').ISubjectSchedulesUpdate {
+  return {
+    ..._subject,
+    schedules: toScheduleDomain(_subject.schedules),
+  }
+}
+
 export const useUserSubjects = () => {
   const service = useSubjectsService()
   const userId = useSchedulesUserId()
   const store = useUserSubjectsStore()
   const { subjects } = storeToRefs(store)
-
-  function toScheduleDomain(
-    schedules: ISubjectSchedule[],
-  ): import('~~/shared/domain').ISubjectSchedule[] {
-    return schedules.map((schedule) => ({
-      ...schedule,
-      sessions: schedule.sessions.map((session) => ({
-        ...session,
-        classroom: {
-          ...session.classroom,
-          name: session.classroom?.name ?? undefined,
-        },
-      })),
-    }))
-  }
-
-  function toCreateDomain(
-    _subject: IBaseSubjectSchedules,
-  ): import('~~/shared/domain').IBaseSubjectSchedules {
-    return {
-      ..._subject,
-      schedules: toScheduleDomain(_subject.schedules),
-    }
-  }
-
-  function toUpdateDomnain(
-    _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
-  ): import('~~/shared/domain').ISubjectSchedulesUpdate {
-    return {
-      ..._subject,
-      schedules: toScheduleDomain(_subject.schedules),
-    }
-  }
 
   async function saveNewSubject(_subject: IBaseSubjectSchedules) {
     const created = await service.create(userId, toCreateDomain(_subject))
