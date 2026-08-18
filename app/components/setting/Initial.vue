@@ -143,9 +143,9 @@ const ending = async () => {
   if (!formValue?.valid) return
   emit(
     'submit',
-    toRaw(internalFacultyId.value)!,
-    toRaw(internalSpecialityId.value)!,
-    toRaw(internalHourlyLoad.value)!,
+    internalFacultyId.value!,
+    internalSpecialityId.value!,
+    internalHourlyLoad.value!,
   )
 }
 </script>
