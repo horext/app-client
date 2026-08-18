@@ -26,6 +26,8 @@ export default defineNuxtConfig({
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    './modules/apis',
+    './modules/schedules-storage',
     '@pinia/nuxt',
     '@unocss/nuxt',
     [

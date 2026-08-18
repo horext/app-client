@@ -9,6 +9,7 @@ import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 import type { IPreferences } from '#shared/domain/types/preferences'
 import type { IGenerationRecord } from '#shared/domain/types/generation-record'
 import type { ISubjectSchedules } from '#shared/domain/types/subject'
+import type { ILocalHourlyLoadDataset } from '#shared/domain/types/local-hourly-load'
 
 export const enum StoresDB {
   SCHEDULES = 'schedules',
@@ -19,6 +20,20 @@ export const enum StoresDB {
   ACADEMIC_CONFIG = 'academic-config',
   GENERATIONS = 'generations',
   SUBJECTS = 'subjects',
+  LOCAL_HOURLY_LOAD = 'local-hourly-load',
+}
+
+export interface ILocalHourlyLoadRecord {
+  userId: string
+  dataset: ILocalHourlyLoadDataset
+}
+
+export type LocalSchemas = {
+  [StoresDB.LOCAL_HOURLY_LOAD]: {
+    key: string
+    value: ILocalHourlyLoadRecord
+    indexes: { userId: string }
+  }
 }
 
 export type ReplicableSchemas = {
@@ -64,7 +79,7 @@ export type ReplicableSchemas = {
   }
 }
 
-export type HorextDB = DBSchema | ReplicableSchemas
+export type HorextDB = DBSchema | ReplicableSchemas | LocalSchemas
 
 export type ReplicableStore =
   | StoresDB.ACADEMIC_CONFIG

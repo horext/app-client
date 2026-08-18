@@ -8,6 +8,7 @@ import {
   PREFERENCES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
   SUBJECTS_SERVICE_KEY,
+  LOCAL_HOURLY_LOAD_SERVICE_KEY,
   USER_ID_KEY,
 } from '../context/keys'
 import type { IFavoritesSchedulesService } from '#shared/application/interfaces/favorites-schedules.service'
@@ -17,6 +18,7 @@ import type { IAcademicConfigService } from '#shared/application/interfaces/acad
 import type { IPreferencesService } from '#shared/application/interfaces/preferences.service'
 import type { IGenerationService } from '#shared/application/interfaces/generation.service'
 import type { ISubjectsService } from '#shared/application/interfaces/subjects.service'
+import type { ILocalHourlyLoadService } from '#shared/application/interfaces/local-hourly-load.service'
 
 const useService = <T>(key: InjectionKey<T>, name: string): T => {
   const service = inject(key)
@@ -46,3 +48,6 @@ export const useGenerationService = (): IGenerationService =>
   useService(GENERATION_SERVICE_KEY, 'useGenerationService')
 export const useSubjectsService = (): ISubjectsService =>
   useService(SUBJECTS_SERVICE_KEY, 'useSubjectsService')
+
+export const useLocalHourlyLoadService = (): ILocalHourlyLoadService =>
+  useService(LOCAL_HOURLY_LOAD_SERVICE_KEY, 'useLocalHourlyLoadService')

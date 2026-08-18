@@ -48,4 +48,13 @@ export const schemaMigrations: SchemaMigration<HorextDB>[] = [
       ])
     },
   },
+  {
+    version: 2,
+    up(db) {
+      const store = db.createObjectStore(StoresDB.LOCAL_HOURLY_LOAD, {
+        keyPath: 'userId',
+      })
+      store.createIndex('userId', 'userId', { unique: true })
+    },
+  },
 ]

@@ -16,6 +16,8 @@ import type {
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
+import type { ILocalHourlyLoadRepository } from '#shared/application/repositories/local-hourly-load.repository'
+import type { ILocalHourlyLoadService } from '#shared/application/interfaces/local-hourly-load.service'
 import type { DbFactory } from './db'
 
 export interface RawSchedulesRepositories {
@@ -27,6 +29,7 @@ export interface RawSchedulesRepositories {
   generationRepository: IGenerationRepository
   favoritesRepository: ISchedulesFavoritesRepository
   subjectsRepository: ISubjectsRepository
+  localHourlyLoadRepository: ILocalHourlyLoadRepository
 }
 
 export interface RawSchedulesStorage extends RawSchedulesRepositories {
@@ -63,3 +66,6 @@ export const GENERATION_SERVICE_KEY: InjectionKey<IGenerationService> =
 
 export const SUBJECTS_SERVICE_KEY: InjectionKey<ISubjectsService> =
   Symbol('ISubjectsService')
+
+export const LOCAL_HOURLY_LOAD_SERVICE_KEY: InjectionKey<ILocalHourlyLoadService> =
+  Symbol('ILocalHourlyLoadService')

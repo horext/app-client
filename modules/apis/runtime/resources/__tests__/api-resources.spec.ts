@@ -33,6 +33,16 @@ describe('FacultyApi', () => {
 })
 
 describe('HourlyLoadApi', () => {
+  it('lists all published loads for a faculty', async () => {
+    const $fetch = makeFetch()
+    const api = new HourlyLoadApi($fetch)
+    await api.getAllByFaculty(42)
+    expect($fetch).toHaveBeenCalledWith('hourlyLoads', {
+      method: 'GET',
+      params: { faculty: 42 },
+    })
+  })
+
   it('calls $fetch with hourlyLoads/latest path and faculty param', async () => {
     const $fetch = makeFetch()
     const api = new HourlyLoadApi($fetch)
@@ -56,6 +66,16 @@ describe('SpecialityApi', () => {
 })
 
 describe('CourseApi', () => {
+  it('resolves course affiliations without uploading schedule contents', async () => {
+    const $fetch = makeFetch()
+    const api = new CourseApi($fetch)
+    await api.getAffiliations(['BIC01', 'BMA01'])
+    expect($fetch).toHaveBeenCalledWith('subjects/affiliations', {
+      method: 'POST',
+      body: ['BIC01', 'BMA01'],
+    })
+  })
+
   it('calls $fetch with subjects search path and params', async () => {
     const $fetch = makeFetch()
     const api = new CourseApi($fetch)
