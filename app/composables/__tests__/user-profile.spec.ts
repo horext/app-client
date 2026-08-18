@@ -56,7 +56,24 @@ vi.mock('~~/modules/apis/runtime/composables', () => ({
 }))
 
 function makeHourlyLoad(id = 1): IHourlyLoad {
-  return { id, updatedAt: '2024-01-01T00:00:00Z' } as IHourlyLoad
+  return {
+    id,
+    updatedAt: '2024-01-01T00:00:00Z',
+    name: '',
+    checkedAt: '',
+    publishedAt: '',
+    academicPeriodOrganizationUnit: {
+      id: 0,
+      fromDate: '',
+      toDate: '',
+      academicPeriod: {
+        id: 0,
+      },
+      organizationUnit: {
+        id: 0,
+      },
+    },
+  } satisfies IHourlyLoad
 }
 
 describe('useUserProfile', () => {
@@ -128,26 +145,111 @@ describe('useUserProfile', () => {
 
   it('updateHourlyLoad sets isUpdateHourlyLoad when id same but updatedAt differs', async () => {
     const store = useUserProfileStore()
-    store.hourlyLoad = { id: 1, updatedAt: '2024-01-01' } as IHourlyLoad
+    store.hourlyLoad = {
+      id: 1,
+      updatedAt: '2024-01-01',
+      name: '',
+      checkedAt: '',
+      publishedAt: '',
+      academicPeriodOrganizationUnit: {
+        id: 0,
+        fromDate: '',
+        toDate: '',
+        academicPeriod: {
+          id: 0,
+        },
+        organizationUnit: {
+          id: 0,
+        },
+      },
+    } satisfies IHourlyLoad
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateHourlyLoad } = useUserProfile()
-    await updateHourlyLoad({ id: 1, updatedAt: '2024-06-01' } as IHourlyLoad)
+    await updateHourlyLoad({
+      id: 1,
+      updatedAt: '2024-06-01',
+      name: '',
+      checkedAt: '',
+      publishedAt: '',
+      academicPeriodOrganizationUnit: {
+        id: 0,
+        fromDate: '',
+        toDate: '',
+        academicPeriod: {
+          id: 0,
+        },
+        organizationUnit: {
+          id: 0,
+        },
+      },
+    } satisfies IHourlyLoad)
     expect(store.isUpdateHourlyLoad).toBe(true)
   })
 
   it('updateHourlyLoad does not set flags when id same and updatedAt same', async () => {
     const store = useUserProfileStore()
-    store.hourlyLoad = { id: 1, updatedAt: '2024-01-01' } as IHourlyLoad
+    store.hourlyLoad = {
+      id: 1,
+      updatedAt: '2024-01-01',
+      name: '',
+      checkedAt: '',
+      publishedAt: '',
+      academicPeriodOrganizationUnit: {
+        id: 0,
+        fromDate: '',
+        toDate: '',
+        academicPeriod: {
+          id: 0,
+        },
+        organizationUnit: {
+          id: 0,
+        },
+      },
+    } satisfies IHourlyLoad
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateHourlyLoad } = useUserProfile()
-    await updateHourlyLoad({ id: 1, updatedAt: '2024-01-01' } as IHourlyLoad)
+    await updateHourlyLoad({
+      id: 1,
+      updatedAt: '2024-01-01',
+      name: '',
+      checkedAt: '',
+      publishedAt: '',
+      academicPeriodOrganizationUnit: {
+        id: 0,
+        fromDate: '',
+        toDate: '',
+        academicPeriod: {
+          id: 0,
+        },
+        organizationUnit: {
+          id: 0,
+        },
+      },
+    } satisfies IHourlyLoad)
     expect(store.isNewHourlyLoad).toBe(false)
     expect(store.isUpdateHourlyLoad).toBe(false)
   })
 
   it('updateHourlyLoad skips flag logic when currentHourlyLoad has no id', async () => {
     const store = useUserProfileStore()
-    store.hourlyLoad = { updatedAt: '2024-01-01' } as IHourlyLoad
+    store.hourlyLoad = {
+      updatedAt: '2024-01-01',
+      id: 0,
+      name: '',
+      checkedAt: '',
+      publishedAt: '',
+      academicPeriodOrganizationUnit: {
+        id: 0,
+        fromDate: '',
+        toDate: '',
+        academicPeriod: {
+          id: 0,
+        },
+        organizationUnit: {
+          id: 0,
+        },
+      },
+    } satisfies IHourlyLoad
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateHourlyLoad } = useUserProfile()
     await updateHourlyLoad(makeHourlyLoad(1))

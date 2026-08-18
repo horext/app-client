@@ -47,7 +47,20 @@ export const useUserProfile = (apis?: IApiRegistry) => {
       }
     }
     hourlyLoad.value = newHourlyLoad
-    await academicConfigService.patch(userId, { hourlyLoad: newHourlyLoad })
+    await academicConfigService.patch(userId, {
+      hourlyLoad: {
+        ...newHourlyLoad,
+        academicPeriodOrganizationUnit: {
+          ...newHourlyLoad.academicPeriodOrganizationUnit,
+          academicPeriod: {
+            ...newHourlyLoad.academicPeriodOrganizationUnit.academicPeriod,
+          },
+          organizationUnit: {
+            ...newHourlyLoad.academicPeriodOrganizationUnit.organizationUnit,
+          },
+        },
+      },
+    })
   }
 
   async function fetchLatestHourlyLoad(facultyId: number) {
