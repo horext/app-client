@@ -23,6 +23,11 @@
               @update:model-value="addNewSubject"
             />
           </v-col>
+          <v-col cols="12">
+            <v-chip color="primary" variant="flat" size="small"
+              >Especialidad: {{ speciality?.name }}
+            </v-chip>
+          </v-col>
         </v-row>
         <v-dialog
           v-model="dialog"
@@ -137,7 +142,7 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
-const { specialityId, hourlyLoad } = storeToRefs(configStore)
+const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
 
 const dialog = ref(false)
 const dialogDelete = ref(false)

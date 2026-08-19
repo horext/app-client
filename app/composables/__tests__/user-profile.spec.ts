@@ -8,6 +8,8 @@ import type { IProfileService } from '#shared/application/interfaces/profile.ser
 import type { IAcademicConfigService } from '#shared/application/interfaces/academic-config.service'
 
 import { useUserProfile } from '../user-profile'
+import type { IHourlyLoadApi } from '~~/modules/apis/runtime/resources/hourly-load'
+import type { ISpecialityApi } from '~~/modules/apis/runtime/resources/speciality'
 
 const mockGetProfile = vi.fn()
 const mockProfilePatch = vi.fn()
@@ -50,9 +52,19 @@ mockNuxtImport('useUserPreferences', () =>
 )
 
 vi.mock('~~/modules/apis/runtime/composables', () => ({
-  useHourlyLoadApi: vi.fn(() => ({
-    getLatestByFaculty: mockGetLatestByFaculty,
-  })),
+  useHourlyLoadApi: vi.fn(
+    () =>
+      ({
+        getLatestByFaculty: mockGetLatestByFaculty,
+      }) satisfies IHourlyLoadApi,
+  ),
+  useSpecialityApi: vi.fn(
+    () =>
+      ({
+        getAllByFaculty: vi.fn(),
+        getById: vi.fn(),
+      }) satisfies ISpecialityApi,
+  ),
 }))
 
 function makeHourlyLoad(id = 1): IHourlyLoad {
