@@ -58,19 +58,6 @@ export interface ISubjectResponse {
   recommended: boolean
 }
 
-export interface IOrganizationUnitSummaryResponse {
-  id: number
-  code: string
-  name: string
-  parentId?: number
-}
-
-export interface ICourseAffiliationResponse {
-  courseId: string
-  faculties: IOrganizationUnitSummaryResponse[]
-  specialities: IOrganizationUnitSummaryResponse[]
-}
-
 export interface IScheduleResponse {
   id: number
   section: {

@@ -6,6 +6,12 @@ export type LocalHourlyLoadId = BrandUUID<'LocalHourlyLoadId'>
 export interface IImportWarning {
   row: number
   message: string
+  courseCode?: string
+  courseName?: string
+  section?: string
+  day?: string
+  startTime?: string
+  endTime?: string
 }
 
 export interface ILocalHourlyLoadDataset {
@@ -13,8 +19,6 @@ export interface ILocalHourlyLoadDataset {
   name: string
   importedAt: string
   sourceFileName: string
-  facultyId: number
-  specialityId: number
   subjects: ISubject[]
   schedulesBySubject: Record<string, ISubjectSchedule[]>
   sessionCount: number
@@ -22,10 +26,7 @@ export interface ILocalHourlyLoadDataset {
   warnings: IImportWarning[]
 }
 
-export type ILocalHourlyLoadDraft = Omit<
-  ILocalHourlyLoadDataset,
-  'facultyId' | 'specialityId'
->
+export type ILocalHourlyLoadDraft = ILocalHourlyLoadDataset
 
 export interface ILocalHourlyLoadSummary {
   id: LocalHourlyLoadId

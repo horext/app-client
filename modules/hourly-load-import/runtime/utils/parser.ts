@@ -208,7 +208,7 @@ export async function parseLocalHourlyLoad(
   >()
   let validSessionCount = 0
   let rejectedRowCount = 0
-  const warnings: { row: number; message: string }[] = []
+  const warnings: ILocalHourlyLoadDraft['warnings'] = []
   const sessionKeys = new Set<string>()
 
   worksheet.eachRow((row, rowNumber) => {
@@ -218,13 +218,26 @@ export async function parseLocalHourlyLoad(
       return column ? cellText(row.getCell(column)) : ''
     }
     const code = read('code').trim().toUpperCase()
+    const courseName = read('name').trim()
     const section = read('section').trim().toUpperCase()
+    const warningContext = {
+      courseCode: code || undefined,
+      courseName: courseName || undefined,
+      section: section || undefined,
+      day: read('day').trim() || undefined,
+      startTime: read('start').trim() || undefined,
+      endTime: read('end').trim() || undefined,
+    }
     const hasMappedValue = [...columns.keys()].some((key) => read(key).trim())
     if (!hasMappedValue) return
     if (code.includes('TOTAL')) return
     if (!code || !section) {
       rejectedRowCount += 1
-      warnings.push({ row: rowNumber, message: 'Falta código o sección.' })
+      warnings.push({
+        row: rowNumber,
+        message: 'Falta código o sección.',
+        ...warningContext,
+      })
       return
     }
     const day = DAY_BY_NAME[normalize(read('day'))]
@@ -239,6 +252,7 @@ export async function parseLocalHourlyLoad(
       warnings.push({
         row: rowNumber,
         message: 'Día u horario inválido; la sesión fue omitida.',
+        ...warningContext,
       })
       return
     }
@@ -248,13 +262,17 @@ export async function parseLocalHourlyLoad(
       .join('|')
     if (sessionKeys.has(sessionKey)) {
       rejectedRowCount += 1
-      warnings.push({ row: rowNumber, message: 'Sesión duplicada omitida.' })
+      warnings.push({
+        row: rowNumber,
+        message: 'Sesión duplicada omitida.',
+        ...warningContext,
+      })
       return
     }
     sessionKeys.add(sessionKey)
 
     const course = grouped.get(code) ?? {
-      name: read('name').trim() || code,
+      name: courseName || code,
       sections: new Map(),
     }
     const sessions = course.sections.get(section) ?? []

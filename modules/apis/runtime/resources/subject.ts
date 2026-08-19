@@ -1,8 +1,5 @@
 import type { IPageResponse } from '../interfaces/page'
-import type {
-  ICourseAffiliationResponse,
-  ISubjectResponse,
-} from '../interfaces/subject'
+import type { ISubjectResponse } from '../interfaces/subject'
 import { BaseApi } from './base'
 
 export type SearchParams = {
@@ -21,7 +18,6 @@ export type SearchParams = {
 )
 
 export interface ISubjectApi {
-  getAffiliations(courseIds: string[]): Promise<ICourseAffiliationResponse[]>
   findPageBySearch(
     params: SearchParams,
   ): Promise<IPageResponse<ISubjectResponse>>
@@ -35,16 +31,6 @@ export interface ISubjectApi {
 const PATH_SUBJECTS = 'subjects'
 
 export class SubjectApi extends BaseApi implements ISubjectApi {
-  public getAffiliations(courseIds: string[]) {
-    return this.$fetch<ICourseAffiliationResponse[]>(
-      PATH_SUBJECTS + '/affiliations',
-      {
-        method: 'POST',
-        body: courseIds,
-      },
-    )
-  }
-
   public findPageBySearch(params: SearchParams) {
     const { search, ..._params } = params
     return this.$fetch<IPageResponse<ISubjectResponse>>(

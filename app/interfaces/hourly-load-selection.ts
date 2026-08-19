@@ -9,6 +9,4 @@ export type HourlyLoadSelection =
     }
   | {
       source: 'local'
-      facultyId: number
-      specialityId: number
     }

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-dialog
-      :model-value="!loadingProfile && !setupCompleted"
+      :model-value="!loadingProfile && !setupCompleted && !localDataset"
       max-width="600"
       persistent
     >
@@ -42,17 +42,19 @@ const {
 } = useUserProfile()
 
 const router = useRouter()
+const { dataset: localDataset } = useLocalHourlyLoad()
 
 const loading = ref(false)
 
 const onSubmit = async (selection: HourlyLoadSelection) => {
   loading.value = true
   try {
-    await completeSetup(
-      selection.facultyId,
-      selection.specialityId,
-      selection.source === 'official' ? selection.hourlyLoad : null,
-    )
+    if (selection.source === 'official')
+      await completeSetup(
+        selection.facultyId,
+        selection.specialityId,
+        selection.hourlyLoad,
+      )
     await router.push('/generator/subjects')
   } finally {
     loading.value = false

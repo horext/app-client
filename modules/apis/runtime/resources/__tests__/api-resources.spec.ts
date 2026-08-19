@@ -66,16 +66,6 @@ describe('SpecialityApi', () => {
 })
 
 describe('SubjectApi', () => {
-  it('resolves course affiliations without uploading schedule contents', async () => {
-    const $fetch = makeFetch()
-    const api = new SubjectApi($fetch)
-    await api.getAffiliations(['BIC01', 'BMA01'])
-    expect($fetch).toHaveBeenCalledWith('subjects/affiliations', {
-      method: 'POST',
-      body: ['BIC01', 'BMA01'],
-    })
-  })
-
   it('calls $fetch with subjects search path and params', async () => {
     const $fetch = makeFetch()
     const api = new SubjectApi($fetch)

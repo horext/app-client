@@ -65,14 +65,17 @@ const successSave = ref(false)
 const saveBasicSettings = async (selection: HourlyLoadSelection) => {
   savingBasic.value = true
   try {
-    if (selection.source === 'official') await localHourlyLoad.clear()
+    if (selection.source === 'local') {
+      await navigateTo('/generator/subjects')
+      return
+    }
+    await localHourlyLoad.clear()
     await updateBasicSettings(
       selection.facultyId,
       selection.specialityId,
-      selection.source === 'official' ? selection.hourlyLoad : null,
+      selection.hourlyLoad,
     )
     successSave.value = true
-    if (selection.source === 'local') await navigateTo('/generator/subjects')
   } finally {
     savingBasic.value = false
   }

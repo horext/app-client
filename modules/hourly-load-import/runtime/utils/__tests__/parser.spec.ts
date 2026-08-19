@@ -88,6 +88,13 @@ describe('parseLocalHourlyLoad', () => {
       'Sesión duplicada omitida.',
       'Día u horario inválido; la sesión fue omitida.',
     ])
+    expect(result.warnings[1]).toMatchObject({
+      row: 5,
+      courseCode: 'BMA01',
+      courseName: 'Cálculo',
+      section: 'V',
+      day: 'INVALIDO',
+    })
     const [session] =
       result.schedulesBySubject[String(result.subjects[0]?.id)]?.[0]
         ?.sessions ?? []

@@ -190,11 +190,6 @@ const submitOfficial = async () => {
   })
 }
 
-const submitLocal = (dataset: ILocalHourlyLoadDataset) => {
-  emit('submit', {
-    source: 'local',
-    facultyId: dataset.facultyId,
-    specialityId: dataset.specialityId,
-  })
-}
+const submitLocal = (_dataset: ILocalHourlyLoadDataset) =>
+  emit('submit', { source: 'local' })
 </script>

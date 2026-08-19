@@ -14,8 +14,6 @@ describe('IndexedDBLocalHourlyLoadRepository', () => {
     name: 'Carga personal',
     importedAt: '2026-08-18T00:00:00.000Z',
     sourceFileName: 'carga.xlsx',
-    facultyId: 1,
-    specialityId: 2,
     subjects: [],
     schedulesBySubject: {},
     sessionCount: 0,
