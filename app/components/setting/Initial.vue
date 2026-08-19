@@ -40,7 +40,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn type="submit" variant="text" @click="ending"> Guardar </v-btn>
+        <v-btn type="submit" variant="text"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -58,6 +58,7 @@ import {
 } from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
 import { storeToRefs } from 'pinia'
+import type { SubmitEventPromise } from 'vuetify'
 
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
@@ -137,9 +138,8 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
   default: () => [],
 })
 
-const form = ref<VForm>()
-const ending = async () => {
-  const formValue = await form.value?.validate()
+const ending = async (e: SubmitEventPromise) => {
+  const formValue = await e
   if (!formValue?.valid) return
   emit(
     'submit',
