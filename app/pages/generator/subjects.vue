@@ -255,11 +255,11 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
     if (!_hourlyLoadId || !_specialityId) return []
-    const response = await courseApi.findBySearch(
-      _search,
-      _specialityId,
-      _hourlyLoadId,
-    )
+    const response = await courseApi.findPageBySearch({
+      search: _search,
+      specialityId: _specialityId,
+      hourlyLoadId: _hourlyLoadId,
+    })
     return response.content
   },
   {

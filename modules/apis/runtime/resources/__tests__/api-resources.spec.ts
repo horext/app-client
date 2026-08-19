@@ -59,10 +59,14 @@ describe('CourseApi', () => {
   it('calls $fetch with subjects search path and params', async () => {
     const $fetch = makeFetch()
     const api = new SubjectApi($fetch)
-    await api.findBySearch('math', 2, 3)
+    await api.findPageBySearch({
+      search: 'math',
+      specialityId: 2,
+      hourlyLoadId: 3,
+    })
     expect($fetch).toHaveBeenCalledWith('subjects?search=math', {
       method: 'GET',
-      params: { speciality: 2, hourlyLoad: 3 },
+      params: { specialityId: 2, hourlyLoadId: 3 },
     })
   })
 })
