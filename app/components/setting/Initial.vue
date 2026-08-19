@@ -89,7 +89,7 @@ watch(hourlyLoad, (value) => {
 })
 
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
-  'setting-specialities',
+  () => 'setting' + internalFacultyId.value + '-specialities',
   async () => {
     if (!internalFacultyId.value) {
       return []
@@ -110,7 +110,7 @@ watch(specialities, (value) => {
 })
 
 const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
-  'setting-last-hourly-load',
+  () => 'setting-last-hourly-load' + internalFacultyId.value,
   async () => {
     if (!internalFacultyId.value) {
       return undefined
@@ -120,7 +120,7 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   },
   {
     watch: [internalFacultyId],
-    immediate: false,
+    default: () => undefined,
     server: false,
   },
 )
