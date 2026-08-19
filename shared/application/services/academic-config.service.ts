@@ -5,8 +5,6 @@ import type {
 import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import type { IAcademicConfigService } from '../interfaces/academic-config.service'
 import { AcademicConfig } from '#shared/domain'
-import { ResourceNotFoundError } from '../errors/resource-not-found.error'
-import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
@@ -19,8 +17,12 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   private async _create(
     userId: string,
-    config: AcademicConfig<IBaseAcademicConfig>,
+    initial?: Partial<IBaseAcademicConfig>,
   ): Promise<AcademicConfig<IAcademicConfig>> {
+    const config = AcademicConfig.create({
+      ...initial,
+      hourlyLoad: initial?.hourlyLoad ?? null,
+    })
     return this.repo.create(userId, config)
   }
 
@@ -39,13 +41,14 @@ export class AcademicConfigService implements IAcademicConfigService {
     userId: string,
     initial?: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
-    if (await this._load(userId))
-      throw new ResourceAlreadyExistsError('academic-config')
-    const config = AcademicConfig.create({
-      ...initial,
-      hourlyLoad: initial?.hourlyLoad ?? null,
-    })
-    return (await this._create(userId, config)).toSnapshot()
+    const existing = await this._load(userId)
+    if (existing) {
+      if (!initial) {
+        return existing.toSnapshot()
+      }
+      ;(await this._update(userId, existing.update(initial))).toSnapshot()
+    }
+    return (await this._create(userId, initial)).toSnapshot()
   }
 
   async patch(
@@ -53,7 +56,9 @@ export class AcademicConfigService implements IAcademicConfigService {
     value: Partial<IBaseAcademicConfig>,
   ): Promise<IAcademicConfig> {
     const existing = await this._load(userId)
-    if (!existing) throw new ResourceNotFoundError('academic-config')
+    if (!existing) {
+      return (await this._create(userId, value)).toSnapshot()
+    }
     return (await this._update(userId, existing.update(value))).toSnapshot()
   }
 }
