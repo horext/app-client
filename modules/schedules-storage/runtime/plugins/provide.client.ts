@@ -38,8 +38,7 @@ export default defineNuxtPlugin({
       },
     )
     const persistence = new IndexedDbAggregatePersistence(dbFactory)
-    const auth = useUserAuthStore()
-    const userId = () => auth.user?.id ?? ANONYMOUS_USER_ID
+    const userId = () => ANONYMOUS_USER_ID
     const storage = {
       db: dbFactory,
       schedulesRepository: new IndexedDBSchedulesRepository(persistence),
