@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IUserProfile } from '~/interfaces/profile'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IOrganization } from '~/interfaces/organization'
 
 export const useUserProfileStore = defineStore('user-profile', () => {
   const loadingProfile = ref(true)
@@ -15,6 +16,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
   )
   const facultyId = computed(() => profile.value?.facultyId)
   const specialityId = computed(() => profile.value?.specialityId)
+  const speciality = ref<IOrganization>()
 
   return {
     profile,
@@ -25,5 +27,6 @@ export const useUserProfileStore = defineStore('user-profile', () => {
     facultyId,
     specialityId,
     loadingProfile,
+    speciality,
   }
 })

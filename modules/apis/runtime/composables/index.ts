@@ -21,7 +21,8 @@ export const useScheduleSubjectApi = () => useApi(SCHEDULE_SUBJECT_API_KEY)
 
 export const useFacultyApi = () => useApi(FACULTY_API_KEY)
 
-export const useSpecialityApi = () => useApi(SPECIALITY_API_KEY)
+export const useSpecialityApi = (ctx?: IApiRegistry) =>
+  useApi(SPECIALITY_API_KEY, ctx)
 
 export const useStudyPlanApi = () => useApi(STUDY_PLAN_API_KEY)
 
