@@ -73,7 +73,7 @@ const { facultyId, specialityId, hourlyLoad } = storeToRefs(store)
 const internalFacultyId = ref(facultyId.value)
 const internalSpecialityId = ref(specialityId.value)
 
-const internalHourlyLoad = ref(
+const internalHourlyLoad = shallowRef(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
 )
 
