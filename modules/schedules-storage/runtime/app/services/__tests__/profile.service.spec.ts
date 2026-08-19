@@ -45,15 +45,16 @@ describe('ProfileService', () => {
     })
   })
   describe('createProfile', () => {
-    it('rejects creation when a profile already exists', async () => {
-      repo.get.mockResolvedValue(makeProfile(true))
-      await expect(
-        service.create('user-1', {
-          facultyId: 5,
-          specialityId: 6,
-        }),
-      ).rejects.toThrow('El recurso profile ya existe.')
+    it('update when a profile already exists', async () => {
+      const profile = makeProfile(true)
+      repo.get.mockResolvedValue(profile)
+      repo.update.mockResolvedValue(profile)
+      await service.create('user-1', {
+        facultyId: 5,
+        specialityId: 6,
+      })
       expect(repo.create).not.toHaveBeenCalled()
+      expect(repo.update).toHaveBeenCalled()
     })
     it('creates and saves new profile when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
