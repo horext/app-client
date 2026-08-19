@@ -5,7 +5,11 @@ import type {
   ILocalHourlyLoadDraft,
   LocalHourlyLoadId,
 } from '#shared/domain/types/local-hourly-load'
-import type { ISession, ISubject, ISubjectSchedule } from '~/interfaces/subject'
+import type {
+  ISession,
+  ISubject,
+  ISubjectSchedule,
+} from '#shared/domain/types/subject'
 import { makeUUID } from '#shared/domain/types/ids'
 
 type ColumnKey =

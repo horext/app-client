@@ -34,11 +34,17 @@ const dayWeek = computed(() =>
     .toUpperCase(),
 )
 
-const type = computed(() => session.value?.type?.code)
+const type = computed(() => {
+  const type = session.value?.type
+  return type?.name || type?.code
+})
 
 const teacherFullName = computed(() => session.value?.teacher?.fullName)
 
-const classroom = computed(() => session.value?.classroom?.code)
+const classroom = computed(() => {
+  const classroom = session.value?.classroom
+  return classroom?.name ?? classroom?.code
+})
 
 const timeInterval = computed(
   () =>

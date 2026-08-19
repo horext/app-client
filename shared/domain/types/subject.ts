@@ -30,6 +30,7 @@ export interface IStudyPlan {
 export interface IClassroom {
   id: number
   code: string
+  name?: string
 }
 
 export interface ITeacher {

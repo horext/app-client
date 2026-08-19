@@ -75,7 +75,6 @@
           persistent-hint
           :rules="[(value) => !!value || 'Selecciona una carrera']"
         />
-
         <div class="d-flex justify-end mt-4">
           <v-btn
             type="submit"

@@ -27,7 +27,7 @@
       <v-list-item
         v-if="item"
         :title="`${item?.course?.id} - ${item?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name}`"
+        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name} | ${item?.studyPlan?.name}`"
       />
     </template>
     <template #item="{ props, item }">
@@ -38,6 +38,7 @@
         <template #subtitle>
           <span v-if="item.cycle">Ciclo: {{ item.cycle }}</span>
           <span v-if="item.type?.name"> · {{ item.type.name }}</span>
+          <span v-if="item.studyPlan?.name"> · {{ item.studyPlan.name }} </span>
           <span v-if="item.specialityCodes?.length" class="ml-2">
             <v-chip
               v-for="code in item.specialityCodes"

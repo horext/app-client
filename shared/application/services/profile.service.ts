@@ -3,7 +3,6 @@ import type { IProfileRepository } from '#shared/application/repositories/profil
 import type { IProfileService } from '../interfaces/profile.service'
 import { Profile } from '#shared/domain'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
-import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class ProfileService implements IProfileService {
   constructor(private readonly repo: IProfileRepository) {}
@@ -14,8 +13,9 @@ export class ProfileService implements IProfileService {
 
   private async _create(
     userId: string,
-    profile: Profile<IBaseProfile>,
+    initial: IBaseProfile,
   ): Promise<Profile<IProfile>> {
+    const profile = Profile.create(initial)
     return this.repo.create(userId, profile)
   }
 
@@ -31,10 +31,10 @@ export class ProfileService implements IProfileService {
   }
 
   async create(userId: string, initial: IBaseProfile): Promise<IProfile> {
-    if (await this._load(userId))
-      throw new ResourceAlreadyExistsError('profile')
-    const profile = Profile.create(initial)
-    return (await this._create(userId, profile)).toSnapshot()
+    const existing = await this._load(userId)
+    if (existing)
+      return (await this._update(userId, existing.update(initial))).toSnapshot()
+    return (await this._create(userId, initial)).toSnapshot()
   }
 
   async patch(userId: string, value: Partial<IBaseProfile>): Promise<IProfile> {

@@ -48,12 +48,12 @@ describe('AcademicConfigService', () => {
     })
   })
   describe('createAcademicConfig', () => {
-    it('rejects creation when config already exists', async () => {
-      repo.get.mockResolvedValue(makeConfig())
-      await expect(service.create('user-1')).rejects.toThrow(
-        'El recurso academic-config ya existe.',
-      )
-      expect(repo.create).not.toHaveBeenCalled()
+    it('update when config already exists', async () => {
+      const config = makeConfig()
+      repo.get.mockResolvedValue(config)
+      repo.update.mockResolvedValue(config)
+      await service.create('user-1', {})
+      expect(repo.update).toHaveBeenCalled()
     })
     it('creates and saves new config when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
@@ -74,12 +74,12 @@ describe('AcademicConfigService', () => {
     })
   })
   describe('patch', () => {
-    it('throws when no config exists', async () => {
+    it('create when no config exists', async () => {
       repo.get.mockResolvedValue(undefined)
-      await expect(
-        service.patch('user-1', { hourlyLoad: null }),
-      ).rejects.toThrow('The academic-config does not exist.')
-      expect(repo.update).not.toHaveBeenCalled()
+      const config = makeConfig()
+      repo.create.mockResolvedValue(config)
+      await service.patch('user-1', { hourlyLoad: null })
+      expect(repo.create).toHaveBeenCalled()
     })
     it('patches and saves when config exists', async () => {
       const config = makeConfig()

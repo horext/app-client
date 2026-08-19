@@ -46,8 +46,12 @@ const { subjects } = storeToRefs(subjectsStore)
 const { favoritesSchedules } = storeToRefs(favoritesStore)
 const { items: events } = storeToRefs(userEventsStore)
 
-const { fetchProfile, fetchAcademicConfig, fetchLatestHourlyLoad } =
-  useUserProfile(apis)
+const {
+  fetchProfile,
+  fetchAcademicConfig,
+  fetchLatestHourlyLoad,
+  fetchSpecialityById,
+} = useUserProfile(apis)
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
 
@@ -66,6 +70,9 @@ onMounted(async () => {
     } catch {
       // No hourly load available yet for this faculty — non-blocking
     }
+  }
+  if (profileStore.specialityId) {
+    await fetchSpecialityById(profileStore.specialityId)
   }
   await Promise.all([
     fetchSubjects(),

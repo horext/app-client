@@ -1,7 +1,10 @@
 import { storeToRefs } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IApiRegistry } from '~~/modules/apis/runtime'
-import { useHourlyLoadApi } from '~~/modules/apis/runtime/composables'
+import {
+  useHourlyLoadApi,
+  useSpecialityApi,
+} from '~~/modules/apis/runtime/composables'
 
 export const useUserProfile = (apis?: IApiRegistry) => {
   const store = useUserProfileStore()
@@ -9,6 +12,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   const academicConfigService = useAcademicConfigService()
   const userId = useSchedulesUserId()
   const hourlyLoadApi = useHourlyLoadApi(apis)
+  const specialityApi = useSpecialityApi(apis)
   const {
     profile,
     hourlyLoad,
@@ -18,12 +22,14 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     facultyId,
     specialityId,
     loadingProfile,
+    speciality,
   } = storeToRefs(store)
 
   async function fetchProfile() {
     try {
       loadingProfile.value = true
-      profile.value = await profileService.get(userId)
+      const data = await profileService.get(userId)
+      profile.value = data
     } finally {
       loadingProfile.value = false
     }
@@ -66,6 +72,11 @@ export const useUserProfile = (apis?: IApiRegistry) => {
   async function fetchLatestHourlyLoad(facultyId: number) {
     const data = await hourlyLoadApi.getLatestByFaculty(facultyId)
     updateHourlyLoad(data)
+  }
+
+  async function fetchSpecialityById(specialityId: number) {
+    const data = await specialityApi.getById(specialityId)
+    speciality.value = data
   }
 
   async function updateFaculty(_facultyId: number) {
@@ -149,5 +160,6 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     updateBasicSettings,
     completeSetup,
     fetchLatestHourlyLoad,
+    fetchSpecialityById,
   }
 }

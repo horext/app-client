@@ -23,6 +23,11 @@
               @update:model-value="addNewSubject"
             />
           </v-col>
+          <v-col cols="12">
+            <v-chip color="primary" variant="flat" size="small"
+              >Especialidad: {{ speciality?.name }}
+            </v-chip>
+          </v-col>
         </v-row>
         <v-dialog
           v-model="dialog"
@@ -147,7 +152,7 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
-const { specialityId, hourlyLoad } = storeToRefs(configStore)
+const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
@@ -296,15 +301,15 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const _hourlyLoadId = hourlyLoad.value?.id
     if (!_hourlyLoadId) return []
     if (!_specialityId) return []
-    const response = await courseApi.findBySearch(
-      _search,
-      _specialityId,
-      _hourlyLoadId,
-    )
+    const response = await courseApi.findPageBySearch({
+      search: _search,
+      specialityId: _specialityId,
+      hourlyLoadId: _hourlyLoadId,
+    })
     return response.content
   },
   {
-    watch: [search, hourlyLoad, localDataset],
+    watch: [search, hourlyLoad, localDataset, specialityId],
     default: () => [],
   },
 )
