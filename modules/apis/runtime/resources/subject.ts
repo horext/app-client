@@ -21,6 +21,11 @@ export interface ISubjectApi {
   findPageBySearch(
     params: SearchParams,
   ): Promise<IPageResponse<ISubjectResponse>>
+  findAllByStudyPlanIdAndCycle(
+    hourlyLoadId: number,
+    studyPlanId: number,
+    cycle: number,
+  ): Promise<ISubjectResponse[]>
 }
 
 const PATH_SUBJECTS = 'subjects'
@@ -35,5 +40,19 @@ export class SubjectApi extends BaseApi implements ISubjectApi {
         params: _params,
       },
     )
+  }
+
+  public findAllByStudyPlanIdAndCycle(
+    hourlyLoadId: number,
+    studyPlanId: number,
+    cycle: number,
+  ) {
+    return this.$fetch<ISubjectResponse[]>(PATH_SUBJECTS, {
+      params: {
+        hourlyLoadId,
+        studyPlanId,
+        cycle,
+      },
+    })
   }
 }
