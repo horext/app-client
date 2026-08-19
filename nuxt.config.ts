@@ -1,5 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
+const isVitest = process.env.VITEST === 'true'
+
 export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
@@ -29,7 +31,7 @@ export default defineNuxtConfig({
     './modules/apis',
     './modules/schedules-storage',
     '@pinia/nuxt',
-    '@unocss/nuxt',
+    ...(!isVitest ? (['@unocss/nuxt'] as const) : []),
     [
       '@vueuse/nuxt',
       {

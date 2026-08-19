@@ -25,9 +25,9 @@ export default defineConfig({
         },
         resolve: {
           alias: {
-            '~': path.resolve(__dirname, './app'),
-            '~~': path.resolve(__dirname, './'),
-            '#shared': path.resolve(__dirname, './shared'),
+            '~': path.resolve(import.meta.dirname, './app'),
+            '~~': path.resolve(import.meta.dirname, './'),
+            '#shared': path.resolve(import.meta.dirname, './shared'),
           },
         },
         plugins: [vue()],
@@ -45,8 +45,8 @@ export default defineConfig({
         },
         resolve: {
           alias: {
-            '~': path.resolve(__dirname, './app'),
-            '#shared': path.resolve(__dirname, './shared'),
+            '~': path.resolve(import.meta.dirname, './app'),
+            '#shared': path.resolve(import.meta.dirname, './shared'),
           },
         },
       },
@@ -54,6 +54,7 @@ export default defineConfig({
         test: {
           name: 'nuxt',
           include: ['app/**/__tests__/**/*.{spec,test}.{ts,vue}'],
+          setupFiles: ['./tests/setup/environment.ts'],
           environment: 'nuxt',
           typecheck: {
             enabled: true,
