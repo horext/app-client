@@ -27,14 +27,14 @@
       <v-list-item
         v-if="item"
         :title="`${item?.course?.id} - ${item?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name}`"
+        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name} | ${item?.studyPlan?.name}`"
       />
     </template>
     <template #item="{ props, item }">
       <v-list-item
         v-bind="props"
         :title="`${item?.course?.id} - ${item?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name}`"
+        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name} | ${item?.studyPlan?.name}`"
       />
     </template>
     <template #append>

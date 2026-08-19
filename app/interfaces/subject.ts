@@ -15,6 +15,7 @@ export interface ICourseType {
 
 export interface IStudyPlan {
   id: number
+  name?: string
   fromDate: string
   code: string
   organizationUnit: {
