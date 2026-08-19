@@ -3,10 +3,14 @@ import JSZip from 'jszip'
 import { describe, expect, it } from 'vitest'
 import { parseLocalHourlyLoad } from '../parser'
 
-const makeFile = async (rows: unknown[][]) => {
+const makeFile = async (
+  rows: unknown[][],
+  configure?: (sheet: ExcelJS.Worksheet) => void,
+) => {
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('Carga')
   rows.forEach((row) => sheet.addRow(row))
+  configure?.(sheet)
   const data = await workbook.xlsx.writeBuffer()
   return new File([data], 'carga.xlsx', {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -38,6 +42,24 @@ const addSpreadsheetNamespacePrefix = async (file: File) => {
 }
 
 describe('parseLocalHourlyLoad', () => {
+  it('ignores empty merged title cells before the header row', async () => {
+    const file = await makeFile(
+      [
+        [],
+        [],
+        [],
+        ['CÓDIGO', 'CURSO', 'SECCIÓN', 'DÍA', 'HORA INICIO', 'HORA FINAL'],
+        ['BEF01', 'Ética', 'U', 'SA', 9, 11],
+      ],
+      (sheet) => sheet.mergeCells('A1:E3'),
+    )
+
+    const result = await parseLocalHourlyLoad(file)
+
+    expect(result.subjects[0]?.course.id).toBe('BEF01')
+    expect(result.sessionCount).toBe(1)
+  })
+
   it('recognizes header variants, defaults optional fields and reports bad rows', async () => {
     const file = await makeFile([
       ['Título'],

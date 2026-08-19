@@ -64,8 +64,9 @@ const normalize = (value: unknown) =>
     .toUpperCase()
 
 const cellText = (cell: ExcelJS.Cell) => {
+  if (cell.value == null) return ''
   if (cell.value instanceof Date) return cell.value.toISOString()
-  return cell.text?.trim() || String(cell.value ?? '').trim()
+  return cell.text.trim() || String(cell.value).trim()
 }
 
 const matchColumn = (header: string): ColumnKey | undefined => {
