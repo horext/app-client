@@ -4,7 +4,7 @@ import { BaseApi } from '../base'
 import { FacultyApi } from '../faculty'
 import { HourlyLoadApi } from '../hourly-load'
 import { SpecialityApi } from '../speciality'
-import { CourseApi } from '../course'
+import { SubjectApi } from '../subject'
 import { ScheduleSubjectApi } from '../schedule-subject'
 import { StudyPlanApi } from '../studyPlan'
 
@@ -58,7 +58,7 @@ describe('SpecialityApi', () => {
 describe('CourseApi', () => {
   it('calls $fetch with subjects search path and params', async () => {
     const $fetch = makeFetch()
-    const api = new CourseApi($fetch)
+    const api = new SubjectApi($fetch)
     await api.findBySearch('math', 2, 3)
     expect($fetch).toHaveBeenCalledWith('subjects?search=math', {
       method: 'GET',

@@ -1,5 +1,5 @@
 import {
-  COURSE_API_KEY,
+  SUBJECT_API_KEY,
   FACULTY_API_KEY,
   HOURLY_LOAD_API_KEY,
   SCHEDULE_SUBJECT_API_KEY,
@@ -26,7 +26,7 @@ export const useSpecialityApi = (ctx?: IApiRegistry) =>
 
 export const useStudyPlanApi = () => useApi(STUDY_PLAN_API_KEY)
 
-export const useCourseApi = () => useApi(COURSE_API_KEY)
+export const useCourseApi = () => useApi(SUBJECT_API_KEY)
 
 export const useHourlyLoadApi = (ctx?: IApiRegistry) =>
   useApi(HOURLY_LOAD_API_KEY, ctx)

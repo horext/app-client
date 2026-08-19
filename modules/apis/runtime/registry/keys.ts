@@ -1,4 +1,4 @@
-import type { ICourseApi } from '../resources/course'
+import type { ISubjectApi } from '../resources/subject'
 import type { IFacultyApi } from '../resources/faculty'
 import type { IHourlyLoadApi } from '../resources/hourly-load'
 import type { IScheduleSubjectApi } from '../resources/schedule-subject'
@@ -6,7 +6,7 @@ import type { ISpecialityApi } from '../resources/speciality'
 import type { IStudyPlanApi } from '../resources/studyPlan'
 import type { InjectionKey } from 'vue'
 
-export const COURSE_API_KEY: InjectionKey<ICourseApi> = Symbol('CourseApi')
+export const SUBJECT_API_KEY: InjectionKey<ISubjectApi> = Symbol('SubjectApi')
 
 export const FACULTY_API_KEY: InjectionKey<IFacultyApi> = Symbol('FacultyApi')
 
