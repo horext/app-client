@@ -46,7 +46,7 @@ export class AcademicConfigService implements IAcademicConfigService {
       if (!initial) {
         return existing.toSnapshot()
       }
-      ;(await this._update(userId, existing.update(initial))).toSnapshot()
+      return (await this._update(userId, existing.update(initial))).toSnapshot()
     }
     return (await this._create(userId, initial)).toSnapshot()
   }
