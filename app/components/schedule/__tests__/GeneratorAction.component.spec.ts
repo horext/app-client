@@ -90,6 +90,24 @@ describe('GeneratorActions.vue', () => {
     const button = wrapper.findComponent(VBtn)
     await button.trigger('click')
 
-    expect(wrapper.emitted()['click:generate']).toBeTruthy()
+    expect(wrapper.emitted()['click:generate']).toEqual([[2]])
+  })
+
+  it('generates with the edited value before persistence finishes', async () => {
+    const wrapper = mount(GeneratorActions, {
+      props: {
+        loadingGenerate: false,
+        crossings: 0,
+      },
+      global: {
+        plugins: [vuetify],
+      },
+    })
+
+    await wrapper.findComponent(VTextField).find('input').setValue(1)
+    await wrapper.findComponent(VBtn).trigger('click')
+
+    expect(wrapper.emitted()['update:crossings']).toEqual([[1]])
+    expect(wrapper.emitted()['click:generate']).toEqual([[1]])
   })
 })

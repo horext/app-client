@@ -119,20 +119,20 @@ const removeFavorite = async (schedule: IScheduleGenerate) => {
 
 const { loadSchedules } = useSchedulesGenerator()
 const loadingGenerate = ref(false)
-const generateAllUserSchedules = async () => {
+const generateAllUserSchedules = async (crossings: number) => {
   succces.value = false
   loadingGenerate.value = true
   const { occurrences: occurrencesData, combinations } = await loadSchedules(
     mySubjects.value,
     myEvents.value,
     {
-      crossingSubjects: crossingSubjects.value,
+      crossingSubjects: crossings,
     },
   )
   loadingGenerate.value = false
   await setResult(toRaw(combinations), toRaw(occurrencesData), {
     generatedAt: new Date().toISOString(),
-    crossingsSetting: toRaw(crossingSubjects.value),
+    crossingsSetting: crossings,
     weekDays: toRaw(weekDays.value),
     hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
   })

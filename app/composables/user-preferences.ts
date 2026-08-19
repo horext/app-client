@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia'
 import type { Weekdays } from '~/interfaces/event'
+import type { IBasePreferences } from '#shared/domain/types/preferences'
 
 export const useUserPreferences = () => {
   const store = useUserPreferencesStore()
@@ -13,13 +14,16 @@ export const useUserPreferences = () => {
     if (prefs) preferences.value = prefs
   }
 
-  async function createPreferences() {
-    await service.create(userId)
+  async function createPreferences(initial: Partial<IBasePreferences> = {}) {
+    preferences.value = await service.create(userId, initial)
   }
 
   async function updateCrossings(_crossings: number) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, crossings: _crossings }
+    if (!preferences.value) {
+      await createPreferences({ crossings: _crossings })
+      return
+    }
+    preferences.value = { ...preferences.value, crossings: _crossings }
     await service.patch(userId, { crossings: _crossings })
   }
 

@@ -53,10 +53,17 @@ describe('useUserPreferences', () => {
   })
 
   it('createPreferences calls service.create', async () => {
-    mockCreatePreferences.mockResolvedValue(undefined)
+    const created = {
+      id: crypto.randomUUID(),
+      crossings: 0,
+      weekDays: [1, 2],
+      maxGenerationHistory: 10,
+    }
+    mockCreatePreferences.mockResolvedValue(created)
     const { createPreferences } = useUserPreferences()
     await createPreferences()
     expect(mockCreatePreferences).toHaveBeenCalled()
+    expect(useUserPreferencesStore().preferences).toEqual(created)
   })
 
   it('updateCrossings updates preferences and patches service', async () => {
@@ -74,12 +81,21 @@ describe('useUserPreferences', () => {
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
   })
 
-  it('updateCrossings skips store update when preferences is undefined', async () => {
-    mockPatch.mockResolvedValue(undefined)
+  it('updateCrossings creates preferences when they do not exist', async () => {
+    const created = {
+      id: crypto.randomUUID(),
+      crossings: 3,
+      weekDays: [1, 2, 3, 4, 5, 6],
+      maxGenerationHistory: 10,
+    }
+    mockCreatePreferences.mockResolvedValue(created)
     const { updateCrossings } = useUserPreferences()
     await updateCrossings(3)
-    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
-    expect(useUserPreferencesStore().preferences).toBeUndefined()
+    expect(mockCreatePreferences).toHaveBeenCalledWith(expect.any(String), {
+      crossings: 3,
+    })
+    expect(mockPatch).not.toHaveBeenCalled()
+    expect(useUserPreferencesStore().preferences).toEqual(created)
   })
 
   it('saveWeekDays updates preferences and patches service', async () => {
