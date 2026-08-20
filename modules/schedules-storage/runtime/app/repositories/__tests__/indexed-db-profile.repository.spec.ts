@@ -8,6 +8,7 @@ import { makeUUID } from '~~/shared/domain/types/ids'
 const persistedProfile: IProfile = {
   facultyId: 1,
   specialityId: 2,
+  studyPlanId: null,
   setupCompleted: false,
   id: makeUUID(),
   createdAt: '2026-01-01T00:00:00.000Z',
@@ -46,6 +47,7 @@ describe('IndexedDBProfileRepository', () => {
     const profile = Profile.create({
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     })
     persistence.create.mockResolvedValue(persistedProfile)

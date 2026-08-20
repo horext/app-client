@@ -9,6 +9,7 @@ const makeProfile = (setupCompleted = false) =>
     persistedSnapshot({
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted,
     }),
   )
@@ -35,6 +36,7 @@ describe('ProfileService', () => {
         persistedSnapshot({
           facultyId: 1,
           specialityId: 2,
+          studyPlanId: null,
           setupCompleted: false,
         }),
       )
@@ -52,6 +54,7 @@ describe('ProfileService', () => {
       await service.create('user-1', {
         facultyId: 5,
         specialityId: 6,
+        studyPlanId: null,
       })
       expect(repo.create).not.toHaveBeenCalled()
       expect(repo.update).toHaveBeenCalled()
@@ -62,6 +65,7 @@ describe('ProfileService', () => {
         persistedSnapshot({
           facultyId: 3,
           specialityId: 4,
+          studyPlanId: null,
           setupCompleted: false,
         }),
       )
@@ -69,6 +73,7 @@ describe('ProfileService', () => {
       const result = await service.create('user-1', {
         facultyId: 3,
         specialityId: 4,
+        studyPlanId: null,
       })
       expect(repo.create).toHaveBeenCalledOnce()
       expect(result.facultyId).toBe(3)
