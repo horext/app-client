@@ -153,7 +153,7 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
-const { specialityId, hourlyLoad, speciality, studyPlanId } =
+const { facultyId, specialityId, hourlyLoad, speciality, studyPlanId } =
   storeToRefs(configStore)
 
 const refresh = async () => {
@@ -300,15 +300,14 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const _search = search.value
     if (!_search) return []
     const _hourlyLoadId = hourlyLoad.value?.id
+    const _facultyId = facultyId.value
     const _specialityId = specialityId.value
     const _studyPlanId = studyPlanId.value
     if (!_hourlyLoadId || !_specialityId) return []
     const response = await subjectApi.findPageBySpeciality({
       search: _search,
       hourlyLoadId: _hourlyLoadId,
-      ...(_studyPlanId
-        ? { studyPlanId: _studyPlanId }
-        : { specialityId: _specialityId }),
+      specialityId: _specialityId,
     })
     return response.content
   },
