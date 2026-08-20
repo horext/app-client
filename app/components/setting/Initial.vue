@@ -115,9 +115,15 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
     if (!internalFacultyId.value) {
       return []
     }
-    internalSpecialityId.value = undefined
-    internalStudyPlanId.value = undefined
-    return await specialityApi.getAllByFaculty(internalFacultyId.value)
+    const items = await specialityApi.getAllByFaculty(internalFacultyId.value)
+    const existsSpeciality = items.some(
+      (i) => i.id === internalSpecialityId.value,
+    )
+    if (!existsSpeciality) {
+      internalSpecialityId.value = undefined
+      internalStudyPlanId.value = undefined
+    }
+    return items
   },
   {
     default: () => [],
@@ -147,8 +153,16 @@ const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
     if (!internalSpecialityId.value) {
       return []
     }
-    internalStudyPlanId.value = undefined
-    return await studyPlanApi.getAllBySpecialityId(internalSpecialityId.value)
+    const items = await studyPlanApi.getAllBySpecialityId(
+      internalSpecialityId.value,
+    )
+    const existsStudyPlan = items.some(
+      (i) => i.id === internalStudyPlanId.value,
+    )
+    if (!existsStudyPlan) {
+      internalStudyPlanId.value = undefined
+    }
+    return items
   },
   {
     default: () => [],
