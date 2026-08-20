@@ -26,12 +26,9 @@ import {
   SETTINGS_ROUTE,
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
-import { provideApis } from '~~/modules/apis/runtime'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
-
-const apis = provideApis()
 
 const settingsStore = useSettingsStore()
 
@@ -51,7 +48,7 @@ const {
   fetchAcademicConfig,
   fetchLatestHourlyLoad,
   fetchSpecialityById,
-} = useUserProfile(apis)
+} = useUserProfile()
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
 

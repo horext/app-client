@@ -7,26 +7,48 @@ import {
   STUDY_PLAN_API_KEY,
 } from '../registry/keys'
 
-import type { InjectionKey } from 'vue'
 import { inject } from 'vue'
-import type { IApiRegistry } from '..'
+import { defineApi } from '../core/define-api'
+import { SubjectApi } from '../resources/subject'
+import { FETCH_KEY } from '../core/symbols'
+import { ScheduleSubjectApi } from '../resources/schedule-subject'
+import { FacultyApi } from '../resources/faculty'
+import { SpecialityApi } from '../resources/speciality'
+import { StudyPlanApi } from '../resources/studyPlan'
+import { HourlyLoadApi } from '../resources/hourly-load'
 
-export function useApi<T>(provider: InjectionKey<T>, ctx?: IApiRegistry): T {
-  const api = inject(provider) ?? ctx?.get(provider)
-  if (!api) throw new Error('No api providedr for ' + provider.description)
-  return api
+const useFetch = () => {
+  const fetcher = inject(FETCH_KEY)
+  if (!fetcher) throw Error('No fetch api provider')
+  return fetcher
 }
 
-export const useScheduleSubjectApi = () => useApi(SCHEDULE_SUBJECT_API_KEY)
+export const useScheduleSubjectApi = defineApi(
+  SCHEDULE_SUBJECT_API_KEY,
+  () => new ScheduleSubjectApi(useFetch()),
+)
 
-export const useFacultyApi = () => useApi(FACULTY_API_KEY)
+export const useFacultyApi = defineApi(
+  FACULTY_API_KEY,
+  () => new FacultyApi(useFetch()),
+)
 
-export const useSpecialityApi = (ctx?: IApiRegistry) =>
-  useApi(SPECIALITY_API_KEY, ctx)
+export const useSpecialityApi = defineApi(
+  SPECIALITY_API_KEY,
+  () => new SpecialityApi(useFetch()),
+)
 
-export const useStudyPlanApi = () => useApi(STUDY_PLAN_API_KEY)
+export const useStudyPlanApi = defineApi(
+  STUDY_PLAN_API_KEY,
+  () => new StudyPlanApi(useFetch()),
+)
 
-export const useCourseApi = () => useApi(SUBJECT_API_KEY)
+export const useCourseApi = defineApi(
+  SUBJECT_API_KEY,
+  () => new SubjectApi(useFetch()),
+)
 
-export const useHourlyLoadApi = (ctx?: IApiRegistry) =>
-  useApi(HOURLY_LOAD_API_KEY, ctx)
+export const useHourlyLoadApi = defineApi(
+  HOURLY_LOAD_API_KEY,
+  () => new HourlyLoadApi(useFetch()),
+)

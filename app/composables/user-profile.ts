@@ -1,18 +1,17 @@
 import { storeToRefs } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import type { IApiRegistry } from '~~/modules/apis/runtime'
 import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
 
-export const useUserProfile = (apis?: IApiRegistry) => {
+export const useUserProfile = () => {
   const store = useUserProfileStore()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
   const userId = useSchedulesUserId()
-  const hourlyLoadApi = useHourlyLoadApi(apis)
-  const specialityApi = useSpecialityApi(apis)
+  const hourlyLoadApi = useHourlyLoadApi()
+  const specialityApi = useSpecialityApi()
   const {
     profile,
     hourlyLoad,
