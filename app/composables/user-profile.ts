@@ -96,48 +96,50 @@ export const useUserProfile = () => {
       profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
 
-  async function updateBasicSettings(
-    _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
-    _studyPlanId?: number,
-  ) {
+  async function updateBasicSettings(data: {
+    facultyId: number
+    specialityId: number | null
+    hourlyLoad: IHourlyLoad
+    studyPlanId: number | null
+  }) {
     await Promise.all([
       profileService.patch(userId, {
-        facultyId: _facultyId,
-        specialityId: _specialityId,
-        studyPlanId: _studyPlanId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
       }),
-      updateHourlyLoad(_hourlyLoad),
+      updateHourlyLoad(data.hourlyLoad),
     ])
     if (profile.value)
       profile.value = {
         ...profile.value,
-        facultyId: _facultyId,
-        specialityId: _specialityId,
-        studyPlanId: _studyPlanId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
       }
   }
 
   const { createPreferences } = useUserPreferences()
-  async function completeSetup(
-    _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
-  ) {
+  async function completeSetup(data: {
+    facultyId: number
+    specialityId: number | null
+    hourlyLoad: IHourlyLoad
+    studyPlanId: number | null
+  }) {
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {
-        facultyId: _facultyId,
-        specialityId: _specialityId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
         setupCompleted: true,
       }),
       academicConfigService.create(userId, {
-        hourlyLoad: _hourlyLoad,
+        hourlyLoad: data.hourlyLoad,
       }),
       createPreferences(),
     ])
     profile.value = createdProfile
-    hourlyLoad.value = _hourlyLoad
+    hourlyLoad.value = data.hourlyLoad
   }
 
   return {

@@ -39,7 +39,6 @@
           :items="specialities"
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
-          :rules="[(v) => !!v || 'Especialidad es requerida']"
         />
         <v-autocomplete
           v-model="internalStudyPlanId"
@@ -77,10 +76,12 @@ import type { SubmitEventPromise } from 'vuetify'
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
   submit: [
-    facultyId: number,
-    specialityId: number,
-    hourlyLoad: IHourlyLoad,
-    internalSpecialityId?: number,
+    {
+      facultyId: number
+      specialityId: number | null
+      hourlyLoad: IHourlyLoad
+      studyPlanId: number | null
+    },
   ]
 }>()
 
@@ -124,8 +125,7 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
       (i) => i.id === internalSpecialityId.value,
     )
     if (!existsSpeciality) {
-      internalSpecialityId.value = undefined
-      internalStudyPlanId.value = undefined
+      internalSpecialityId.value = null
     }
     return items
   },
@@ -164,7 +164,7 @@ const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
       (i) => i.id === internalStudyPlanId.value,
     )
     if (!existsStudyPlan) {
-      internalStudyPlanId.value = undefined
+      internalStudyPlanId.value = null
     }
     return items
   },
@@ -173,6 +173,12 @@ const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
     watch: [internalSpecialityId],
   },
 )
+
+watch(internalSpecialityId, (value) => {
+  if (!value) {
+    internalStudyPlanId.value = null
+  }
+})
 
 watch(lastHourlyLoad, (value) => {
   if (value) {
@@ -189,12 +195,11 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 const ending = async (e: SubmitEventPromise) => {
   const formValue = await e
   if (!formValue?.valid) return
-  emit(
-    'submit',
-    internalFacultyId.value!,
-    internalSpecialityId.value!,
-    internalHourlyLoad.value!,
-    internalStudyPlanId.value,
-  )
+  emit('submit', {
+    facultyId: internalFacultyId.value!,
+    specialityId: internalSpecialityId.value,
+    hourlyLoad: internalHourlyLoad.value!,
+    studyPlanId: internalStudyPlanId.value,
+  })
 }
 </script>

@@ -45,14 +45,15 @@ const router = useRouter()
 
 const loading = ref(false)
 
-const onSubmit = async (
-  facultyId: number,
-  specialityId: number,
-  hourlyLoad: IHourlyLoad,
-) => {
+const onSubmit = async (data: {
+  facultyId: number
+  specialityId: number | null
+  studyPlanId: number | null
+  hourlyLoad: IHourlyLoad
+}) => {
   loading.value = true
   try {
-    await completeSetup(facultyId, specialityId, hourlyLoad)
+    await completeSetup(data)
     await router.push('/generator/subjects')
   } finally {
     loading.value = false
