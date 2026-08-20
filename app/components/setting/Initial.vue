@@ -3,8 +3,7 @@
     <v-card :loading="loading">
       <v-card-title> Configuración Básica </v-card-title>
       <v-card-subtitle>
-        Selecciona tu facultad para obtener tu carga horaria y selecciona tu
-        especialidad para filtrar los cursos.
+        Selecciona tu facultad para obtener tu carga horaria
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
@@ -26,6 +25,11 @@
           label="Carga horaria"
           :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
         />
+      </v-card-text>
+      <v-card-subtitle>
+        Selecciona tu especialidad y plan de estudios para un mejor filtrado de
+        los cursos. </v-card-subtitle
+      ><v-card-text>
         <v-autocomplete
           v-model="internalSpecialityId"
           :disabled="!internalFacultyId"
