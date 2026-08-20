@@ -37,6 +37,16 @@
           placeholder="Especialidad"
           :rules="[(v) => !!v || 'Especialidad es requerida']"
         />
+        <v-autocomplete
+          v-model="internalStudyPlanId"
+          :disabled="!internalSpecialityId"
+          item-value="id"
+          :loading="loadingStudyPlans"
+          item-title="name"
+          :items="studyPlans"
+          label="Selecciona tu plan de estudios"
+          placeholder="Plan de estudios"
+        />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -55,24 +65,31 @@ import {
   useFacultyApi,
   useHourlyLoadApi,
   useSpecialityApi,
+  useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
-import type { VForm } from 'vuetify/components/VForm'
 import { storeToRefs } from 'pinia'
 import type { SubmitEventPromise } from 'vuetify'
 
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
-  submit: [facultyId: number, specialityId: number, hourlyLoad: IHourlyLoad]
+  submit: [
+    facultyId: number,
+    specialityId: number,
+    hourlyLoad: IHourlyLoad,
+    internalSpecialityId?: number,
+  ]
 }>()
 
 const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
+const studyPlanApi = useStudyPlanApi()
 const store = useUserProfileStore()
-const { facultyId, specialityId, hourlyLoad } = storeToRefs(store)
+const { facultyId, specialityId, hourlyLoad, studyPlanId } = storeToRefs(store)
 
 const internalFacultyId = ref(facultyId.value)
 const internalSpecialityId = ref(specialityId.value)
+const internalStudyPlanId = ref(studyPlanId.value)
 
 const internalHourlyLoad = shallowRef(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
@@ -83,6 +100,9 @@ watch(facultyId, (value) => {
 })
 watch(specialityId, (value) => {
   internalSpecialityId.value = value
+})
+watch(studyPlanId, (value) => {
+  internalStudyPlanId.value = value
 })
 
 watch(hourlyLoad, (value) => {
@@ -95,6 +115,8 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
     if (!internalFacultyId.value) {
       return []
     }
+    internalSpecialityId.value = undefined
+    internalStudyPlanId.value = undefined
     return await specialityApi.getAllByFaculty(internalFacultyId.value)
   },
   {
@@ -102,13 +124,6 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
     watch: [internalFacultyId],
   },
 )
-
-watch(specialities, (value) => {
-  const speciality = value.find((s) => s.id === internalSpecialityId.value)
-  if (!speciality) {
-    internalSpecialityId.value = undefined
-  }
-})
 
 const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   () => 'setting-last-hourly-load' + internalFacultyId.value,
@@ -123,6 +138,21 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
     watch: [internalFacultyId],
     default: () => undefined,
     server: false,
+  },
+)
+
+const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
+  () => 'setting' + internalSpecialityId.value + '-study-plans',
+  async () => {
+    if (!internalSpecialityId.value) {
+      return []
+    }
+    internalStudyPlanId.value = undefined
+    return await studyPlanApi.getAllBySpecialityId(internalSpecialityId.value)
+  },
+  {
+    default: () => [],
+    watch: [internalSpecialityId],
   },
 )
 
@@ -146,6 +176,7 @@ const ending = async (e: SubmitEventPromise) => {
     internalFacultyId.value!,
     internalSpecialityId.value!,
     internalHourlyLoad.value!,
+    internalStudyPlanId.value,
   )
 }
 </script>

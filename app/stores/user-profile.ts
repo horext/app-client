@@ -16,6 +16,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
   )
   const facultyId = computed(() => profile.value?.facultyId)
   const specialityId = computed(() => profile.value?.specialityId)
+  const studyPlanId = computed(() => profile.value?.studyPlanId)
   const speciality = ref<IOrganization>()
 
   return {
@@ -28,5 +29,6 @@ export const useUserProfileStore = defineStore('user-profile', () => {
     specialityId,
     loadingProfile,
     speciality,
+    studyPlanId,
   }
 })

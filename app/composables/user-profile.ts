@@ -100,11 +100,13 @@ export const useUserProfile = () => {
     _facultyId: number,
     _specialityId: number,
     _hourlyLoad: IHourlyLoad,
+    _studyPlanId?: number,
   ) {
     await Promise.all([
       profileService.patch(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
+        studyPlanId: _studyPlanId,
       }),
       updateHourlyLoad(_hourlyLoad),
     ])
@@ -113,6 +115,7 @@ export const useUserProfile = () => {
         ...profile.value,
         facultyId: _facultyId,
         specialityId: _specialityId,
+        studyPlanId: _studyPlanId,
       }
   }
 

@@ -3,5 +3,6 @@ export interface IUserProfile {
   id: UUID
   facultyId: number
   specialityId: number
+  studyPlanId?: number
   setupCompleted: boolean
 }
