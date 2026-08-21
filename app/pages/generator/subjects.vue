@@ -89,6 +89,15 @@
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
     </template>
+    <template #[`item.subject.studyPlan.name`]="{ item }">
+      {{ item.subject.studyPlan.name ?? item.subject.studyPlan.code }}
+    </template>
+    <template #[`item.subject.studyPlan.organizationUnit.name`]="{ item }">
+      {{
+        item.subject.studyPlan.organizationUnit.name ??
+        `Especialidad ${item.subject.studyPlan.organizationUnit.id}`
+      }}
+    </template>
     <template #[`item.actions`]="{ item }">
       <SubjectTableItemActions
         @click:edit="editItem(item)"

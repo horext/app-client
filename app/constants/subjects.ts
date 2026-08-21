@@ -16,6 +16,16 @@ export const SUBJECT_HEADERS = [
     value: 'subject.course.name',
   },
   {
+    title: 'Especialidad',
+    value: 'subject.studyPlan.organizationUnit.name',
+    sortable: true,
+  },
+  {
+    title: 'Plan de estudios',
+    value: 'subject.studyPlan.name',
+    sortable: true,
+  },
+  {
     title: 'Secciones',
     value: 'sections',
     sortable: true,

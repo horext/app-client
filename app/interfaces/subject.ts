@@ -22,6 +22,7 @@ export interface IStudyPlan {
   updatedAt?: string
   organizationUnit: {
     id: number
+    name?: string
   }
 }
 
