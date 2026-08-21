@@ -15,9 +15,12 @@ export interface IStudyPlanResponse {
   id: number
   fromDate: string
   code: string
+  name: string
   organizationUnit: {
     id: number
   }
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IClassroomResponse {
