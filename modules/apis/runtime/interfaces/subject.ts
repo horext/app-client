@@ -65,6 +65,8 @@ export interface ISubjectResponse {
   studyPlan: IStudyPlanResponse
   credits: number
   cycle: number | null
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IScheduleResponse {
