@@ -17,6 +17,7 @@
             <SubjectSearchContext
               :speciality-name="activeSpecialityName"
               :study-plan-name="activeStudyPlanName"
+              :report-url="studyPlanReportUrl"
             />
           </v-col>
           <v-col cols="12">
@@ -131,6 +132,7 @@ import type { SubjectSchedules } from '~/models/subject-schedules'
 import type { SubjectScheduleId } from '~~/shared/domain'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
 import SubjectSearchContext from '~/components/subject/SearchContext.vue'
+import { buildStudyPlanReportUrl } from '~/utils/study-plan-report'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -179,12 +181,25 @@ const { data: studyPlans } = useAsyncData(
 )
 
 const activeSpecialityName = computed(
-  () => speciality.value?.name ?? `Especialidad ${specialityId.value}`,
+  () => speciality.value?.name ?? 'Especialidad',
 )
 const activeStudyPlanName = computed(() => {
   if (!studyPlanId.value) return undefined
   const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
-  return plan?.name ?? plan?.code ?? `Plan de estudios ${studyPlanId.value}`
+  if (!plan) return 'Plan de estudios'
+  if (plan.code && plan.name) return `${plan.code} - ${plan.name}`
+  return plan.name ?? plan.code
+})
+const studyPlanReportUrl = computed(() => {
+  if (!studyPlanId.value || !speciality.value?.name) return undefined
+  const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
+  if (!plan) return undefined
+  return buildStudyPlanReportUrl({
+    specialityName: speciality.value.name,
+    studyPlanName: plan.name ?? plan.code,
+    studyPlanCode: plan.name ? plan.code : undefined,
+    fromDate: plan.fromDate,
+  })
 })
 
 const refresh = async () => {
