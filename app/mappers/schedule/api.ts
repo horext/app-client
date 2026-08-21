@@ -36,8 +36,7 @@ export function toAppScheduleSubject(
 export function toAppScheduleSubjectDetail(
   scheduleSubject: IScheduleSubjectDetailResponse,
 ): IScheduleSubjectDetail {
-  return {
-    ...toAppScheduleSubject(scheduleSubject),
+  return Object.assign(toAppScheduleSubject(scheduleSubject), {
     subject: scheduleSubject.subject,
-  }
+  })
 }

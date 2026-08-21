@@ -23,10 +23,11 @@ export function toDomainSchedule(
   return {
     ...('id' in schedule ? { id: schedule.id } : {}),
     scheduleSubjectKey: schedule.scheduleSubjectKey,
-    schedulesSubject: schedule.schedulesSubject.map((item) => ({
-      ...toDomainSubjectSchedule(item),
-      subject: toDomainSubject(item.subject),
-    })),
+    schedulesSubject: schedule.schedulesSubject.map((item) =>
+      Object.assign(toDomainSubjectSchedule(item), {
+        subject: toDomainSubject(item.subject),
+      }),
+    ),
     crossings: schedule.crossings,
     events: schedule.events.map(toDomainEvent),
   }
