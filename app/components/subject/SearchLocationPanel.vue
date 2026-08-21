@@ -2,21 +2,34 @@
   <v-card variant="tonal" class="pa-3">
     <div class="d-flex flex-wrap align-start justify-space-between ga-2">
       <div>
-        <div class="text-subtitle-1">¿Dónde quieres buscar?</div>
-        <div class="text-body-2 mt-1">
+        <div class="text-body-2">
           <span class="text-medium-emphasis">Buscando cursos en:</span>
           <span class="font-weight-medium ml-1">
             {{ searchLocationLabel }}
           </span>
           <v-chip
-            v-if="hasCustomContext"
-            color="primary"
+            :color="hasCustomContext ? 'primary' : undefined"
             variant="tonal"
             size="x-small"
             class="ml-2"
           >
-            Personalizado
+            {{ hasCustomContext ? 'Personalizado' : 'Según tu perfil' }}
           </v-chip>
+        </div>
+        <div
+          v-if="profileSuggestion"
+          class="text-caption text-medium-emphasis mt-1"
+        >
+          {{ profileSuggestion }}
+          <v-btn
+            to="/generator/settings"
+            variant="plain"
+            density="compact"
+            size="small"
+            class="px-1"
+          >
+            Completar perfil
+          </v-btn>
         </div>
       </div>
       <v-btn
@@ -128,7 +141,7 @@
             size="small"
             @click="emit('reset')"
           >
-            Usar mi configuración
+            Usar datos de mi perfil
           </v-btn>
           <v-btn
             to="/generator/settings"
@@ -154,6 +167,8 @@ const props = defineProps<{
   faculties: IOrganization[]
   facultyId?: number
   hasCustomContext: boolean
+  profileSpecialityId: number | null
+  profileStudyPlanId: number | null
   closeRequestId: number
   specialities: IOrganization[]
   studyPlans: IStudyPlan[]
@@ -166,6 +181,13 @@ const props = defineProps<{
 }>()
 
 const showOptions = ref(false)
+const profileSuggestion = computed(() => {
+  if (!props.profileSpecialityId)
+    return 'Añade tu especialidad para obtener resultados más relevantes.'
+  if (!props.profileStudyPlanId)
+    return 'Añade tu plan de estudios para precisar la búsqueda.'
+  return undefined
+})
 const facultyName = computed(() =>
   (props.faculties.find((faculty) => faculty.id === props.facultyId)?.name ??
   props.facultyId)

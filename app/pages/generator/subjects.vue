@@ -18,6 +18,8 @@
               :faculties="faculties"
               :faculty-id="facultyId"
               :has-custom-context="hasCustomContext"
+              :profile-speciality-id="profileSpecialityId"
+              :profile-study-plan-id="profileStudyPlanId"
               :close-request-id="closeRequestId"
               :specialities="specialities"
               :study-plans="studyPlans"
@@ -183,7 +185,12 @@ const availableCourses = computed(() => {
     (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
   )
 })
-const { facultyId, hourlyLoad } = storeToRefs(configStore)
+const {
+  facultyId,
+  hourlyLoad,
+  specialityId: profileSpecialityId,
+  studyPlanId: profileStudyPlanId,
+} = storeToRefs(configStore)
 const {
   context,
   hasCustomContext,

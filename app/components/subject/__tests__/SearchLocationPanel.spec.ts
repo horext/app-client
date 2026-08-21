@@ -45,6 +45,8 @@ const mountPanel = (
       faculties,
       facultyId: 1,
       hasCustomContext: false,
+      profileSpecialityId: 2,
+      profileStudyPlanId: 3,
       closeRequestId: 0,
       specialities,
       studyPlans,
@@ -64,6 +66,28 @@ describe('SubjectSearchLocationPanel', () => {
 
     expect(wrapper.text()).toContain('Buscando cursos en:')
     expect(wrapper.text()).toContain('toda la facultad')
+    expect(wrapper.text()).toContain('Según tu perfil')
+  })
+
+  it('distinguishes a custom search from profile defaults', async () => {
+    const wrapper = mountPanel(2, null)
+
+    await wrapper.setProps({ hasCustomContext: true })
+
+    expect(wrapper.text()).toContain('Personalizado')
+    expect(wrapper.text()).not.toContain('Según tu perfil')
+  })
+
+  it('suggests completing missing profile information', async () => {
+    const wrapper = mountPanel(null, null)
+
+    await wrapper.setProps({
+      profileSpecialityId: null,
+      profileStudyPlanId: null,
+    })
+
+    expect(wrapper.text()).toContain('Añade tu especialidad')
+    expect(wrapper.text()).toContain('Completar perfil')
   })
 
   it('derives the speciality and study-plan summary from its options', () => {
