@@ -1,7 +1,7 @@
 import type {
   IBaseSubjectSchedules,
   ISubjectSchedules,
-  ISubjectSchedulesUpdate,
+  IUserSubjectUpdate,
   SubjectScheduleId,
 } from '#shared/domain/types/subject'
 import type { UserSubject } from '#shared/domain'
@@ -24,6 +24,6 @@ export interface ISubjectsService {
   patch(
     userId: string,
     id: SubjectScheduleId,
-    subject: ISubjectSchedulesUpdate,
+    subject: IUserSubjectUpdate,
   ): Promise<UserSubject<ISubjectSchedules>>
 }

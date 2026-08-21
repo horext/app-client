@@ -61,7 +61,12 @@
       <SubjectTableNoData />
     </template>
     <template #[`item.color`]="{ item }">
-      <v-badge :color="item.color ?? '#1976d2'" />
+      <BaseColorEditor
+        :color="item.color"
+        :loading="updatingColor"
+        title="Color del curso"
+        @save="saveColor(item, $event)"
+      />
     </template>
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
@@ -131,8 +136,13 @@ useSeoMeta({
 const courseApi = useCourseApi()
 
 const configStore = useUserProfileStore()
-const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
-  useUserSubjects()
+const {
+  mySubjects,
+  deleteSubjectById,
+  updateSubject,
+  updateSubjectColor,
+  saveNewSubject,
+} = useUserSubjects()
 
 const succcesAddCourse = ref(false)
 
@@ -226,6 +236,18 @@ const closeDelete = () => {
 }
 
 const succcesUpdateCourse = ref(false)
+const updatingColor = ref(false)
+
+const saveColor = async (item: ISubjectSchedules, color: string) => {
+  updatingColor.value = true
+  try {
+    await updateSubjectColor(item.id, color)
+    succcesUpdateCourse.value = true
+  } finally {
+    updatingColor.value = false
+  }
+}
+
 const save = async (
   data: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
 ) => {

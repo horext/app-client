@@ -68,6 +68,12 @@ export const useUserSubjects = () => {
     subjects.value[index] = result.toSnapshot()
   }
 
+  async function updateSubjectColor(id: SubjectScheduleId, color: string) {
+    const result = await service.patch(userId, id, { color })
+    const index = subjects.value.findIndex((subject) => subject.id === id)
+    if (index >= 0) subjects.value[index] = result.toSnapshot()
+  }
+
   async function fetchSubjects() {
     const data = await service.getAll(userId)
     const subjectsWithSchedules = data
@@ -84,6 +90,7 @@ export const useUserSubjects = () => {
   return {
     mySubjects: subjects,
     updateSubject,
+    updateSubjectColor,
     saveNewSubject,
     deleteSubjectById,
     fetchSubjects,

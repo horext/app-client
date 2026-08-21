@@ -69,12 +69,13 @@ describe('useUserSubjects', () => {
     vi.clearAllMocks()
   })
 
-  it('returns mySubjects, updateSubject, saveNewSubject, deleteSubjectById, fetchSubjects', () => {
+  it('returns subject management methods', () => {
     const result = useUserSubjects()
     expect(result.mySubjects).toBeDefined()
     expect(result.saveNewSubject).toBeTypeOf('function')
     expect(result.deleteSubjectById).toBeTypeOf('function')
     expect(result.updateSubject).toBeTypeOf('function')
+    expect(result.updateSubjectColor).toBeTypeOf('function')
     expect(result.fetchSubjects).toBeTypeOf('function')
   })
 
@@ -122,6 +123,22 @@ describe('useUserSubjects', () => {
     const { updateSubject, mySubjects } = useUserSubjects()
     await updateSubject(original)
     expect(mockPatch).toHaveBeenCalled()
+    expect(mySubjects.value[0]).toEqual(updated)
+  })
+
+  it('updateSubjectColor patches only the color and updates the store', async () => {
+    const original = makeSubject()
+    const updated = { ...original, color: '#ff0000' }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    mockPatch.mockResolvedValue(asEntity(updated))
+    const { updateSubjectColor, mySubjects } = useUserSubjects()
+
+    await updateSubjectColor(original.id, updated.color)
+
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), original.id, {
+      color: updated.color,
+    })
     expect(mySubjects.value[0]).toEqual(updated)
   })
 
