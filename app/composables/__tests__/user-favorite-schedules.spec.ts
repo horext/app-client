@@ -6,6 +6,10 @@ import type {
   IScheduleGenerate,
 } from '~/interfaces/schedule'
 import { useUserFavoritesStore } from '~/stores/user-favorites'
+import { makeUUID } from '~~/shared/domain/types/ids'
+import { isProxy, reactive } from 'vue'
+import { Schedule } from '~~/shared/domain'
+import type { ScheduleGenerateId } from '~~/shared/domain'
 
 import { useUserFavoriteSchedules } from '../user-favorite-schedules'
 
@@ -23,7 +27,9 @@ mockNuxtImport('useFavoritesSchedulesService', () =>
   })),
 )
 
-function makeFavorite(id = crypto.randomUUID()): IScheduleGenerate {
+function makeFavorite(
+  id: ScheduleGenerateId = makeUUID<ScheduleGenerateId>(),
+): IScheduleGenerate {
   return {
     id,
     events: [],
@@ -55,6 +61,35 @@ describe('useUserFavoriteSchedules', () => {
     await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
     expect(mockAddFavorite).toHaveBeenCalledWith(expect.any(String), fav)
     expect(favoritesSchedules.value).toContainEqual(fav)
+  })
+
+  it('maps a reactive new favorite before domain entity creation', async () => {
+    const favorite = makeFavorite()
+    const { id: _id, ...newSchedule } = favorite
+    const reactiveSchedule = reactive(newSchedule)
+    mockAddFavorite.mockImplementation(async (_userId, input) => {
+      expect(isProxy(input)).toBe(false)
+      expect(() => Schedule.create(input)).not.toThrow()
+      return favorite
+    })
+
+    const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
+    await expect(
+      saveNewFavoriteSchedule(reactiveSchedule),
+    ).resolves.toBeUndefined()
+  })
+
+  it('preserves the id of a reactive persisted favorite', async () => {
+    const favorite = reactive(makeFavorite())
+    mockAddFavorite.mockResolvedValue(favorite)
+
+    const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
+    await saveNewFavoriteSchedule(favorite)
+
+    expect(mockAddFavorite.mock.calls[0]?.[1]).toEqual(
+      expect.objectContaining({ id: favorite.id }),
+    )
+    expect(isProxy(mockAddFavorite.mock.calls[0]?.[1])).toBe(false)
   })
 
   it('deleteFavoriteScheduleById removes from service and store', async () => {

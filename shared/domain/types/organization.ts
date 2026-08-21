@@ -3,11 +3,14 @@ export interface IOrganizationType {
   name: string
 }
 
-export interface IOrganization {
+export interface IOrganizationReference {
   id: number
-  parentOrganizationUnit: {
-    id: number
-  }
+  name?: string
+  code?: string
+}
+
+export interface IOrganization extends IOrganizationReference {
+  parentOrganizationUnit: IOrganizationReference
   code: string
   name: string
   type: IOrganizationType

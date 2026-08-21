@@ -38,7 +38,9 @@ export const useUserProfile = () => {
 
   async function fetchAcademicConfig() {
     const config = await academicConfigService.get(userId)
-    if (config?.hourlyLoad) hourlyLoad.value = config.hourlyLoad
+    if (config?.hourlyLoad) {
+      hourlyLoad.value = config.hourlyLoad ?? undefined
+    }
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {

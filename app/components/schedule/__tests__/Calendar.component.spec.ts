@@ -6,6 +6,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import { VMenu } from 'vuetify/components'
 import type { IScheduleGenerate } from '~/interfaces/schedule'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 const vuetify = createVuetify()
 vi.stubGlobal('visualViewport', new EventTarget())
@@ -31,7 +32,7 @@ describe('Schedule Calendar', () => {
         type: '',
       },
     ],
-    id: crypto.randomUUID(),
+    id: makeUUID(),
     schedulesSubject: [],
     crossings: 0,
     scheduleSubjectKey: '1,2',

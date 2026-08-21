@@ -160,7 +160,7 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
       return undefined
     }
     internalHourlyLoad.value = undefined
-    return await hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
+    return hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
   },
   {
     watch: [internalFacultyId],

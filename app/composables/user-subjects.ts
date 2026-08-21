@@ -1,71 +1,15 @@
 import type {
   IBaseSubjectSchedules,
-  ISubjectSchedule,
-  ISubjectSchedules,
-  ISubject,
+  ISubjectSchedulesUpdate,
 } from '~/interfaces/subject'
 import type { SubjectScheduleId } from '~~/shared/domain'
-import type { ISubject as ISubjectDomain } from '~~/shared/domain/types/subject'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 import { useSubjectApi } from '~~/modules/apis/runtime/composables'
-
-export function toScheduleDomain(
-  schedules: ISubjectSchedule[],
-): import('~~/shared/domain').ISubjectSchedule[] {
-  return schedules.map((schedule) => ({
-    ...schedule,
-    sessions: schedule.sessions.map((session) => ({
-      ...session,
-      classroom: {
-        ...session.classroom,
-        name: session.classroom?.name ?? undefined,
-      },
-    })),
-  }))
-}
-
-function toCreateDomain(
-  _subject: IBaseSubjectSchedules,
-): import('~~/shared/domain').IBaseSubjectSchedules {
-  return {
-    ..._subject,
-    schedules: toScheduleDomain(_subject.schedules),
-    color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
-  }
-}
-
-function toSubjectDomain(subject: ISubject): Omit<ISubjectDomain, 'id'> {
-  return {
-    course: subject.course,
-    type: subject.type,
-    studyPlan: {
-      id: subject.studyPlan.id,
-      fromDate: subject.studyPlan.fromDate,
-      code: subject.studyPlan.code,
-      name: subject.studyPlan.name,
-      createdAt: subject.studyPlan.createdAt,
-      updatedAt: subject.studyPlan.updatedAt,
-      organizationUnit: subject.studyPlan.organizationUnit,
-    },
-    credits: subject.credits,
-    cycle: subject.cycle,
-    createdAt: subject.createdAt,
-    updatedAt: subject.updatedAt,
-  }
-}
-
-function toUpdateDomnain(
-  _subject: Pick<ISubjectSchedules, 'id'> &
-    Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
-): import('~~/shared/domain').IUserSubjectUpdate {
-  const { subject, schedules, color } = _subject
-
-  return {
-    ...(subject ? { subject: toSubjectDomain(subject) } : {}),
-    ...(schedules ? { schedules: toScheduleDomain(schedules) } : {}),
-    ...(typeof color !== 'undefined' ? { color } : {}),
-  }
-}
+import {
+  toDomainSubjectSchedules,
+  toDomainSubjectUpdate,
+} from '~/mappers/subject/domain'
+import { toAppSubject } from '~/mappers/subject/api'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()
@@ -74,7 +18,10 @@ export const useUserSubjects = () => {
   const { subjects } = storeToRefs(store)
 
   async function saveNewSubject(_subject: IBaseSubjectSchedules) {
-    const created = await service.create(userId, toCreateDomain(_subject))
+    const created = await service.create(userId, {
+      ...toDomainSubjectSchedules(_subject),
+      color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
+    })
     subjects.value.push(created.toSnapshot())
   }
 
@@ -84,23 +31,18 @@ export const useUserSubjects = () => {
     if (index >= 0) subjects.value.splice(index, 1)
   }
 
-  async function updateSubject(
-    _subject: Pick<ISubjectSchedules, 'id'> &
-      Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
-  ) {
+  async function updateSubject(_subject: ISubjectSchedulesUpdate) {
     const result = await service.patch(
       userId,
       _subject.id,
-      toUpdateDomnain(_subject),
+      toDomainSubjectUpdate(_subject),
     )
     const index = subjects.value.findIndex((s) => s.id === _subject.id)
     subjects.value[index] = result.toSnapshot()
   }
 
   async function updateSubjectColor(id: SubjectScheduleId, color: string) {
-    const result = await service.patch(userId, id, {
-      color,
-    })
+    const result = await service.patch(userId, id, { color })
     const index = subjects.value.findIndex((subject) => subject.id === id)
     if (index >= 0) subjects.value[index] = result.toSnapshot()
   }
@@ -114,7 +56,7 @@ export const useUserSubjects = () => {
       subjects.value.map(({ subject }) => subject.id),
     )
     const latestById = new Map(
-      latestSubjects.map((subject) => [subject.id, subject]),
+      latestSubjects.map(toAppSubject).map((subject) => [subject.id, subject]),
     )
 
     await Promise.all(

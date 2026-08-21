@@ -18,6 +18,7 @@ import CalendarEventCard from '~/components/schedule/CalendarEventCard.vue'
 import CalendarEventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
 import ActionsBar from '~/components/schedule/ActionsBar.vue'
 import ShareCard from '~/components/schedule/ShareCard.vue'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 vi.mock('~/composables/lottie', () => ({
   useLottie: vi.fn(() => ref(null)),
@@ -40,7 +41,7 @@ const vuetify = createVuetify()
 
 function makeSchedule(): IScheduleGenerate {
   return {
-    id: crypto.randomUUID(),
+    id: makeUUID(),
     schedulesSubject: [],
     events: [],
     scheduleSubjectKey: '',

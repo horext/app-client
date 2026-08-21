@@ -1,13 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
+import { isProxy, reactive } from 'vue'
 import type { ISubjectSchedules } from '~/interfaces/subject'
+import type { SubjectScheduleId } from '~~/shared/domain'
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
-import type { SubjectScheduleId } from '~~/shared/domain'
-import { makeUUID } from '~~/shared/domain/types/ids'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
+import { UserSubject } from '~~/shared/domain'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -92,12 +94,35 @@ describe('useUserSubjects', () => {
   })
 
   it('saveNewSubject creates a subject and pushes to store', async () => {
-    const newSubject = makeSubject()
-    mockCreate.mockResolvedValue(asEntity(newSubject))
+    const { id: _id, ...newSubject } = makeSubject()
+    const savedSubject = makeSubject()
+    mockCreate.mockResolvedValue(asEntity(savedSubject))
     const { saveNewSubject, mySubjects } = useUserSubjects()
     await saveNewSubject(newSubject)
-    expect(mockCreate).toHaveBeenCalledWith(expect.any(String), newSubject)
-    expect(mySubjects.value).toContainEqual(newSubject)
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        subject: expect.objectContaining({ id: newSubject.subject.id }),
+        schedules: expect.any(Array),
+        color: newSubject.color,
+      }),
+    )
+    expect(mockCreate.mock.calls[0]?.[1]).not.toHaveProperty('id')
+    expect(mySubjects.value).toContainEqual(savedSubject)
+  })
+
+  it('passes deeply reactive create data safely through a domain entity', async () => {
+    const { id: _id, ...newSubject } = makeSubject()
+    const reactiveSubject = reactive(newSubject)
+    mockCreate.mockImplementation(async (_userId, input) => {
+      expect(isProxy(input)).toBe(false)
+      expect(isProxy(input.subject)).toBe(false)
+      expect(() => structuredClone(input)).not.toThrow()
+      return UserSubject.create(input)
+    })
+
+    const { saveNewSubject } = useUserSubjects()
+    await expect(saveNewSubject(reactiveSubject)).resolves.toBeUndefined()
   })
 
   it('saveNewSubject never sends an undefined color', async () => {

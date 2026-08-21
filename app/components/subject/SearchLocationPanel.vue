@@ -160,8 +160,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { IOrganization } from '~/interfaces/organization'
+import type { IStudyPlan } from '~/interfaces/subject'
 import { formatSearchLocation } from '~/constants/subject-search'
-import type { IStudyPlanResponse } from '~~/modules/apis/runtime/interfaces/subject'
 
 const props = defineProps<{
   faculties: IOrganization[]
@@ -171,7 +171,7 @@ const props = defineProps<{
   profileStudyPlanId: number | null
   closeRequestId: number
   specialities: IOrganization[]
-  studyPlans: IStudyPlanResponse[]
+  studyPlans: IStudyPlan[]
   selectedSpecialityId: number | null
   selectedStudyPlanId: number | null
   loadingSpecialities: boolean
@@ -194,7 +194,7 @@ const facultyName = computed(() =>
     ? `Facultad ${props.facultyId}`
     : 'Facultad no configurada',
 )
-const studyPlanTitle = (plan: IStudyPlanResponse) => plan.name ?? plan.code
+const studyPlanTitle = (plan: IStudyPlan) => plan.name ?? plan.code
 const selectedSpecialityName = computed(
   () =>
     props.specialities.find(

@@ -162,9 +162,9 @@ import type { SubjectScheduleId } from '~~/shared/domain'
 import type { IOrganization } from '~/interfaces/organization'
 import { useSubjectsFilter } from '~/composables/subjects-filter'
 import SubjectSearchLocationPanel from '~/components/subject/SearchLocationPanel.vue'
-import {
-  formatSearchLocation,
-} from '~/constants/subject-search'
+import { formatSearchLocation } from '~/constants/subject-search'
+import { toAppScheduleSubject } from '~/mappers/schedule/api'
+import { toAppStudyPlan, toAppSubject } from '~/mappers/subject/api'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -191,7 +191,11 @@ const succcesAddCourse = ref(false)
 const selectedSubject = shallowRef<ISubject>()
 const availableCourses = computed(() => {
   return subjects.value?.filter(
-    (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
+    (c1) =>
+      !mySubjects.value.some(
+        (c2) =>
+          c1.id === c2.subject.id || c1.course.id === c2.subject.course.id,
+      ),
   )
 })
 const {
@@ -243,7 +247,10 @@ const {
   'subjects-study-plans',
   async () => {
     if (!selectedSpecialityId.value) return []
-    return await studyPlanApi.getAllBySpecialityId(selectedSpecialityId.value)
+    const response = await studyPlanApi.getAllBySpecialityId(
+      selectedSpecialityId.value,
+    )
+    return response.map(toAppStudyPlan)
   },
   {
     default: () => [],
@@ -370,7 +377,7 @@ const {
         _hourlyLoadId,
       )
 
-    return schedulesSubject.map((sb) => ({
+    return schedulesSubject.map(toAppScheduleSubject).map((sb) => ({
       ...sb.schedule,
       scheduleSubject: {
         id: sb.id,
@@ -492,7 +499,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
       hourlyLoadId: _hourlyLoadId,
       specialityId: context.value.specialityId!,
     })
-    return response.content
+    return response.content.map(toAppSubject)
   },
   {
     watch: [normalizedSearch, context, facultyId, hourlyLoad],

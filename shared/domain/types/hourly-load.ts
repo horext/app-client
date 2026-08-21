@@ -1,4 +1,4 @@
-import type { IOrganization } from './organization'
+import type { IOrganizationReference } from './organization'
 
 export interface IAcademicPeriod {
   id: number
@@ -6,12 +6,14 @@ export interface IAcademicPeriod {
   code: string
 }
 
+export type IAcademicPeriodReference = Pick<IAcademicPeriod, 'id'>
+
 export interface IAcademicPeriodOrganizationUnit {
   id: number
   fromDate: string
   toDate: string
-  academicPeriod: Pick<IAcademicPeriod, 'id'>
-  organizationUnit: Pick<IOrganization, 'id'>
+  academicPeriod: IAcademicPeriodReference
+  organizationUnit: IOrganizationReference
 }
 
 export interface IHourlyLoad {
@@ -22,3 +24,5 @@ export interface IHourlyLoad {
   publishedAt: string
   academicPeriodOrganizationUnit: IAcademicPeriodOrganizationUnit
 }
+
+export type IHourlyLoadReference = Pick<IHourlyLoad, 'id'>

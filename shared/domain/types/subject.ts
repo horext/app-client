@@ -1,11 +1,12 @@
 import type { Weekdays } from './event'
-import type { IScheduleSubject } from './schedule-subject'
+import type { IScheduleSubjectReference } from './schedule-subject'
 import type { IAuditable } from './entity-metadata'
 import type {
   ReplicatedIdentity,
   ReplicationState,
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
+import type { IOrganizationReference } from './organization'
 
 export interface ICourse {
   id: string
@@ -25,9 +26,7 @@ export interface IStudyPlan {
   name?: string
   createdAt?: string
   updatedAt?: string
-  organizationUnit: {
-    id: number
-  }
+  organizationUnit: IOrganizationReference
 }
 
 export interface IClassroom {
@@ -41,6 +40,12 @@ export interface ITeacher {
   fullName: string
 }
 
+export interface ISessionType {
+  id: number
+  code: string
+  name?: string
+}
+
 export interface ISession {
   id: number
   schedule: {
@@ -48,10 +53,7 @@ export interface ISession {
   }
   classroom: IClassroom
   teacher?: ITeacher
-  type: {
-    id: number
-    code: string
-  }
+  type: ISessionType
   day: Weekdays
   startTime: string
   endTime: string
@@ -68,12 +70,14 @@ export interface ISubject {
   updatedAt?: string
 }
 
+export type ISubjectUpdate = Omit<ISubject, 'id'>
+
 export interface ISubjectSchedule {
   id: number
   section: {
     id: string
   }
-  scheduleSubject: Pick<IScheduleSubject, 'id'>
+  scheduleSubject: IScheduleSubjectReference
   sessions: ISession[]
 }
 
@@ -81,19 +85,13 @@ export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
 
 export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleId> {
   subject: ISubject
-  schedules: Pick<
-    ISubjectSchedule,
-    'id' | 'section' | 'scheduleSubject' | 'sessions'
-  >[]
+  schedules: ISubjectSchedule[]
   color: string
 }
 
 export interface ISubjectSchedulesUpdate {
-  subject?: Omit<ISubject, 'id'>
-  schedules: Pick<
-    ISubjectSchedule,
-    'id' | 'section' | 'scheduleSubject' | 'sessions'
-  >[]
+  subject?: ISubjectUpdate
+  schedules: ISubjectSchedule[]
   color: string
 }
 
@@ -105,7 +103,7 @@ export interface ISubjectSchedules
 
 export type IUserSubjectCreate = IBaseSubjectSchedules
 export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &
-  Pick<IBaseSubjectSchedules, 'externalId' | 'revision'>
+  ReplicationState<SubjectScheduleId>
 
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {
