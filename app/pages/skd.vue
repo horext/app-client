@@ -19,6 +19,7 @@ import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import { getEventColorByIndex } from '~/constants/event'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
 import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
@@ -49,8 +50,9 @@ const { data: subjects } = useAsyncData<IBaseSubjectSchedules[]>(
     const scheduleSubjects =
       await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
 
-    return scheduleSubjects.map((sb) => ({
+    return scheduleSubjects.map((sb, index) => ({
       subject: sb.subject,
+      color: getEventColorByIndex(index),
       schedules: [
         {
           ...sb.schedule,

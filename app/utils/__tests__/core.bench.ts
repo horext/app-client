@@ -29,6 +29,7 @@ function makeSubject(
       },
       type: { id: 1, code: 'COURSE', name: 'Course' },
     },
+    color: '#3F51B5',
     schedules: sessions.map((s, idx) => ({
       id: id * 100 + idx,
       section: { id: `S${id}-${idx}` },

@@ -3,6 +3,7 @@ import { getSchedules } from '../core'
 import type { IActivity, Weekdays } from '~/interfaces/event'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { UUID } from 'crypto'
+import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 
 function makeSubject(
   id: number,
@@ -16,7 +17,7 @@ function makeSubject(
       typeCode: string
     }>
   }>,
-  color?: string,
+  color = DEFAULT_SUBJECT_COLOR,
 ): IBaseSubjectSchedules {
   return {
     subject: {
@@ -941,7 +942,7 @@ describe('getSchedules', () => {
   })
 
   describe('given more subjects than entries in the EVENT_COLORS palette', () => {
-    it('should fall back to #000000 for subjects beyond the 18th', () => {
+    it('should use the default event color for subjects beyond the palette', () => {
       const TIME_BANDS = [T_08_10, T_14_16, T_10_12] as const
       const subjects = Array.from({ length: 19 }, (_, i) =>
         makeSubject(i + 1, [

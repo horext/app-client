@@ -1,3 +1,8 @@
+const DEFAULT_COLOR = '#1976d2'
+
+export const DEFAULT_ACTIVITY_COLOR = DEFAULT_COLOR
+export const DEFAULT_SUBJECT_COLOR = DEFAULT_COLOR
+
 export const EVENT_COLORS = [
   '#3F51B5',
   '#673AB7',
@@ -18,6 +23,22 @@ export const EVENT_COLORS = [
   '#FFB74D',
   '#64B5F6',
 ]
+
+export function getEventColorByIndex(index: number): string {
+  return EVENT_COLORS[index] ?? DEFAULT_SUBJECT_COLOR
+}
+
+export function getNextAvailableEventColor(
+  usedColors: Iterable<string | undefined>,
+): string {
+  const used = new Set(
+    [...usedColors].filter(Boolean).map((color) => color!.toLowerCase()),
+  )
+  return (
+    EVENT_COLORS.find((color) => !used.has(color.toLowerCase())) ??
+    DEFAULT_SUBJECT_COLOR
+  )
+}
 
 export const EVENT_HEADERS = [
   { title: 'Color', value: 'color' },

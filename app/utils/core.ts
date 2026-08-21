@@ -5,7 +5,6 @@ import type {
 } from '~/interfaces/schedule'
 import type { IBaseSubjectSchedules } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
-import { EVENT_COLORS } from '~/constants/event'
 import { ActivitySessionEvent, SubjectSessionEvent } from '~/models/Event'
 import type { UUID } from 'crypto'
 
@@ -68,10 +67,7 @@ export function getSchedules(
         subject: subjectSchedules.subject,
       }))
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      SubjectSessionEvent.buildFromSchedule(
-        c,
-        subjectsSchedules[index]?.color ?? EVENT_COLORS[index] ?? '#000000',
-      ),
+      SubjectSessionEvent.buildFromSchedule(c, subjectsSchedules[index]!.color),
     )
     let crossingCombination = 0
     let useCombination = true
