@@ -80,6 +80,7 @@ describe('useUserProfileStore', () => {
       id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: true,
     }
     expect(store.setupCompleted).toBe(true)
@@ -97,6 +98,7 @@ describe('useUserProfileStore', () => {
       id: crypto.randomUUID(),
       facultyId: 5,
       specialityId: 7,
+      studyPlanId: null,
       setupCompleted: true,
     }
     expect(store.facultyId).toBe(5)
@@ -108,6 +110,7 @@ describe('useUserProfileStore', () => {
       id: crypto.randomUUID(),
       facultyId: 5,
       specialityId: 7,
+      studyPlanId: null,
       setupCompleted: true,
     }
     expect(store.specialityId).toBe(7)
