@@ -8,7 +8,7 @@ import { useSubjectApi } from '~~/modules/apis/runtime/composables'
 import {
   toDomainSubjectSchedules,
   toDomainSubjectUpdate,
-} from '~/utils/domain-mappers'
+} from '~/mappers/subject/domain'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()

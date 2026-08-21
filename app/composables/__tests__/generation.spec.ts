@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
+import { isProxy, reactive } from 'vue'
 import { useGenerationStore } from '~/stores/generation'
+import { Schedule } from '~~/shared/domain'
 
 import { useGeneration } from '../generation'
 
@@ -46,6 +48,37 @@ describe('useGeneration', () => {
     expect(mockGetGenerations).toHaveBeenCalled()
     expect(store.result).toEqual(savedResult)
     expect(store.history).toEqual(records)
+  })
+
+  it('maps reactive schedules before domain entity creation', async () => {
+    const schedule = reactive({
+      scheduleSubjectKey: 'subject-1',
+      schedulesSubject: [],
+      crossings: 0,
+      events: [
+        {
+          id: 'event-1',
+          title: 'Class',
+          day: 1 as const,
+          color: '#3F51B5',
+          type: 'CLASS',
+          startTime: '08:00',
+          endTime: '09:00',
+        },
+      ],
+    })
+    mockSaveGeneration.mockImplementation(async (_userId, _meta, schedules) => {
+      expect(isProxy(schedules[0])).toBe(false)
+      expect(isProxy(schedules[0].events[0])).toBe(false)
+      expect(() => Schedule.create(schedules[0])).not.toThrow()
+      return { id: 'generation-1', schedules: [] }
+    })
+    mockGetGenerations.mockResolvedValue([])
+
+    const { setResult } = useGeneration()
+    await expect(
+      setResult([schedule], [], { label: 'test', date: '2026-08-21' } as never),
+    ).resolves.toBeUndefined()
   })
 
   it('loadSaved fetches generations and latest generation', async () => {

@@ -2,7 +2,7 @@ import { storeToRefs } from 'pinia'
 import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IGenerationMeta } from '~/interfaces/generation-record'
-import { toDomainSchedule } from '~/utils/domain-mappers'
+import { toDomainSchedule } from '~/mappers/schedule/domain'
 
 export const useGeneration = () => {
   const store = useGenerationStore()

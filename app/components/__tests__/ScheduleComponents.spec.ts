@@ -9,6 +9,7 @@ import type {
 import ScheduleShareAddFavorite from '~/components/ScheduleShareAddFavorite.vue'
 import SchedulesWindow from '~/components/SchedulesWindow.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 vi.mock('~/composables/google-oauth2', () => ({
   useGoogleOAuth2: vi.fn(() => ({
@@ -42,7 +43,7 @@ const vuetify = createVuetify()
 
 function makeSchedule(): IScheduleGenerate {
   return {
-    id: crypto.randomUUID(),
+    id: makeUUID(),
     schedulesSubject: [],
     events: [],
     scheduleSubjectKey: 'key-1',

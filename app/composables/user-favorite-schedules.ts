@@ -2,7 +2,7 @@ import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
 } from '~/interfaces/schedule'
-import { toDomainSchedule } from '~/utils/domain-mappers'
+import { toDomainSchedule } from '~/mappers/schedule/domain'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
