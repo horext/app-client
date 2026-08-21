@@ -200,9 +200,7 @@ const { data: specialities, pending: loadingSpecialities } = useAsyncData<
   'subjects-specialities',
   async () => {
     if (!facultyId.value) return []
-    return (await specialityApi.getAllByFaculty(
-      facultyId.value,
-    )) as IOrganization[]
+    return await specialityApi.getAllByFaculty(facultyId.value)
   },
   {
     default: () => [],
@@ -217,9 +215,7 @@ const { data: studyPlans, pending: loadingStudyPlans } = useAsyncData<
   'subjects-study-plans',
   async () => {
     if (!selectedSpecialityId.value) return []
-    return (await studyPlanApi.getAllBySpecialityId(
-      selectedSpecialityId.value,
-    )) as IStudyPlan[]
+    return await studyPlanApi.getAllBySpecialityId(selectedSpecialityId.value)
   },
   {
     default: () => [],
