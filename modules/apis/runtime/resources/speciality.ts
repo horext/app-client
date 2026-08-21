@@ -6,17 +6,17 @@ export interface ISpecialityApi {
   getAllByFaculty(facultyId: number): Promise<IOrganizationResponse[]>
 }
 
-const PATH_SUBJECTS = 'specialities'
+export const PATH_SPECIALITIES = 'specialities'
 
 export class SpecialityApi extends BaseApi implements ISpecialityApi {
   getById(specialityId: number): Promise<IOrganizationResponse> {
     return this.$fetch<IOrganizationResponse>(
-      `${PATH_SUBJECTS}/${specialityId}`,
+      `${PATH_SPECIALITIES}/${specialityId}`,
     )
   }
 
   getAllByFaculty(facultyId: number) {
-    return this.$fetch<IOrganizationResponse[]>(PATH_SUBJECTS, {
+    return this.$fetch<IOrganizationResponse[]>(PATH_SPECIALITIES, {
       params: {
         faculty: facultyId,
       },

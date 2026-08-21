@@ -114,4 +114,11 @@ describe('StudyPlanApi', () => {
     await api.getSubjectsByStudyPlanId(7)
     expect($fetch).toHaveBeenCalledWith('studyPlans/7/subjects')
   })
+
+  it('calls $fetch with speciality study plans path', async () => {
+    const $fetch = makeFetch()
+    const api = new StudyPlanApi($fetch)
+    await api.getAllBySpecialityId(4)
+    expect($fetch).toHaveBeenCalledWith('specialities/4/studyPlans')
+  })
 })
