@@ -16,9 +16,17 @@ export interface IStudyPlanResponse {
   fromDate: string
   code: string
   name: string
-  organizationUnit: {
-    id: number
-  }
+  organizationUnit:
+    | {
+        id: number
+        name: null
+        code: null
+      }
+    | {
+        id: number
+        name: string
+        code: string
+      }
   createdAt: string
   updatedAt: string
 }
