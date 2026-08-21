@@ -1,6 +1,6 @@
 import type {
   IBaseScheduleGenerate as DomainBaseScheduleGenerate,
-  IScheduleGenerate as DomainScheduleGenerate,
+  ScheduleGenerateId,
 } from '~~/shared/domain/types/schedule'
 import type { IEvent } from '~/interfaces/event'
 import type {
@@ -16,8 +16,9 @@ function toDomainEvent(event: IEvent): IEvent {
   return { ...event }
 }
 
-type DomainPersistedSchedule = DomainBaseScheduleGenerate &
-  Pick<DomainScheduleGenerate, 'id'>
+interface DomainPersistedSchedule extends DomainBaseScheduleGenerate {
+  id: ScheduleGenerateId
+}
 
 function toDomainScheduleValues(
   schedule: IBaseScheduleGenerate,

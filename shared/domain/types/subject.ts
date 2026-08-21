@@ -1,5 +1,5 @@
 import type { Weekdays } from './event'
-import type { IScheduleSubject } from './schedule-subject'
+import type { IScheduleSubjectReference } from './schedule-subject'
 import type { IAuditable } from './entity-metadata'
 import type {
   ReplicatedIdentity,
@@ -71,12 +71,14 @@ export interface ISubject {
   updatedAt?: string
 }
 
+export type ISubjectUpdate = Omit<ISubject, 'id'>
+
 export interface ISubjectSchedule {
   id: number
   section: {
     id: string
   }
-  scheduleSubject: Pick<IScheduleSubject, 'id'>
+  scheduleSubject: IScheduleSubjectReference
   sessions: ISession[]
 }
 
@@ -84,19 +86,13 @@ export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
 
 export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleId> {
   subject: ISubject
-  schedules: Pick<
-    ISubjectSchedule,
-    'id' | 'section' | 'scheduleSubject' | 'sessions'
-  >[]
+  schedules: ISubjectSchedule[]
   color: string
 }
 
 export interface ISubjectSchedulesUpdate {
-  subject?: Omit<ISubject, 'id'>
-  schedules: Pick<
-    ISubjectSchedule,
-    'id' | 'section' | 'scheduleSubject' | 'sessions'
-  >[]
+  subject?: ISubjectUpdate
+  schedules: ISubjectSchedule[]
   color: string
 }
 
@@ -108,7 +104,7 @@ export interface ISubjectSchedules
 
 export type IUserSubjectCreate = IBaseSubjectSchedules
 export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &
-  Pick<IBaseSubjectSchedules, 'externalId' | 'revision'>
+  ReplicationState<SubjectScheduleId>
 
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {

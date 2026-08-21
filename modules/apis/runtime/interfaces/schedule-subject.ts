@@ -1,10 +1,14 @@
-import type { ISubjectResponse, IScheduleResponse } from './subject'
-import type { IHourlyLoadResponse } from './hourly-load'
+import type {
+  IScheduleResponse,
+  ISubjectReferenceResponse,
+  ISubjectResponse,
+} from './subject'
+import type { IHourlyLoadReferenceResponse } from './hourly-load'
 
 export interface IScheduleSubjectResponse {
   id: number
-  subject: Pick<ISubjectResponse, 'id'>
-  hourlyLoad: Pick<IHourlyLoadResponse, 'id'>
+  subject: ISubjectReferenceResponse
+  hourlyLoad: IHourlyLoadReferenceResponse
   schedule: IScheduleResponse
 }
 

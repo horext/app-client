@@ -69,6 +69,8 @@ export interface ISubjectResponse {
   updatedAt: string
 }
 
+export type ISubjectReferenceResponse = Pick<ISubjectResponse, 'id'>
+
 export interface IScheduleResponse {
   id: number
   section: {

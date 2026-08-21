@@ -2,13 +2,14 @@ import type {
   IBaseSubjectSchedules as DomainBaseSubjectSchedules,
   ISubject as DomainSubject,
   ISubjectSchedule as DomainSubjectSchedule,
+  ISubjectUpdate as DomainSubjectPatch,
   IUserSubjectUpdate as DomainSubjectUpdate,
 } from '~~/shared/domain/types/subject'
 import type {
   IBaseSubjectSchedules,
   ISubject,
   ISubjectSchedule,
-  ISubjectSchedules,
+  ISubjectSchedulesUpdate,
 } from '~/interfaces/subject'
 
 export function toDomainSubject(subject: ISubject): DomainSubject {
@@ -25,9 +26,7 @@ export function toDomainSubject(subject: ISubject): DomainSubject {
   }
 }
 
-function toDomainSubjectPatch(
-  subject: ISubject,
-): NonNullable<DomainSubjectUpdate['subject']> {
+function toDomainSubjectPatch(subject: ISubject): DomainSubjectPatch {
   const { id: _id, ...patch } = toDomainSubject(subject)
   return patch
 }
@@ -62,8 +61,7 @@ export function toDomainSubjectSchedules(
 }
 
 export function toDomainSubjectUpdate(
-  subject: Pick<ISubjectSchedules, 'id'> &
-    Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
+  subject: ISubjectSchedulesUpdate,
 ): DomainSubjectUpdate {
   return {
     ...(subject.subject

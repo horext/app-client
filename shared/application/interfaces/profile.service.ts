@@ -1,7 +1,11 @@
-import type { IBaseProfile, IProfile } from '#shared/domain/types/profile'
+import type {
+  IProfile,
+  IProfileCreate,
+  IProfileUpdate,
+} from '#shared/domain/types/profile'
 
 export interface IProfileService {
   get(userId: string): Promise<IProfile | undefined>
-  create(userId: string, initial: IBaseProfile): Promise<IProfile>
-  patch(userId: string, value: Partial<IBaseProfile>): Promise<IProfile>
+  create(userId: string, initial: IProfileCreate): Promise<IProfile>
+  patch(userId: string, value: IProfileUpdate): Promise<IProfile>
 }

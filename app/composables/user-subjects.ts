@@ -1,6 +1,6 @@
 import type {
   IBaseSubjectSchedules,
-  ISubjectSchedules,
+  ISubjectSchedulesUpdate,
 } from '~/interfaces/subject'
 import type { SubjectScheduleId } from '~~/shared/domain'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
@@ -30,10 +30,7 @@ export const useUserSubjects = () => {
     if (index >= 0) subjects.value.splice(index, 1)
   }
 
-  async function updateSubject(
-    _subject: Pick<ISubjectSchedules, 'id'> &
-      Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
-  ) {
+  async function updateSubject(_subject: ISubjectSchedulesUpdate) {
     const result = await service.patch(
       userId,
       _subject.id,

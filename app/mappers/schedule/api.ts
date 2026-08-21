@@ -7,11 +7,10 @@ import type {
   IScheduleSubject,
   IScheduleSubjectDetail,
 } from '~/interfaces/schedule-subject'
-import type { ISubjectSchedule } from '~/interfaces/subject'
 
 function toAppSchedule(
   schedule: IScheduleResponse,
-): Pick<ISubjectSchedule, 'id' | 'section' | 'sessions'> {
+): IScheduleSubject['schedule'] {
   return {
     ...schedule,
     sessions: schedule.sessions.map((session) => ({

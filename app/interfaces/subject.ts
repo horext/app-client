@@ -26,3 +26,10 @@ export interface IBaseSubjectSchedules {
 export interface ISubjectSchedules extends IBaseSubjectSchedules {
   id: SubjectScheduleId
 }
+
+export interface ISubjectSchedulesUpdate {
+  id: SubjectScheduleId
+  subject?: ISubject
+  schedules?: ISubjectSchedule[]
+  color?: string
+}
