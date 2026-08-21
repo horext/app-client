@@ -42,6 +42,7 @@ function toSubjectDomain(subject: ISubject): Omit<ISubjectDomain, 'id'> {
       id: subject.studyPlan.id,
       fromDate: subject.studyPlan.fromDate,
       code: subject.studyPlan.code,
+      name: subject.studyPlan.name,
       createdAt: subject.studyPlan.createdAt,
       updatedAt: subject.studyPlan.updatedAt,
       organizationUnit: subject.studyPlan.organizationUnit,
