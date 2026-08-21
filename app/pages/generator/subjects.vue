@@ -151,7 +151,11 @@ const succcesAddCourse = ref(false)
 const selectedSubject = shallowRef<ISubject>()
 const availableCourses = computed(() => {
   return subjects.value?.filter(
-    (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
+    (c1) =>
+      !mySubjects.value.some(
+        (c2) =>
+          c1.id === c2.subject.id || c1.course.id === c2.subject.course.id,
+      ),
   )
 })
 const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
