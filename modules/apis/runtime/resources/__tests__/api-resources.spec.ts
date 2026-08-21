@@ -77,6 +77,19 @@ describe('SubjectApi', () => {
       'hourlyLoads/3/specialities/2/subjects?search=math',
     )
   })
+
+  it('calls $fetch with study-plan subjects search path', async () => {
+    const $fetch = makeFetch()
+    const api = new SubjectApi($fetch)
+    await api.findPageByStudyPlan({
+      search: 'math',
+      studyPlanId: 2,
+      hourlyLoadId: 3,
+    })
+    expect($fetch).toHaveBeenCalledWith(
+      'hourlyLoads/3/studyPlans/2/subjects?search=math',
+    )
+  })
 })
 
 describe('ScheduleSubjectApi', () => {

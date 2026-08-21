@@ -65,9 +65,10 @@ const saveBasicSettings = async (
   facultyId: number,
   specialityId: number,
   hourlyLoad: IHourlyLoad,
+  studyPlanId?: number,
 ) => {
   savingBasic.value = true
-  await updateBasicSettings(facultyId, specialityId, hourlyLoad)
+  await updateBasicSettings(facultyId, specialityId, hourlyLoad, studyPlanId)
   savingBasic.value = false
   successSave.value = true
 }

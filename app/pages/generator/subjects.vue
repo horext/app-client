@@ -14,6 +14,12 @@
       <v-sheet flat class="pa-2">
         <v-row density="comfortable">
           <v-col cols="12">
+            <SubjectSearchContext
+              :speciality-name="activeSpecialityName"
+              :study-plan-name="activeStudyPlanName"
+            />
+          </v-col>
+          <v-col cols="12">
             <SubjectSelect
               v-model="selectedSubject"
               v-model:search="search"
@@ -22,11 +28,6 @@
               :subjects="availableCourses"
               @update:model-value="addNewSubject"
             />
-          </v-col>
-          <v-col cols="12">
-            <v-chip color="primary" variant="flat" size="small"
-              >Especialidad: {{ speciality?.name }}
-            </v-chip>
           </v-col>
         </v-row>
         <v-dialog
@@ -121,6 +122,7 @@ import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
   useSubjectApi,
   useScheduleSubjectApi,
+  useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
@@ -128,6 +130,7 @@ import { useUserSubjects } from '~/composables/user-subjects'
 import type { SubjectSchedules } from '~/models/subject-schedules'
 import type { SubjectScheduleId } from '~~/shared/domain'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
+import SubjectSearchContext from '~/components/subject/SearchContext.vue'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -135,6 +138,7 @@ useSeoMeta({
 })
 
 const subjectApi = useSubjectApi()
+const studyPlanApi = useStudyPlanApi()
 
 const configStore = useUserProfileStore()
 const {
@@ -158,7 +162,30 @@ const availableCourses = computed(() => {
       ),
   )
 })
-const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
+const { specialityId, studyPlanId, hourlyLoad, speciality } =
+  storeToRefs(configStore)
+
+const { data: studyPlans } = useAsyncData(
+  'profile-study-plans',
+  async () => {
+    if (!specialityId.value || !studyPlanId.value) return []
+    return studyPlanApi.getAllBySpecialityId(specialityId.value)
+  },
+  {
+    default: () => [],
+    watch: [specialityId, studyPlanId],
+    server: false,
+  },
+)
+
+const activeSpecialityName = computed(
+  () => speciality.value?.name ?? `Especialidad ${specialityId.value}`,
+)
+const activeStudyPlanName = computed(() => {
+  if (!studyPlanId.value) return undefined
+  const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
+  return plan?.name ?? plan?.code ?? `Plan de estudios ${studyPlanId.value}`
+})
 
 const refresh = async () => {
   try {
@@ -305,16 +332,23 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     if (!_search) return []
     const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
+    const _studyPlanId = studyPlanId.value
     if (!_hourlyLoadId || !_specialityId) return []
-    const response = await subjectApi.findPageBySpeciality({
-      search: _search,
-      specialityId: _specialityId,
-      hourlyLoadId: _hourlyLoadId,
-    })
+    const response = _studyPlanId
+      ? await subjectApi.findPageByStudyPlan({
+          search: _search,
+          studyPlanId: _studyPlanId,
+          hourlyLoadId: _hourlyLoadId,
+        })
+      : await subjectApi.findPageBySpeciality({
+          search: _search,
+          specialityId: _specialityId,
+          hourlyLoadId: _hourlyLoadId,
+        })
     return response.content
   },
   {
-    watch: [search],
+    watch: [search, specialityId, studyPlanId, hourlyLoad],
     default: () => [],
   },
 )

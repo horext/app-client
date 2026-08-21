@@ -49,10 +49,11 @@ const onSubmit = async (
   facultyId: number,
   specialityId: number,
   hourlyLoad: IHourlyLoad,
+  studyPlanId?: number,
 ) => {
   loading.value = true
   try {
-    await completeSetup(facultyId, specialityId, hourlyLoad)
+    await completeSetup(facultyId, specialityId, hourlyLoad, studyPlanId)
     await router.push('/generator/subjects')
   } finally {
     loading.value = false
