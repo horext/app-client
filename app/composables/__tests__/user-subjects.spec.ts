@@ -77,6 +77,7 @@ describe('useUserSubjects', () => {
     expect(result.saveNewSubject).toBeTypeOf('function')
     expect(result.deleteSubjectById).toBeTypeOf('function')
     expect(result.updateSubject).toBeTypeOf('function')
+    expect(result.refreshSubjectCatalog).toBeTypeOf('function')
     expect(result.updateSubjectColor).toBeTypeOf('function')
     expect(result.fetchSubjects).toBeTypeOf('function')
   })
@@ -140,6 +141,53 @@ describe('useUserSubjects', () => {
     await updateSubject(original)
     expect(mockPatch).toHaveBeenCalled()
     expect(mySubjects.value[0]).toEqual(updated)
+  })
+
+  it('updateSubject supports a partial catalog update', async () => {
+    const original = makeSubject()
+    const updated = {
+      ...original,
+      subject: { ...original.subject, credits: 5 },
+    }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    mockPatch.mockResolvedValue(asEntity(updated))
+    const { updateSubject, mySubjects } = useUserSubjects()
+
+    await updateSubject({ id: original.id, subject: updated.subject })
+
+    expect(mockPatch).toHaveBeenCalledWith(
+      expect.any(String),
+      original.id,
+      expect.objectContaining({
+        subject: expect.objectContaining({ credits: 5 }),
+      }),
+    )
+    expect(mySubjects.value[0]?.subject.credits).toBe(5)
+  })
+
+  it('refreshSubjectCatalog updates changed subjects by catalog id', async () => {
+    const original = makeSubject()
+    const latest = { ...original.subject, credits: 5 }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    const subjectApi = {
+      findAllByIds: vi.fn().mockResolvedValue([latest]),
+    }
+    mockPatch.mockResolvedValue(asEntity({ ...original, subject: latest }))
+    const { refreshSubjectCatalog, mySubjects } = useUserSubjects()
+
+    await refreshSubjectCatalog(subjectApi)
+
+    expect(subjectApi.findAllByIds).toHaveBeenCalledWith([original.subject.id])
+    expect(mockPatch).toHaveBeenCalledWith(
+      expect.any(String),
+      original.id,
+      expect.objectContaining({
+        subject: expect.objectContaining({ credits: 5 }),
+      }),
+    )
+    expect(mySubjects.value[0]?.subject.credits).toBe(5)
   })
 
   it('updateSubjectColor patches only the color and updates the store', async () => {

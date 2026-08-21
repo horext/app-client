@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
@@ -142,6 +142,7 @@ const {
   updateSubject,
   updateSubjectColor,
   saveNewSubject,
+  refreshSubjectCatalog,
 } = useUserSubjects()
 
 const succcesAddCourse = ref(false)
@@ -153,6 +154,26 @@ const availableCourses = computed(() => {
   )
 })
 const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
+
+const refresh = async () => {
+  try {
+    await refreshSubjectCatalog()
+  } catch {
+    // IndexedDB remains the offline source of truth.
+  }
+}
+
+if (mySubjects.value.length > 0) {
+  void refresh()
+} else {
+  watch(
+    () => mySubjects.value.length,
+    (length) => {
+      if (length > 0) void refresh()
+    },
+    { once: true },
+  )
+}
 
 const dialog = ref(false)
 const dialogDelete = ref(false)

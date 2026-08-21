@@ -18,6 +18,7 @@ export type SearchParams = {
 )
 
 export interface ISubjectApi {
+  findAllByIds(ids: number[]): Promise<ISubjectResponse[]>
   findPageBySearch(
     params: SearchParams,
   ): Promise<IPageResponse<ISubjectResponse>>
@@ -31,6 +32,12 @@ export interface ISubjectApi {
 const PATH_SUBJECTS = 'subjects'
 
 export class SubjectApi extends BaseApi implements ISubjectApi {
+  public findAllByIds(ids: number[]) {
+    return this.$fetch<ISubjectResponse[]>(PATH_SUBJECTS, {
+      params: { ids: ids.join(',') },
+    })
+  }
+
   public findPageBySearch(params: SearchParams) {
     const { search, ..._params } = params
     return this.$fetch<IPageResponse<ISubjectResponse>>(

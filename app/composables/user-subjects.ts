@@ -2,8 +2,12 @@ import type {
   IBaseSubjectSchedules,
   ISubjectSchedule,
   ISubjectSchedules,
+  ISubject,
 } from '~/interfaces/subject'
 import type { SubjectScheduleId } from '~~/shared/domain'
+import type { ISubject as ISubjectDomain } from '~~/shared/domain/types/subject'
+import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
+import { useSubjectApi } from '~~/modules/apis/runtime/composables'
 
 export function toScheduleDomain(
   schedules: ISubjectSchedule[],
@@ -26,17 +30,35 @@ function toCreateDomain(
   return {
     ..._subject,
     schedules: toScheduleDomain(_subject.schedules),
-    color: _subject.color,
+    color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
+  }
+}
+
+function toSubjectDomain(subject: ISubject): Omit<ISubjectDomain, 'id'> {
+  return {
+    course: subject.course,
+    type: subject.type,
+    studyPlan: {
+      id: subject.studyPlan.id,
+      fromDate: subject.studyPlan.fromDate,
+      code: subject.studyPlan.code,
+      organizationUnit: subject.studyPlan.organizationUnit,
+    },
+    credits: subject.credits,
+    cycle: subject.cycle,
   }
 }
 
 function toUpdateDomnain(
-  _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
-): import('~~/shared/domain').ISubjectSchedulesUpdate {
+  _subject: Pick<ISubjectSchedules, 'id'> &
+    Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
+): import('~~/shared/domain').IUserSubjectUpdate {
+  const { subject, schedules, color } = _subject
+
   return {
-    ..._subject,
-    schedules: toScheduleDomain(_subject.schedules),
-    color: _subject.color,
+    ...(subject ? { subject: toSubjectDomain(subject) } : {}),
+    ...(schedules ? { schedules: toScheduleDomain(schedules) } : {}),
+    ...(typeof color !== 'undefined' ? { color } : {}),
   }
 }
 
@@ -58,7 +80,8 @@ export const useUserSubjects = () => {
   }
 
   async function updateSubject(
-    _subject: Pick<ISubjectSchedules, 'id' | 'schedules' | 'color'>,
+    _subject: Pick<ISubjectSchedules, 'id'> &
+      Partial<Pick<ISubjectSchedules, 'subject' | 'schedules' | 'color'>>,
   ) {
     const result = await service.patch(
       userId,
@@ -77,6 +100,28 @@ export const useUserSubjects = () => {
     if (index >= 0) subjects.value[index] = result.toSnapshot()
   }
 
+  const subjectApi = useSubjectApi()
+
+  async function refreshSubjectCatalog() {
+    if (subjects.value.length === 0) return
+
+    const latestSubjects = await subjectApi.findAllByIds(
+      subjects.value.map(({ subject }) => subject.id),
+    )
+    const latestById = new Map(
+      latestSubjects.map((subject) => [subject.id, subject]),
+    )
+
+    await Promise.all(
+      subjects.value.map(async (saved) => {
+        const latest = latestById.get(saved.subject.id)
+        if (!latest || JSON.stringify(saved.subject) === JSON.stringify(latest))
+          return
+        await updateSubject({ id: saved.id, subject: latest })
+      }),
+    )
+  }
+
   async function fetchSubjects() {
     const data = await service.getAll(userId)
     const subjectsWithSchedules = data
@@ -91,6 +136,7 @@ export const useUserSubjects = () => {
     mySubjects: subjects,
     updateSubject,
     updateSubjectColor,
+    refreshSubjectCatalog,
     saveNewSubject,
     deleteSubjectById,
     fetchSubjects,

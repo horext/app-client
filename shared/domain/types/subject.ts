@@ -84,6 +84,7 @@ export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleI
 }
 
 export interface ISubjectSchedulesUpdate {
+  subject?: Omit<ISubject, 'id'>
   schedules: Pick<
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'

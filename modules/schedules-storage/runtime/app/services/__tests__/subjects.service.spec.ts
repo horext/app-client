@@ -74,5 +74,28 @@ describe('SubjectsService', () => {
       )
       expect(result).toMatchObject({ id: subject.id })
     })
+
+    it('updates subject fields without changing the catalog subject id', async () => {
+      const subject = createSubject()
+      repo.findById.mockResolvedValue(subject)
+      repo.update.mockImplementation(async (_userId, updated) => updated)
+
+      const result = await service.patch('user-1', subject.id, {
+        subject: {
+          course: { id: 'CS101', name: 'Updated Intro to CS' },
+          credits: 5,
+          type: subject.toSnapshot().subject.type,
+          studyPlan: subject.toSnapshot().subject.studyPlan,
+          cycle: 2,
+        },
+      })
+
+      expect(result.toSnapshot().subject).toMatchObject({
+        id: subject.toSnapshot().subject.id,
+        course: { name: 'Updated Intro to CS' },
+        credits: 5,
+        cycle: 2,
+      })
+    })
   })
 })

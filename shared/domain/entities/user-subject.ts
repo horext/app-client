@@ -38,6 +38,9 @@ export class UserSubject<
   ): UserSubject<ISubjectSchedules> {
     return UserSubject.build({
       ...this.snapshot,
+      subject: input.subject
+        ? { ...this.snapshot.subject, ...input.subject }
+        : this.snapshot.subject,
       schedules: input.schedules ?? this.snapshot.schedules,
       color: input.color ?? this.snapshot.color,
     })

@@ -55,7 +55,16 @@ describe('SpecialityApi', () => {
   })
 })
 
-describe('CourseApi', () => {
+describe('SubjectApi', () => {
+  it('calls subjects path with comma-separated ids', async () => {
+    const $fetch = makeFetch()
+    const api = new SubjectApi($fetch)
+    await api.findAllByIds([12, 18, 25])
+    expect($fetch).toHaveBeenCalledWith('subjects', {
+      params: { ids: '12,18,25' },
+    })
+  })
+
   it('calls $fetch with subjects search path and params', async () => {
     const $fetch = makeFetch()
     const api = new SubjectApi($fetch)
