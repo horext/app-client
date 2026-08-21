@@ -3,12 +3,31 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
 import type { IPreferencesService } from '#shared/application/interfaces/preferences.service'
+import type {
+  IPreferences,
+  PreferenceID,
+} from '#shared/domain/types/preferences'
+import { makeUUID } from '#shared/domain/types/ids'
 
 import { useUserPreferences } from '../user-preferences'
 
 const mockGetPreferences = vi.fn()
 const mockCreatePreferences = vi.fn()
 const mockPatch = vi.fn()
+
+function makePreferences(overrides: Partial<IPreferences> = {}): IPreferences {
+  return {
+    id: makeUUID<PreferenceID>(),
+    crossings: 0,
+    weekDays: [1, 2],
+    maxGenerationHistory: 5,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+    ...overrides,
+  }
+}
 
 mockNuxtImport('usePreferencesService', () =>
   vi.fn(
@@ -61,76 +80,72 @@ describe('useUserPreferences', () => {
 
   it('updateCrossings updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
-    store.preferences = {
-      id: crypto.randomUUID(),
-      crossings: 0,
-      weekDays: [1, 2],
-      maxGenerationHistory: 5,
-    }
-    mockPatch.mockResolvedValue(undefined)
+    const current = makePreferences()
+    const updated = makePreferences({ ...current, crossings: 3 })
+    store.preferences = current
+    mockPatch.mockResolvedValue(updated)
     const { updateCrossings } = useUserPreferences()
     await updateCrossings(3)
-    expect(store.preferences?.crossings).toBe(3)
+    expect(store.preferences).toEqual(updated)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
   })
 
-  it('updateCrossings skips store update when preferences is undefined', async () => {
-    mockPatch.mockResolvedValue(undefined)
+  it('updateCrossings stores the service result when preferences is undefined', async () => {
+    const updated = makePreferences({ crossings: 3 })
+    mockPatch.mockResolvedValue(updated)
     const { updateCrossings } = useUserPreferences()
     await updateCrossings(3)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), { crossings: 3 })
-    expect(useUserPreferencesStore().preferences).toBeUndefined()
+    expect(useUserPreferencesStore().preferences).toEqual(updated)
   })
 
   it('saveWeekDays updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
-    store.preferences = {
-      id: crypto.randomUUID(),
-      crossings: 0,
-      weekDays: [1],
-      maxGenerationHistory: 5,
-    }
-    mockPatch.mockResolvedValue(undefined)
+    const current = makePreferences({ weekDays: [1] })
+    const updated = makePreferences({ ...current, weekDays: [1, 2, 3] })
+    store.preferences = current
+    mockPatch.mockResolvedValue(updated)
     const { saveWeekDays } = useUserPreferences()
     await saveWeekDays([1, 2, 3] as never)
-    expect(store.preferences?.weekDays).toEqual([1, 2, 3])
+    expect(store.preferences).toEqual(updated)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
       weekDays: [1, 2, 3],
     })
   })
 
-  it('saveWeekDays skips store update when preferences is undefined', async () => {
-    mockPatch.mockResolvedValue(undefined)
+  it('saveWeekDays stores the service result when preferences is undefined', async () => {
+    const updated = makePreferences({ weekDays: [1, 2] })
+    mockPatch.mockResolvedValue(updated)
     const { saveWeekDays } = useUserPreferences()
     await saveWeekDays([1, 2] as never)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
       weekDays: [1, 2],
     })
+    expect(useUserPreferencesStore().preferences).toEqual(updated)
   })
 
   it('updateMaxGenerationHistory updates preferences and patches service', async () => {
     const store = useUserPreferencesStore()
-    store.preferences = {
-      id: crypto.randomUUID(),
-      crossings: 0,
-      weekDays: [1],
-      maxGenerationHistory: 5,
-    }
-    mockPatch.mockResolvedValue(undefined)
+    const current = makePreferences({ weekDays: [1] })
+    const updated = makePreferences({ ...current, maxGenerationHistory: 20 })
+    store.preferences = current
+    mockPatch.mockResolvedValue(updated)
     const { updateMaxGenerationHistory } = useUserPreferences()
     await updateMaxGenerationHistory(20)
-    expect(store.preferences?.maxGenerationHistory).toBe(20)
+    expect(store.preferences).toEqual(updated)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
       maxGenerationHistory: 20,
     })
   })
 
-  it('updateMaxGenerationHistory skips store update when preferences is undefined', async () => {
-    mockPatch.mockResolvedValue(undefined)
+  it('updateMaxGenerationHistory stores the service result when preferences is undefined', async () => {
+    const updated = makePreferences({ maxGenerationHistory: 20 })
+    mockPatch.mockResolvedValue(updated)
     const { updateMaxGenerationHistory } = useUserPreferences()
     await updateMaxGenerationHistory(20)
     expect(mockPatch).toHaveBeenCalledWith(expect.any(String), {
       maxGenerationHistory: 20,
     })
+    expect(useUserPreferencesStore().preferences).toEqual(updated)
   })
 })
