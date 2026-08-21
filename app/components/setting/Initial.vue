@@ -8,7 +8,7 @@
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          v-model="internalFacultyId"
+          :model-value="internalFacultyId"
           :items="faculties"
           :loading="loadingFaculties"
           item-title="name"
@@ -16,6 +16,7 @@
           label="Selecciona tu facultad"
           placeholder="Facultad"
           :rules="[(v) => !!v || 'Facultad es requerida']"
+          @update:model-value="selectFaculty"
         />
         <v-alert v-if="errorMessage" closable type="error">
           No se ha encontrado la carga horaria de tu facultad
@@ -27,7 +28,7 @@
           :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
         />
         <v-autocomplete
-          v-model="internalSpecialityId"
+          :model-value="internalSpecialityId"
           :disabled="!internalFacultyId"
           item-value="id"
           :loading="loadingSpecialities"
@@ -36,6 +37,18 @@
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
           :rules="[(v) => !!v || 'Especialidad es requerida']"
+          @update:model-value="selectSpeciality"
+        />
+        <v-autocomplete
+          v-model="internalStudyPlanId"
+          :disabled="!internalSpecialityId"
+          item-value="id"
+          :loading="loadingStudyPlans"
+          :item-title="studyPlanTitle"
+          :items="studyPlans"
+          label="Selecciona tu plan de estudios"
+          placeholder="Plan de estudios (opcional)"
+          clearable
         />
       </v-card-text>
       <v-card-actions>
@@ -55,6 +68,7 @@ import {
   useFacultyApi,
   useHourlyLoadApi,
   useSpecialityApi,
+  useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
 import type { VForm } from 'vuetify/components/VForm'
 import { storeToRefs } from 'pinia'
@@ -62,17 +76,24 @@ import type { SubmitEventPromise } from 'vuetify'
 
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
-  submit: [facultyId: number, specialityId: number, hourlyLoad: IHourlyLoad]
+  submit: [
+    facultyId: number,
+    specialityId: number,
+    hourlyLoad: IHourlyLoad,
+    studyPlanId?: number,
+  ]
 }>()
 
 const hourlyLoadApi = useHourlyLoadApi()
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
+const studyPlanApi = useStudyPlanApi()
 const store = useUserProfileStore()
-const { facultyId, specialityId, hourlyLoad } = storeToRefs(store)
+const { facultyId, specialityId, studyPlanId, hourlyLoad } = storeToRefs(store)
 
 const internalFacultyId = ref(facultyId.value)
 const internalSpecialityId = ref(specialityId.value)
+const internalStudyPlanId = ref(studyPlanId.value)
 
 const internalHourlyLoad = shallowRef(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
@@ -84,6 +105,25 @@ watch(facultyId, (value) => {
 watch(specialityId, (value) => {
   internalSpecialityId.value = value
 })
+watch(studyPlanId, (value) => {
+  internalStudyPlanId.value = value
+})
+
+const selectFaculty = (value: number | null) => {
+  if (value === internalFacultyId.value) return
+  internalFacultyId.value = value ?? undefined
+  internalSpecialityId.value = undefined
+  internalStudyPlanId.value = undefined
+}
+
+const selectSpeciality = (value: number | null) => {
+  if (value === internalSpecialityId.value) return
+  internalSpecialityId.value = value ?? undefined
+  internalStudyPlanId.value = undefined
+}
+
+const studyPlanTitle = (plan: { name?: string; code: string }) =>
+  plan.name ?? plan.code
 
 watch(hourlyLoad, (value) => {
   internalHourlyLoad.value = value ? { ...value } : undefined
@@ -109,6 +149,24 @@ watch(specialities, (value) => {
     internalSpecialityId.value = undefined
   }
 })
+
+const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
+  () => 'setting' + internalSpecialityId.value + '-study-plans',
+  async () => {
+    if (!internalSpecialityId.value) return []
+    const items = await studyPlanApi.getAllBySpecialityId(
+      internalSpecialityId.value,
+    )
+    if (!items.some((item) => item.id === internalStudyPlanId.value)) {
+      internalStudyPlanId.value = undefined
+    }
+    return items
+  },
+  {
+    default: () => [],
+    watch: [internalSpecialityId],
+  },
+)
 
 const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   () => 'setting-last-hourly-load' + internalFacultyId.value,
@@ -146,6 +204,7 @@ const ending = async (e: SubmitEventPromise) => {
     internalFacultyId.value!,
     internalSpecialityId.value!,
     internalHourlyLoad.value!,
+    internalStudyPlanId.value,
   )
 }
 </script>
