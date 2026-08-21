@@ -11,7 +11,7 @@ export interface IStudyPlanApi {
   getSubjectsByStudyPlanId(id: number): Promise<ISubjectStudyPlanResponse[]>
 }
 
-const PATH_STUDY_PLANS = 'studyPlans'
+export const PATH_STUDY_PLANS = 'studyPlans'
 
 export class StudyPlanApi extends BaseApi {
   getAll() {
