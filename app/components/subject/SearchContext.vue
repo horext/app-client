@@ -19,6 +19,20 @@
         Seleccionar plan
       </v-btn>
     </div>
+    <div v-else-if="reportUrl" class="mt-2">
+      <v-btn
+        :href="reportUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="text"
+        density="compact"
+        size="small"
+        prepend-icon="mdi-alert-circle-outline"
+        class="px-1"
+      >
+        Reportar datos incorrectos
+      </v-btn>
+    </div>
   </v-card>
 </template>
 
@@ -26,6 +40,7 @@
 const props = defineProps<{
   specialityName: string
   studyPlanName?: string
+  reportUrl?: string
 }>()
 
 const location = computed(() =>

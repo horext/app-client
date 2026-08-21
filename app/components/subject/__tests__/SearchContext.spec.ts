@@ -11,13 +11,20 @@ describe('SubjectSearchContext', () => {
       props: {
         specialityName: 'Engineering',
         studyPlanName: 'Plan 2026',
+        reportUrl: 'https://github.com/horext/app-data/issues/new',
       },
       global: { plugins: [vuetify] },
     })
 
     expect(wrapper.text()).toContain('Engineering · Plan 2026')
     expect(wrapper.text()).toContain('Plan de estudios')
+    expect(wrapper.text()).toContain('Reportar datos incorrectos')
     expect(wrapper.text()).not.toContain('resultados más precisos')
+    expect(wrapper.get('a').attributes()).toMatchObject({
+      href: 'https://github.com/horext/app-data/issues/new',
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    })
   })
 
   it('shows the specialty level and recommends selecting a plan', () => {
@@ -29,5 +36,6 @@ describe('SubjectSearchContext', () => {
     expect(wrapper.text()).toContain('Engineering')
     expect(wrapper.text()).toContain('Especialidad')
     expect(wrapper.text()).toContain('resultados más precisos')
+    expect(wrapper.text()).not.toContain('Reportar datos incorrectos')
   })
 })
