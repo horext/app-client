@@ -43,6 +43,7 @@
             :subject-schedules="subjectSchedules"
             :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
+            :report-url="scheduleReportUrl"
             @save="save"
             @cancel="close"
           />
@@ -149,7 +150,9 @@ import type { SubjectScheduleId } from '~~/shared/domain'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
 import SubjectSearchContext from '~/components/subject/SearchContext.vue'
 import {
+  buildHourlyLoadReportUrl,
   buildStudyPlanReportUrl,
+  withHourlyLoadSubjectSchedules,
   withStudyPlanReportProblem,
 } from '~/utils/study-plan-report'
 
@@ -298,6 +301,23 @@ const {
     server: false,
   },
 )
+
+const scheduleReportUrl = computed(() => {
+  const subject = subjectSchedules.value?.subject
+  const currentHourlyLoad = hourlyLoad.value
+  const specialityName = speciality.value?.name
+  if (!subject || !currentHourlyLoad || !specialityName) return undefined
+
+  const reportUrl = buildHourlyLoadReportUrl({
+    specialityName,
+    hourlyLoadName: currentHourlyLoad.name,
+  })
+  return withHourlyLoadSubjectSchedules(reportUrl, {
+    courseCode: subject.course.id,
+    courseName: subject.course.name,
+    sections: schedules.value.map((schedule) => schedule.section.id),
+  })
+})
 
 const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
   subjectSchedules.value = item
