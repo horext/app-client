@@ -3,7 +3,10 @@ import type {
   IScheduleGenerate as DomainScheduleGenerate,
 } from '~~/shared/domain/types/schedule'
 import type { IEvent } from '~/interfaces/event'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type {
+  IBaseScheduleGenerate,
+  IScheduleGenerate,
+} from '~/interfaces/schedule'
 import {
   toDomainSubject,
   toDomainSubjectSchedule,
@@ -13,15 +16,13 @@ function toDomainEvent(event: IEvent): IEvent {
   return { ...event }
 }
 
-export function toDomainSchedule(
-  schedule: Pick<
-    IScheduleGenerate,
-    'scheduleSubjectKey' | 'schedulesSubject' | 'crossings' | 'events'
-  > &
-    Partial<Pick<IScheduleGenerate, 'id'>>,
-): DomainBaseScheduleGenerate & Partial<Pick<DomainScheduleGenerate, 'id'>> {
+type DomainPersistedSchedule = DomainBaseScheduleGenerate &
+  Pick<DomainScheduleGenerate, 'id'>
+
+function toDomainScheduleValues(
+  schedule: IBaseScheduleGenerate,
+): DomainBaseScheduleGenerate {
   return {
-    ...('id' in schedule ? { id: schedule.id } : {}),
     scheduleSubjectKey: schedule.scheduleSubjectKey,
     schedulesSubject: schedule.schedulesSubject.map((item) =>
       Object.assign(toDomainSubjectSchedule(item), {
@@ -31,4 +32,17 @@ export function toDomainSchedule(
     crossings: schedule.crossings,
     events: schedule.events.map(toDomainEvent),
   }
+}
+
+export function toDomainSchedule(
+  schedule: IScheduleGenerate,
+): DomainPersistedSchedule
+export function toDomainSchedule(
+  schedule: IBaseScheduleGenerate,
+): DomainBaseScheduleGenerate
+export function toDomainSchedule(
+  schedule: IBaseScheduleGenerate | IScheduleGenerate,
+): DomainBaseScheduleGenerate | DomainPersistedSchedule {
+  const mapped = toDomainScheduleValues(schedule)
+  return 'id' in schedule ? Object.assign(mapped, { id: schedule.id }) : mapped
 }
