@@ -39,16 +39,13 @@ defineOptions({
   name: 'BaseColorEditor',
 })
 
-const DEFAULT_COLOR = '#1976d2'
-
 const props = withDefaults(
   defineProps<{
-    color?: string
+    color: string
     loading?: boolean
     title?: string
   }>(),
   {
-    color: DEFAULT_COLOR,
     loading: false,
     title: 'Editar color',
   },

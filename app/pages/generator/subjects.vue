@@ -116,7 +116,7 @@ import type {
   IBaseSubjectSchedules,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
-import { EVENT_COLORS } from '~/constants/event'
+import { getNextAvailableEventColor } from '~/constants/event'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
   useCourseApi,
@@ -163,11 +163,14 @@ const openSearchMenu = ref(false)
 
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
+  const color = getNextAvailableEventColor(
+    mySubjects.value.map((subject) => subject.color),
+  )
   openSearchMenu.value = false
   editItem({
     subject: item,
     schedules: [],
-    color: EVENT_COLORS[mySubjects.value.length] ?? '#1976d2',
+    color,
   })
 }
 

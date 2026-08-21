@@ -73,7 +73,7 @@ export interface ISubjectSchedule {
 export interface IBaseSubjectSchedules {
   subject: ISubject
   schedules: ISubjectSchedule[]
-  color?: string
+  color: string
 }
 
 export interface ISubjectSchedules extends IBaseSubjectSchedules {

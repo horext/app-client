@@ -7,6 +7,7 @@ import { useUserSubjectsStore } from '~/stores/user-subjects'
 import { useUserSubjects } from '../user-subjects'
 import type { SubjectScheduleId } from '~~/shared/domain'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -37,6 +38,7 @@ function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
         sessions: [],
       },
     ],
+    color: '#3F51B5',
     subject: {
       id: 1,
       course: { id: 'CS101', name: 'CS' },
@@ -86,6 +88,20 @@ describe('useUserSubjects', () => {
     await saveNewSubject(newSubject)
     expect(mockCreate).toHaveBeenCalledWith(expect.any(String), newSubject)
     expect(mySubjects.value).toContainEqual(newSubject)
+  })
+
+  it('saveNewSubject never sends an undefined color', async () => {
+    const newSubject = makeSubject()
+    const { color: _color, ...subjectWithoutColor } = newSubject
+    mockCreate.mockResolvedValue(asEntity(newSubject))
+    const { saveNewSubject } = useUserSubjects()
+
+    await saveNewSubject(subjectWithoutColor as unknown as ISubjectSchedules)
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ color: DEFAULT_SUBJECT_COLOR }),
+    )
   })
 
   it('deleteSubjectById deletes from service and removes from store', async () => {

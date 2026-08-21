@@ -18,6 +18,7 @@ const subjectInput: IBaseSubjectSchedules = {
     studyPlan: { id: 0, fromDate: '', code: '', organizationUnit: { id: 0 } },
     cycle: null,
   },
+  color: '#3F51B5',
   schedules: [],
 }
 const createSubject = () =>

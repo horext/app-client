@@ -74,7 +74,7 @@ export class SubjectSchedules<
     id: ID,
     subject: ISubject,
     schedules: ISubjectSchedule[],
-    color = '#1976d2',
+    color: string,
   ) {
     this.id = id
     this.subject = subject

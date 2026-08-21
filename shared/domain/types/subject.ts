@@ -80,7 +80,7 @@ export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleI
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'
   >[]
-  color?: string
+  color: string
 }
 
 export interface ISubjectSchedulesUpdate {
@@ -88,7 +88,7 @@ export interface ISubjectSchedulesUpdate {
     ISubjectSchedule,
     'id' | 'section' | 'scheduleSubject' | 'sessions'
   >[]
-  color?: string
+  color: string
 }
 
 export interface ISubjectSchedules

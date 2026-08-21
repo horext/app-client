@@ -3,7 +3,6 @@ import type {
   ISubjectSchedule,
   ISubjectSchedules,
 } from '~/interfaces/subject'
-import { EVENT_COLORS } from '~/constants/event'
 import type { SubjectScheduleId } from '~~/shared/domain'
 
 export function toScheduleDomain(
@@ -27,6 +26,7 @@ function toCreateDomain(
   return {
     ..._subject,
     schedules: toScheduleDomain(_subject.schedules),
+    color: _subject.color,
   }
 }
 
@@ -36,6 +36,7 @@ function toUpdateDomnain(
   return {
     ..._subject,
     schedules: toScheduleDomain(_subject.schedules),
+    color: _subject.color,
   }
 }
 
@@ -69,7 +70,9 @@ export const useUserSubjects = () => {
   }
 
   async function updateSubjectColor(id: SubjectScheduleId, color: string) {
-    const result = await service.patch(userId, id, { color })
+    const result = await service.patch(userId, id, {
+      color,
+    })
     const index = subjects.value.findIndex((subject) => subject.id === id)
     if (index >= 0) subjects.value[index] = result.toSnapshot()
   }
@@ -81,10 +84,7 @@ export const useUserSubjects = () => {
       .filter(
         (subject: IBaseSubjectSchedules) => subject?.schedules?.length > 0,
       )
-    subjects.value = subjectsWithSchedules.map((subject, index) => ({
-      ...subject,
-      color: subject.color ?? EVENT_COLORS[index] ?? '#1976d2',
-    }))
+    subjects.value = subjectsWithSchedules
   }
 
   return {
