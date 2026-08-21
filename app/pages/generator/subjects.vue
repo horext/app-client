@@ -119,7 +119,7 @@ import { SUBJECT_HEADERS } from '~/constants/subjects'
 import { getNextAvailableEventColor } from '~/constants/event'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
-  useCourseApi,
+  useSubjectApi,
   useScheduleSubjectApi,
 } from '~~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
@@ -133,7 +133,7 @@ useSeoMeta({
   description: 'Administra tus cursos para tener un mejor control de tu tiempo',
 })
 
-const courseApi = useCourseApi()
+const subjectApi = useSubjectApi()
 
 const configStore = useUserProfileStore()
 const {
@@ -280,7 +280,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
     if (!_hourlyLoadId || !_specialityId) return []
-    const response = await courseApi.findPageBySearch({
+    const response = await subjectApi.findPageBySearch({
       search: _search,
       specialityId: _specialityId,
       hourlyLoadId: _hourlyLoadId,

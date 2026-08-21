@@ -43,7 +43,7 @@ export const useStudyPlanApi = defineApi(
   () => new StudyPlanApi(useFetch()),
 )
 
-export const useCourseApi = defineApi(
+export const useSubjectApi = defineApi(
   SUBJECT_API_KEY,
   () => new SubjectApi(useFetch()),
 )
