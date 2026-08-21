@@ -25,4 +25,13 @@ describe('TotalCredits', () => {
 
     expect(wrapper.text()).toContain('Total de créditos: 9')
   })
+
+  it('renders an optional footer action', () => {
+    const wrapper = shallowMount(TotalCredits, {
+      props: { subjects: [] },
+      slots: { actions: '¿No encuentras tu curso?' },
+    })
+
+    expect(wrapper.text()).toContain('¿No encuentras tu curso?')
+  })
 })
