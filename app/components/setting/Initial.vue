@@ -95,7 +95,7 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
     if (!internalFacultyId.value) {
       return []
     }
-    return await specialityApi.getAllByFaculty(internalFacultyId.value)
+    return specialityApi.getAllByFaculty(internalFacultyId.value)
   },
   {
     default: () => [],
@@ -117,7 +117,7 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
       return undefined
     }
     internalHourlyLoad.value = undefined
-    return await hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
+    return hourlyLoadApi.getLatestByFaculty(internalFacultyId.value)
   },
   {
     watch: [internalFacultyId],

@@ -127,6 +127,7 @@ import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
 import type { SubjectSchedules } from '~/models/subject-schedules'
 import type { SubjectScheduleId } from '~~/shared/domain'
+import { toAppScheduleSubject } from '~/mappers/schedule/api'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -214,7 +215,7 @@ const {
         _hourlyLoadId,
       )
 
-    return schedulesSubject.map((sb) => ({
+    return schedulesSubject.map(toAppScheduleSubject).map((sb) => ({
       ...sb.schedule,
       scheduleSubject: {
         id: sb.id,

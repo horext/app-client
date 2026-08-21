@@ -23,6 +23,7 @@ import { getEventColorByIndex } from '~/constants/event'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
 import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
+import { toAppScheduleSubjectDetail } from '~/mappers/schedule/api'
 
 definePageMeta({
   layout: 'app',
@@ -50,19 +51,21 @@ const { data: subjects } = useAsyncData<IBaseSubjectSchedules[]>(
     const scheduleSubjects =
       await scheduleSubjectApi.getAllByIds(scheduleSubjectIds)
 
-    return scheduleSubjects.map((sb, index) => ({
-      subject: sb.subject,
-      color: getEventColorByIndex(index),
-      schedules: [
-        {
-          ...sb.schedule,
-          scheduleSubject: {
-            id: sb.id,
+    return scheduleSubjects
+      .map(toAppScheduleSubjectDetail)
+      .map((sb, index) => ({
+        subject: sb.subject,
+        color: getEventColorByIndex(index),
+        schedules: [
+          {
+            ...sb.schedule,
+            scheduleSubject: {
+              id: sb.id,
+            },
+            subject: sb.subject,
           },
-          subject: sb.subject,
-        },
-      ],
-    }))
+        ],
+      }))
   },
   {
     default: () => [],
