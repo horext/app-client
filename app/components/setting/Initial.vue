@@ -114,6 +114,13 @@ watch(hourlyLoad, (value) => {
   internalHourlyLoad.value = value ? { ...value } : undefined
 })
 
+watch(internalFacultyId, (value, previousValue) => {
+  if (value !== previousValue) {
+    internalSpecialityId.value = null
+    internalStudyPlanId.value = null
+  }
+})
+
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
   () => 'setting' + internalFacultyId.value + '-specialities',
   async () => {
@@ -174,8 +181,8 @@ const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
   },
 )
 
-watch(internalSpecialityId, (value) => {
-  if (!value) {
+watch(internalSpecialityId, (value, previousValue) => {
+  if (!value || (previousValue && value !== previousValue)) {
     internalStudyPlanId.value = null
   }
 })
