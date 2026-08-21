@@ -43,6 +43,7 @@
             :subject-schedules="subjectSchedules"
             :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
+            :report-url="scheduleReportUrl"
             @save="save"
             @cancel="close"
           />
@@ -81,7 +82,22 @@
     </template>
     <template #bottom>
       <v-divider />
-      <SubjectTotalCredits :subjects="mySubjects" />
+      <SubjectTotalCredits :subjects="mySubjects">
+        <template v-if="missingCourseReportUrl" #actions>
+          <v-btn
+            :href="missingCourseReportUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="text"
+            density="compact"
+            size="small"
+            :prepend-icon="mdiBookSearchOutline"
+            :append-icon="mdiOpenInNew"
+          >
+            ¿No encuentras tu curso?
+          </v-btn>
+        </template>
+      </SubjectTotalCredits>
 
       <base-confirm-dialog
         v-if="selectedDelete"
@@ -107,6 +123,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { mdiBookSearchOutline, mdiOpenInNew } from '@mdi/js'
 import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
@@ -132,7 +149,12 @@ import type { SubjectSchedules } from '~/models/subject-schedules'
 import type { SubjectScheduleId } from '~~/shared/domain'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
 import SubjectSearchContext from '~/components/subject/SearchContext.vue'
-import { buildStudyPlanReportUrl } from '~/utils/study-plan-report'
+import {
+  buildHourlyLoadReportUrl,
+  buildStudyPlanReportUrl,
+  withHourlyLoadSubjectSchedules,
+  withStudyPlanReportProblem,
+} from '~/utils/study-plan-report'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -200,6 +222,10 @@ const studyPlanReportUrl = computed(() => {
     studyPlanCode: plan.name ? plan.code : undefined,
     fromDate: plan.fromDate,
   })
+})
+const missingCourseReportUrl = computed(() => {
+  if (!studyPlanReportUrl.value) return undefined
+  return withStudyPlanReportProblem(studyPlanReportUrl.value, 'missing-subject')
 })
 
 const refresh = async () => {
@@ -275,6 +301,23 @@ const {
     server: false,
   },
 )
+
+const scheduleReportUrl = computed(() => {
+  const subject = subjectSchedules.value?.subject
+  const currentHourlyLoad = hourlyLoad.value
+  const specialityName = speciality.value?.name
+  if (!subject || !currentHourlyLoad || !specialityName) return undefined
+
+  const reportUrl = buildHourlyLoadReportUrl({
+    specialityName,
+    hourlyLoadName: currentHourlyLoad.name,
+  })
+  return withHourlyLoadSubjectSchedules(reportUrl, {
+    courseCode: subject.course.id,
+    courseName: subject.course.name,
+    sections: schedules.value.map((schedule) => schedule.section.id),
+  })
+})
 
 const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
   subjectSchedules.value = item

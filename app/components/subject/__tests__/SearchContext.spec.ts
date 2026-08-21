@@ -1,9 +1,16 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import SearchContext from '../SearchContext.vue'
 
-const vuetify = createVuetify()
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: { mdi },
+  },
+})
 
 describe('SubjectSearchContext', () => {
   it('shows the active study-plan search level', () => {
@@ -22,13 +29,11 @@ describe('SubjectSearchContext', () => {
     expect(wrapper.text()).toContain('Plan 2026')
     expect(wrapper.text()).toContain('Informar problema')
     expect(wrapper.text()).not.toContain('mejorar la precisión')
-    expect(wrapper.find('.mdi-school-outline').exists()).toBe(true)
-    expect(wrapper.find('.mdi-book-open-page-variant-outline').exists()).toBe(
-      true,
-    )
-    expect(wrapper.find('.mdi-flag-outline').exists()).toBe(true)
-    expect(wrapper.find('.mdi-open-in-new').exists()).toBe(true)
-    expect(wrapper.get('a').attributes()).toMatchObject({
+    expect(wrapper.find('.v-chip__prepend svg').exists()).toBe(true)
+    const reportLink = wrapper.get('a')
+    expect(reportLink.find('.v-btn__prepend svg').exists()).toBe(true)
+    expect(reportLink.find('.v-btn__append svg').exists()).toBe(true)
+    expect(reportLink.attributes()).toMatchObject({
       href: 'https://github.com/horext/app-data/issues/new',
       target: '_blank',
       rel: 'noopener noreferrer',
@@ -45,7 +50,7 @@ describe('SubjectSearchContext', () => {
     expect(wrapper.text()).toContain('Especialidad')
     expect(wrapper.text()).toContain('mejorar la precisión')
     expect(wrapper.text()).not.toContain('Informar problema')
-    expect(wrapper.find('.mdi-information-outline').exists()).toBe(true)
-    expect(wrapper.find('.mdi-tune-variant').exists()).toBe(true)
+    expect(wrapper.find('.v-icon svg').exists()).toBe(true)
+    expect(wrapper.find('.v-btn__prepend svg').exists()).toBe(true)
   })
 })

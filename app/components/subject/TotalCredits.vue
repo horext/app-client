@@ -1,5 +1,8 @@
 <template>
-  <v-row class="pa-2 align-center justify-end">
+  <v-row class="pa-2 align-center">
+    <v-col v-if="$slots.actions" cols="auto" class="mr-auto">
+      <slot name="actions" />
+    </v-col>
     <v-col cols="auto">
       <v-chip color="green" label>
         Total de créditos: {{ totalCredits }}

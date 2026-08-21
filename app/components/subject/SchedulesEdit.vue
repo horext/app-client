@@ -41,6 +41,19 @@
       />
     </v-card-text>
     <v-card-actions>
+      <v-btn
+        v-if="reportUrl"
+        :href="reportUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="text"
+        density="compact"
+        size="small"
+        :prepend-icon="mdiFlagOutline"
+        :append-icon="mdiOpenInNew"
+      >
+        Informar secciones u horarios
+      </v-btn>
       <v-spacer />
       <v-btn color="primary" variant="text" @click="$emit('cancel')">
         Cancelar
@@ -53,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiFlagOutline, mdiOpenInNew } from '@mdi/js'
 import { computed, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import type {
@@ -67,6 +81,7 @@ const props = defineProps<{
   subjectSchedules: IBaseSubjectSchedules | ISubjectSchedules
   availableSchedules: ISubjectSchedule[]
   loading: boolean
+  reportUrl?: string
 }>()
 
 const emit = defineEmits<{
