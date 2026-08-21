@@ -13,6 +13,7 @@ export interface ICourseTypeResponse {
 
 export interface IStudyPlanResponse {
   id: number
+  name?: string
   fromDate: string
   code: string
   name: string
