@@ -21,19 +21,34 @@ export const useSubjectsFilter = () => {
   )
   const hasCustomContext = computed(() => !!storedContext.value)
 
+  const profileContext = computed<SubjectSearchContext>(() => ({
+    specialityId: profileSpecialityId.value,
+    studyPlanId: profileStudyPlanId.value,
+  }))
+
+  const setContext = (value: SubjectSearchContext) => {
+    const defaults = profileContext.value
+    subjectsSearchStore.setContext(
+      value.specialityId === defaults.specialityId &&
+        value.studyPlanId === defaults.studyPlanId
+        ? undefined
+        : value,
+    )
+  }
+
   const resetToProfileDefaults = () => {
     subjectsSearchStore.setContext(undefined)
   }
 
   const setSpeciality = (value: number | null) => {
-    subjectsSearchStore.setContext({
+    setContext({
       specialityId: value,
       studyPlanId: null,
     })
   }
 
   const setStudyPlan = (value: number | null) => {
-    subjectsSearchStore.setContext({
+    setContext({
       specialityId: context.value.specialityId,
       studyPlanId: value,
     })

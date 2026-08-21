@@ -42,6 +42,17 @@ describe('useSubjectsFilter', () => {
     expect(context.value).toEqual({ specialityId: 4, studyPlanId: 5 })
   })
 
+  it('does not keep an override when the selected context matches the profile', () => {
+    const { hasCustomContext, setSpeciality, setStudyPlan } =
+      useSubjectsFilter()
+
+    setSpeciality(4)
+    setSpeciality(2)
+    setStudyPlan(3)
+
+    expect(hasCustomContext.value).toBe(false)
+  })
+
   it('restores profile defaults', () => {
     const { context, hasCustomContext, setSpeciality, resetToProfileDefaults } =
       useSubjectsFilter()
