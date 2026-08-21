@@ -115,4 +115,16 @@ describe('useUserProfileStore', () => {
     }
     expect(store.specialityId).toBe(7)
   })
+
+  it('studyPlanId returns the optional study plan from profile', () => {
+    const store = useUserProfileStore()
+    store.profile = {
+      id: crypto.randomUUID(),
+      facultyId: 5,
+      specialityId: 7,
+      studyPlanId: 9,
+      setupCompleted: true,
+    }
+    expect(store.studyPlanId).toBe(9)
+  })
 })

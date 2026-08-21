@@ -494,10 +494,29 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     const _hourlyLoadId = hourlyLoad.value?.id
     const _facultyId = facultyId.value
     if (!_hourlyLoadId || !_facultyId) return []
-    const response = await subjectApi.findPageBySpeciality({
+
+    if (context.value.studyPlanId) {
+      const response = await subjectApi.findPageByStudyPlan({
+        search: _search,
+        studyPlanId: context.value.studyPlanId,
+        hourlyLoadId: _hourlyLoadId,
+      })
+      return response.content.map(toAppSubject)
+    }
+
+    if (context.value.specialityId) {
+      const response = await subjectApi.findPageBySpeciality({
+        search: _search,
+        specialityId: context.value.specialityId,
+        hourlyLoadId: _hourlyLoadId,
+      })
+      return response.content.map(toAppSubject)
+    }
+
+    const response = await subjectApi.findPageByFaculty({
       search: _search,
+      facultyId: _facultyId,
       hourlyLoadId: _hourlyLoadId,
-      specialityId: context.value.specialityId!,
     })
     return response.content.map(toAppSubject)
   },

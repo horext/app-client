@@ -50,7 +50,8 @@
           :item-title="studyPlanTitle"
           :items="studyPlans"
           label="Selecciona tu plan de estudios"
-          placeholder="Plan de estudios"
+          placeholder="Plan de estudios (opcional)"
+          clearable
         />
       </v-card-text>
       <v-card-actions>

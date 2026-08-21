@@ -371,11 +371,17 @@ describe('useUserProfile', () => {
     await updateBasicSettings({
       facultyId: 3,
       specialityId: 4,
-      studyPlanId: null,
+      studyPlanId: 5,
       hourlyLoad: load,
+    })
+    expect(mockProfilePatch).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 3,
+      specialityId: 4,
+      studyPlanId: 5,
     })
     expect(store.profile?.facultyId).toBe(3)
     expect(store.profile?.specialityId).toBe(4)
+    expect(store.profile?.studyPlanId).toBe(5)
   })
 
   it('updateBasicSettings works when profile is undefined', async () => {
@@ -415,11 +421,16 @@ describe('useUserProfile', () => {
     await completeSetup({
       facultyId: 2,
       specialityId: 3,
-      studyPlanId: null,
+      studyPlanId: 4,
       hourlyLoad: load,
     })
     const store = useUserProfileStore()
-    expect(mockCreateProfile).toHaveBeenCalled()
+    expect(mockCreateProfile).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 2,
+      specialityId: 3,
+      studyPlanId: 4,
+      setupCompleted: true,
+    })
     expect(mockCreateAcademicConfig).toHaveBeenCalled()
     expect(mockCreatePreferences).toHaveBeenCalled()
     expect(store.profile?.facultyId).toBe(2)

@@ -18,8 +18,8 @@ vi.mock('~/stores/user-profile', () => ({
   useUserProfileStore: vi.fn(() => ({
     facultyId: ref(null),
     specialityId: ref(null),
-    hourlyLoad: ref(null),
     studyPlanId: ref(null),
+    hourlyLoad: ref(null),
   })),
 }))
 
