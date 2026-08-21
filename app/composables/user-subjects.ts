@@ -42,10 +42,14 @@ function toSubjectDomain(subject: ISubject): Omit<ISubjectDomain, 'id'> {
       id: subject.studyPlan.id,
       fromDate: subject.studyPlan.fromDate,
       code: subject.studyPlan.code,
+      createdAt: subject.studyPlan.createdAt,
+      updatedAt: subject.studyPlan.updatedAt,
       organizationUnit: subject.studyPlan.organizationUnit,
     },
     credits: subject.credits,
     cycle: subject.cycle,
+    createdAt: subject.createdAt,
+    updatedAt: subject.updatedAt,
   }
 }
 
@@ -115,8 +119,10 @@ export const useUserSubjects = () => {
     await Promise.all(
       subjects.value.map(async (saved) => {
         const latest = latestById.get(saved.subject.id)
-        if (!latest || JSON.stringify(saved.subject) === JSON.stringify(latest))
-          return
+        if (!latest) return
+
+        if (latest.updatedAt === saved.subject.updatedAt) return
+
         await updateSubject({ id: saved.id, subject: latest })
       }),
     )

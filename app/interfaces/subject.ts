@@ -18,6 +18,8 @@ export interface IStudyPlan {
   name?: string
   fromDate: string
   code: string
+  createdAt?: string
+  updatedAt?: string
   organizationUnit: {
     id: number
   }
@@ -59,6 +61,8 @@ export interface ISubject {
   studyPlan: IStudyPlan
   credits: number
   cycle: number | null
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ISubjectSchedule {

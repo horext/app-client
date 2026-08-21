@@ -177,7 +177,12 @@ describe('useUserSubjects', () => {
 
   it('refreshSubjectCatalog updates changed subjects by catalog id', async () => {
     const original = makeSubject()
-    const latest = { ...original.subject, credits: 5 }
+    original.subject.updatedAt = '2026-08-20T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      credits: 5,
+      updatedAt: '2026-08-21T00:00:00.000Z',
+    }
     const store = useUserSubjectsStore()
     store.subjects = [original]
     mockFindAllByIds.mockResolvedValue([latest])
@@ -195,6 +200,39 @@ describe('useUserSubjects', () => {
       }),
     )
     expect(mySubjects.value[0]?.subject.credits).toBe(5)
+  })
+
+  it('refreshes legacy records without a subject version', async () => {
+    const original = makeSubject()
+    original.subject.studyPlan.updatedAt = '2026-08-21T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      updatedAt: '2026-08-21T00:00:00.000Z',
+    }
+    useUserSubjectsStore().subjects = [original]
+    mockFindAllByIds.mockResolvedValue([latest])
+    mockPatch.mockResolvedValue(asEntity({ ...original, subject: latest }))
+    const { refreshSubjectCatalog } = useUserSubjects()
+
+    await refreshSubjectCatalog()
+
+    expect(mockPatch).toHaveBeenCalled()
+  })
+
+  it('trusts the subject version when updatedAt is unchanged', async () => {
+    const original = makeSubject()
+    original.subject.updatedAt = '2026-08-21T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      credits: original.subject.credits + 1,
+    }
+    useUserSubjectsStore().subjects = [original]
+    mockFindAllByIds.mockResolvedValue([latest])
+    const { refreshSubjectCatalog } = useUserSubjects()
+
+    await refreshSubjectCatalog()
+
+    expect(mockPatch).not.toHaveBeenCalled()
   })
 
   it('updateSubjectColor patches only the color and updates the store', async () => {
