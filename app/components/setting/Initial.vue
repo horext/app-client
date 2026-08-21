@@ -7,7 +7,7 @@
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
-          v-model="internalFacultyId"
+          :model-value="internalFacultyId"
           :items="faculties"
           :loading="loadingFaculties"
           item-title="name"
@@ -15,6 +15,7 @@
           label="Selecciona tu facultad"
           placeholder="Facultad"
           :rules="[(v) => !!v || 'Facultad es requerida']"
+          @update:model-value="selectFaculty"
         />
         <v-alert v-if="errorMessage" closable type="error">
           No se ha encontrado la carga horaria de tu facultad
@@ -31,7 +32,7 @@
         los cursos. </v-card-subtitle
       ><v-card-text>
         <v-autocomplete
-          v-model="internalSpecialityId"
+          :model-value="internalSpecialityId"
           :disabled="!internalFacultyId"
           item-value="id"
           :loading="loadingSpecialities"
@@ -39,13 +40,14 @@
           :items="specialities"
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
+          @update:model-value="selectSpeciality"
         />
         <v-autocomplete
           v-model="internalStudyPlanId"
           :disabled="!internalSpecialityId"
           item-value="id"
           :loading="loadingStudyPlans"
-          item-title="name"
+          :item-title="studyPlanTitle"
           :items="studyPlans"
           label="Selecciona tu plan de estudios"
           placeholder="Plan de estudios"
@@ -100,6 +102,22 @@ const internalHourlyLoad = shallowRef(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
 )
 
+const selectFaculty = (value: number | null) => {
+  if (value === internalFacultyId.value) return
+  internalFacultyId.value = value ?? undefined
+  internalSpecialityId.value = null
+  internalStudyPlanId.value = null
+}
+
+const selectSpeciality = (value: number | null) => {
+  if (value === internalSpecialityId.value) return
+  internalSpecialityId.value = value
+  internalStudyPlanId.value = null
+}
+
+const studyPlanTitle = (plan: { name?: string; code: string }) =>
+  plan.name ?? plan.code
+
 watch(facultyId, (value) => {
   internalFacultyId.value = value
 })
@@ -112,13 +130,6 @@ watch(studyPlanId, (value) => {
 
 watch(hourlyLoad, (value) => {
   internalHourlyLoad.value = value ? { ...value } : undefined
-})
-
-watch(internalFacultyId, (value, previousValue) => {
-  if (value !== previousValue) {
-    internalSpecialityId.value = null
-    internalStudyPlanId.value = null
-  }
 })
 
 const { pending: loadingSpecialities, data: specialities } = useAsyncData(
@@ -180,12 +191,6 @@ const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
     watch: [internalSpecialityId],
   },
 )
-
-watch(internalSpecialityId, (value, previousValue) => {
-  if (!value || (previousValue && value !== previousValue)) {
-    internalStudyPlanId.value = null
-  }
-})
 
 watch(lastHourlyLoad, (value) => {
   if (value) {
