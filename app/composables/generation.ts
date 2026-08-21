@@ -2,6 +2,7 @@ import { storeToRefs } from 'pinia'
 import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IGenerationMeta } from '~/interfaces/generation-record'
+import { toDomainSchedule } from '~/utils/domain-mappers'
 
 export const useGeneration = () => {
   const store = useGenerationStore()
@@ -19,19 +20,7 @@ export const useGeneration = () => {
     const _result = await service.saveGeneration(
       userId,
       meta,
-      newSchedules.map((schedule) => ({
-        ...schedule,
-        schedulesSubject: schedule.schedulesSubject.map((scheduleSubject) => ({
-          ...scheduleSubject,
-          sessions: scheduleSubject.sessions.map((session) => ({
-            ...session,
-            classroom: {
-              ...session.classroom,
-              name: session.classroom.name ?? undefined,
-            },
-          })),
-        })),
-      })),
+      newSchedules.map(toDomainSchedule),
       newOccurrences,
       preferencesStore.maxGenerationHistory,
     )

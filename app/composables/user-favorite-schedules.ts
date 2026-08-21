@@ -2,6 +2,7 @@ import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
 } from '~/interfaces/schedule'
+import { toDomainSchedule } from '~/utils/domain-mappers'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -12,21 +13,10 @@ export const useUserFavoriteSchedules = () => {
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
   ) {
-    const result = await favoritesStorage.addFavorite(userId, {
-      ..._favoritesSchedule,
-      schedulesSubject: _favoritesSchedule.schedulesSubject.map(
-        (scheduleSubject) => ({
-          ...scheduleSubject,
-          sessions: scheduleSubject.sessions.map((session) => ({
-            ...session,
-            classroom: {
-              ...session.classroom,
-              name: session.classroom.name ?? undefined,
-            },
-          })),
-        }),
-      ),
-    })
+    const result = await favoritesStorage.addFavorite(
+      userId,
+      toDomainSchedule(_favoritesSchedule),
+    )
     favoritesSchedules.value.push(result)
   }
 

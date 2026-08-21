@@ -18,21 +18,18 @@ export const useUserPreferences = () => {
   }
 
   async function updateCrossings(_crossings: number) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, crossings: _crossings }
-    await service.patch(userId, { crossings: _crossings })
+    const result = await service.patch(userId, { crossings: _crossings })
+    preferences.value = result
   }
 
   async function saveWeekDays(data: Weekdays[]) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, weekDays: data }
-    await service.patch(userId, { weekDays: data })
+    const result = await service.patch(userId, { weekDays: data })
+    preferences.value = result
   }
 
   async function updateMaxGenerationHistory(n: number) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, maxGenerationHistory: n }
-    await service.patch(userId, { maxGenerationHistory: n })
+    const result = await service.patch(userId, { maxGenerationHistory: n })
+    preferences.value = result
   }
 
   return {

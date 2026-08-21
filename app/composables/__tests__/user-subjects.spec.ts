@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import type { ISubjectSchedules } from '~/interfaces/subject'
+import type { SubjectScheduleId } from '~~/shared/domain'
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
-import type { SubjectScheduleId } from '~~/shared/domain'
-import { makeUUID } from '~~/shared/domain/types/ids'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 
 const mockCreate = vi.fn()
