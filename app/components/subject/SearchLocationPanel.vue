@@ -77,7 +77,7 @@
               :items="studyPlans"
               :loading="loadingStudyPlans"
               :disabled="!selectedSpecialityId"
-              item-title="name"
+              :item-title="studyPlanTitle"
               item-value="id"
               label="Plan de estudios"
               placeholder="Todos los planes"
@@ -107,6 +107,20 @@
             </div>
           </v-col>
         </v-row>
+        <v-alert
+          v-if="specialitiesError || studyPlansError"
+          type="error"
+          variant="tonal"
+          density="compact"
+          class="mt-2"
+        >
+          No pudimos cargar las opciones de búsqueda.
+          <template #append>
+            <v-btn variant="text" size="small" @click="emit('retry')">
+              Reintentar
+            </v-btn>
+          </template>
+        </v-alert>
         <div class="d-flex flex-wrap align-center ga-2 mt-2">
           <v-btn
             v-if="hasCustomContext"
@@ -147,14 +161,18 @@ const props = defineProps<{
   selectedStudyPlanId: number | null
   loadingSpecialities: boolean
   loadingStudyPlans: boolean
+  specialitiesError: boolean
+  studyPlansError: boolean
 }>()
 
 const showOptions = ref(false)
-const facultyName = computed(
-  () =>
-    props.faculties.find((faculty) => faculty.id === props.facultyId)?.name ??
-    `Facultad ${props.facultyId ?? ''}`,
+const facultyName = computed(() =>
+  (props.faculties.find((faculty) => faculty.id === props.facultyId)?.name ??
+  props.facultyId)
+    ? `Facultad ${props.facultyId}`
+    : 'Facultad no configurada',
 )
+const studyPlanTitle = (plan: IStudyPlan) => plan.name ?? plan.code
 const selectedSpecialityName = computed(
   () =>
     props.specialities.find(
@@ -185,6 +203,7 @@ const emit = defineEmits<{
   'select-speciality': [value: number | null]
   'select-study-plan': [value: number | null]
   reset: []
+  retry: []
 }>()
 </script>
 

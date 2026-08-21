@@ -52,6 +52,8 @@ const mountPanel = (
       selectedStudyPlanId,
       loadingSpecialities: false,
       loadingStudyPlans: false,
+      specialitiesError: false,
+      studyPlansError: false,
     },
     global: { plugins: [vuetify] },
   })
@@ -83,5 +85,24 @@ describe('SubjectSearchLocationPanel', () => {
     expect(wrapper.text()).not.toContain(
       'La facultad determina tu carga horaria',
     )
+  })
+
+  it('shows a useful faculty fallback and retry action for option errors', async () => {
+    const wrapper = mountPanel(null, null)
+    await wrapper.setProps({
+      facultyId: undefined,
+      specialitiesError: true,
+    })
+    const toggle = wrapper
+      .findAllComponents(VBtn)
+      .find((button) => button.text().includes('Cambiar dónde buscar'))
+
+    await toggle?.trigger('click')
+
+    expect(wrapper.find('input').attributes('value')).toBe(
+      'Facultad no configurada',
+    )
+    expect(wrapper.text()).toContain('No pudimos cargar las opciones')
+    expect(wrapper.text()).toContain('Reintentar')
   })
 })
