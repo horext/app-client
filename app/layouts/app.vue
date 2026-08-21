@@ -5,7 +5,11 @@
     v-model:dark-mode="darkMode"
     :hourly-load="hourlyLoad"
   />
-  <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
+  <AppNavigationDrawer
+    v-model:drawer="drawer"
+    :items="items"
+    :report-url="userBugReportUrl"
+  />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
   <v-main>
@@ -29,6 +33,7 @@ import {
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
+import { buildUserBugReportUrl } from '~/utils/user-bug-report'
 
 const settingsStore = useSettingsStore()
 
@@ -73,6 +78,13 @@ onMounted(async () => {
   ])
 })
 const drawer = ref(true)
+const route = useRoute()
+const userBugReportUrl = computed(() =>
+  buildUserBugReportUrl({
+    path: route.path,
+    userAgent: import.meta.client ? navigator.userAgent : undefined,
+  }),
+)
 const items = computed(() => [
   HOME_ROUTE,
   {
