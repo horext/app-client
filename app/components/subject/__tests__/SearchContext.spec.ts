@@ -16,10 +16,18 @@ describe('SubjectSearchContext', () => {
       global: { plugins: [vuetify] },
     })
 
-    expect(wrapper.text()).toContain('Engineering · Plan 2026')
-    expect(wrapper.text()).toContain('Plan de estudios')
-    expect(wrapper.text()).toContain('Reportar datos incorrectos')
-    expect(wrapper.text()).not.toContain('resultados más precisos')
+    expect(wrapper.text()).toContain('Buscando en')
+    expect(wrapper.text()).toContain('Especialidad')
+    expect(wrapper.text()).toContain('Engineering')
+    expect(wrapper.text()).toContain('Plan 2026')
+    expect(wrapper.text()).toContain('Informar problema')
+    expect(wrapper.text()).not.toContain('mejorar la precisión')
+    expect(wrapper.find('.mdi-school-outline').exists()).toBe(true)
+    expect(wrapper.find('.mdi-book-open-page-variant-outline').exists()).toBe(
+      true,
+    )
+    expect(wrapper.find('.mdi-flag-outline').exists()).toBe(true)
+    expect(wrapper.find('.mdi-open-in-new').exists()).toBe(true)
     expect(wrapper.get('a').attributes()).toMatchObject({
       href: 'https://github.com/horext/app-data/issues/new',
       target: '_blank',
@@ -35,7 +43,9 @@ describe('SubjectSearchContext', () => {
 
     expect(wrapper.text()).toContain('Engineering')
     expect(wrapper.text()).toContain('Especialidad')
-    expect(wrapper.text()).toContain('resultados más precisos')
-    expect(wrapper.text()).not.toContain('Reportar datos incorrectos')
+    expect(wrapper.text()).toContain('mejorar la precisión')
+    expect(wrapper.text()).not.toContain('Informar problema')
+    expect(wrapper.find('.mdi-information-outline').exists()).toBe(true)
+    expect(wrapper.find('.mdi-tune-variant').exists()).toBe(true)
   })
 })
