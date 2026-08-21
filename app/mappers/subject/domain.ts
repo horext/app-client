@@ -13,31 +13,15 @@ import type {
 
 export function toDomainSubject(subject: ISubject): DomainSubject {
   return {
-    id: subject.id,
-    course: {
-      id: subject.course.id,
-      name: subject.course.name,
-    },
-    type: {
-      id: subject.type.id,
-      name: subject.type.name,
-      code: subject.type.code,
-    },
+    ...subject,
+    course: { ...subject.course },
+    type: { ...subject.type },
     studyPlan: {
-      id: subject.studyPlan.id,
-      name: subject.studyPlan.name,
-      fromDate: subject.studyPlan.fromDate,
-      code: subject.studyPlan.code,
-      createdAt: subject.studyPlan.createdAt,
-      updatedAt: subject.studyPlan.updatedAt,
+      ...subject.studyPlan,
       organizationUnit: {
         id: subject.studyPlan.organizationUnit.id,
       },
     },
-    credits: subject.credits,
-    cycle: subject.cycle,
-    createdAt: subject.createdAt,
-    updatedAt: subject.updatedAt,
   }
 }
 
@@ -52,37 +36,17 @@ export function toDomainSubjectSchedule(
   schedule: ISubjectSchedule,
 ): DomainSubjectSchedule {
   return {
-    id: schedule.id,
-    section: {
-      id: schedule.section.id,
-    },
-    scheduleSubject: {
-      id: schedule.scheduleSubject.id,
-    },
+    ...schedule,
+    section: { ...schedule.section },
+    scheduleSubject: { ...schedule.scheduleSubject },
     sessions: schedule.sessions.map((session) => ({
-      id: session.id,
-      schedule: {
-        id: session.schedule.id,
-      },
+      ...session,
+      schedule: { ...session.schedule },
       classroom: {
-        id: session.classroom.id,
-        code: session.classroom.code,
-        name: session.classroom.name,
+        ...session.classroom,
       },
-      teacher: session.teacher
-        ? {
-            id: session.teacher.id,
-            fullName: session.teacher.fullName,
-          }
-        : undefined,
-      type: {
-        id: session.type.id,
-        code: session.type.code,
-        name: session.type.name,
-      },
-      day: session.day,
-      startTime: session.startTime,
-      endTime: session.endTime,
+      teacher: session.teacher ? { ...session.teacher } : undefined,
+      type: { ...session.type },
     })),
   }
 }

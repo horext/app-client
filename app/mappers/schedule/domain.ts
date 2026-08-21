@@ -10,18 +10,7 @@ import {
 } from '~/mappers/subject/domain'
 
 function toDomainEvent(event: IEvent): IEvent {
-  return {
-    id: event.id,
-    title: event.title,
-    day: event.day,
-    description: event.description,
-    location: event.location,
-    color: event.color,
-    category: event.category,
-    type: event.type,
-    startTime: event.startTime,
-    endTime: event.endTime,
-  }
+  return { ...event }
 }
 
 export function toDomainSchedule(
