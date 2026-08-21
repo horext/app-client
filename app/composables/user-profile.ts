@@ -4,6 +4,7 @@ import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
+import { useSubjectsSearchStore } from '~/stores/subjects-search'
 
 export const useUserProfile = () => {
   const store = useUserProfileStore()
@@ -12,6 +13,7 @@ export const useUserProfile = () => {
   const userId = useSchedulesUserId()
   const hourlyLoadApi = useHourlyLoadApi()
   const specialityApi = useSpecialityApi()
+  const subjectsSearchStore = useSubjectsSearchStore()
   const {
     profile,
     hourlyLoad,
@@ -102,6 +104,9 @@ export const useUserProfile = () => {
     hourlyLoad: IHourlyLoad
     studyPlanId: number | null
   }) {
+    const facultyChanged =
+      profile.value?.facultyId !== undefined &&
+      profile.value.facultyId !== data.facultyId
     await Promise.all([
       profileService.patch(userId, {
         facultyId: data.facultyId,
@@ -110,6 +115,7 @@ export const useUserProfile = () => {
       }),
       updateHourlyLoad(data.hourlyLoad),
     ])
+    if (facultyChanged) subjectsSearchStore.setContext(undefined)
     if (profile.value)
       profile.value = {
         ...profile.value,
