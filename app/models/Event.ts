@@ -74,7 +74,7 @@ export class ActivitySessionEvent<
     title = '',
     description = '',
     location = '',
-    color = '#1976d2',
+    color: string,
     allowOverlap = true,
     id: ID = undefined as ID,
   ) {

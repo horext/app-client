@@ -6,6 +6,7 @@ import type { UUID } from 'crypto'
 import { useUserEventsStore } from '~/stores/user-events'
 
 import { useUserEvents } from '../user-events'
+import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -24,7 +25,7 @@ mockNuxtImport('useActivitiesService', () =>
 function makeActivity(): IActivity {
   return {
     sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-    color: '#1976d2',
+    color: DEFAULT_ACTIVITY_COLOR,
     id: crypto.randomUUID(),
     title: 'Test Activity',
   }

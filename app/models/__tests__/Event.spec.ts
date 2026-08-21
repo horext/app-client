@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { ActivitySessionEvent, SubjectSessionEvent } from '../Event'
 import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
+import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
 
 function makeSchedule(
   sessions: Array<{
@@ -209,7 +210,15 @@ describe('CourseEvent.buildFromSchedule', () => {
 })
 
 function makeActivity(startTime: string, endTime: string) {
-  return new ActivitySessionEvent(1, startTime, endTime)
+  return new ActivitySessionEvent(
+    1,
+    startTime,
+    endTime,
+    '',
+    '',
+    '',
+    DEFAULT_ACTIVITY_COLOR,
+  )
 }
 
 describe('Event.intersects', () => {

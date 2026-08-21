@@ -3,6 +3,7 @@ import { isProxy, reactive } from 'vue'
 import { Activity } from '../Activity'
 import { ActivitySessionEvent } from '../Event'
 import type { IActivity } from '~/interfaces/event'
+import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
 
 describe('Activity requests', () => {
   it('creates a structured-cloneable request from reactive sessions', () => {
@@ -22,7 +23,7 @@ describe('Activity requests', () => {
     const activity = {
       id: crypto.randomUUID(),
       title: 'Study',
-      color: '#1976d2',
+      color: DEFAULT_ACTIVITY_COLOR,
       sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
     } satisfies IActivity
 
@@ -33,7 +34,7 @@ describe('Activity requests', () => {
     const activity = {
       id: crypto.randomUUID(),
       title: 'Study',
-      color: '#1976d2',
+      color: DEFAULT_ACTIVITY_COLOR,
       sessions: [
         { day: 1, startTime: '08:00', endTime: '10:00' },
         { day: 3, startTime: '14:00', endTime: '16:00' },
