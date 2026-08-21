@@ -25,9 +25,12 @@
               :selected-study-plan-id="selectedStudyPlanId"
               :loading-specialities="loadingSpecialities"
               :loading-study-plans="loadingStudyPlans"
+              :specialities-error="!!specialitiesError"
+              :study-plans-error="!!studyPlansError"
               @select-speciality="selectSpeciality"
               @select-study-plan="selectStudyPlan"
               @reset="resetContext"
+              @retry="retrySearchOptions"
             />
           </v-col>
           <v-col cols="12">
@@ -35,7 +38,7 @@
               v-model="selectedSubject"
               v-model:search="search"
               v-model:menu="openSearchMenu"
-              :status-subjects="statusSubjects"
+              :status-subjects="subjectSearchStatus"
               :subjects="availableCourses"
               :no-data-text="subjectSearchMessage"
               @update:model-value="addNewSubject"
@@ -118,6 +121,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { refDebounced } from '@vueuse/core'
 import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
@@ -147,7 +151,9 @@ import type { SubjectScheduleId } from '~~/shared/domain'
 import type { IOrganization } from '~/interfaces/organization'
 import { useSubjectsFilter } from '~/composables/subjects-filter'
 import SubjectSearchLocationPanel from '~/components/subject/SearchLocationPanel.vue'
-import { formatSearchLocation } from '~/constants/subject-search'
+import {
+  formatSearchLocation,
+} from '~/constants/subject-search'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -194,9 +200,12 @@ const { data: faculties } = useAsyncData<IOrganization[]>(
   () => facultyApi.getAll(),
   { default: () => [], server: false },
 )
-const { data: specialities, pending: loadingSpecialities } = useAsyncData<
-  IOrganization[]
->(
+const {
+  data: specialities,
+  pending: loadingSpecialities,
+  error: specialitiesError,
+  refresh: refreshSpecialities,
+} = useAsyncData<IOrganization[]>(
   'subjects-specialities',
   async () => {
     if (!facultyId.value) return []
@@ -209,9 +218,12 @@ const { data: specialities, pending: loadingSpecialities } = useAsyncData<
   },
 )
 
-const { data: studyPlans, pending: loadingStudyPlans } = useAsyncData<
-  IStudyPlan[]
->(
+const {
+  data: studyPlans,
+  pending: loadingStudyPlans,
+  error: studyPlansError,
+  refresh: refreshStudyPlans,
+} = useAsyncData<IStudyPlan[]>(
   'subjects-study-plans',
   async () => {
     if (!selectedSpecialityId.value) return []
@@ -245,12 +257,18 @@ const resetContext = () => {
   closeRequestId.value += 1
 }
 
+const retrySearchOptions = async () => {
+  await refreshSpecialities()
+  if (selectedSpecialityId.value) await refreshStudyPlans()
+}
+
 watch(
   [specialities, loadingSpecialities, facultyId],
   () => {
     const selected = context.value.specialityId
     if (
       loadingSpecialities.value ||
+      !!specialitiesError.value ||
       !facultyId.value ||
       selected === null ||
       specialities.value.some((speciality) => speciality.id === selected)
@@ -267,6 +285,7 @@ watch(
     const selected = context.value.studyPlanId
     if (
       loadingStudyPlans.value ||
+      !!studyPlansError.value ||
       selected === null ||
       studyPlans.value.some((plan) => plan.id === selected)
     )
@@ -413,16 +432,24 @@ const save = async (
 }
 
 const search = ref('')
+const debouncedSearch = refDebounced(search, 300)
+const normalizedSearch = computed(() => debouncedSearch.value?.trim() ?? '')
+const searchIsSettling = computed(
+  () => search.value.trim() !== normalizedSearch.value,
+)
+const subjectSearchStatus = computed(() =>
+  searchIsSettling.value ? 'pending' : statusSubjects.value,
+)
 
 const subjectSearchMessage = computed(() => {
-  if (statusSubjects.value === 'error')
+  if (subjectSearchStatus.value === 'error')
     return 'No pudimos cargar las asignaturas. Intenta nuevamente.'
   if (!facultyId.value || !hourlyLoad.value) {
     return 'Configura tu perfil académico para buscar cursos'
   }
   if (!search.value)
     return 'Escribe el nombre o código de una asignatura para comenzar.'
-  if (statusSubjects.value === 'pending') return 'Buscando cursos...'
+  if (subjectSearchStatus.value === 'pending') return 'Buscando cursos...'
   const specialityName = specialities.value.find(
     (speciality) => speciality.id === context.value.specialityId,
   )?.name
@@ -439,7 +466,7 @@ const subjectSearchMessage = computed(() => {
 const { data: subjects, status: statusSubjects } = await useAsyncData(
   'search',
   async () => {
-    const _search = search.value
+    const _search = normalizedSearch.value
     if (!_search) return []
     const _hourlyLoadId = hourlyLoad.value?.id
     const _facultyId = facultyId.value
@@ -452,7 +479,7 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     return response.content
   },
   {
-    watch: [search, context, facultyId, hourlyLoad],
+    watch: [normalizedSearch, context, facultyId, hourlyLoad],
     default: () => [],
   },
 )

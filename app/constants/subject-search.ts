@@ -6,3 +6,13 @@ export const formatSearchLocation = (
   if (specialityName) return specialityName
   return 'toda la facultad'
 }
+
+export const getSubjectSearchScope = (
+  facultyId: number,
+  specialityId: number | null,
+  studyPlanId: number | null,
+) => {
+  if (studyPlanId) return { studyPlanId }
+  if (specialityId) return { specialityId }
+  return { facultyId }
+}
