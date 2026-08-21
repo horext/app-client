@@ -1,3 +1,5 @@
+import type { IOrganizationSummaryResponse } from './organization'
+
 type WeekdaysResponse = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export interface ICourseResponse {
@@ -16,17 +18,7 @@ export interface IStudyPlanResponse {
   fromDate: string
   code: string
   name: string
-  organizationUnit:
-    | {
-        id: number
-        name: null
-        code: null
-      }
-    | {
-        id: number
-        name: string
-        code: string
-      }
+  organizationUnit: IOrganizationSummaryResponse
   createdAt: string
   updatedAt: string
 }

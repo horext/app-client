@@ -3,8 +3,7 @@
     <v-card :loading="loading">
       <v-card-title> Configuración Básica </v-card-title>
       <v-card-subtitle>
-        Selecciona tu facultad para obtener tu carga horaria y selecciona tu
-        especialidad para filtrar los cursos.
+        Selecciona tu facultad para obtener tu carga horaria
       </v-card-subtitle>
       <v-card-text>
         <v-autocomplete
@@ -27,6 +26,11 @@
           label="Carga horaria"
           :rules="[(v) => !!v || 'La facultad no tiene carga horaria']"
         />
+      </v-card-text>
+      <v-card-subtitle>
+        Selecciona tu especialidad y plan de estudios para un mejor filtrado de
+        los cursos. </v-card-subtitle
+      ><v-card-text>
         <v-autocomplete
           :model-value="internalSpecialityId"
           :disabled="!internalFacultyId"
@@ -36,7 +40,6 @@
           :items="specialities"
           label="Selecciona tu especialidad"
           placeholder="Especialidad"
-          :rules="[(v) => !!v || 'Especialidad es requerida']"
           @update:model-value="selectSpeciality"
         />
         <v-autocomplete
@@ -70,17 +73,18 @@ import {
   useSpecialityApi,
   useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
-import type { VForm } from 'vuetify/components/VForm'
 import { storeToRefs } from 'pinia'
 import type { SubmitEventPromise } from 'vuetify'
 
 defineProps<{ loading?: boolean }>()
 const emit = defineEmits<{
   submit: [
-    facultyId: number,
-    specialityId: number,
-    hourlyLoad: IHourlyLoad,
-    studyPlanId?: number,
+    {
+      facultyId: number
+      specialityId: number | null
+      hourlyLoad: IHourlyLoad
+      studyPlanId: number | null
+    },
   ]
 }>()
 
@@ -89,7 +93,7 @@ const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const studyPlanApi = useStudyPlanApi()
 const store = useUserProfileStore()
-const { facultyId, specialityId, studyPlanId, hourlyLoad } = storeToRefs(store)
+const { facultyId, specialityId, hourlyLoad, studyPlanId } = storeToRefs(store)
 
 const internalFacultyId = ref(facultyId.value)
 const internalSpecialityId = ref(specialityId.value)
@@ -98,6 +102,22 @@ const internalStudyPlanId = ref(studyPlanId.value)
 const internalHourlyLoad = shallowRef(
   hourlyLoad.value ? { ...hourlyLoad.value } : undefined,
 )
+
+const selectFaculty = (value: number | null) => {
+  if (value === internalFacultyId.value) return
+  internalFacultyId.value = value ?? undefined
+  internalSpecialityId.value = null
+  internalStudyPlanId.value = null
+}
+
+const selectSpeciality = (value: number | null) => {
+  if (value === internalSpecialityId.value) return
+  internalSpecialityId.value = value
+  internalStudyPlanId.value = null
+}
+
+const studyPlanTitle = (plan: { name?: string; code: string }) =>
+  plan.name ?? plan.code
 
 watch(facultyId, (value) => {
   internalFacultyId.value = value
@@ -109,22 +129,6 @@ watch(studyPlanId, (value) => {
   internalStudyPlanId.value = value
 })
 
-const selectFaculty = (value: number | null) => {
-  if (value === internalFacultyId.value) return
-  internalFacultyId.value = value ?? undefined
-  internalSpecialityId.value = undefined
-  internalStudyPlanId.value = undefined
-}
-
-const selectSpeciality = (value: number | null) => {
-  if (value === internalSpecialityId.value) return
-  internalSpecialityId.value = value ?? undefined
-  internalStudyPlanId.value = undefined
-}
-
-const studyPlanTitle = (plan: { name?: string; code: string }) =>
-  plan.name ?? plan.code
-
 watch(hourlyLoad, (value) => {
   internalHourlyLoad.value = value ? { ...value } : undefined
 })
@@ -135,36 +139,18 @@ const { pending: loadingSpecialities, data: specialities } = useAsyncData(
     if (!internalFacultyId.value) {
       return []
     }
-    return specialityApi.getAllByFaculty(internalFacultyId.value)
-  },
-  {
-    default: () => [],
-    watch: [internalFacultyId],
-  },
-)
-
-watch(specialities, (value) => {
-  const speciality = value.find((s) => s.id === internalSpecialityId.value)
-  if (!speciality) {
-    internalSpecialityId.value = undefined
-  }
-})
-
-const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
-  () => 'setting' + internalSpecialityId.value + '-study-plans',
-  async () => {
-    if (!internalSpecialityId.value) return []
-    const items = await studyPlanApi.getAllBySpecialityId(
-      internalSpecialityId.value,
+    const items = await specialityApi.getAllByFaculty(internalFacultyId.value)
+    const existsSpeciality = items.some(
+      (i) => i.id === internalSpecialityId.value,
     )
-    if (!items.some((item) => item.id === internalStudyPlanId.value)) {
-      internalStudyPlanId.value = undefined
+    if (!existsSpeciality) {
+      internalSpecialityId.value = null
     }
     return items
   },
   {
     default: () => [],
-    watch: [internalSpecialityId],
+    watch: [internalFacultyId],
   },
 )
 
@@ -184,6 +170,29 @@ const { data: lastHourlyLoad, error: errorMessage } = useAsyncData(
   },
 )
 
+const { pending: loadingStudyPlans, data: studyPlans } = useAsyncData(
+  () => 'setting' + internalSpecialityId.value + '-study-plans',
+  async () => {
+    if (!internalSpecialityId.value) {
+      return []
+    }
+    const items = await studyPlanApi.getAllBySpecialityId(
+      internalSpecialityId.value,
+    )
+    const existsStudyPlan = items.some(
+      (i) => i.id === internalStudyPlanId.value,
+    )
+    if (!existsStudyPlan) {
+      internalStudyPlanId.value = null
+    }
+    return items
+  },
+  {
+    default: () => [],
+    watch: [internalSpecialityId],
+  },
+)
+
 watch(lastHourlyLoad, (value) => {
   if (value) {
     internalHourlyLoad.value = { ...value }
@@ -199,12 +208,11 @@ const { data: faculties, pending: loadingFaculties } = useAsyncData<
 const ending = async (e: SubmitEventPromise) => {
   const formValue = await e
   if (!formValue?.valid) return
-  emit(
-    'submit',
-    internalFacultyId.value!,
-    internalSpecialityId.value!,
-    internalHourlyLoad.value!,
-    internalStudyPlanId.value,
-  )
+  emit('submit', {
+    facultyId: internalFacultyId.value!,
+    specialityId: internalSpecialityId.value,
+    hourlyLoad: internalHourlyLoad.value!,
+    studyPlanId: internalStudyPlanId.value,
+  })
 }
 </script>

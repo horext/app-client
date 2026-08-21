@@ -9,6 +9,7 @@ import {
   toDomainSubjectSchedules,
   toDomainSubjectUpdate,
 } from '~/mappers/subject/domain'
+import { toAppSubject } from '~/mappers/subject/api'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()
@@ -55,7 +56,7 @@ export const useUserSubjects = () => {
       subjects.value.map(({ subject }) => subject.id),
     )
     const latestById = new Map(
-      latestSubjects.map((subject) => [subject.id, subject]),
+      latestSubjects.map(toAppSubject).map((subject) => [subject.id, subject]),
     )
 
     await Promise.all(

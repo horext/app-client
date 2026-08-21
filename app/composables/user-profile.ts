@@ -4,6 +4,7 @@ import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
+import { useSubjectsSearchStore } from '~/stores/subjects-search'
 
 export const useUserProfile = () => {
   const store = useUserProfileStore()
@@ -12,6 +13,7 @@ export const useUserProfile = () => {
   const userId = useSchedulesUserId()
   const hourlyLoadApi = useHourlyLoadApi()
   const specialityApi = useSpecialityApi()
+  const subjectsSearchStore = useSubjectsSearchStore()
   const {
     profile,
     hourlyLoad,
@@ -98,50 +100,54 @@ export const useUserProfile = () => {
       profile.value = { ...profile.value, setupCompleted: _setupCompleted }
   }
 
-  async function updateBasicSettings(
-    _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
-    _studyPlanId?: number,
-  ) {
+  async function updateBasicSettings(data: {
+    facultyId: number
+    specialityId: number | null
+    hourlyLoad: IHourlyLoad
+    studyPlanId: number | null
+  }) {
+    const facultyChanged =
+      profile.value?.facultyId !== undefined &&
+      profile.value.facultyId !== data.facultyId
     await Promise.all([
       profileService.patch(userId, {
-        facultyId: _facultyId,
-        specialityId: _specialityId,
-        studyPlanId: _studyPlanId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
       }),
-      updateHourlyLoad(_hourlyLoad),
+      updateHourlyLoad(data.hourlyLoad),
     ])
+    if (facultyChanged) subjectsSearchStore.setContext(undefined)
     if (profile.value)
       profile.value = {
         ...profile.value,
-        facultyId: _facultyId,
-        specialityId: _specialityId,
-        studyPlanId: _studyPlanId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
       }
   }
 
   const { createPreferences } = useUserPreferences()
-  async function completeSetup(
-    _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad,
-    _studyPlanId?: number,
-  ) {
+  async function completeSetup(data: {
+    facultyId: number
+    specialityId: number | null
+    hourlyLoad: IHourlyLoad
+    studyPlanId: number | null
+  }) {
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {
-        facultyId: _facultyId,
-        specialityId: _specialityId,
-        studyPlanId: _studyPlanId,
+        facultyId: data.facultyId,
+        specialityId: data.specialityId,
+        studyPlanId: data.studyPlanId,
         setupCompleted: true,
       }),
       academicConfigService.create(userId, {
-        hourlyLoad: _hourlyLoad,
+        hourlyLoad: data.hourlyLoad,
       }),
       createPreferences(),
     ])
     profile.value = createdProfile
-    hourlyLoad.value = _hourlyLoad
+    hourlyLoad.value = data.hourlyLoad
   }
 
   return {

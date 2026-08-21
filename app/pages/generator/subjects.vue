@@ -14,9 +14,25 @@
       <v-sheet flat class="pa-2">
         <v-row density="comfortable">
           <v-col cols="12">
-            <SubjectSearchContext
-              :speciality-name="activeSpecialityName"
-              :study-plan-name="activeStudyPlanName"
+            <SubjectSearchLocationPanel
+              :faculties="faculties"
+              :faculty-id="facultyId"
+              :has-custom-context="hasCustomContext"
+              :profile-speciality-id="profileSpecialityId"
+              :profile-study-plan-id="profileStudyPlanId"
+              :close-request-id="closeRequestId"
+              :specialities="specialities"
+              :study-plans="studyPlans"
+              :selected-speciality-id="selectedSpecialityId"
+              :selected-study-plan-id="selectedStudyPlanId"
+              :loading-specialities="loadingSpecialities"
+              :loading-study-plans="loadingStudyPlans"
+              :specialities-error="!!specialitiesError"
+              :study-plans-error="!!studyPlansError"
+              @select-speciality="selectSpeciality"
+              @select-study-plan="selectStudyPlan"
+              @reset="resetContext"
+              @retry="retrySearchOptions"
             />
           </v-col>
           <v-col cols="12">
@@ -24,8 +40,9 @@
               v-model="selectedSubject"
               v-model:search="search"
               v-model:menu="openSearchMenu"
-              :status-subjects="statusSubjects"
+              :status-subjects="subjectSearchStatus"
               :subjects="availableCourses"
+              :no-data-text="subjectSearchMessage"
               @update:model-value="addNewSubject"
             />
           </v-col>
@@ -72,6 +89,15 @@
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
     </template>
+    <template #[`item.subject.studyPlan.name`]="{ item }">
+      {{ item.subject.studyPlan.name ?? item.subject.studyPlan.code }}
+    </template>
+    <template #[`item.subject.studyPlan.organizationUnit.name`]="{ item }">
+      {{
+        item.subject.studyPlan.organizationUnit.name ??
+        `Especialidad ${item.subject.studyPlan.organizationUnit.id}`
+      }}
+    </template>
     <template #[`item.actions`]="{ item }">
       <SubjectTableItemActions
         @click:edit="editItem(item)"
@@ -106,6 +132,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { refDebounced } from '@vueuse/core'
 import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
@@ -115,6 +142,7 @@ import type {
   ISubjectSchedule,
   ISubject,
   IBaseSubjectSchedules,
+  IStudyPlan,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import { getNextAvailableEventColor } from '~/constants/event'
@@ -123,14 +151,20 @@ import {
   useSubjectApi,
   useScheduleSubjectApi,
   useStudyPlanApi,
+  useFacultyApi,
+  useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
 import type { SubjectSchedules } from '~/models/subject-schedules'
 import type { SubjectScheduleId } from '~~/shared/domain'
+import type { IOrganization } from '~/interfaces/organization'
+import { useSubjectsFilter } from '~/composables/subjects-filter'
+import SubjectSearchLocationPanel from '~/components/subject/SearchLocationPanel.vue'
+import { formatSearchLocation } from '~/constants/subject-search'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
-import SubjectSearchContext from '~/components/subject/SearchContext.vue'
+import { toAppStudyPlan, toAppSubject } from '~/mappers/subject/api'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
@@ -138,6 +172,8 @@ useSeoMeta({
 })
 
 const subjectApi = useSubjectApi()
+const facultyApi = useFacultyApi()
+const specialityApi = useSpecialityApi()
 const studyPlanApi = useStudyPlanApi()
 
 const configStore = useUserProfileStore()
@@ -162,30 +198,125 @@ const availableCourses = computed(() => {
       ),
   )
 })
-const { specialityId, studyPlanId, hourlyLoad, speciality } =
-  storeToRefs(configStore)
+const {
+  facultyId,
+  hourlyLoad,
+  specialityId: profileSpecialityId,
+  studyPlanId: profileStudyPlanId,
+} = storeToRefs(configStore)
+const {
+  context,
+  hasCustomContext,
+  setSpeciality,
+  setStudyPlan,
+  resetToProfileDefaults,
+} = useSubjectsFilter()
+const closeRequestId = ref(0)
+const selectedSpecialityId = toRef(() => context.value.specialityId)
+const selectedStudyPlanId = toRef(() => context.value.studyPlanId)
 
-const { data: studyPlans } = useAsyncData(
-  'profile-study-plans',
+const { data: faculties } = useAsyncData<IOrganization[]>(
+  'subjects-faculties',
+  () => facultyApi.getAll(),
+  { default: () => [], server: false },
+)
+const {
+  data: specialities,
+  pending: loadingSpecialities,
+  error: specialitiesError,
+  refresh: refreshSpecialities,
+} = useAsyncData<IOrganization[]>(
+  'subjects-specialities',
   async () => {
-    if (!specialityId.value || !studyPlanId.value) return []
-    return studyPlanApi.getAllBySpecialityId(specialityId.value)
+    if (!facultyId.value) return []
+    return await specialityApi.getAllByFaculty(facultyId.value)
   },
   {
     default: () => [],
-    watch: [specialityId, studyPlanId],
+    watch: [facultyId],
     server: false,
   },
 )
 
-const activeSpecialityName = computed(
-  () => speciality.value?.name ?? `Especialidad ${specialityId.value}`,
+const {
+  data: studyPlans,
+  pending: loadingStudyPlans,
+  error: studyPlansError,
+  refresh: refreshStudyPlans,
+} = useAsyncData<IStudyPlan[]>(
+  'subjects-study-plans',
+  async () => {
+    if (!selectedSpecialityId.value) return []
+    const response = await studyPlanApi.getAllBySpecialityId(
+      selectedSpecialityId.value,
+    )
+    return response.map(toAppStudyPlan)
+  },
+  {
+    default: () => [],
+    watch: [selectedSpecialityId],
+    server: false,
+  },
 )
-const activeStudyPlanName = computed(() => {
-  if (!studyPlanId.value) return undefined
-  const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
-  return plan?.name ?? plan?.code ?? `Plan de estudios ${studyPlanId.value}`
-})
+
+const selectSpeciality = (value: number | null) => {
+  if (
+    value !== null &&
+    !specialities.value.some((speciality) => speciality.id === value)
+  )
+    return
+  setSpeciality(value)
+}
+
+const selectStudyPlan = (value: number | null) => {
+  if (value !== null && !studyPlans.value.some((plan) => plan.id === value))
+    return
+  setStudyPlan(value)
+  closeRequestId.value += 1
+}
+
+const resetContext = () => {
+  resetToProfileDefaults()
+  closeRequestId.value += 1
+}
+
+const retrySearchOptions = async () => {
+  await refreshSpecialities()
+  if (selectedSpecialityId.value) await refreshStudyPlans()
+}
+
+watch(
+  [specialities, loadingSpecialities, facultyId],
+  () => {
+    const selected = context.value.specialityId
+    if (
+      loadingSpecialities.value ||
+      !!specialitiesError.value ||
+      !facultyId.value ||
+      selected === null ||
+      specialities.value.some((speciality) => speciality.id === selected)
+    )
+      return
+    resetToProfileDefaults()
+  },
+  { immediate: true },
+)
+
+watch(
+  [studyPlans, loadingStudyPlans, selectedSpecialityId],
+  () => {
+    const selected = context.value.studyPlanId
+    if (
+      loadingStudyPlans.value ||
+      !!studyPlansError.value ||
+      selected === null ||
+      studyPlans.value.some((plan) => plan.id === selected)
+    )
+      return
+    setStudyPlan(null)
+  },
+  { immediate: true },
+)
 
 const refresh = async () => {
   try {
@@ -324,31 +455,73 @@ const save = async (
 }
 
 const search = ref('')
+const debouncedSearch = refDebounced(search, 300)
+const normalizedSearch = computed(() => debouncedSearch.value?.trim() ?? '')
+const searchIsSettling = computed(
+  () => search.value.trim() !== normalizedSearch.value,
+)
+const subjectSearchStatus = computed(() =>
+  searchIsSettling.value ? 'pending' : statusSubjects.value,
+)
+
+const subjectSearchMessage = computed(() => {
+  if (subjectSearchStatus.value === 'error')
+    return 'No pudimos cargar las asignaturas. Intenta nuevamente.'
+  if (!facultyId.value || !hourlyLoad.value) {
+    return 'Configura tu perfil académico para buscar cursos'
+  }
+  if (!search.value)
+    return 'Escribe el nombre o código de una asignatura para comenzar.'
+  if (subjectSearchStatus.value === 'pending') return 'Buscando cursos...'
+  const specialityName = specialities.value.find(
+    (speciality) => speciality.id === context.value.specialityId,
+  )?.name
+  const plan = studyPlans.value.find(
+    (studyPlan) => studyPlan.id === context.value.studyPlanId,
+  )
+  const location = formatSearchLocation(
+    specialityName,
+    plan?.name ?? plan?.code,
+  )
+  return `No encontramos cursos para “${search.value}” en ${location}.`
+})
 
 const { data: subjects, status: statusSubjects } = await useAsyncData(
   'search',
   async () => {
-    const _search = search.value
+    const _search = normalizedSearch.value
     if (!_search) return []
     const _hourlyLoadId = hourlyLoad.value?.id
-    const _specialityId = specialityId.value
-    const _studyPlanId = studyPlanId.value
-    if (!_hourlyLoadId || !_specialityId) return []
-    const response = _studyPlanId
-      ? await subjectApi.findPageByStudyPlan({
-          search: _search,
-          studyPlanId: _studyPlanId,
-          hourlyLoadId: _hourlyLoadId,
-        })
-      : await subjectApi.findPageBySpeciality({
-          search: _search,
-          specialityId: _specialityId,
-          hourlyLoadId: _hourlyLoadId,
-        })
-    return response.content
+    const _facultyId = facultyId.value
+    if (!_hourlyLoadId || !_facultyId) return []
+
+    if (context.value.studyPlanId) {
+      const response = await subjectApi.findPageByStudyPlan({
+        search: _search,
+        studyPlanId: context.value.studyPlanId,
+        hourlyLoadId: _hourlyLoadId,
+      })
+      return response.content.map(toAppSubject)
+    }
+
+    if (context.value.specialityId) {
+      const response = await subjectApi.findPageBySpeciality({
+        search: _search,
+        specialityId: context.value.specialityId,
+        hourlyLoadId: _hourlyLoadId,
+      })
+      return response.content.map(toAppSubject)
+    }
+
+    const response = await subjectApi.findPageByFaculty({
+      search: _search,
+      facultyId: _facultyId,
+      hourlyLoadId: _hourlyLoadId,
+    })
+    return response.content.map(toAppSubject)
   },
   {
-    watch: [search, specialityId, studyPlanId, hourlyLoad],
+    watch: [normalizedSearch, context, facultyId, hourlyLoad],
     default: () => [],
   },
 )

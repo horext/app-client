@@ -5,6 +5,8 @@ export interface IOrganizationType {
 
 export interface IOrganizationReference {
   id: number
+  name?: string
+  code?: string
 }
 
 export interface IOrganization extends IOrganizationReference {

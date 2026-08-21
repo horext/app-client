@@ -114,6 +114,7 @@ describe('useUserProfile', () => {
       id: 'p1',
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     }
     mockGetProfile.mockResolvedValue(profile)
@@ -291,6 +292,7 @@ describe('useUserProfile', () => {
       id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     } as IUserProfile
     mockProfilePatch.mockResolvedValue(undefined)
@@ -315,6 +317,7 @@ describe('useUserProfile', () => {
       id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     } as IUserProfile
     mockProfilePatch.mockResolvedValue(undefined)
@@ -336,6 +339,7 @@ describe('useUserProfile', () => {
       id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     } as IUserProfile
     mockProfilePatch.mockResolvedValue(undefined)
@@ -358,12 +362,18 @@ describe('useUserProfile', () => {
       id: crypto.randomUUID(),
       facultyId: 1,
       specialityId: 2,
+      studyPlanId: null,
       setupCompleted: false,
     } as IUserProfile
     mockProfilePatch.mockResolvedValue(undefined)
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateBasicSettings } = useUserProfile()
-    await updateBasicSettings(3, 4, load, 5)
+    await updateBasicSettings({
+      facultyId: 3,
+      specialityId: 4,
+      studyPlanId: 5,
+      hourlyLoad: load,
+    })
     expect(mockProfilePatch).toHaveBeenCalledWith(expect.any(String), {
       facultyId: 3,
       specialityId: 4,
@@ -379,7 +389,12 @@ describe('useUserProfile', () => {
     mockProfilePatch.mockResolvedValue(undefined)
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateBasicSettings } = useUserProfile()
-    await updateBasicSettings(3, 4, load)
+    await updateBasicSettings({
+      facultyId: 3,
+      specialityId: 4,
+      studyPlanId: null,
+      hourlyLoad: load,
+    })
     expect(mockProfilePatch).toHaveBeenCalled()
   })
 
@@ -389,6 +404,7 @@ describe('useUserProfile', () => {
       id: crypto.randomUUID(),
       facultyId: 2,
       specialityId: 3,
+      studyPlanId: null,
       setupCompleted: true,
     })
     mockCreateAcademicConfig.mockResolvedValue({
@@ -402,7 +418,12 @@ describe('useUserProfile', () => {
       maxGenerationHistory: 10,
     })
     const { completeSetup } = useUserProfile()
-    await completeSetup(2, 3, load, 4)
+    await completeSetup({
+      facultyId: 2,
+      specialityId: 3,
+      studyPlanId: 4,
+      hourlyLoad: load,
+    })
     const store = useUserProfileStore()
     expect(mockCreateProfile).toHaveBeenCalledWith(expect.any(String), {
       facultyId: 2,

@@ -7,6 +7,10 @@ export interface IOrganizationReferenceResponse {
   id: number
 }
 
+export type IOrganizationSummaryResponse =
+  | (IOrganizationReferenceResponse & { name: null; code: null })
+  | Pick<IOrganizationResponse, 'id' | 'name' | 'code'>
+
 export interface IOrganizationResponse extends IOrganizationReferenceResponse {
   parentOrganizationUnit: IOrganizationReferenceResponse
   code: string

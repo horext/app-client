@@ -7,6 +7,7 @@ import type {
   IScheduleSubject,
   IScheduleSubjectDetail,
 } from '~/interfaces/schedule-subject'
+import { toAppSubject } from '~/mappers/subject/api'
 
 function toAppSchedule(
   schedule: IScheduleResponse,
@@ -36,6 +37,6 @@ export function toAppScheduleSubjectDetail(
   scheduleSubject: IScheduleSubjectDetailResponse,
 ): IScheduleSubjectDetail {
   return Object.assign(toAppScheduleSubject(scheduleSubject), {
-    subject: scheduleSubject.subject,
+    subject: toAppSubject(scheduleSubject.subject),
   })
 }

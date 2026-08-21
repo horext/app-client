@@ -87,7 +87,12 @@ describe('IndexedDbAggregatePersistence', () => {
   it('stamps ownership and timestamps when creating', async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-01-02T03:04:05.000Z'))
-    const value = { facultyId: 1, specialityId: 2, setupCompleted: false }
+    const value = {
+      facultyId: 1,
+      specialityId: 2,
+      studyPlanId: null,
+      setupCompleted: false,
+    }
 
     await expect(
       persistence.create(StoresDB.PROFILE, value, 'user-1'),
@@ -131,6 +136,7 @@ describe('IndexedDbAggregatePersistence', () => {
       updatedBy: 'user-2',
       setupCompleted: true,
       specialityId: 1,
+      studyPlanId: null,
     }
 
     const result = await persistence.update(StoresDB.PROFILE, value, 'user-2')

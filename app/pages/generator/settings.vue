@@ -61,14 +61,14 @@ watch(weekDays, (value) => {
 
 const savingBasic = ref(false)
 const successSave = ref(false)
-const saveBasicSettings = async (
-  facultyId: number,
-  specialityId: number,
-  hourlyLoad: IHourlyLoad,
-  studyPlanId?: number,
-) => {
+const saveBasicSettings = async (data: {
+  facultyId: number
+  specialityId: number | null
+  hourlyLoad: IHourlyLoad
+  studyPlanId: number | null
+}) => {
   savingBasic.value = true
-  await updateBasicSettings(facultyId, specialityId, hourlyLoad, studyPlanId)
+  await updateBasicSettings(data)
   savingBasic.value = false
   successSave.value = true
 }

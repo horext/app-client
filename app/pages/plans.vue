@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { IStudyPlan } from '~/interfaces/subject'
+import { toAppStudyPlan } from '~/mappers/subject/api'
 import { useStudyPlanApi } from '~~/modules/apis/runtime/composables'
 
 definePageMeta({
@@ -11,7 +12,7 @@ definePageMeta({
 const api = useStudyPlanApi()
 const { data } = await useAsyncData<IStudyPlan[]>(
   'plans-list',
-  () => api.getAll(),
+  async () => (await api.getAll()).map(toAppStudyPlan),
   {
     default: () => [],
   },

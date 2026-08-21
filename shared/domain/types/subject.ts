@@ -6,6 +6,7 @@ import type {
   ReplicationState,
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
+import type { IOrganizationReference } from './organization'
 
 export interface ICourse {
   id: string
@@ -25,9 +26,7 @@ export interface IStudyPlan {
   name?: string
   createdAt?: string
   updatedAt?: string
-  organizationUnit: {
-    id: number
-  }
+  organizationUnit: IOrganizationReference
 }
 
 export interface IClassroom {

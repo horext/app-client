@@ -76,7 +76,12 @@ describe('schedule API mapper', () => {
 
     const result = toAppScheduleSubjectDetail(response)
 
-    expect(result.subject).toBe(response.subject)
+    expect(result.subject).not.toBe(response.subject)
+    expect(result.subject.studyPlan.organizationUnit).toEqual({
+      id: 31,
+      name: undefined,
+      code: undefined,
+    })
     expect(result.schedule.sessions[0]?.classroom.name).toBeUndefined()
   })
 })

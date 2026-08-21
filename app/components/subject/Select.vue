@@ -14,13 +14,14 @@
     item-value="id"
     :loading="statusSubjects === 'pending'"
     :no-data-text="
-      statusSubjects === 'error'
+      noDataText ??
+      (statusSubjects === 'error'
         ? 'Error al buscar cursos'
         : search
           ? statusSubjects === 'pending'
             ? 'Buscando cursos...'
             : 'No se encontraron cursos'
-          : 'Escribe el nombre del curso'
+          : 'Escribe el nombre del curso')
     "
   >
     <template #selection="{ item }">
@@ -58,6 +59,7 @@ import type { ISubject } from '~/interfaces/subject'
 defineProps<{
   subjects: ISubject[]
   statusSubjects: 'idle' | 'pending' | 'success' | 'error'
+  noDataText?: string
 }>()
 const search = defineModel<string>('search')
 const openSearchMenu = defineModel<boolean>('menu')
