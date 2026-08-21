@@ -13,6 +13,9 @@ const mockCreate = vi.fn()
 const mockDelete = vi.fn()
 const mockPatch = vi.fn()
 const mockGetAll = vi.fn()
+const { mockFindAllByIds } = vi.hoisted(() => ({
+  mockFindAllByIds: vi.fn(),
+}))
 
 mockNuxtImport('useSubjectsService', () =>
   vi.fn(() => ({
@@ -22,6 +25,12 @@ mockNuxtImport('useSubjectsService', () =>
     getAll: mockGetAll,
   })),
 )
+
+vi.mock('~~/modules/apis/runtime/composables', () => ({
+  useSubjectApi: () => ({
+    findAllByIds: mockFindAllByIds,
+  }),
+}))
 
 function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
   return {
@@ -171,15 +180,13 @@ describe('useUserSubjects', () => {
     const latest = { ...original.subject, credits: 5 }
     const store = useUserSubjectsStore()
     store.subjects = [original]
-    const subjectApi = {
-      findAllByIds: vi.fn().mockResolvedValue([latest]),
-    }
+    mockFindAllByIds.mockResolvedValue([latest])
     mockPatch.mockResolvedValue(asEntity({ ...original, subject: latest }))
     const { refreshSubjectCatalog, mySubjects } = useUserSubjects()
 
-    await refreshSubjectCatalog(subjectApi)
+    await refreshSubjectCatalog()
 
-    expect(subjectApi.findAllByIds).toHaveBeenCalledWith([original.subject.id])
+    expect(mockFindAllByIds).toHaveBeenCalledWith([original.subject.id])
     expect(mockPatch).toHaveBeenCalledWith(
       expect.any(String),
       original.id,
