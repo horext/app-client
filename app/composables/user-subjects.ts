@@ -14,20 +14,19 @@ export const useUserSubjects = () => {
   const service = useSubjectsService()
   const userId = useSchedulesUserId()
   const store = useUserSubjectsStore()
-  const { subjects } = storeToRefs(store)
+  const { subjects, hasSubjects } = storeToRefs(store)
 
   async function saveNewSubject(_subject: IBasePlannedSubject) {
     const created = await service.create(userId, {
       ...toDomainPlannedSubject(_subject),
       color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
     })
-    subjects.value.push(created.toSnapshot())
+    store.addSubject(created.toSnapshot())
   }
 
   async function deleteSubjectById(id: PlannedSubjectId) {
     await service.delete(userId, id)
-    const index = subjects.value.findIndex((s) => s.id === id)
-    if (index >= 0) subjects.value.splice(index, 1)
+    store.deleteSubjectById(id)
   }
 
   async function updateSubject(_subject: IPlannedSubjectUpdate) {
@@ -36,20 +35,18 @@ export const useUserSubjects = () => {
       _subject.id,
       toDomainSubjectUpdate(_subject),
     )
-    const index = subjects.value.findIndex((s) => s.id === _subject.id)
-    subjects.value[index] = result.toSnapshot()
+    store.updateSubject(result.toSnapshot())
   }
 
   async function updateSubjectColor(id: PlannedSubjectId, color: string) {
     const result = await service.patch(userId, id, { color })
-    const index = subjects.value.findIndex((subject) => subject.id === id)
-    if (index >= 0) subjects.value[index] = result.toSnapshot()
+    store.updateSubject(result.toSnapshot())
   }
 
   const subjectApi = useSubjectApi()
 
   async function refreshSubjectCatalog() {
-    if (subjects.value.length === 0) return
+    if (!hasSubjects.value) return
 
     const latestSubjects = await subjectApi.findAllByIds(
       subjects.value.map(({ subject }) => subject.id),
@@ -75,7 +72,7 @@ export const useUserSubjects = () => {
     const subjectsWithSchedules = data
       .map((entity) => entity.toSnapshot())
       .filter((subject: IBasePlannedSubject) => subject?.schedules?.length > 0)
-    subjects.value = subjectsWithSchedules
+    store.setSubjects(subjectsWithSchedules)
   }
 
   return {
