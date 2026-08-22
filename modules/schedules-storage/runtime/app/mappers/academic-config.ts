@@ -14,5 +14,5 @@ export const toRecord = (entity: AcademicConfig): IAcademicConfig =>
   Object.assign(
     toCreateRecord(entity),
     { id: entity.id },
-    toAuditRecord(entity),
+    toAuditRecord(entity.audit),
   )

@@ -4,6 +4,7 @@ import type { IIntersectionOccurrence } from '../types/occurrences'
 export type GenerationOccurrences = IIntersectionOccurrence[]
 export type AcademicLoad = IHourlyLoad
 
+export * from './audit'
 export * from './activity'
 export * from './planned-subject'
 export * from './generated-schedule'

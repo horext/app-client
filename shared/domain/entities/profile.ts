@@ -4,6 +4,7 @@ import type {
   IProfileUpdate,
   ProfileId,
 } from '../types/profile'
+import { Audit } from './audit'
 
 export class BaseProfile {
   protected _facultyId: number
@@ -56,18 +57,12 @@ export class BaseProfile {
 
 export class Profile extends BaseProfile {
   private readonly _id: ProfileId
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IProfile) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IProfileCreate): BaseProfile {
@@ -81,16 +76,7 @@ export class Profile extends BaseProfile {
   get id(): ProfileId {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

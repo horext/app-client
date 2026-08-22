@@ -6,6 +6,7 @@ import type {
 } from '../types/preferences'
 import type { Weekdays } from '../types/event'
 import { DomainError } from '../errors/domain-error'
+import { Audit } from './audit'
 
 export class BasePreferences {
   protected _weekDays: Weekdays[]
@@ -63,18 +64,12 @@ export class BasePreferences {
 
 export class Preferences extends BasePreferences {
   private readonly _id: PreferenceID
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IPreferences) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IPreferencesCreate): BasePreferences {
@@ -87,16 +82,7 @@ export class Preferences extends BasePreferences {
   get id(): PreferenceID {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

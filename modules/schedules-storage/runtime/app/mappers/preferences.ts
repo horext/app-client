@@ -16,5 +16,5 @@ export const toRecord = (entity: Preferences): IPreferences =>
   Object.assign(
     toCreateRecord(entity),
     { id: entity.id },
-    toAuditRecord(entity),
+    toAuditRecord(entity.audit),
   )

@@ -3,6 +3,7 @@ import type {
   IScheduleFavorite,
   IScheduleFavoriteCreate,
 } from '../types/schedule'
+import { Audit } from './audit'
 
 export class BaseScheduleFavorite {
   protected _id: GeneratedScheduleId
@@ -25,19 +26,13 @@ export class BaseScheduleFavorite {
 }
 
 export class ScheduleFavorite extends BaseScheduleFavorite {
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IScheduleFavorite) {
     super({ scheduleId: input.id })
     this._externalId = input.externalId
     this._revision = input.revision
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IScheduleFavoriteCreate): BaseScheduleFavorite {
@@ -47,16 +42,7 @@ export class ScheduleFavorite extends BaseScheduleFavorite {
     return new ScheduleFavorite(input)
   }
 
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }
