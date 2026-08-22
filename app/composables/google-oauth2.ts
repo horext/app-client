@@ -2,6 +2,7 @@ import { ofetch } from 'ofetch'
 import type {
   IGoogleCalendarItem,
   IGoogleCalendarListPayload,
+  GoogleCalendarSummary,
 } from '~/interfaces/google/calendar'
 import { storeToRefs } from 'pinia'
 
@@ -85,7 +86,7 @@ export const useGoogleOAuth2 = () => {
 
   async function createCalendar({
     summary,
-  }: Pick<IGoogleCalendarItem, 'summary'>): Promise<IGoogleCalendarItem> {
+  }: GoogleCalendarSummary): Promise<IGoogleCalendarItem> {
     return await googleApis<IGoogleCalendarItem>('calendar/v3/calendars', {
       method: 'POST',
       body: { summary },
