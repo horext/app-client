@@ -24,8 +24,8 @@ export const useGeneration = () => {
       newOccurrences,
       preferencesStore.maxGenerationHistory,
     )
-    history.value = await service.getGenerations(userId)
-    result.value = _result
+    store.setHistory(await service.getGenerations(userId))
+    store.setResult(_result)
   }
 
   async function loadSaved(): Promise<void> {
@@ -34,8 +34,8 @@ export const useGeneration = () => {
       service.getGenerations(userId),
       service.getLatestGeneration(userId),
     ])
-    history.value = records
-    result.value = latest ?? null
+    store.setHistory(records)
+    store.setResult(latest ?? null)
   }
 
   return {

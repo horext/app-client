@@ -6,9 +6,7 @@ export const useUserSchedules = () => {
   const { result } = storeToRefs(generationStore)
 
   async function updateSchedules(_schedules: IScheduleGenerate[]) {
-    if (result.value) {
-      result.value.schedules = _schedules
-    }
+    generationStore.updateSchedules(_schedules)
   }
 
   return {
