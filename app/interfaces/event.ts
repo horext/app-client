@@ -20,3 +20,5 @@ export interface IBaseActivity {
 export interface IActivity extends IBaseActivity {
   id: UUID
 }
+
+export type ActivityForm = IBaseActivity & { id?: IActivity['id'] }

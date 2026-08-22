@@ -1,6 +1,6 @@
 import type { UUID } from 'crypto'
 import { storeToRefs } from 'pinia'
-import type { IActivity, IBaseActivity } from '~/interfaces/event'
+import type { ActivityForm, IBaseActivity } from '~/interfaces/event'
 
 export const useUserEvents = () => {
   const store = useUserEventsStore()
@@ -20,7 +20,7 @@ export const useUserEvents = () => {
     store.deleteItemById(id)
   }
 
-  async function updateItem(item: IBaseActivity & { id?: IActivity['id'] }) {
+  async function updateItem(item: ActivityForm) {
     const itemId = item.id
     if (!itemId) return
     const result = await service.patch(userId, itemId, {

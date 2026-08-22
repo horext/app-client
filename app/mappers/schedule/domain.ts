@@ -6,6 +6,7 @@ import type { IEvent } from '~/interfaces/event'
 import type {
   IBaseScheduleGenerate,
   IScheduleGenerate,
+  ScheduleGenerateInput,
 } from '~/interfaces/schedule'
 import {
   toDomainSubject,
@@ -42,7 +43,7 @@ export function toDomainSchedule(
   schedule: IBaseScheduleGenerate,
 ): DomainBaseScheduleGenerate
 export function toDomainSchedule(
-  schedule: IBaseScheduleGenerate | IScheduleGenerate,
+  schedule: ScheduleGenerateInput,
 ): DomainBaseScheduleGenerate | DomainPersistedSchedule {
   const mapped = toDomainScheduleValues(schedule)
   return 'id' in schedule ? Object.assign(mapped, { id: schedule.id }) : mapped

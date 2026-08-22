@@ -1,10 +1,15 @@
-import type { IEvent } from './event'
 import type {
   IScheduleSubjectGenerate,
   ScheduleGenerateId,
 } from '~~/shared/domain'
 
-export type { IScheduleSubjectGenerate } from '~~/shared/domain'
+import type { IEvent } from './event'
+
+export type {
+  IScheduleSubjectGenerate,
+  ScheduleGenerateId,
+} from '~~/shared/domain'
+
 export interface IBaseScheduleGenerate {
   scheduleSubjectKey: string
   schedulesSubject: IScheduleSubjectGenerate[]
@@ -20,3 +25,5 @@ export interface IScheduleGenerate extends IBaseScheduleGenerate {
   id: ScheduleGenerateId
   events: IEvent[]
 }
+
+export type ScheduleGenerateInput = IBaseScheduleGenerate | IScheduleGenerate

@@ -65,7 +65,7 @@
 import { ref } from 'vue'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import { EVENT_HEADERS } from '~/constants/event'
-import type { IActivity, IBaseActivity } from '~/interfaces/event'
+import type { ActivityForm, IActivity } from '~/interfaces/event'
 
 useSeoMeta({
   title: 'Mis Actividades - Generador de Horarios',
@@ -115,7 +115,7 @@ const closeDelete = () => {
   dialogDelete.value = false
 }
 
-const save = async (event: IBaseActivity & { id?: IActivity['id'] }) => {
+const save = async (event: ActivityForm) => {
   if (event.id) {
     await updateItem(event)
     succcesUpdateEvent.value = true

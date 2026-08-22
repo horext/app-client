@@ -1,8 +1,7 @@
 import type {
-  IBaseSubjectSchedules,
   ISubject,
   ISubjectSchedule,
-  ISubjectSchedules,
+  SubjectSchedulesWithCurrentSchedules,
 } from '~/interfaces/subject'
 import type { SubjectScheduleId } from '~~/shared/domain'
 
@@ -98,9 +97,7 @@ export class SubjectSchedules<
   }
 
   static buildFrom(
-    data:
-      | (IBaseSubjectSchedules & { currentSchedules: ISubjectSchedule[] })
-      | (ISubjectSchedules & { currentSchedules: ISubjectSchedule[] }),
+    data: SubjectSchedulesWithCurrentSchedules,
   ): SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined> {
     if ('id' in data) {
       return new SubjectSchedules(

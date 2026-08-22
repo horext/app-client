@@ -17,6 +17,8 @@ export type {
   ITeacher,
 } from '~~/shared/domain/types/subject'
 
+export type { SubjectScheduleId }
+
 export interface IBaseSubjectSchedules {
   subject: ISubject
   schedules: ISubjectSchedule[]
@@ -33,3 +35,7 @@ export interface ISubjectSchedulesUpdate {
   schedules?: ISubjectSchedule[]
   color?: string
 }
+
+export type SubjectSchedulesWithCurrentSchedules =
+  | (IBaseSubjectSchedules & { currentSchedules: ISubjectSchedule[] })
+  | (ISubjectSchedules & { currentSchedules: ISubjectSchedule[] })
