@@ -1,6 +1,6 @@
 import type { IActivity } from '~/interfaces/event'
 import type { IIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
+import type { ILocalGeneratedSchedule } from '~/interfaces/schedule'
 import type {
   IBasePlannedSubject,
   ISubjectSchedule,
@@ -25,7 +25,7 @@ export const useSchedulesGenerator = () => {
     return new Promise<{
       occurrences: IIntersectionOccurrence[]
       schedules: ISubjectSchedule[]
-      combinations: ILocalScheduleGenerate[]
+      combinations: ILocalGeneratedSchedule[]
     }>((resolve, reject) => {
       if (!worker.value) reject('Not loaded worker')
       worker.value?.addEventListener(
@@ -34,7 +34,7 @@ export const useSchedulesGenerator = () => {
           e: MessageEvent<{
             occurrences: IIntersectionOccurrence[]
             schedules: ISubjectSchedule[]
-            combinations: ILocalScheduleGenerate[]
+            combinations: ILocalGeneratedSchedule[]
           }>,
         ) => {
           if (!e.data) reject('No data')

@@ -35,11 +35,11 @@ import ScheduleShare from '~/components/schedule/ShareCard.vue'
 import GoogleCalendarConnect from '~/components/google/calendar/Connect.vue'
 import GoogleSignInDialog from '~/components/google/SignInDialog.vue'
 import GoogleCalendarSyncDialog from '~/components/google/calendar/SyncDialog.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import type { ViewMode } from '~/models/ViewMode'
 
 defineProps<{
-  currentSchedule: IScheduleGenerate
+  currentSchedule: IGeneratedSchedule
   mode: ViewMode
   path: string
 }>()

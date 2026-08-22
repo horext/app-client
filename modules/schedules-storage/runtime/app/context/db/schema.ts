@@ -1,7 +1,7 @@
 import type { DBSchema } from 'idb'
 import type {
-  IFavoriteSchedule,
-  IScheduleGenerate,
+  IScheduleFavorite,
+  IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 import type { IActivity } from '#shared/domain/types/event'
 import type { IProfile } from '#shared/domain/types/profile'
@@ -23,8 +23,8 @@ export const enum StoresDB {
 
 export type ReplicableSchemas = {
   [StoresDB.SCHEDULES]: {
-    key: [string, IScheduleGenerate['id']]
-    value: IScheduleGenerate
+    key: [string, IGeneratedSchedule['id']]
+    value: IGeneratedSchedule
     indexes: { createdBy: string; scheduleSubjectKey: [string, string] }
   }
   [StoresDB.ACTIVITIES]: {
@@ -33,8 +33,8 @@ export type ReplicableSchemas = {
     indexes: { createdBy: string }
   }
   [StoresDB.FAVORITES]: {
-    key: [string, IFavoriteSchedule['id']]
-    value: IFavoriteSchedule
+    key: [string, IScheduleFavorite['id']]
+    value: IScheduleFavorite
     indexes: { createdBy: string }
   }
   [StoresDB.PROFILE]: {

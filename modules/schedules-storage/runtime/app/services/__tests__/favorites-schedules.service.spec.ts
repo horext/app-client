@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import {
-  Favorite,
+  ScheduleFavorite,
   Generation,
-  Schedule,
-  type ScheduleGenerateId,
+  GeneratedSchedule,
+  type GeneratedScheduleId,
 } from '#shared/domain'
 import { FavoritesSchedulesService } from '#shared/application/services/favorites-schedules.service'
 import type {
@@ -21,9 +21,11 @@ const input = {
   crossings: 0,
 }
 const createSchedule = () =>
-  Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
-const createFavorite = (scheduleId: ScheduleGenerateId) =>
-  Favorite.restore({
+  GeneratedSchedule.restore(
+    persistedSnapshot(GeneratedSchedule.create(input).toSnapshot()),
+  )
+const createFavorite = (scheduleId: GeneratedScheduleId) =>
+  ScheduleFavorite.restore({
     id: scheduleId,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
@@ -82,7 +84,7 @@ describe('FavoritesSchedulesService', () => {
       const result = await service.addFavorite('user-1', schedule.toSnapshot())
       expect(favRepo.create).toHaveBeenCalledWith(
         'user-1',
-        expect.any(Favorite),
+        expect.any(ScheduleFavorite),
       )
       expect(result).toEqual(schedule.toSnapshot())
     })
@@ -108,12 +110,15 @@ describe('FavoritesSchedulesService', () => {
       favRepo.findByScheduleId.mockResolvedValue(undefined)
       favRepo.create.mockResolvedValue(createFavorite(schedule.id))
       await service.addFavorite('user-1', input)
-      expect(repo.create).toHaveBeenCalledWith('user-1', expect.any(Schedule))
+      expect(repo.create).toHaveBeenCalledWith(
+        'user-1',
+        expect.any(GeneratedSchedule),
+      )
     })
   })
   describe('removeFavorite', () => {
     it('removes from list and deletes when not in any generation', async () => {
-      const id: ScheduleGenerateId = makeUUID()
+      const id: GeneratedScheduleId = makeUUID()
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(id))
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.findAll.mockResolvedValue([])
@@ -121,7 +126,7 @@ describe('FavoritesSchedulesService', () => {
       expect(repo.deleteEntry).toHaveBeenCalledWith('user-1', id)
     })
     it('does not delete when schedule is referenced in a generation', async () => {
-      const id: ScheduleGenerateId = makeUUID()
+      const id: GeneratedScheduleId = makeUUID()
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(id))
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.findAll.mockResolvedValue([

@@ -3,7 +3,7 @@ import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import { isProxy, reactive } from 'vue'
 import { useGenerationStore } from '~/stores/generation'
-import { Schedule } from '~~/shared/domain'
+import { GeneratedSchedule } from '~~/shared/domain'
 
 import { useGeneration } from '../generation'
 
@@ -70,7 +70,7 @@ describe('useGeneration', () => {
     mockSaveGeneration.mockImplementation(async (_userId, _meta, schedules) => {
       expect(isProxy(schedules[0])).toBe(false)
       expect(isProxy(schedules[0].events[0])).toBe(false)
-      expect(() => Schedule.create(schedules[0])).not.toThrow()
+      expect(() => GeneratedSchedule.create(schedules[0])).not.toThrow()
       return { id: 'generation-1', schedules: [] }
     })
     mockGetGenerations.mockResolvedValue([])

@@ -6,9 +6,9 @@ export type AcademicLoad = IHourlyLoad
 
 export * from './activity'
 export * from './planned-subject'
-export * from './schedule'
+export * from './generated-schedule'
 export * from './generation'
 export * from './profile'
 export * from './preferences'
 export * from './academic-config'
-export * from './favorite'
+export * from './schedule-favorite'

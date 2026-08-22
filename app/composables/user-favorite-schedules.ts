@@ -1,6 +1,6 @@
 import type {
-  ScheduleGenerateInput,
-  IScheduleGenerate,
+  GeneratedScheduleInput,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
 import { toDomainSchedule } from '~/mappers/schedule/domain'
 
@@ -11,7 +11,7 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: ScheduleGenerateInput,
+    _favoritesSchedule: GeneratedScheduleInput,
   ) {
     const result = await favoritesStorage.addFavorite(
       userId,
@@ -21,7 +21,7 @@ export const useUserFavoriteSchedules = () => {
   }
 
   async function deleteFavoriteScheduleById(
-    favoriteScheduleId: IScheduleGenerate['id'],
+    favoriteScheduleId: IGeneratedSchedule['id'],
   ) {
     await favoritesStorage.removeFavorite(userId, favoriteScheduleId)
     store.removeFavoriteById(favoriteScheduleId)

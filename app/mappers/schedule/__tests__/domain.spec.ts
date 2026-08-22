@@ -1,9 +1,9 @@
 import { isProxy, reactive } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { Schedule } from '~~/shared/domain'
+import { GeneratedSchedule } from '~~/shared/domain'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import type { ScheduleGenerateId } from '~~/shared/domain'
-import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
+import type { GeneratedScheduleId } from '~~/shared/domain'
+import type { IBaseGeneratedSchedule } from '~/interfaces/schedule'
 import { toDomainSchedule } from '../domain'
 
 function expectNoProxy(value: unknown): void {
@@ -12,7 +12,7 @@ function expectNoProxy(value: unknown): void {
   Object.values(value).forEach(expectNoProxy)
 }
 
-function makeSchedule(): IBaseScheduleGenerate {
+function makeSchedule(): IBaseGeneratedSchedule {
   return {
     scheduleSubjectKey: '6',
     schedulesSubject: [
@@ -57,11 +57,11 @@ describe('schedule domain mapper', () => {
 
     expectNoProxy(mapped)
     expect(() => structuredClone(mapped)).not.toThrow()
-    expect(() => Schedule.create(mapped)).not.toThrow()
+    expect(() => GeneratedSchedule.create(mapped)).not.toThrow()
   })
 
   it('keeps a persisted schedule identity', () => {
-    const id = makeUUID<ScheduleGenerateId>()
+    const id = makeUUID<GeneratedScheduleId>()
     const mapped = toDomainSchedule(reactive({ ...makeSchedule(), id }))
 
     expect(mapped.id).toBe(id)

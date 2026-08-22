@@ -1,13 +1,13 @@
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 
 export interface IFavoritesSchedulesService {
-  getFavoriteSchedules(userId: string): Promise<IScheduleGenerate[]>
+  getFavoriteSchedules(userId: string): Promise<IGeneratedSchedule[]>
   addFavorite(
     userId: string,
-    schedule: IBaseScheduleGenerate | IScheduleGenerate,
-  ): Promise<IScheduleGenerate>
+    schedule: IBaseGeneratedSchedule | IGeneratedSchedule,
+  ): Promise<IGeneratedSchedule>
   removeFavorite(userId: string, id: string): Promise<void>
 }

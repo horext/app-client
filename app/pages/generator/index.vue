@@ -72,7 +72,7 @@ import { useUserPreferencesStore } from '~/stores/user-preferences'
 import { useUserProfileStore } from '~/stores/user-profile'
 import { useGenerationStore } from '~/stores/generation'
 import { useUserEventsStore } from '~/stores/user-events'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 
 useSeoMeta({
@@ -104,14 +104,14 @@ const showAddFavoriteMessage = ref(false)
 const { saveNewFavoriteSchedule, deleteFavoriteScheduleById } =
   useUserFavoriteSchedules()
 
-const addFavorite = async (schedule: IScheduleGenerate) => {
+const addFavorite = async (schedule: IGeneratedSchedule) => {
   showAddFavoriteMessage.value = false
   await saveNewFavoriteSchedule(toRaw(schedule))
   showAddFavoriteMessage.value = true
 }
 
 const showRemoveFavoriteMessage = ref(false)
-const removeFavorite = async (schedule: IScheduleGenerate) => {
+const removeFavorite = async (schedule: IGeneratedSchedule) => {
   showRemoveFavoriteMessage.value = false
   await deleteFavoriteScheduleById(schedule.id)
   showRemoveFavoriteMessage.value = true

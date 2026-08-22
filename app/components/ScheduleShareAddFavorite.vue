@@ -14,20 +14,20 @@
 <script setup lang="ts">
 import { mdiStar } from '@mdi/js'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
 
 const props = defineProps<{
-  schedule: IBaseScheduleGenerate
-  favoritesSchedules: IScheduleGenerate[]
+  schedule: IBaseGeneratedSchedule
+  favoritesSchedules: IGeneratedSchedule[]
 }>()
 
 const { favoritesSchedules, schedule } = toRefs(props)
 
 const emit = defineEmits<{
-  (e: 'click:add-favorite', event: IBaseScheduleGenerate): void
-  (e: 'click:remove-favorite', event: IScheduleGenerate['id']): void
+  (e: 'click:add-favorite', event: IBaseGeneratedSchedule): void
+  (e: 'click:remove-favorite', event: IGeneratedSchedule['id']): void
 }>()
 
 const existingFavorite = computed(() => {
@@ -37,7 +37,7 @@ const existingFavorite = computed(() => {
 })
 
 const addFavoriteCurrentSchedule = (
-  existingFavorite: IScheduleGenerate | undefined,
+  existingFavorite: IGeneratedSchedule | undefined,
 ) => {
   if (existingFavorite) {
     emit('click:remove-favorite', existingFavorite.id)

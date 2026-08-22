@@ -1,6 +1,6 @@
 import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './occurrences'
-import type { IScheduleGenerate, ScheduleGenerateId } from './schedule'
+import type { IGeneratedSchedule, GeneratedScheduleId } from './schedule'
 import type { IAuditable } from './entity-metadata'
 import type {
   ReplicatedIdentity,
@@ -18,7 +18,7 @@ export interface IBaseGenerationRecord<
   T extends GenerationId = GenerationId,
 > extends ReplicationState<T> {
   generatedAt: string
-  scheduleIds: ScheduleGenerateId[]
+  scheduleIds: GeneratedScheduleId[]
   crossingsSetting: number
   weekDays: Weekdays[]
   hourlyLoadId: number
@@ -30,7 +30,7 @@ export interface IGenerationRecord
   extends IBaseGenerationRecord, IAuditable, ReplicatedIdentity<GenerationId> {}
 
 export interface IGenerationResult extends IGenerationRecord {
-  schedules: IScheduleGenerate[]
+  schedules: IGeneratedSchedule[]
   occurrences: IIntersectionOccurrence[]
 }
 

@@ -1,20 +1,20 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
-import type { ScheduleGenerateId } from '~~/shared/domain'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
+import type { GeneratedScheduleId } from '~~/shared/domain'
 
 export const useUserFavoritesStore = defineStore('user-favorites', () => {
-  const favoritesSchedules = ref<IScheduleGenerate[]>([])
+  const favoritesSchedules = ref<IGeneratedSchedule[]>([])
 
-  function setFavorites(schedules: IScheduleGenerate[]) {
+  function setFavorites(schedules: IGeneratedSchedule[]) {
     favoritesSchedules.value = schedules
   }
 
-  function addFavorite(schedule: IScheduleGenerate) {
+  function addFavorite(schedule: IGeneratedSchedule) {
     favoritesSchedules.value.push(schedule)
   }
 
-  function removeFavoriteById(id: ScheduleGenerateId) {
+  function removeFavoriteById(id: GeneratedScheduleId) {
     favoritesSchedules.value = favoritesSchedules.value.filter(
       (schedule) => schedule.id !== id,
     )

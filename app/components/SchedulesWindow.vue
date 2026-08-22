@@ -36,12 +36,12 @@ import { computed, ref, watch } from 'vue'
 import ViewList from './schedule/SubjectsTable.vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { ViewMode } from '~/models/ViewMode'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import { mdiArrowRightBoldCircle, mdiArrowLeftBoldCircle } from '@mdi/js'
 import type { Weekdays } from '~/interfaces/event'
 
 const props = defineProps<{
-  schedules: IScheduleGenerate[]
+  schedules: IGeneratedSchedule[]
   weekDays: Weekdays[]
   mode: ViewMode
 }>()
@@ -50,7 +50,7 @@ const { schedules } = toRefs(props)
 
 const index = ref(0)
 
-const syncedCurrentSchedule = defineModel<IScheduleGenerate>('currentSchedule')
+const syncedCurrentSchedule = defineModel<IGeneratedSchedule>('currentSchedule')
 
 const MODES = ViewMode
 

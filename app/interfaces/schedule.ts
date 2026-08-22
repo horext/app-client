@@ -1,29 +1,29 @@
 import type {
-  IScheduleSubjectGenerate,
-  ScheduleGenerateId,
+  IGeneratedScheduleSubject,
+  GeneratedScheduleId,
 } from '~~/shared/domain'
 
 import type { IEvent } from './event'
 
 export type {
-  IScheduleSubjectGenerate,
-  ScheduleGenerateId,
+  IGeneratedScheduleSubject,
+  GeneratedScheduleId,
 } from '~~/shared/domain'
 
-export interface IBaseScheduleGenerate {
+export interface IBaseGeneratedSchedule {
   scheduleSubjectKey: string
-  schedulesSubject: IScheduleSubjectGenerate[]
+  schedulesSubject: IGeneratedScheduleSubject[]
   crossings: number
   events: IEvent[]
 }
 
-export interface ILocalScheduleGenerate extends IBaseScheduleGenerate {
+export interface ILocalGeneratedSchedule extends IBaseGeneratedSchedule {
   events: IEvent[]
 }
 
-export interface IScheduleGenerate extends IBaseScheduleGenerate {
-  id: ScheduleGenerateId
+export interface IGeneratedSchedule extends IBaseGeneratedSchedule {
+  id: GeneratedScheduleId
   events: IEvent[]
 }
 
-export type ScheduleGenerateInput = IBaseScheduleGenerate | IScheduleGenerate
+export type GeneratedScheduleInput = IBaseGeneratedSchedule | IGeneratedSchedule

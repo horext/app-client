@@ -5,8 +5,8 @@ import type {
 } from '#shared/domain/types/generation-record'
 import type { IBaseIntersectionOccurrence } from '#shared/domain/types/occurrences'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 
 export interface IGenerationService {
@@ -15,12 +15,12 @@ export interface IGenerationService {
   saveGeneration(
     userId: string,
     meta: IGenerationMeta,
-    schedules: IBaseScheduleGenerate[],
+    schedules: IBaseGeneratedSchedule[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,
   ): Promise<IGenerationResult>
   getSchedulesForGeneration(
     userId: string,
     record: IGenerationRecord,
-  ): Promise<IScheduleGenerate[]>
+  ): Promise<IGeneratedSchedule[]>
 }

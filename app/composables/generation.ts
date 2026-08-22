@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseGeneratedSchedule } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IGenerationMeta } from '~/interfaces/generation-record'
 import { toDomainSchedule } from '~/mappers/schedule/domain'
@@ -12,7 +12,7 @@ export const useGeneration = () => {
   const { result, history } = storeToRefs(store)
 
   async function setResult(
-    newSchedules: IBaseScheduleGenerate[],
+    newSchedules: IBaseGeneratedSchedule[],
     newOccurrences: IBaseIntersectionOccurrence[],
     meta: IGenerationMeta,
   ): Promise<void> {

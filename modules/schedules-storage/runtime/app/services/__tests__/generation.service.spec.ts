@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import {
   Generation,
-  Schedule,
-  Favorite,
-  type ScheduleGenerateId,
+  GeneratedSchedule,
+  ScheduleFavorite,
+  type GeneratedScheduleId,
 } from '#shared/domain'
 import type {
   GenerationId,
@@ -31,8 +31,8 @@ const meta: IGenerationMeta = {
   weekDays: [1, 2, 3, 4, 5],
   hourlyLoadId: 1,
 }
-const ids = new Map<string, GenerationId | ScheduleGenerateId>()
-const idFor = <T extends GenerationId | ScheduleGenerateId>(
+const ids = new Map<string, GenerationId | GeneratedScheduleId>()
+const idFor = <T extends GenerationId | GeneratedScheduleId>(
   name: string,
 ): T => {
   const existing = ids.get(name)
@@ -42,9 +42,11 @@ const idFor = <T extends GenerationId | ScheduleGenerateId>(
   return generated
 }
 const createSchedule = () =>
-  Schedule.restore(persistedSnapshot(Schedule.create(input).toSnapshot()))
-const createFavorite = (scheduleId: ScheduleGenerateId) =>
-  Favorite.restore({
+  GeneratedSchedule.restore(
+    persistedSnapshot(GeneratedSchedule.create(input).toSnapshot()),
+  )
+const createFavorite = (scheduleId: GeneratedScheduleId) =>
+  ScheduleFavorite.restore({
     id: scheduleId,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
@@ -60,7 +62,7 @@ const makeRecord = (
     id: idFor<GenerationId>(id),
     ...meta,
     generatedAt,
-    scheduleIds: scheduleIds.map<ScheduleGenerateId>(idFor),
+    scheduleIds: scheduleIds.map<GeneratedScheduleId>(idFor),
     resultCount: scheduleIds.length,
     occurrences: [],
     createdAt: generatedAt,

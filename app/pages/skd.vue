@@ -22,7 +22,7 @@ import type { IBasePlannedSubject } from '~/interfaces/subject'
 import { getEventColorByIndex } from '~/constants/event'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
-import type { ILocalScheduleGenerate } from '~/interfaces/schedule'
+import type { ILocalGeneratedSchedule } from '~/interfaces/schedule'
 import { toAppScheduleSubjectDetail } from '~/mappers/schedule/api'
 
 definePageMeta({
@@ -35,7 +35,7 @@ useSeoMeta({
 })
 
 const scheduleSubjectApi = useScheduleSubjectApi()
-const schedules = ref<ILocalScheduleGenerate[]>([])
+const schedules = ref<ILocalGeneratedSchedule[]>([])
 const loading = ref(false)
 
 const firstSchedule = computed(() => schedules.value[0])

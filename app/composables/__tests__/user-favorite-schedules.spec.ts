@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
 import { useUserFavoritesStore } from '~/stores/user-favorites'
 import { makeUUID } from '~~/shared/domain/types/ids'
 import { isProxy, reactive } from 'vue'
-import { Schedule } from '~~/shared/domain'
-import type { ScheduleGenerateId } from '~~/shared/domain'
+import { GeneratedSchedule } from '~~/shared/domain'
+import type { GeneratedScheduleId } from '~~/shared/domain'
 
 import { useUserFavoriteSchedules } from '../user-favorite-schedules'
 
@@ -28,8 +28,8 @@ mockNuxtImport('useFavoritesSchedulesService', () =>
 )
 
 function makeFavorite(
-  id: ScheduleGenerateId = makeUUID<ScheduleGenerateId>(),
-): IScheduleGenerate {
+  id: GeneratedScheduleId = makeUUID<GeneratedScheduleId>(),
+): IGeneratedSchedule {
   return {
     id,
     events: [],
@@ -58,7 +58,7 @@ describe('useUserFavoriteSchedules', () => {
     mockAddFavorite.mockResolvedValue(fav)
     const { saveNewFavoriteSchedule, favoritesSchedules } =
       useUserFavoriteSchedules()
-    await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
+    await saveNewFavoriteSchedule(fav as IBaseGeneratedSchedule)
     expect(mockAddFavorite).toHaveBeenCalledWith(expect.any(String), fav)
     expect(favoritesSchedules.value).toContainEqual(fav)
   })
@@ -69,7 +69,7 @@ describe('useUserFavoriteSchedules', () => {
     const reactiveSchedule = reactive(newSchedule)
     mockAddFavorite.mockImplementation(async (_userId, input) => {
       expect(isProxy(input)).toBe(false)
-      expect(() => Schedule.create(input)).not.toThrow()
+      expect(() => GeneratedSchedule.create(input)).not.toThrow()
       return favorite
     })
 

@@ -5,13 +5,13 @@ import { nextTick } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import { VMenu } from 'vuetify/components'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const vuetify = createVuetify()
 vi.stubGlobal('visualViewport', new EventTarget())
-describe('Schedule Calendar', () => {
-  const scheduleMock: IScheduleGenerate = {
+describe('GeneratedSchedule Calendar', () => {
+  const scheduleMock: IGeneratedSchedule = {
     events: [
       {
         id: '1',

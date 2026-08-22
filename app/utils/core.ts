@@ -1,7 +1,7 @@
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
-  ILocalScheduleGenerate,
-  IScheduleSubjectGenerate,
+  ILocalGeneratedSchedule,
+  IGeneratedScheduleSubject,
 } from '~/interfaces/schedule'
 import type { IBasePlannedSubject } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
@@ -21,7 +21,7 @@ export function getSchedules(
   _options?: ScheduleOptions,
 ): {
   occurrences: IBaseIntersectionOccurrence[]
-  combinations: ILocalScheduleGenerate[]
+  combinations: ILocalGeneratedSchedule[]
 } {
   const options = {
     credits: 100,
@@ -33,7 +33,7 @@ export function getSchedules(
   const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const generatedSchedules: Array<ILocalScheduleGenerate> = []
+  const generatedSchedules: Array<ILocalGeneratedSchedule> = []
   const baseEvents = activities.flatMap(
     ActivitySessionEvent.buildActivitiesFrom,
   )
@@ -61,7 +61,7 @@ export function getSchedules(
 
   const intersectionCache = new Map<string, boolean>()
   for (let i = totalSchedules; i--;) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> =
+    const scheduleSubjects: Array<IGeneratedScheduleSubject> =
       subjectsSchedules.map((subjectSchedules, j) => ({
         ...subjectSchedules.schedules[indexSchedules[j]!]!,
         subject: subjectSchedules.subject,

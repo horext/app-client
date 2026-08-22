@@ -6,11 +6,11 @@ import type {
   IGenerationRecord,
   IGenerationResult,
 } from '#shared/domain/types/generation-record'
-import { Generation, Schedule } from '#shared/domain'
+import { Generation, GeneratedSchedule } from '#shared/domain'
 import type { IIntersectionOccurrence } from '#shared/domain/types/occurrences'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import type { IGenerationService } from '../interfaces/generation.service'
@@ -77,12 +77,12 @@ export class GenerationService implements IGenerationService {
   async saveGeneration(
     userId: string,
     meta: IGenerationMeta,
-    schedules: IBaseScheduleGenerate[],
+    schedules: IBaseGeneratedSchedule[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
   ): Promise<IGenerationResult> {
     const schedulesToSave = schedules.map((schedule) =>
-      Schedule.create(schedule),
+      GeneratedSchedule.create(schedule),
     )
     const savedSchedules = await this.schedulesRepo.createAll(
       userId,
@@ -127,7 +127,7 @@ export class GenerationService implements IGenerationService {
   async getSchedulesForGeneration(
     userId: string,
     record: IGenerationRecord,
-  ): Promise<IScheduleGenerate[]> {
+  ): Promise<IGeneratedSchedule[]> {
     return (
       await this.schedulesRepo.getEntries(userId, record.scheduleIds)
     ).map((schedule) => schedule.toSnapshot())

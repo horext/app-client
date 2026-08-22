@@ -1,6 +1,6 @@
 import type { UUID } from 'crypto'
 import type { IActivity, IEvent, Weekdays } from '~/interfaces/event'
-import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
+import type { IGeneratedScheduleSubject } from '~/interfaces/schedule'
 
 export enum EventCategory {
   COURSE = 'COURSE',
@@ -176,7 +176,7 @@ export class SubjectSessionEvent extends Event implements IEvent {
     this.id = id
   }
 
-  static buildFromSchedule(schedule: IScheduleSubjectGenerate, color: string) {
+  static buildFromSchedule(schedule: IGeneratedScheduleSubject, color: string) {
     if (!schedule.sessions?.length) return []
     const events: Array<SubjectSessionEvent> = []
     const sessions = schedule.sessions

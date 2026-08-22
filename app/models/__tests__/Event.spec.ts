@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { ActivitySessionEvent, SubjectSessionEvent } from '../Event'
-import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
+import type { IGeneratedScheduleSubject } from '~/interfaces/schedule'
 import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
 
 function makeSchedule(
@@ -13,7 +13,7 @@ function makeSchedule(
     teacherName?: string
     classroomCode?: string
   }>,
-): IScheduleSubjectGenerate {
+): IGeneratedScheduleSubject {
   return {
     id: 1,
     section: { id: 'A' },

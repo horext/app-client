@@ -1,31 +1,35 @@
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
-  IScheduleCreate,
-  IScheduleUpdate,
-  ScheduleGenerateId,
-  ScheduleGenerateInput,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
+  IGeneratedScheduleCreate,
+  IGeneratedScheduleUpdate,
+  GeneratedScheduleId,
+  GeneratedScheduleInput,
 } from '../types/schedule'
 import { DomainError } from '../errors/domain-error'
 import type { IEntitySnapshot } from './snapshot'
 
-export class Schedule<
-  T extends ScheduleGenerateInput = IScheduleGenerate,
+export class GeneratedSchedule<
+  T extends GeneratedScheduleInput = IGeneratedSchedule,
 > implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
-  private static build<T extends ScheduleGenerateInput>(input: T): Schedule<T> {
+  private static build<T extends GeneratedScheduleInput>(
+    input: T,
+  ): GeneratedSchedule<T> {
     if (!Number.isInteger(input.crossings) || input.crossings < 0)
       throw new DomainError(
         'invalid-limit',
-        'Schedule crossings cannot be negative.',
+        'GeneratedSchedule crossings cannot be negative.',
         'crossings',
       )
-    return new Schedule(structuredClone(input))
+    return new GeneratedSchedule(structuredClone(input))
   }
 
-  static create(input: IScheduleCreate): Schedule<IBaseScheduleGenerate> {
-    return Schedule.build({
+  static create(
+    input: IGeneratedScheduleCreate,
+  ): GeneratedSchedule<IBaseGeneratedSchedule> {
+    return GeneratedSchedule.build({
       ...(input.externalId ? { externalId: input.externalId } : {}),
       ...(input.revision !== undefined ? { revision: input.revision } : {}),
       scheduleSubjectKey: input.scheduleSubjectKey,
@@ -35,11 +39,13 @@ export class Schedule<
     })
   }
 
-  static restore(snapshot: IScheduleGenerate): Schedule<IScheduleGenerate> {
-    return Schedule.build(snapshot)
+  static restore(
+    snapshot: IGeneratedSchedule,
+  ): GeneratedSchedule<IGeneratedSchedule> {
+    return GeneratedSchedule.build(snapshot)
   }
 
-  get id(): ScheduleGenerateId {
+  get id(): GeneratedScheduleId {
     if (!('id' in this.snapshot))
       throw new Error('The entity has not been persisted.')
     return this.snapshot.id
@@ -50,10 +56,10 @@ export class Schedule<
   }
 
   update(
-    this: Schedule<IScheduleGenerate>,
-    input: IScheduleUpdate,
-  ): Schedule<IScheduleGenerate> {
-    return Schedule.build({
+    this: GeneratedSchedule<IGeneratedSchedule>,
+    input: IGeneratedScheduleUpdate,
+  ): GeneratedSchedule<IGeneratedSchedule> {
+    return GeneratedSchedule.build({
       ...this.snapshot,
       ...structuredClone(input),
     })

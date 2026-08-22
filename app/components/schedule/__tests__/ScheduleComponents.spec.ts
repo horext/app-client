@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import { ViewMode } from '~/models/ViewMode'
 import type {
-  IScheduleGenerate,
-  IScheduleSubjectGenerate,
+  IGeneratedSchedule,
+  IGeneratedScheduleSubject,
 } from '~/interfaces/schedule'
 import FavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
@@ -39,7 +39,7 @@ vi.mock('~/stores/user-profile', () => ({
 
 const vuetify = createVuetify()
 
-function makeSchedule(): IScheduleGenerate {
+function makeSchedule(): IGeneratedSchedule {
   return {
     id: makeUUID(),
     schedulesSubject: [],
@@ -49,7 +49,7 @@ function makeSchedule(): IScheduleGenerate {
   }
 }
 
-function makeScheduleSubject(): IScheduleSubjectGenerate {
+function makeScheduleSubject(): IGeneratedScheduleSubject {
   return {
     id: 1,
     sessions: [],
