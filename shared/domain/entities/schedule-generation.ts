@@ -8,6 +8,7 @@ import type { GeneratedScheduleId } from '../types/schedule'
 import type { IIntersectionOccurrence } from '../types/occurrences'
 import type { Weekdays } from '../types/event'
 import { DomainError } from '../errors/domain-error'
+import { Audit } from './audit'
 
 export class BaseScheduleGeneration {
   protected _generatedAt: string
@@ -92,18 +93,12 @@ export class BaseScheduleGeneration {
 
 export class ScheduleGeneration extends BaseScheduleGeneration {
   private readonly _id: ScheduleGenerationId
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IScheduleGeneration) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IScheduleGenerationCreate): BaseScheduleGeneration {
@@ -116,16 +111,7 @@ export class ScheduleGeneration extends BaseScheduleGeneration {
   get id(): ScheduleGenerationId {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

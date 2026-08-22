@@ -4,6 +4,7 @@ import type {
   IAcademicConfigCreate,
   IAcademicConfigUpdate,
 } from '../types/academic-config'
+import { Audit } from './audit'
 import type { IHourlyLoad } from '../types/hourly-load'
 
 export class BaseAcademicConfig {
@@ -38,18 +39,12 @@ export class BaseAcademicConfig {
 
 export class AcademicConfig extends BaseAcademicConfig {
   private readonly _id: AcademicConfigId
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IAcademicConfig) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IAcademicConfigCreate): BaseAcademicConfig {
@@ -62,16 +57,7 @@ export class AcademicConfig extends BaseAcademicConfig {
   get id(): AcademicConfigId {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

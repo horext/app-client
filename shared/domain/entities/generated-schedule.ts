@@ -7,6 +7,7 @@ import type {
 } from '../types/schedule'
 import type { IEvent } from '../types/event'
 import { DomainError } from '../errors/domain-error'
+import { Audit } from './audit'
 
 export class BaseGeneratedSchedule {
   protected _scheduleSubjectKey: string
@@ -71,18 +72,12 @@ export class BaseGeneratedSchedule {
 
 export class GeneratedSchedule extends BaseGeneratedSchedule {
   private readonly _id: GeneratedScheduleId
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IGeneratedSchedule) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IGeneratedScheduleCreate): BaseGeneratedSchedule {
@@ -95,16 +90,7 @@ export class GeneratedSchedule extends BaseGeneratedSchedule {
   get id(): GeneratedScheduleId {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

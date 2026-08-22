@@ -13,9 +13,8 @@ import type {
   ISchedulesFavoritesRepository,
 } from '#shared/application/repositories/schedules.repository'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import { GeneratedSchedulePersistenceMapper } from '../../mappers/persistence'
 
 const input = {
   scheduleSubjectKey: 'key',
@@ -25,6 +24,11 @@ const input = {
 }
 const createSchedule = () =>
   GeneratedSchedule.reconstitute(persistedSnapshot(input))
+const persistedScheduleInput = (schedule: GeneratedSchedule) => ({
+  ...input,
+  id: schedule.id,
+  ...schedule.audit,
+})
 const createFavorite = (scheduleId: GeneratedScheduleId) =>
   ScheduleFavorite.reconstitute({
     id: scheduleId,
@@ -84,7 +88,7 @@ describe('FavoritesSchedulesService', () => {
       favRepo.create.mockResolvedValue(createFavorite(schedule.id))
       const result = await service.addFavorite(
         'user-1',
-        GeneratedSchedulePersistenceMapper.toRecord(schedule),
+        persistedScheduleInput(schedule),
       )
       expect(favRepo.create).toHaveBeenCalledWith(
         'user-1',
@@ -95,10 +99,7 @@ describe('FavoritesSchedulesService', () => {
     it('does not add to list when already in favorites', async () => {
       const schedule = createSchedule()
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(schedule.id))
-      await service.addFavorite(
-        'user-1',
-        GeneratedSchedulePersistenceMapper.toRecord(schedule),
-      )
+      await service.addFavorite('user-1', persistedScheduleInput(schedule))
       expect(favRepo.create).not.toHaveBeenCalled()
     })
     it('uses existing schedule when events match (base schedule without id)', async () => {

@@ -3,7 +3,7 @@ import { AcademicConfig } from '#shared/domain'
 import type { IHourlyLoad } from '#shared/domain/types/hourly-load'
 import { AcademicConfigService } from '#shared/application/services/academic-config.service'
 import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 
 const hourlyLoad: IHourlyLoad = {
   id: 1,

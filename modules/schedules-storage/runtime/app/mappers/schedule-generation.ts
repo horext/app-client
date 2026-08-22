@@ -20,5 +20,5 @@ export const toRecord = (entity: ScheduleGeneration): IScheduleGeneration =>
   Object.assign(
     toCreateRecord(entity),
     { id: entity.id },
-    toAuditRecord(entity),
+    toAuditRecord(entity.audit),
   )

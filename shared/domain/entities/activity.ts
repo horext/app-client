@@ -6,6 +6,7 @@ import type {
   IActivityUpdate,
 } from '../types/event'
 import { validateSessions } from '../types/event'
+import { Audit } from './audit'
 
 export class BaseActivity {
   protected _title: string
@@ -70,18 +71,12 @@ export class BaseActivity {
 
 export class Activity extends BaseActivity {
   private readonly _id: ActivityID
-  private readonly _createdAt: string
-  private readonly _updatedAt: string
-  private readonly _createdBy: string
-  private readonly _updatedBy: string
+  private readonly _audit: Audit
 
   private constructor(input: IActivity) {
     super(input)
     this._id = input.id
-    this._createdAt = input.createdAt
-    this._updatedAt = input.updatedAt
-    this._createdBy = input.createdBy
-    this._updatedBy = input.updatedBy
+    this._audit = Audit.reconstitute(input)
   }
 
   static create(input: IActivityCreate): BaseActivity {
@@ -94,16 +89,7 @@ export class Activity extends BaseActivity {
   get id(): ActivityID {
     return this._id
   }
-  get createdAt(): string {
-    return this._createdAt
-  }
-  get updatedAt(): string {
-    return this._updatedAt
-  }
-  get createdBy(): string {
-    return this._createdBy
-  }
-  get updatedBy(): string {
-    return this._updatedBy
+  get audit(): Audit {
+    return this._audit
   }
 }

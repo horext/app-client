@@ -11,4 +11,4 @@ export const toCreateRecord = (entity: BaseScheduleFavorite) => ({
   revision: entity.revision,
 })
 export const toRecord = (entity: ScheduleFavorite): IScheduleFavorite =>
-  Object.assign(toCreateRecord(entity), toAuditRecord(entity))
+  Object.assign(toCreateRecord(entity), toAuditRecord(entity.audit))

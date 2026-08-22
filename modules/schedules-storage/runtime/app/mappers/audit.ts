@@ -1,11 +1,11 @@
-export const toAuditRecord = (entity: {
+export const toAuditRecord = (audit: {
   createdAt: string
   updatedAt: string
   createdBy: string
   updatedBy: string
 }) => ({
-  createdAt: entity.createdAt,
-  updatedAt: entity.updatedAt,
-  createdBy: entity.createdBy,
-  updatedBy: entity.updatedBy,
+  createdAt: audit.createdAt,
+  updatedAt: audit.updatedAt,
+  createdBy: audit.createdBy,
+  updatedBy: audit.updatedBy,
 })
