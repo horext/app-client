@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Activity, type ActivityID } from '#shared/domain'
 import { ActivitiesService } from '#shared/application/services/activities.service'
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 describe('ActivitiesService', () => {

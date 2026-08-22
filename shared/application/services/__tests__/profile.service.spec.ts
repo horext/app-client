@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { Profile } from '#shared/domain'
 import { ProfileService } from '#shared/application/services/profile.service'
 import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 
 const makeProfile = (setupCompleted = false) =>
   Profile.reconstitute(

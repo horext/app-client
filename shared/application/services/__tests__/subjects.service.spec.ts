@@ -6,7 +6,7 @@ import type {
   IBasePlannedSubject,
   PlannedSubjectId,
 } from '#shared/domain/types/subject'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const subjectInput: IBasePlannedSubject = {

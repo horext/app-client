@@ -16,9 +16,8 @@ import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
-import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
+import { persistedEntity as persistedSnapshot } from './persisted-entity'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import { ScheduleGenerationPersistenceMapper } from '../../mappers/persistence'
 
 const input = {
   scheduleSubjectKey: 'k',
@@ -43,6 +42,19 @@ const idFor = <T extends ScheduleGenerationId | GeneratedScheduleId>(
 }
 const createSchedule = () =>
   GeneratedSchedule.reconstitute(persistedSnapshot(input))
+const persistedGenerationInput = (generation: ScheduleGeneration) => ({
+  id: generation.id,
+  generatedAt: generation.generatedAt,
+  scheduleIds: generation.scheduleIds,
+  resultCount: generation.resultCount,
+  occurrences: generation.occurrences,
+  crossingsSetting: generation.crossingsSetting,
+  weekDays: generation.weekDays,
+  hourlyLoadId: generation.hourlyLoadId,
+  externalId: generation.externalId,
+  revision: generation.revision,
+  ...generation.audit,
+})
 const createFavorite = (scheduleId: GeneratedScheduleId) =>
   ScheduleFavorite.reconstitute({
     id: scheduleId,
@@ -142,7 +154,7 @@ describe('GenerationService', () => {
       ])
       const result = await service.getSchedulesForGeneration(
         'user-1',
-        ScheduleGenerationPersistenceMapper.toRecord(record),
+        persistedGenerationInput(record),
       )
       expect(result).toHaveLength(2)
     })
