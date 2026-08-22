@@ -13,6 +13,7 @@
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
   <v-main>
+    <AppPersistentStorageAlert />
     <slot />
   </v-main>
 </template>
@@ -22,6 +23,7 @@ import { ref } from 'vue'
 import AppBar from '../components/app/Bar.vue'
 import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
 import AppBottomNavigation from '../components/app/BottomNavigation.vue'
+import AppPersistentStorageAlert from '../components/app/PersistentStorageAlert.vue'
 import {
   EVENTS_ROUTE,
   FAVORITES_ROUTE,
