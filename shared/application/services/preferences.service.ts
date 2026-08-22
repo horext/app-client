@@ -1,6 +1,7 @@
 import type {
   IBasePreferences,
   IPreferences,
+  IPreferencesUpdate,
 } from '#shared/domain/types/preferences'
 import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import type { IPreferencesService } from '../interfaces/preferences.service'
@@ -37,7 +38,7 @@ export class PreferencesService implements IPreferencesService {
 
   async create(
     userId: string,
-    initial: Partial<IBasePreferences> = {},
+    initial: IPreferencesUpdate = {},
   ): Promise<IPreferences> {
     if (await this._load(userId))
       throw new ResourceAlreadyExistsError('preferences')
@@ -51,7 +52,7 @@ export class PreferencesService implements IPreferencesService {
 
   async patch(
     userId: string,
-    value: Partial<IBasePreferences>,
+    value: IPreferencesUpdate,
   ): Promise<IPreferences> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('preferences')

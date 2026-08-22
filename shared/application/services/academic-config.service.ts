@@ -1,6 +1,6 @@
 import type {
   IAcademicConfig,
-  IBaseAcademicConfig,
+  IAcademicConfigUpdate,
 } from '#shared/domain/types/academic-config'
 import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import type { IAcademicConfigService } from '../interfaces/academic-config.service'
@@ -17,7 +17,7 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   private async _create(
     userId: string,
-    initial?: Partial<IBaseAcademicConfig>,
+    initial?: IAcademicConfigUpdate,
   ): Promise<AcademicConfig<IAcademicConfig>> {
     const config = AcademicConfig.create({
       ...initial,
@@ -39,7 +39,7 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   async create(
     userId: string,
-    initial?: Partial<IBaseAcademicConfig>,
+    initial?: IAcademicConfigUpdate,
   ): Promise<IAcademicConfig> {
     const existing = await this._load(userId)
     if (existing) {
@@ -53,7 +53,7 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   async patch(
     userId: string,
-    value: Partial<IBaseAcademicConfig>,
+    value: IAcademicConfigUpdate,
   ): Promise<IAcademicConfig> {
     const existing = await this._load(userId)
     if (!existing) {

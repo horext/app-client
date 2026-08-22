@@ -1,4 +1,8 @@
-import type { IBaseProfile, IProfile } from '#shared/domain/types/profile'
+import type {
+  IBaseProfile,
+  IProfile,
+  IProfileUpdate,
+} from '#shared/domain/types/profile'
 import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
 import type { IProfileService } from '../interfaces/profile.service'
 import { Profile } from '#shared/domain'
@@ -37,7 +41,7 @@ export class ProfileService implements IProfileService {
     return (await this._create(userId, initial)).toSnapshot()
   }
 
-  async patch(userId: string, value: Partial<IBaseProfile>): Promise<IProfile> {
+  async patch(userId: string, value: IProfileUpdate): Promise<IProfile> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('profile')
     return (await this._update(userId, existing.update(value))).toSnapshot()

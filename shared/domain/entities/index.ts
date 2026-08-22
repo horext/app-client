@@ -1,4 +1,4 @@
-import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IHourlyLoad } from '../types/hourly-load'
 import type { IIntersectionOccurrence } from '../types/occurrences'
 
 export type GenerationOccurrences = IIntersectionOccurrence[]

@@ -26,6 +26,9 @@ export interface IScheduleGenerate
     IAuditable,
     ReplicatedIdentity<ScheduleGenerateId> {}
 
+/** A schedule can be either a newly generated value or a persisted entity. */
+export type ScheduleGenerateInput = IBaseScheduleGenerate | IScheduleGenerate
+
 export interface IBaseFavoriteSchedule extends ReplicationState<ScheduleGenerateId> {
   id: ScheduleGenerateId
 }

@@ -4,18 +4,17 @@ import type {
   IScheduleCreate,
   IScheduleUpdate,
   ScheduleGenerateId,
+  ScheduleGenerateInput,
 } from '../types/schedule'
 import { DomainError } from '../errors/domain-error'
 import type { IEntitySnapshot } from './snapshot'
 
 export class Schedule<
-  T extends IBaseScheduleGenerate | IScheduleGenerate = IScheduleGenerate,
+  T extends ScheduleGenerateInput = IScheduleGenerate,
 > implements IEntitySnapshot<T> {
   private constructor(private readonly snapshot: T) {}
 
-  private static build<T extends IBaseScheduleGenerate | IScheduleGenerate>(
-    input: T,
-  ): Schedule<T> {
+  private static build<T extends ScheduleGenerateInput>(input: T): Schedule<T> {
     if (!Number.isInteger(input.crossings) || input.crossings < 0)
       throw new DomainError(
         'invalid-limit',
