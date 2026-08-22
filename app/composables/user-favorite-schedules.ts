@@ -17,22 +17,20 @@ export const useUserFavoriteSchedules = () => {
       userId,
       toDomainSchedule(_favoritesSchedule),
     )
-    favoritesSchedules.value.push(result)
+    store.addFavorite(result)
   }
 
   async function deleteFavoriteScheduleById(
     favoriteScheduleId: IScheduleGenerate['id'],
   ) {
     await favoritesStorage.removeFavorite(userId, favoriteScheduleId)
-    const index = favoritesSchedules.value.findIndex(
-      (s) => s.id === favoriteScheduleId,
-    )
-    if (index >= 0) favoritesSchedules.value.splice(index, 1)
+    store.removeFavoriteById(favoriteScheduleId)
   }
 
   async function fetchFavoritesSchedules() {
-    favoritesSchedules.value =
-      (await favoritesStorage.getFavoriteSchedules(userId)) ?? []
+    store.setFavorites(
+      (await favoritesStorage.getFavoriteSchedules(userId)) ?? [],
+    )
   }
 
   return {
