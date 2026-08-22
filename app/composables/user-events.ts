@@ -12,7 +12,7 @@ export const useUserEvents = () => {
     const result = await service.create(userId, {
       ...item,
     })
-    items.value.push(result.toSnapshot())
+    store.addItem(result.toSnapshot())
   }
 
   async function deleteItemById(id: UUID) {
