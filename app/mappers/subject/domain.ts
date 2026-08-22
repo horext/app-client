@@ -1,15 +1,15 @@
 import type {
-  IBaseSubjectSchedules as DomainBaseSubjectSchedules,
+  IBasePlannedSubject as DomainBasePlannedSubject,
   ISubject as DomainSubject,
   ISubjectSchedule as DomainSubjectSchedule,
   ISubjectUpdate as DomainSubjectPatch,
-  IUserSubjectUpdate as DomainSubjectUpdate,
+  IPlannedSubjectUpdate as DomainSubjectUpdate,
 } from '~~/shared/domain/types/subject'
 import type {
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
   ISubject,
   ISubjectSchedule,
-  ISubjectSchedulesUpdate,
+  IPlannedSubjectUpdate,
 } from '~/interfaces/subject'
 
 export function toDomainSubject(subject: ISubject): DomainSubject {
@@ -50,9 +50,9 @@ export function toDomainSubjectSchedule(
   }
 }
 
-export function toDomainSubjectSchedules(
-  subject: IBaseSubjectSchedules,
-): DomainBaseSubjectSchedules {
+export function toDomainPlannedSubject(
+  subject: IBasePlannedSubject,
+): DomainBasePlannedSubject {
   return {
     subject: toDomainSubject(subject.subject),
     schedules: subject.schedules.map(toDomainSubjectSchedule),
@@ -61,7 +61,7 @@ export function toDomainSubjectSchedules(
 }
 
 export function toDomainSubjectUpdate(
-  subject: ISubjectSchedulesUpdate,
+  subject: IPlannedSubjectUpdate,
 ): DomainSubjectUpdate {
   return {
     ...(subject.subject

@@ -1,11 +1,11 @@
 import type {
-  ISubjectSchedules,
-  SubjectScheduleId,
+  IPlannedSubject,
+  PlannedSubjectId,
 } from '#shared/domain/types/subject'
 import {
-  UserSubject,
-  type IUserSubjectCreate,
-  type IUserSubjectUpdate,
+  PlannedSubject,
+  type IPlannedSubjectCreate,
+  type IPlannedSubjectUpdate,
 } from '#shared/domain'
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 import type { ISubjectsService } from '../interfaces/subjects.service'
@@ -14,24 +14,24 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 export class SubjectsService implements ISubjectsService {
   constructor(private readonly repo: ISubjectsRepository) {}
 
-  getAll(userId: string): Promise<UserSubject<ISubjectSchedules>[]> {
+  getAll(userId: string): Promise<PlannedSubject<IPlannedSubject>[]> {
     return this.repo.findAll(userId)
   }
 
   async get(
     userId: string,
-    id: SubjectScheduleId,
-  ): Promise<UserSubject<ISubjectSchedules> | undefined> {
+    id: PlannedSubjectId,
+  ): Promise<PlannedSubject<IPlannedSubject> | undefined> {
     return this.repo.findById(userId, id)
   }
 
-  async create(userId: string, subject: IUserSubjectCreate) {
-    return this.repo.create(userId, UserSubject.create(subject))
+  async create(userId: string, subject: IPlannedSubjectCreate) {
+    return this.repo.create(userId, PlannedSubject.create(subject))
   }
 
   delete(
     userId: string,
-    id: SubjectScheduleId,
+    id: PlannedSubjectId,
     expectedRevision?: number,
   ): Promise<void> {
     return this.repo.delete(userId, id, expectedRevision)
@@ -39,9 +39,9 @@ export class SubjectsService implements ISubjectsService {
 
   async patch(
     userId: string,
-    id: SubjectScheduleId,
-    subject: IUserSubjectUpdate,
-  ): Promise<UserSubject<ISubjectSchedules>> {
+    id: PlannedSubjectId,
+    subject: IPlannedSubjectUpdate,
+  ): Promise<PlannedSubject<IPlannedSubject>> {
     const data = await this.repo.findById(userId, id)
     if (!data) {
       throw new ResourceNotFoundError('subject')

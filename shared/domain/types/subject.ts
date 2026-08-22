@@ -82,29 +82,27 @@ export interface ISubjectSchedule {
   sessions: ISession[]
 }
 
-export type SubjectScheduleId = BrandUUID<'SubjectScheduleId'>
+export type PlannedSubjectId = BrandUUID<'PlannedSubjectId'>
 
-export interface IBaseSubjectSchedules extends ReplicationState<SubjectScheduleId> {
+export interface IBasePlannedSubject extends ReplicationState<PlannedSubjectId> {
   subject: ISubject
   schedules: ISubjectSchedule[]
   color: string
 }
 
-export interface ISubjectSchedulesUpdate {
-  subject?: ISubjectUpdate
-  schedules: ISubjectSchedule[]
-  color: string
-}
-
-export interface ISubjectSchedules
+export interface IPlannedSubject
   extends
-    IBaseSubjectSchedules,
+    IBasePlannedSubject,
     IAuditable,
-    ReplicatedIdentity<SubjectScheduleId> {}
+    ReplicatedIdentity<PlannedSubjectId> {}
 
-export type IUserSubjectCreate = IBaseSubjectSchedules
-export type IUserSubjectUpdate = Partial<ISubjectSchedulesUpdate> &
-  ReplicationState<SubjectScheduleId>
+export type IPlannedSubjectCreate = IBasePlannedSubject
+
+export interface IPlannedSubjectUpdate extends ReplicationState<PlannedSubjectId> {
+  subject?: ISubjectUpdate
+  schedules?: ISubjectSchedule[]
+  color?: string
+}
 
 export interface ISubjectStudyPlan extends ISubject {
   relationships: {

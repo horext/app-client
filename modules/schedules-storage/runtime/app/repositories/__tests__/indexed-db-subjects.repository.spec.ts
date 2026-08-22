@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { UserSubject } from '#shared/domain'
-import type { IBaseSubjectSchedules } from '#shared/domain/types/subject'
+import { PlannedSubject } from '#shared/domain'
+import type { IBasePlannedSubject } from '#shared/domain/types/subject'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBSubjectsRepository } from '../indexed-db-subjects.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
-const subjectInput: IBaseSubjectSchedules = {
+const subjectInput: IBasePlannedSubject = {
   subject: {
     id: 1,
     course: { id: 'CS101', name: 'Intro to CS' },
@@ -36,8 +36,8 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('getAll', () => {
     it('returns all subjects', async () => {
-      const subject = UserSubject.restore(
-        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      const subject = PlannedSubject.restore(
+        persistedSnapshot(PlannedSubject.create(subjectInput).toSnapshot()),
       )
       persistence.findAll.mockResolvedValue([
         persistedSnapshot(subject.toSnapshot()),
@@ -51,8 +51,8 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('update', () => {
     it('returns the updated subject', async () => {
-      const subject = UserSubject.restore(
-        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      const subject = PlannedSubject.restore(
+        persistedSnapshot(PlannedSubject.create(subjectInput).toSnapshot()),
       )
       persistence.create.mockResolvedValue(
         persistedSnapshot(subject.toSnapshot()),
@@ -62,8 +62,8 @@ describe('IndexedDBSubjectsRepository', () => {
   })
   describe('create', () => {
     it('returns a new subject with generated id and input data', async () => {
-      const subject = UserSubject.restore(
-        persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+      const subject = PlannedSubject.restore(
+        persistedSnapshot(PlannedSubject.create(subjectInput).toSnapshot()),
       )
       persistence.create.mockResolvedValue(
         persistedSnapshot(subject.toSnapshot()),

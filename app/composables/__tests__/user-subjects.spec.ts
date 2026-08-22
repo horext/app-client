@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import { isProxy, reactive } from 'vue'
-import type { ISubjectSchedules } from '~/interfaces/subject'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import type { IPlannedSubject } from '~/interfaces/subject'
+import type { PlannedSubjectId } from '~~/shared/domain'
 import { makeUUID } from '~~/shared/domain/types/ids'
 import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
-import { UserSubject } from '~~/shared/domain'
+import { PlannedSubject } from '~~/shared/domain'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -34,7 +34,7 @@ vi.mock('~~/modules/apis/runtime/composables', () => ({
   }),
 }))
 
-function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
+function makeSubject(id: PlannedSubjectId = makeUUID()): IPlannedSubject {
   return {
     id,
     schedules: [
@@ -72,7 +72,7 @@ function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
   }
 }
 
-const asEntity = (subject: ISubjectSchedules) => ({
+const asEntity = (subject: IPlannedSubject) => ({
   toSnapshot: () => subject,
 })
 
@@ -118,7 +118,7 @@ describe('useUserSubjects', () => {
       expect(isProxy(input)).toBe(false)
       expect(isProxy(input.subject)).toBe(false)
       expect(() => structuredClone(input)).not.toThrow()
-      return UserSubject.create(input)
+      return PlannedSubject.create(input)
     })
 
     const { saveNewSubject } = useUserSubjects()
@@ -131,7 +131,7 @@ describe('useUserSubjects', () => {
     mockCreate.mockResolvedValue(asEntity(newSubject))
     const { saveNewSubject } = useUserSubjects()
 
-    await saveNewSubject(subjectWithoutColor as unknown as ISubjectSchedules)
+    await saveNewSubject(subjectWithoutColor as unknown as IPlannedSubject)
 
     expect(mockCreate).toHaveBeenCalledWith(
       expect.any(String),
@@ -167,7 +167,7 @@ describe('useUserSubjects', () => {
     const original = makeSubject()
     const updated = {
       ...original,
-    } satisfies ISubjectSchedules
+    } satisfies IPlannedSubject
     const store = useUserSubjectsStore()
     store.subjects = [original]
     mockPatch.mockResolvedValue(asEntity(updated))
@@ -281,7 +281,7 @@ describe('useUserSubjects', () => {
     const withoutSchedules = {
       ...makeSubject(),
       schedules: [],
-    } satisfies ISubjectSchedules
+    } satisfies IPlannedSubject
     mockGetAll.mockResolvedValue(
       [withSchedules, withoutSchedules].map(asEntity),
     )

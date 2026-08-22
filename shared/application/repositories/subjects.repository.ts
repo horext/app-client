@@ -1,27 +1,27 @@
-import type { UserSubject } from '#shared/domain'
+import type { PlannedSubject } from '#shared/domain'
 import type {
-  IBaseSubjectSchedules,
-  ISubjectSchedules,
-  SubjectScheduleId,
+  IBasePlannedSubject,
+  IPlannedSubject,
+  PlannedSubjectId,
 } from '#shared/domain/types/subject'
 
 export interface ISubjectsRepository {
-  findAll(userId: string): Promise<UserSubject[]>
+  findAll(userId: string): Promise<PlannedSubject[]>
   findById(
     userId: string,
-    id: SubjectScheduleId,
-  ): Promise<UserSubject | undefined>
+    id: PlannedSubjectId,
+  ): Promise<PlannedSubject | undefined>
   create(
     userId: string,
-    subject: UserSubject<IBaseSubjectSchedules>,
-  ): Promise<UserSubject<ISubjectSchedules>>
+    subject: PlannedSubject<IBasePlannedSubject>,
+  ): Promise<PlannedSubject<IPlannedSubject>>
   update(
     userId: string,
-    subject: UserSubject<ISubjectSchedules>,
-  ): Promise<UserSubject<ISubjectSchedules>>
+    subject: PlannedSubject<IPlannedSubject>,
+  ): Promise<PlannedSubject<IPlannedSubject>>
   delete(
     userId: string,
-    id: SubjectScheduleId,
+    id: PlannedSubjectId,
     expectedRevision?: number,
   ): Promise<void>
 }

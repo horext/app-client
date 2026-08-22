@@ -1,7 +1,7 @@
 import type {
   ISubject,
   ISubjectSchedule,
-  SubjectScheduleId,
+  PlannedSubjectId,
 } from '~~/shared/domain/types/subject'
 
 export type {
@@ -17,25 +17,25 @@ export type {
   ITeacher,
 } from '~~/shared/domain/types/subject'
 
-export type { SubjectScheduleId }
+export type { PlannedSubjectId }
 
-export interface IBaseSubjectSchedules {
+export interface IBasePlannedSubject {
   subject: ISubject
   schedules: ISubjectSchedule[]
   color: string
 }
 
-export interface ISubjectSchedules extends IBaseSubjectSchedules {
-  id: SubjectScheduleId
+export interface IPlannedSubject extends IBasePlannedSubject {
+  id: PlannedSubjectId
 }
 
-export interface ISubjectSchedulesUpdate {
-  id: SubjectScheduleId
+export interface IPlannedSubjectUpdate {
+  id: PlannedSubjectId
   subject?: ISubject
   schedules?: ISubjectSchedule[]
   color?: string
 }
 
-export type SubjectSchedulesWithCurrentSchedules =
-  | (IBaseSubjectSchedules & { currentSchedules: ISubjectSchedule[] })
-  | (ISubjectSchedules & { currentSchedules: ISubjectSchedule[] })
+export type PlannedSubjectWithCurrentSchedules =
+  | (IBasePlannedSubject & { currentSchedules: ISubjectSchedule[] })
+  | (IPlannedSubject & { currentSchedules: ISubjectSchedule[] })

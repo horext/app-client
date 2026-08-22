@@ -8,7 +8,7 @@ import type { IProfile } from '#shared/domain/types/profile'
 import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 import type { IPreferences } from '#shared/domain/types/preferences'
 import type { IGenerationRecord } from '#shared/domain/types/generation-record'
-import type { ISubjectSchedules } from '#shared/domain/types/subject'
+import type { IPlannedSubject } from '#shared/domain/types/subject'
 
 export const enum StoresDB {
   SCHEDULES = 'schedules',
@@ -58,8 +58,8 @@ export type ReplicableSchemas = {
     indexes: { createdBy: string }
   }
   [StoresDB.SUBJECTS]: {
-    key: [string, ISubjectSchedules['id']]
-    value: ISubjectSchedules
+    key: [string, IPlannedSubject['id']]
+    value: IPlannedSubject
     indexes: { createdBy: string }
   }
 }

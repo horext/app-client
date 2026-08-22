@@ -5,7 +5,7 @@ export type GenerationOccurrences = IIntersectionOccurrence[]
 export type AcademicLoad = IHourlyLoad
 
 export * from './activity'
-export * from './user-subject'
+export * from './planned-subject'
 export * from './schedule'
 export * from './generation'
 export * from './profile'

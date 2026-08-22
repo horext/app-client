@@ -1,12 +1,12 @@
 import type {
-  IBaseSubjectSchedules,
-  ISubjectSchedulesUpdate,
+  IBasePlannedSubject,
+  IPlannedSubjectUpdate,
 } from '~/interfaces/subject'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import type { PlannedSubjectId } from '~~/shared/domain'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 import { useSubjectApi } from '~~/modules/apis/runtime/composables'
 import {
-  toDomainSubjectSchedules,
+  toDomainPlannedSubject,
   toDomainSubjectUpdate,
 } from '~/mappers/subject/domain'
 
@@ -16,21 +16,21 @@ export const useUserSubjects = () => {
   const store = useUserSubjectsStore()
   const { subjects } = storeToRefs(store)
 
-  async function saveNewSubject(_subject: IBaseSubjectSchedules) {
+  async function saveNewSubject(_subject: IBasePlannedSubject) {
     const created = await service.create(userId, {
-      ...toDomainSubjectSchedules(_subject),
+      ...toDomainPlannedSubject(_subject),
       color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
     })
     subjects.value.push(created.toSnapshot())
   }
 
-  async function deleteSubjectById(id: SubjectScheduleId) {
+  async function deleteSubjectById(id: PlannedSubjectId) {
     await service.delete(userId, id)
     const index = subjects.value.findIndex((s) => s.id === id)
     if (index >= 0) subjects.value.splice(index, 1)
   }
 
-  async function updateSubject(_subject: ISubjectSchedulesUpdate) {
+  async function updateSubject(_subject: IPlannedSubjectUpdate) {
     const result = await service.patch(
       userId,
       _subject.id,
@@ -40,7 +40,7 @@ export const useUserSubjects = () => {
     subjects.value[index] = result.toSnapshot()
   }
 
-  async function updateSubjectColor(id: SubjectScheduleId, color: string) {
+  async function updateSubjectColor(id: PlannedSubjectId, color: string) {
     const result = await service.patch(userId, id, { color })
     const index = subjects.value.findIndex((subject) => subject.id === id)
     if (index >= 0) subjects.value[index] = result.toSnapshot()
@@ -74,9 +74,7 @@ export const useUserSubjects = () => {
     const data = await service.getAll(userId)
     const subjectsWithSchedules = data
       .map((entity) => entity.toSnapshot())
-      .filter(
-        (subject: IBaseSubjectSchedules) => subject?.schedules?.length > 0,
-      )
+      .filter((subject: IBasePlannedSubject) => subject?.schedules?.length > 0)
     subjects.value = subjectsWithSchedules
   }
 

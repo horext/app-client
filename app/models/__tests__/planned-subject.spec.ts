@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { isProxy, reactive } from 'vue'
-import { SubjectSchedules } from '../subject-schedules'
+import { PlannedSubject } from '../planned-subject'
 import type { ISubject } from '~/interfaces/subject'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 
@@ -19,7 +19,7 @@ describe('SubjectSchedules.toCreateRequest', () => {
       credits: 4,
       cycle: 1,
     })
-    const model = new SubjectSchedules(
+    const model = new PlannedSubject(
       undefined,
       subject,
       [],

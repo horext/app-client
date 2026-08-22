@@ -18,7 +18,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ScheduleViewer from '~/components/schedule/Calendar.vue'
 import { useScheduleSubjectApi } from '~~/modules/apis/runtime/composables'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
 import { getEventColorByIndex } from '~/constants/event'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import ScheduleShareAddFavorite from '../components/ScheduleShareAddFavorite.vue'
@@ -41,7 +41,7 @@ const loading = ref(false)
 const firstSchedule = computed(() => schedules.value[0])
 const route = useRoute()
 
-const { data: subjects } = useAsyncData<IBaseSubjectSchedules[]>(
+const { data: subjects } = useAsyncData<IBasePlannedSubject[]>(
   'skd-subjects',
   async () => {
     const encodedQuery = route.query.q
@@ -80,7 +80,7 @@ const {
 
 const { loadSchedules } = useSchedulesGenerator()
 
-async function fetchSchedules(subjects: IBaseSubjectSchedules[]) {
+async function fetchSchedules(subjects: IBasePlannedSubject[]) {
   loading.value = true
   const { combinations } = await loadSchedules(subjects, [], {
     crossingSubjects: 100,

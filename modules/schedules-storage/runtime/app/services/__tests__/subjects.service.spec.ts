@@ -1,15 +1,15 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { UserSubject } from '#shared/domain'
+import { PlannedSubject } from '#shared/domain'
 import { SubjectsService } from '#shared/application/services/subjects.service'
 import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
 import type {
-  IBaseSubjectSchedules,
-  SubjectScheduleId,
+  IBasePlannedSubject,
+  PlannedSubjectId,
 } from '#shared/domain/types/subject'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
-const subjectInput: IBaseSubjectSchedules = {
+const subjectInput: IBasePlannedSubject = {
   subject: {
     id: 100,
     course: { id: 'CS101', name: 'Intro to CS' },
@@ -22,8 +22,8 @@ const subjectInput: IBaseSubjectSchedules = {
   schedules: [],
 }
 const createSubject = () =>
-  UserSubject.restore(
-    persistedSnapshot(UserSubject.create(subjectInput).toSnapshot()),
+  PlannedSubject.restore(
+    persistedSnapshot(PlannedSubject.create(subjectInput).toSnapshot()),
   )
 describe('SubjectsService', () => {
   const makeRepo = (): Mocked<ISubjectsRepository> => ({
@@ -55,7 +55,7 @@ describe('SubjectsService', () => {
   })
   describe('delete', () => {
     it('deletes a subject by id', async () => {
-      const id: SubjectScheduleId = makeUUID()
+      const id: PlannedSubjectId = makeUUID()
       await service.delete('user-1', id)
       expect(repo.delete).toHaveBeenCalledWith('user-1', id, undefined)
     })
@@ -70,7 +70,7 @@ describe('SubjectsService', () => {
       })
       expect(repo.update).toHaveBeenCalledWith(
         'user-1',
-        expect.any(UserSubject),
+        expect.any(PlannedSubject),
       )
       expect(result).toMatchObject({ id: subject.id })
     })

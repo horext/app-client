@@ -1,7 +1,7 @@
 import { bench, describe } from 'vitest'
 import { getSchedules } from '../core'
 import type { ScheduleOptions } from '../core'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
 import type { UUID } from 'crypto'
 
@@ -14,7 +14,7 @@ function makeSubject(
     end: string
     type?: string
   }>,
-): IBaseSubjectSchedules {
+): IBasePlannedSubject {
   return {
     subject: {
       id,
@@ -71,7 +71,7 @@ const T = (h: number) => `${String(h).padStart(2, '0')}:00:00`
 // ── fixture factory ──────────────────────────────────────────────────────────
 // makeMedium is a factory because it is used by two independent describe scopes.
 
-function makeMedium(): IBaseSubjectSchedules[] {
+function makeMedium(): IBasePlannedSubject[] {
   return [1, 2, 3, 4, 5].map((id) =>
     makeSubject(
       id,

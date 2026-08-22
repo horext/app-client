@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getSchedules } from '../core'
 import type { IActivity, Weekdays } from '~/interfaces/event'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
 import type { UUID } from 'crypto'
 import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
 
@@ -18,7 +18,7 @@ function makeSubject(
     }>
   }>,
   color = DEFAULT_SUBJECT_COLOR,
-): IBaseSubjectSchedules {
+): IBasePlannedSubject {
   return {
     subject: {
       id,

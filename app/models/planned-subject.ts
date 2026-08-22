@@ -1,9 +1,9 @@
 import type {
   ISubject,
   ISubjectSchedule,
-  SubjectSchedulesWithCurrentSchedules,
+  PlannedSubjectWithCurrentSchedules,
 } from '~/interfaces/subject'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import type { PlannedSubjectId } from '~~/shared/domain'
 
 const convertSubject = (subject: ISubject): ISubject => ({
   id: subject.id,
@@ -61,8 +61,8 @@ const convertSchedule = (s: ISubjectSchedule): ISubjectSchedule => ({
     id: session.id,
   })),
 })
-export class SubjectSchedules<
-  ID extends SubjectScheduleId | undefined = SubjectScheduleId,
+export class PlannedSubject<
+  ID extends PlannedSubjectId | undefined = PlannedSubjectId,
 > {
   id: ID
   subject: ISubject
@@ -97,17 +97,17 @@ export class SubjectSchedules<
   }
 
   static buildFrom(
-    data: SubjectSchedulesWithCurrentSchedules,
-  ): SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined> {
+    data: PlannedSubjectWithCurrentSchedules,
+  ): PlannedSubject<PlannedSubjectId> | PlannedSubject<undefined> {
     if ('id' in data) {
-      return new SubjectSchedules(
+      return new PlannedSubject(
         data.id,
         data.subject,
         data.currentSchedules,
         data.color,
       )
     }
-    return new SubjectSchedules(
+    return new PlannedSubject(
       undefined,
       data.subject,
       data.currentSchedules,

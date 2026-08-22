@@ -1,10 +1,10 @@
 import { isProxy, reactive } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { UserSubject } from '~~/shared/domain'
+import { PlannedSubject } from '~~/shared/domain'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import type { SubjectScheduleId } from '~~/shared/domain'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
-import { toDomainSubjectSchedules, toDomainSubjectUpdate } from '../domain'
+import type { PlannedSubjectId } from '~~/shared/domain'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
+import { toDomainPlannedSubject, toDomainSubjectUpdate } from '../domain'
 
 function expectNoProxy(value: unknown): void {
   if (!value || typeof value !== 'object') return
@@ -12,7 +12,7 @@ function expectNoProxy(value: unknown): void {
   Object.values(value).forEach(expectNoProxy)
 }
 
-function makeSubject(): IBaseSubjectSchedules {
+function makeSubject(): IBasePlannedSubject {
   return {
     color: '#3F51B5',
     subject: {
@@ -53,18 +53,18 @@ function makeSubject(): IBaseSubjectSchedules {
 
 describe('subject domain mapper', () => {
   it('detaches a deeply reactive subject before entity cloning', () => {
-    const mapped = toDomainSubjectSchedules(reactive(makeSubject()))
+    const mapped = toDomainPlannedSubject(reactive(makeSubject()))
 
     expectNoProxy(mapped)
     expect(mapped.schedules[0]?.sessions[0]?.classroom.name).toBeUndefined()
     expect(() => structuredClone(mapped)).not.toThrow()
-    expect(() => UserSubject.create(mapped)).not.toThrow()
+    expect(() => PlannedSubject.create(mapped)).not.toThrow()
   })
 
   it('projects a reactive patch without mutable identifiers', () => {
-    const saved = toDomainSubjectSchedules(makeSubject())
-    const id = makeUUID<SubjectScheduleId>()
-    const entity = UserSubject.restore({
+    const saved = toDomainPlannedSubject(makeSubject())
+    const id = makeUUID<PlannedSubjectId>()
+    const entity = PlannedSubject.restore({
       ...saved,
       id,
       createdAt: '2026-08-21T00:00:00.000Z',

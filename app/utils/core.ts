@@ -3,7 +3,7 @@ import type {
   ILocalScheduleGenerate,
   IScheduleSubjectGenerate,
 } from '~/interfaces/schedule'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
 import { ActivitySessionEvent, SubjectSessionEvent } from '~/models/Event'
 import type { UUID } from 'crypto'
@@ -16,7 +16,7 @@ export type ScheduleOptions = {
 }
 
 export function getSchedules(
-  subjectsSchedules: Array<IBaseSubjectSchedules>,
+  subjectsSchedules: Array<IBasePlannedSubject>,
   activities: Array<IActivity>,
   _options?: ScheduleOptions,
 ): {

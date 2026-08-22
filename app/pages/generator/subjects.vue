@@ -129,10 +129,10 @@ import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionL
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserProfileStore } from '~/stores/user-profile'
 import type {
-  ISubjectSchedules,
+  IPlannedSubject,
   ISubjectSchedule,
   ISubject,
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
 import { getNextAvailableEventColor } from '~/constants/event'
@@ -145,8 +145,8 @@ import {
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
-import type { SubjectSchedules } from '~/models/subject-schedules'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import type { PlannedSubject } from '~/models/planned-subject'
+import type { PlannedSubjectId } from '~~/shared/domain'
 import { toAppScheduleSubject } from '~/mappers/schedule/api'
 import SubjectSearchContext from '~/components/subject/SearchContext.vue'
 import {
@@ -251,7 +251,7 @@ if (mySubjects.value.length > 0) {
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const subjectSchedules = shallowRef<IBaseSubjectSchedules | ISubjectSchedules>()
+const subjectSchedules = shallowRef<IBasePlannedSubject | IPlannedSubject>()
 
 const openSearchMenu = ref(false)
 
@@ -319,20 +319,20 @@ const scheduleReportUrl = computed(() => {
   })
 })
 
-const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
+const editItem = (item: IPlannedSubject | IBasePlannedSubject) => {
   subjectSchedules.value = item
   fetchSchedules()
   dialog.value = true
 }
 
-const selectedDelete = ref<ISubjectSchedules>()
-const deleteItem = (item: ISubjectSchedules) => {
+const selectedDelete = ref<IPlannedSubject>()
+const deleteItem = (item: IPlannedSubject) => {
   selectedDelete.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
-const deleteItemConfirm = async (item: ISubjectSchedules) => {
+const deleteItemConfirm = async (item: IPlannedSubject) => {
   await deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
@@ -352,7 +352,7 @@ const closeDelete = () => {
 const succcesUpdateCourse = ref(false)
 const updatingColor = ref(false)
 
-const saveColor = async (item: ISubjectSchedules, color: string) => {
+const saveColor = async (item: IPlannedSubject, color: string) => {
   updatingColor.value = true
   try {
     await updateSubjectColor(item.id, color)
@@ -363,7 +363,7 @@ const saveColor = async (item: ISubjectSchedules, color: string) => {
 }
 
 const save = async (
-  data: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
+  data: PlannedSubject<PlannedSubjectId> | PlannedSubject<undefined>,
 ) => {
   succcesAddCourse.value = false
   if (data.id) {

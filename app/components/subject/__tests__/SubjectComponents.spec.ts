@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { createVuetify } from 'vuetify'
 import type {
   ISubjectSchedule,
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
 } from '~/interfaces/subject'
 import ScheduleItem from '~/components/subject/ScheduleItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
@@ -26,7 +26,7 @@ function makeSchedule(): ISubjectSchedule {
   }
 }
 
-function makeBaseSubjectSchedules(): IBaseSubjectSchedules {
+function makeBaseSubjectSchedules(): IBasePlannedSubject {
   return {
     subject: {
       id: 1,
@@ -42,7 +42,7 @@ function makeBaseSubjectSchedules(): IBaseSubjectSchedules {
       cycle: 1,
     },
     schedules: [makeSchedule()],
-  } as IBaseSubjectSchedules
+  } as IBasePlannedSubject
 }
 
 describe('subject/ScheduleItem', () => {
