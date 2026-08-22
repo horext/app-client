@@ -10,7 +10,7 @@ export const useUserPreferences = () => {
 
   async function fetchPreferences() {
     const prefs = await service.get(userId)
-    if (prefs) preferences.value = prefs
+    if (prefs) preferences.value = prefs.toSnapshot()
   }
 
   async function createPreferences() {
@@ -19,17 +19,17 @@ export const useUserPreferences = () => {
 
   async function updateCrossings(_crossings: number) {
     const result = await service.patch(userId, { crossings: _crossings })
-    preferences.value = result
+    preferences.value = result.toSnapshot()
   }
 
   async function saveWeekDays(data: Weekdays[]) {
     const result = await service.patch(userId, { weekDays: data })
-    preferences.value = result
+    preferences.value = result.toSnapshot()
   }
 
   async function updateMaxGenerationHistory(n: number) {
     const result = await service.patch(userId, { maxGenerationHistory: n })
-    preferences.value = result
+    preferences.value = result.toSnapshot()
   }
 
   return {

@@ -30,20 +30,25 @@ export class ProfileService implements IProfileService {
     return this.repo.update(userId, profile)
   }
 
-  async get(userId: string): Promise<IProfile | undefined> {
-    return (await this._load(userId))?.toSnapshot()
+  async get(userId: string): Promise<Profile<IProfile> | undefined> {
+    return this._load(userId)
   }
 
-  async create(userId: string, initial: IBaseProfile): Promise<IProfile> {
+  async create(
+    userId: string,
+    initial: IBaseProfile,
+  ): Promise<Profile<IProfile>> {
     const existing = await this._load(userId)
-    if (existing)
-      return (await this._update(userId, existing.update(initial))).toSnapshot()
-    return (await this._create(userId, initial)).toSnapshot()
+    if (existing) return this._update(userId, existing.update(initial))
+    return this._create(userId, initial)
   }
 
-  async patch(userId: string, value: IProfileUpdate): Promise<IProfile> {
+  async patch(
+    userId: string,
+    value: IProfileUpdate,
+  ): Promise<Profile<IProfile>> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('profile')
-    return (await this._update(userId, existing.update(value))).toSnapshot()
+    return this._update(userId, existing.update(value))
   }
 }

@@ -16,7 +16,6 @@ export const useGeneration = () => {
     newOccurrences: IBaseIntersectionOccurrence[],
     parameters: IScheduleGenerationParameters,
   ): Promise<void> {
-    if (!service) return
     const _result = await service.saveGeneration(
       userId,
       parameters,
@@ -24,18 +23,35 @@ export const useGeneration = () => {
       newOccurrences,
       preferencesStore.maxGenerationHistory,
     )
-    store.setHistory(await service.getGenerations(userId))
-    store.setResult(_result)
+    store.setHistory(
+      (await service.getGenerations(userId)).map((generation) =>
+        generation.toSnapshot(),
+      ),
+    )
+    store.setResult({
+      ..._result.generation.toSnapshot(),
+      schedules: _result.schedules.map((schedule) => schedule.toSnapshot()),
+      occurrences: _result.occurrences,
+    })
   }
 
   async function loadSaved(): Promise<void> {
-    if (!service) return
     const [records, latest] = await Promise.all([
       service.getGenerations(userId),
       service.getLatestGeneration(userId),
     ])
-    store.setHistory(records)
-    store.setResult(latest ?? null)
+    store.setHistory(records.map((generation) => generation.toSnapshot()))
+    store.setResult(
+      latest
+        ? {
+            ...latest.generation.toSnapshot(),
+            schedules: latest.schedules.map((schedule) =>
+              schedule.toSnapshot(),
+            ),
+            occurrences: latest.occurrences,
+          }
+        : null,
+    )
   }
 
   return {

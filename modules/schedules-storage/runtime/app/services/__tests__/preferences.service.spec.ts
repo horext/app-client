@@ -52,7 +52,7 @@ describe('PreferencesService', () => {
       const result = await service.create('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
       expect(result.id).toBe(prefs.id)
-      expect(result.crossings).toBe(0)
+      expect(result.toSnapshot().crossings).toBe(0)
     })
   })
   describe('patch', () => {

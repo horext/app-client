@@ -32,14 +32,14 @@ export class PreferencesService implements IPreferencesService {
     return this.repo.update(userId, prefs)
   }
 
-  async get(userId: string): Promise<IPreferences | undefined> {
-    return (await this._load(userId))?.toSnapshot()
+  async get(userId: string): Promise<Preferences<IPreferences> | undefined> {
+    return this._load(userId)
   }
 
   async create(
     userId: string,
     initial: IPreferencesUpdate = {},
-  ): Promise<IPreferences> {
+  ): Promise<Preferences<IPreferences>> {
     if (await this._load(userId))
       throw new ResourceAlreadyExistsError('preferences')
     const prefs = Preferences.create({
@@ -47,15 +47,15 @@ export class PreferencesService implements IPreferencesService {
       crossings: initial.crossings ?? 0,
       maxGenerationHistory: initial.maxGenerationHistory ?? 10,
     })
-    return (await this._create(userId, prefs)).toSnapshot()
+    return this._create(userId, prefs)
   }
 
   async patch(
     userId: string,
     value: IPreferencesUpdate,
-  ): Promise<IPreferences> {
+  ): Promise<Preferences<IPreferences>> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('preferences')
-    return (await this._update(userId, existing.update(value))).toSnapshot()
+    return this._update(userId, existing.update(value))
   }
 }

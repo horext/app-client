@@ -130,7 +130,7 @@ describe('GenerationService', () => {
       schedulesRepo.getEntries.mockResolvedValue([createSchedule()])
       const result = await service.getLatestGeneration('user-1')
       expect(result).toBeDefined()
-      expect(result!.id).toBe(idFor('gen1'))
+      expect(result!.generation.toSnapshot().id).toBe(idFor('gen1'))
       expect(result!.schedules).toHaveLength(1)
     })
   })
@@ -162,7 +162,7 @@ describe('GenerationService', () => {
         [],
         5,
       )
-      expect(result.id).toBe(idFor('gen1'))
+      expect(result.generation.toSnapshot().id).toBe(idFor('gen1'))
       expect(result.schedules).toHaveLength(1)
     })
     it('trims history when exceeding maxHistory', async () => {

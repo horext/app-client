@@ -30,7 +30,6 @@ export const useUserEvents = () => {
   }
 
   async function fetchItems() {
-    if (!service) return
     const data = await service.getAll(userId)
     store.setItems(data.map((entity) => entity.toSnapshot()))
   }

@@ -17,18 +17,18 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     private readonly generationRepo: IGenerationRepository,
   ) {}
 
-  async getFavoriteSchedules(userId: string): Promise<IGeneratedSchedule[]> {
+  async getFavoriteSchedules(
+    userId: string,
+  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]> {
     const ids = (await this.favoritesRepo.findAll(userId)).map(
       (favorite) => favorite.id,
     )
-    return (await this.repo.getEntries(userId, ids)).map((schedule) =>
-      schedule.toSnapshot(),
-    )
+    return this.repo.getEntries(userId, ids)
   }
 
   private async checkAndAddToFavorites(
     userId: string,
-    createdSchedule: IGeneratedSchedule,
+    createdSchedule: GeneratedSchedule<IGeneratedSchedule>,
   ) {
     const existingFavoriteSchedule = await this.favoritesRepo.findByScheduleId(
       userId,
@@ -46,21 +46,23 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
   async addFavorite(
     userId: string,
     schedule: IBaseGeneratedSchedule | IGeneratedSchedule,
-  ): Promise<IGeneratedSchedule> {
+  ): Promise<GeneratedSchedule<IGeneratedSchedule>> {
     if ('id' in schedule) {
-      return await this.checkAndAddToFavorites(userId, schedule)
+      return await this.checkAndAddToFavorites(
+        userId,
+        GeneratedSchedule.restore(schedule),
+      )
     }
     const existing = await this.repo.getByKey(
       userId,
       schedule.scheduleSubjectKey,
     )
-    const existingSnapshot = existing?.toSnapshot()
-    if (existingSnapshot?.events.length === schedule.events.length) {
-      return await this.checkAndAddToFavorites(userId, existingSnapshot)
+    if (existing?.toSnapshot().events.length === schedule.events.length) {
+      return await this.checkAndAddToFavorites(userId, existing)
     }
     const createdSchedule = GeneratedSchedule.create(schedule)
     const savedSchedule = await this.repo.create(userId, createdSchedule)
-    return await this.checkAndAddToFavorites(userId, savedSchedule.toSnapshot())
+    return await this.checkAndAddToFavorites(userId, savedSchedule)
   }
 
   async removeFavorite(

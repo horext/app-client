@@ -1,28 +1,37 @@
 import type {
   IScheduleGenerationParameters,
   IScheduleGeneration,
-  IScheduleGenerationResult,
 } from '#shared/domain/types/schedule-generation'
-import type { IBaseIntersectionOccurrence } from '#shared/domain/types/occurrences'
+import type {
+  IBaseIntersectionOccurrence,
+  IIntersectionOccurrence,
+} from '#shared/domain/types/occurrences'
 import type {
   IBaseGeneratedSchedule,
   IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
+import type { GeneratedSchedule, ScheduleGeneration } from '#shared/domain'
+
+export interface GenerationResult {
+  generation: ScheduleGeneration<IScheduleGeneration>
+  schedules: GeneratedSchedule<IGeneratedSchedule>[]
+  occurrences: IIntersectionOccurrence[]
+}
 
 export interface IGenerationService {
-  getGenerations(userId: string): Promise<IScheduleGeneration[]>
-  getLatestGeneration(
+  getGenerations(
     userId: string,
-  ): Promise<IScheduleGenerationResult | undefined>
+  ): Promise<ScheduleGeneration<IScheduleGeneration>[]>
+  getLatestGeneration(userId: string): Promise<GenerationResult | undefined>
   saveGeneration(
     userId: string,
     parameters: IScheduleGenerationParameters,
     schedules: IBaseGeneratedSchedule[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IScheduleGenerationResult>
+  ): Promise<GenerationResult>
   getSchedulesForGeneration(
     userId: string,
     record: IScheduleGeneration,
-  ): Promise<IGeneratedSchedule[]>
+  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]>
 }

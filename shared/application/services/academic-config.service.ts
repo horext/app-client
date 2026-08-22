@@ -33,32 +33,34 @@ export class AcademicConfigService implements IAcademicConfigService {
     return this.repo.update(userId, config)
   }
 
-  async get(userId: string): Promise<IAcademicConfig | undefined> {
-    return (await this._load(userId))?.toSnapshot()
+  async get(
+    userId: string,
+  ): Promise<AcademicConfig<IAcademicConfig> | undefined> {
+    return this._load(userId)
   }
 
   async create(
     userId: string,
     initial?: IAcademicConfigUpdate,
-  ): Promise<IAcademicConfig> {
+  ): Promise<AcademicConfig<IAcademicConfig>> {
     const existing = await this._load(userId)
     if (existing) {
       if (!initial) {
-        return existing.toSnapshot()
+        return existing
       }
-      return (await this._update(userId, existing.update(initial))).toSnapshot()
+      return this._update(userId, existing.update(initial))
     }
-    return (await this._create(userId, initial)).toSnapshot()
+    return this._create(userId, initial)
   }
 
   async patch(
     userId: string,
     value: IAcademicConfigUpdate,
-  ): Promise<IAcademicConfig> {
+  ): Promise<AcademicConfig<IAcademicConfig>> {
     const existing = await this._load(userId)
     if (!existing) {
-      return (await this._create(userId, value)).toSnapshot()
+      return this._create(userId, value)
     }
-    return (await this._update(userId, existing.update(value))).toSnapshot()
+    return this._update(userId, existing.update(value))
   }
 }

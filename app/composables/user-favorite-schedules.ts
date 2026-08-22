@@ -17,7 +17,7 @@ export const useUserFavoriteSchedules = () => {
       userId,
       toDomainSchedule(_favoritesSchedule),
     )
-    store.addFavorite(result)
+    store.addFavorite(result.toSnapshot())
   }
 
   async function deleteFavoriteScheduleById(
@@ -29,7 +29,9 @@ export const useUserFavoriteSchedules = () => {
 
   async function fetchFavoritesSchedules() {
     store.setFavorites(
-      (await favoritesStorage.getFavoriteSchedules(userId)) ?? [],
+      (await favoritesStorage.getFavoriteSchedules(userId)).map((schedule) =>
+        schedule.toSnapshot(),
+      ),
     )
   }
 

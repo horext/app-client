@@ -4,7 +4,6 @@ import type {
   IScheduleGenerationCreate,
   IScheduleGenerationParameters,
   IScheduleGeneration,
-  IScheduleGenerationResult,
 } from '#shared/domain/types/schedule-generation'
 import { ScheduleGeneration, GeneratedSchedule } from '#shared/domain'
 import type { IIntersectionOccurrence } from '#shared/domain/types/occurrences'
@@ -13,7 +12,10 @@ import type {
   IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
-import type { IGenerationService } from '../interfaces/generation.service'
+import type {
+  GenerationResult,
+  IGenerationService,
+} from '../interfaces/generation.service'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -59,26 +61,29 @@ export class GenerationService implements IGenerationService {
     return this.generationRepo.delete(userId, id, revision)
   }
 
-  async getGenerations(userId: string): Promise<IScheduleGeneration[]> {
+  async getGenerations(
+    userId: string,
+  ): Promise<ScheduleGeneration<IScheduleGeneration>[]> {
     const records = await this.generationRepo.findAll(userId)
     return records
       .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
-      .map((record) => record.toSnapshot())
+      .map((record) => record)
   }
 
   async getLatestGeneration(
     userId: string,
-  ): Promise<IScheduleGenerationResult | undefined> {
+  ): Promise<GenerationResult | undefined> {
     const records = await this.getGenerations(userId)
     const latest = records[records.length - 1]
     if (!latest) return undefined
     const schedules = await this.schedulesRepo.getEntries(
       userId,
-      latest.scheduleIds,
+      latest.toSnapshot().scheduleIds,
     )
     return {
-      ...latest,
-      schedules: schedules.map((schedule) => schedule.toSnapshot()),
+      generation: latest,
+      schedules,
+      occurrences: latest.toSnapshot().occurrences as IIntersectionOccurrence[],
     }
   }
 
@@ -88,7 +93,7 @@ export class GenerationService implements IGenerationService {
     schedules: IBaseGeneratedSchedule[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IScheduleGenerationResult> {
+  ): Promise<GenerationResult> {
     const schedulesToSave = schedules.map((schedule) =>
       GeneratedSchedule.create(schedule),
     )
@@ -127,19 +132,17 @@ export class GenerationService implements IGenerationService {
     await this._trimAndCleanup(userId, maxHistory)
 
     return {
-      ...savedRecord.toSnapshot(),
-      schedules: savedSchedules.map((schedule) => schedule.toSnapshot()),
-      occurrences,
+      generation: savedRecord,
+      schedules: savedSchedules,
+      occurrences: occurrences as IIntersectionOccurrence[],
     }
   }
 
   async getSchedulesForGeneration(
     userId: string,
     record: IScheduleGeneration,
-  ): Promise<IGeneratedSchedule[]> {
-    return (
-      await this.schedulesRepo.getEntries(userId, record.scheduleIds)
-    ).map((schedule) => schedule.toSnapshot())
+  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]> {
+    return this.schedulesRepo.getEntries(userId, record.scheduleIds)
   }
 
   private async _trimAndCleanup(
@@ -153,12 +156,14 @@ export class GenerationService implements IGenerationService {
     const toRemove = records.slice(0, records.length - maxHistory)
 
     for (const r of toRemove) {
-      await this.generationRepo.delete(userId, r.id)
+      await this.generationRepo.delete(userId, r.toSnapshot().id)
     }
 
     // Compute which schedule IDs are still referenced
     const remaining = records.slice(records.length - maxHistory)
-    const referencedIds = new Set(remaining.flatMap((r) => r.scheduleIds))
+    const referencedIds = new Set(
+      remaining.flatMap((r) => r.toSnapshot().scheduleIds),
+    )
 
     // Also keep favorites
     const favoriteIds = (await this.favoritesRepo.findAll(userId)).map(
@@ -168,7 +173,7 @@ export class GenerationService implements IGenerationService {
 
     // Collect all orphaned schedule IDs from removed records
     const orphanIds = toRemove
-      .flatMap((r) => r.scheduleIds)
+      .flatMap((r) => r.toSnapshot().scheduleIds)
       .filter((id) => !referencedIds.has(id))
 
     if (orphanIds.length > 0) {

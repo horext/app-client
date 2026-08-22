@@ -86,7 +86,7 @@ describe('FavoritesSchedulesService', () => {
         'user-1',
         expect.any(ScheduleFavorite),
       )
-      expect(result).toEqual(schedule.toSnapshot())
+      expect(result.toSnapshot()).toEqual(schedule.toSnapshot())
     })
     it('does not add to list when already in favorites', async () => {
       const schedule = createSchedule()
@@ -99,7 +99,7 @@ describe('FavoritesSchedulesService', () => {
       repo.getByKey.mockResolvedValue(schedule)
       favRepo.findByScheduleId.mockResolvedValue(undefined)
       favRepo.create.mockResolvedValue(createFavorite(schedule.id))
-      expect(await service.addFavorite('user-1', input)).toEqual(
+      expect((await service.addFavorite('user-1', input)).toSnapshot()).toEqual(
         schedule.toSnapshot(),
       )
     })

@@ -41,7 +41,7 @@ describe('AcademicConfigService', () => {
     it('returns config data when stored', async () => {
       const config = makeConfig()
       repo.get.mockResolvedValue(config)
-      expect(await service.get('user-1')).toMatchObject({
+      expect((await service.get('user-1'))?.toSnapshot()).toMatchObject({
         id: config.id,
         hourlyLoad: null,
       })
@@ -61,7 +61,7 @@ describe('AcademicConfigService', () => {
       repo.create.mockResolvedValue(config)
       const result = await service.create('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.hourlyLoad).toBeNull()
+      expect(result.toSnapshot().hourlyLoad).toBeNull()
     })
     it('creates config with initial values', async () => {
       repo.get.mockResolvedValue(undefined)
@@ -70,7 +70,7 @@ describe('AcademicConfigService', () => {
       const result = await service.create('user-1', {
         hourlyLoad,
       })
-      expect(result.hourlyLoad).toEqual(hourlyLoad)
+      expect(result.toSnapshot().hourlyLoad).toEqual(hourlyLoad)
     })
   })
   describe('patch', () => {

@@ -28,7 +28,7 @@ export const useUserProfile = () => {
     try {
       loadingProfile.value = true
       const data = await profileService.get(userId)
-      profile.value = data
+      profile.value = data?.toSnapshot()
     } finally {
       loadingProfile.value = false
     }
@@ -36,8 +36,9 @@ export const useUserProfile = () => {
 
   async function fetchAcademicConfig() {
     const config = await academicConfigService.get(userId)
-    if (config?.hourlyLoad) {
-      hourlyLoad.value = config.hourlyLoad ?? undefined
+    const snapshot = config?.toSnapshot()
+    if (snapshot?.hourlyLoad) {
+      hourlyLoad.value = snapshot.hourlyLoad
     }
   }
 
@@ -140,7 +141,7 @@ export const useUserProfile = () => {
       }),
       createPreferences(),
     ])
-    profile.value = createdProfile
+    profile.value = createdProfile.toSnapshot()
     hourlyLoad.value = _hourlyLoad
   }
 

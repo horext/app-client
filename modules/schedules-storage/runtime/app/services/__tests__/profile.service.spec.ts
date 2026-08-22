@@ -71,8 +71,8 @@ describe('ProfileService', () => {
         specialityId: 4,
       })
       expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.facultyId).toBe(3)
-      expect(result.setupCompleted).toBe(false)
+      expect(result.toSnapshot().facultyId).toBe(3)
+      expect(result.toSnapshot().setupCompleted).toBe(false)
     })
   })
   describe('patch', () => {
