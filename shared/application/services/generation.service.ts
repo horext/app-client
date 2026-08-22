@@ -1,12 +1,12 @@
 import type {
-  GenerationId,
-  IBaseGenerationRecord,
-  IGenerationCreate,
-  IGenerationMeta,
-  IGenerationRecord,
-  IGenerationResult,
-} from '#shared/domain/types/generation-record'
-import { Generation, GeneratedSchedule } from '#shared/domain'
+  ScheduleGenerationId,
+  IBaseScheduleGeneration,
+  IScheduleGenerationCreate,
+  IScheduleGenerationMeta,
+  IScheduleGeneration,
+  IScheduleGenerationResult,
+} from '#shared/domain/types/schedule-generation'
+import { ScheduleGeneration, GeneratedSchedule } from '#shared/domain'
 import type { IIntersectionOccurrence } from '#shared/domain/types/occurrences'
 import type {
   IBaseGeneratedSchedule,
@@ -27,31 +27,39 @@ export class GenerationService implements IGenerationService {
     private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
 
-  get(userId: string, id: GenerationId) {
+  get(userId: string, id: ScheduleGenerationId) {
     return this.generationRepo.findById(userId, id)
   }
 
-  create(userId: string, value: IGenerationCreate, id?: GenerationId) {
+  create(
+    userId: string,
+    value: IScheduleGenerationCreate,
+    id?: ScheduleGenerationId,
+  ) {
     return this.generationRepo.create(
       userId,
-      Generation.create({
+      ScheduleGeneration.create({
         ...value,
         ...(id ? { externalId: id } : {}),
       }),
     )
   }
 
-  async patch(userId: string, id: GenerationId, value: { revision: number }) {
+  async patch(
+    userId: string,
+    id: ScheduleGenerationId,
+    value: { revision: number },
+  ) {
     const current = await this.get(userId, id)
     if (!current) throw new ResourceNotFoundError('generation')
     return this.generationRepo.update(userId, current.update(value))
   }
 
-  delete(userId: string, id: GenerationId, revision?: number) {
+  delete(userId: string, id: ScheduleGenerationId, revision?: number) {
     return this.generationRepo.delete(userId, id, revision)
   }
 
-  async getGenerations(userId: string): Promise<IGenerationRecord[]> {
+  async getGenerations(userId: string): Promise<IScheduleGeneration[]> {
     const records = await this.generationRepo.findAll(userId)
     return records
       .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
@@ -60,7 +68,7 @@ export class GenerationService implements IGenerationService {
 
   async getLatestGeneration(
     userId: string,
-  ): Promise<IGenerationResult | undefined> {
+  ): Promise<IScheduleGenerationResult | undefined> {
     const records = await this.getGenerations(userId)
     const latest = records[records.length - 1]
     if (!latest) return undefined
@@ -76,11 +84,11 @@ export class GenerationService implements IGenerationService {
 
   async saveGeneration(
     userId: string,
-    meta: IGenerationMeta,
+    meta: IScheduleGenerationMeta,
     schedules: IBaseGeneratedSchedule[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IGenerationResult> {
+  ): Promise<IScheduleGenerationResult> {
     const schedulesToSave = schedules.map((schedule) =>
       GeneratedSchedule.create(schedule),
     )
@@ -89,9 +97,9 @@ export class GenerationService implements IGenerationService {
       schedulesToSave,
     )
 
-    let savedRecord: Generation
+    let savedRecord: ScheduleGeneration
     try {
-      const record: IBaseGenerationRecord = {
+      const record: IBaseScheduleGeneration = {
         resultCount: schedules.length,
         occurrences,
         ...meta,
@@ -100,7 +108,7 @@ export class GenerationService implements IGenerationService {
 
       savedRecord = await this.generationRepo.create(
         userId,
-        Generation.create(record),
+        ScheduleGeneration.create(record),
       )
     } catch (error) {
       try {
@@ -126,7 +134,7 @@ export class GenerationService implements IGenerationService {
 
   async getSchedulesForGeneration(
     userId: string,
-    record: IGenerationRecord,
+    record: IScheduleGeneration,
   ): Promise<IGeneratedSchedule[]> {
     return (
       await this.schedulesRepo.getEntries(userId, record.scheduleIds)

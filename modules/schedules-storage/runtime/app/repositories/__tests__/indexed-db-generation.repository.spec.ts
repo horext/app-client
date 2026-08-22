@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Generation, type IGenerationRecord } from '#shared/domain'
+import { ScheduleGeneration, type IScheduleGeneration } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
 
 const makeGeneration = () =>
-  Generation.create({
+  ScheduleGeneration.create({
     generatedAt: '2024-01-01T00:00:00Z',
     scheduleIds: [],
     crossingsSetting: 0,
@@ -34,7 +34,7 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns all records', async () => {
     const value = makeGeneration()
     persistence.findAll.mockResolvedValue([
-      persistedSnapshot(value.toSnapshot()) satisfies IGenerationRecord,
+      persistedSnapshot(value.toSnapshot()) satisfies IScheduleGeneration,
     ])
     expect(await repo.findAll('user-1')).toHaveLength(1)
   })
@@ -46,7 +46,7 @@ describe('IndexedDBGenerationsRepository', () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
       value.toSnapshot(),
-    ) satisfies IGenerationRecord
+    ) satisfies IScheduleGeneration
     persistence.find.mockResolvedValue(stored)
     expect(await repo.findById('user-1', stored.id)).toBeDefined()
   })
@@ -58,7 +58,7 @@ describe('IndexedDBGenerationsRepository', () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
       value.toSnapshot(),
-    ) satisfies IGenerationRecord
+    ) satisfies IScheduleGeneration
     persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
     expect(result.id).toBe(stored.id)

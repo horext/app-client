@@ -1,8 +1,8 @@
 import type {
-  IGenerationMeta,
-  IGenerationRecord,
-  IGenerationResult,
-} from '#shared/domain/types/generation-record'
+  IScheduleGenerationMeta,
+  IScheduleGeneration,
+  IScheduleGenerationResult,
+} from '#shared/domain/types/schedule-generation'
 import type { IBaseIntersectionOccurrence } from '#shared/domain/types/occurrences'
 import type {
   IBaseGeneratedSchedule,
@@ -10,17 +10,19 @@ import type {
 } from '#shared/domain/types/schedule'
 
 export interface IGenerationService {
-  getGenerations(userId: string): Promise<IGenerationRecord[]>
-  getLatestGeneration(userId: string): Promise<IGenerationResult | undefined>
+  getGenerations(userId: string): Promise<IScheduleGeneration[]>
+  getLatestGeneration(
+    userId: string,
+  ): Promise<IScheduleGenerationResult | undefined>
   saveGeneration(
     userId: string,
-    meta: IGenerationMeta,
+    meta: IScheduleGenerationMeta,
     schedules: IBaseGeneratedSchedule[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IGenerationResult>
+  ): Promise<IScheduleGenerationResult>
   getSchedulesForGeneration(
     userId: string,
-    record: IGenerationRecord,
+    record: IScheduleGeneration,
   ): Promise<IGeneratedSchedule[]>
 }

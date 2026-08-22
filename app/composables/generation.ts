@@ -1,7 +1,7 @@
 import { storeToRefs } from 'pinia'
 import type { IBaseGeneratedSchedule } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IGenerationMeta } from '~/interfaces/generation-record'
+import type { IScheduleGenerationMeta } from '~/interfaces/schedule-generation'
 import { toDomainSchedule } from '~/mappers/schedule/domain'
 
 export const useGeneration = () => {
@@ -14,7 +14,7 @@ export const useGeneration = () => {
   async function setResult(
     newSchedules: IBaseGeneratedSchedule[],
     newOccurrences: IBaseIntersectionOccurrence[],
-    meta: IGenerationMeta,
+    meta: IScheduleGenerationMeta,
   ): Promise<void> {
     if (!service) return
     const _result = await service.saveGeneration(

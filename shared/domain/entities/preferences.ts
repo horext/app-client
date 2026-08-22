@@ -23,7 +23,7 @@ export class Preferences<
     if (input.maxGenerationHistory < 1)
       throw new DomainError(
         'invalid-limit',
-        'Generation history must be positive.',
+        'ScheduleGeneration history must be positive.',
         'maxGenerationHistory',
       )
     return new Preferences({

@@ -8,14 +8,14 @@ import type {
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
 
-export type IGenerationMeta = Omit<
-  IGenerationRecord,
+export type IScheduleGenerationMeta = Omit<
+  IScheduleGeneration,
   'id' | 'scheduleIds' | 'resultCount' | 'occurrences' | keyof IAuditable
 >
 
-export type GenerationId = BrandUUID<'GenerationId'>
-export interface IBaseGenerationRecord<
-  T extends GenerationId = GenerationId,
+export type ScheduleGenerationId = BrandUUID<'ScheduleGenerationId'>
+export interface IBaseScheduleGeneration<
+  T extends ScheduleGenerationId = ScheduleGenerationId,
 > extends ReplicationState<T> {
   generatedAt: string
   scheduleIds: GeneratedScheduleId[]
@@ -26,13 +26,16 @@ export interface IBaseGenerationRecord<
   occurrences: IIntersectionOccurrence[]
 }
 
-export interface IGenerationRecord
-  extends IBaseGenerationRecord, IAuditable, ReplicatedIdentity<GenerationId> {}
+export interface IScheduleGeneration
+  extends
+    IBaseScheduleGeneration,
+    IAuditable,
+    ReplicatedIdentity<ScheduleGenerationId> {}
 
-export interface IGenerationResult extends IGenerationRecord {
+export interface IScheduleGenerationResult extends IScheduleGeneration {
   schedules: IGeneratedSchedule[]
   occurrences: IIntersectionOccurrence[]
 }
 
-export type IGenerationCreate = IBaseGenerationRecord
-export type IGenerationUpdate = Partial<IBaseGenerationRecord>
+export type IScheduleGenerationCreate = IBaseScheduleGeneration
+export type IScheduleGenerationUpdate = Partial<IBaseScheduleGeneration>

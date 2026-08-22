@@ -1,15 +1,15 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import {
-  Generation,
+  ScheduleGeneration,
   GeneratedSchedule,
   ScheduleFavorite,
   type GeneratedScheduleId,
 } from '#shared/domain'
 import type {
-  GenerationId,
-  IGenerationMeta,
-  IGenerationRecord,
-} from '#shared/domain/types/generation-record'
+  ScheduleGenerationId,
+  IScheduleGenerationMeta,
+  IScheduleGeneration,
+} from '#shared/domain/types/schedule-generation'
 import { GenerationService } from '#shared/application/services/generation.service'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import type {
@@ -25,14 +25,14 @@ const input = {
   crossings: 0,
   events: [],
 }
-const meta: IGenerationMeta = {
+const meta: IScheduleGenerationMeta = {
   generatedAt: '2024-01-01',
   crossingsSetting: 0,
   weekDays: [1, 2, 3, 4, 5],
   hourlyLoadId: 1,
 }
-const ids = new Map<string, GenerationId | GeneratedScheduleId>()
-const idFor = <T extends GenerationId | GeneratedScheduleId>(
+const ids = new Map<string, ScheduleGenerationId | GeneratedScheduleId>()
+const idFor = <T extends ScheduleGenerationId | GeneratedScheduleId>(
   name: string,
 ): T => {
   const existing = ids.get(name)
@@ -58,8 +58,8 @@ const makeRecord = (
   scheduleIds: string[] = [],
   generatedAt = '2024-01-01',
 ) => {
-  return Generation.restore({
-    id: idFor<GenerationId>(id),
+  return ScheduleGeneration.restore({
+    id: idFor<ScheduleGenerationId>(id),
     ...meta,
     generatedAt,
     scheduleIds: scheduleIds.map<GeneratedScheduleId>(idFor),
@@ -69,7 +69,7 @@ const makeRecord = (
     updatedAt: generatedAt,
     createdBy: 'user-1',
     updatedBy: 'user-1',
-  } satisfies IGenerationRecord)
+  } satisfies IScheduleGeneration)
 }
 
 describe('GenerationService', () => {

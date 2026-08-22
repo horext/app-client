@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import {
   ScheduleFavorite,
-  Generation,
+  ScheduleGeneration,
   GeneratedSchedule,
   type GeneratedScheduleId,
 } from '#shared/domain'
@@ -130,7 +130,7 @@ describe('FavoritesSchedulesService', () => {
       favRepo.findByScheduleId.mockResolvedValue(createFavorite(id))
       favRepo.delete.mockResolvedValue(undefined)
       genRepo.findAll.mockResolvedValue([
-        Generation.restore(
+        ScheduleGeneration.restore(
           persistedSnapshot({
             generatedAt: '',
             scheduleIds: [id],

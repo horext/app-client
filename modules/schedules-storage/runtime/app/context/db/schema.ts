@@ -7,7 +7,7 @@ import type { IActivity } from '#shared/domain/types/event'
 import type { IProfile } from '#shared/domain/types/profile'
 import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 import type { IPreferences } from '#shared/domain/types/preferences'
-import type { IGenerationRecord } from '#shared/domain/types/generation-record'
+import type { IScheduleGeneration } from '#shared/domain/types/schedule-generation'
 import type { IPlannedSubject } from '#shared/domain/types/subject'
 
 export const enum StoresDB {
@@ -53,8 +53,8 @@ export type ReplicableSchemas = {
     indexes: { createdBy: string }
   }
   [StoresDB.GENERATIONS]: {
-    key: [string, IGenerationRecord['id']]
-    value: IGenerationRecord
+    key: [string, IScheduleGeneration['id']]
+    value: IScheduleGeneration
     indexes: { createdBy: string }
   }
   [StoresDB.SUBJECTS]: {
