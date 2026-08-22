@@ -17,12 +17,10 @@ export interface IScheduleGenerationParameters {
 export type ScheduleGenerationId = BrandUUID<'ScheduleGenerationId'>
 export interface IBaseScheduleGeneration<
   T extends ScheduleGenerationId = ScheduleGenerationId,
-> extends ReplicationState<T> {
+>
+  extends ReplicationState<T>, IScheduleGenerationParameters {
   generatedAt: string
   scheduleIds: GeneratedScheduleId[]
-  crossingsSetting: number
-  weekDays: Weekdays[]
-  hourlyLoadId: number
   resultCount: number
   occurrences: IIntersectionOccurrence[]
 }
