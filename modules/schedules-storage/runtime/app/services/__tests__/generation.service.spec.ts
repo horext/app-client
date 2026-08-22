@@ -7,7 +7,7 @@ import {
 } from '#shared/domain'
 import type {
   ScheduleGenerationId,
-  IScheduleGenerationMeta,
+  IScheduleGenerationParameters,
   IScheduleGeneration,
 } from '#shared/domain/types/schedule-generation'
 import { GenerationService } from '#shared/application/services/generation.service'
@@ -25,8 +25,7 @@ const input = {
   crossings: 0,
   events: [],
 }
-const meta: IScheduleGenerationMeta = {
-  generatedAt: '2024-01-01',
+const parameters: IScheduleGenerationParameters = {
   crossingsSetting: 0,
   weekDays: [1, 2, 3, 4, 5],
   hourlyLoadId: 1,
@@ -60,7 +59,7 @@ const makeRecord = (
 ) => {
   return ScheduleGeneration.restore({
     id: idFor<ScheduleGenerationId>(id),
-    ...meta,
+    ...parameters,
     generatedAt,
     scheduleIds: scheduleIds.map<GeneratedScheduleId>(idFor),
     resultCount: scheduleIds.length,
@@ -158,7 +157,7 @@ describe('GenerationService', () => {
       genRepo.findAll.mockResolvedValue([])
       const result = await service.saveGeneration(
         'user-1',
-        meta,
+        parameters,
         [input],
         [],
         5,
@@ -178,7 +177,7 @@ describe('GenerationService', () => {
         makeRecord('g3', ['s3'], '2024-01-03'),
       ])
       favoritesRepo.findAll.mockResolvedValue([])
-      await service.saveGeneration('user-1', meta, [input], [], 2)
+      await service.saveGeneration('user-1', parameters, [input], [], 2)
       expect(genRepo.delete).toHaveBeenCalledWith('user-1', idFor('g1'))
     })
     it('does not delete schedules when all removed schedules are favorites', async () => {
@@ -193,7 +192,7 @@ describe('GenerationService', () => {
         makeRecord('g3', ['s3'], '2024-01-03'),
       ])
       favoritesRepo.findAll.mockResolvedValue([createFavorite(idFor('s1'))])
-      await service.saveGeneration('user-1', meta, [input], [], 2)
+      await service.saveGeneration('user-1', parameters, [input], [], 2)
       expect(schedulesRepo.deleteEntries).not.toHaveBeenCalled()
     })
     it('does not trim when within maxHistory', async () => {
@@ -201,7 +200,7 @@ describe('GenerationService', () => {
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockResolvedValue(makeRecord('g1', [schedule.id]))
       genRepo.findAll.mockResolvedValue([makeRecord('g1', ['s1'])])
-      await service.saveGeneration('user-1', meta, [input], [], 5)
+      await service.saveGeneration('user-1', parameters, [input], [], 5)
       expect(genRepo.delete).not.toHaveBeenCalled()
     })
     it('cleans saved schedules if generation creation fails', async () => {
@@ -209,7 +208,7 @@ describe('GenerationService', () => {
       schedulesRepo.createAll.mockResolvedValue([schedule])
       genRepo.create.mockRejectedValue(new Error('failed'))
       await expect(
-        service.saveGeneration('user-1', meta, [input], [], 5),
+        service.saveGeneration('user-1', parameters, [input], [], 5),
       ).rejects.toThrow('failed')
       expect(schedulesRepo.deleteEntries).toHaveBeenCalledWith('user-1', [
         expect.any(String),

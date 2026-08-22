@@ -3,10 +3,11 @@ import type { Weekdays } from './event'
 import type { IIntersectionOccurrence } from './ocurrences'
 import type { IGeneratedSchedule } from './schedule'
 
-export type IScheduleGenerationMeta = Omit<
-  IScheduleGeneration,
-  'id' | 'scheduleIds' | 'resultCount' | 'occurrences'
->
+export interface IScheduleGenerationParameters {
+  crossingsSetting: number
+  weekDays: Weekdays[]
+  hourlyLoadId: number
+}
 
 export interface IScheduleGeneration {
   generatedAt: string

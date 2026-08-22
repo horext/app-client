@@ -131,7 +131,6 @@ const generateAllUserSchedules = async () => {
   )
   loadingGenerate.value = false
   await setResult(toRaw(combinations), toRaw(occurrencesData), {
-    generatedAt: new Date().toISOString(),
     crossingsSetting: toRaw(crossingSubjects.value),
     weekDays: toRaw(weekDays.value),
     hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,

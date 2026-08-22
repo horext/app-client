@@ -2,7 +2,7 @@ import type {
   ScheduleGenerationId,
   IBaseScheduleGeneration,
   IScheduleGenerationCreate,
-  IScheduleGenerationMeta,
+  IScheduleGenerationParameters,
   IScheduleGeneration,
   IScheduleGenerationResult,
 } from '#shared/domain/types/schedule-generation'
@@ -84,7 +84,7 @@ export class GenerationService implements IGenerationService {
 
   async saveGeneration(
     userId: string,
-    meta: IScheduleGenerationMeta,
+    parameters: IScheduleGenerationParameters,
     schedules: IBaseGeneratedSchedule[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
@@ -100,9 +100,10 @@ export class GenerationService implements IGenerationService {
     let savedRecord: ScheduleGeneration
     try {
       const record: IBaseScheduleGeneration = {
+        generatedAt: new Date().toISOString(),
         resultCount: schedules.length,
         occurrences,
-        ...meta,
+        ...parameters,
         scheduleIds: savedSchedules.map((schedule) => schedule.id),
       }
 

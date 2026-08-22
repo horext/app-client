@@ -1,5 +1,5 @@
 import type {
-  IScheduleGenerationMeta,
+  IScheduleGenerationParameters,
   IScheduleGeneration,
   IScheduleGenerationResult,
 } from '#shared/domain/types/schedule-generation'
@@ -16,7 +16,7 @@ export interface IGenerationService {
   ): Promise<IScheduleGenerationResult | undefined>
   saveGeneration(
     userId: string,
-    meta: IScheduleGenerationMeta,
+    parameters: IScheduleGenerationParameters,
     schedules: IBaseGeneratedSchedule[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,

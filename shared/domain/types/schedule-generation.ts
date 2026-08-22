@@ -8,10 +8,11 @@ import type {
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
 
-export type IScheduleGenerationMeta = Omit<
-  IScheduleGeneration,
-  'id' | 'scheduleIds' | 'resultCount' | 'occurrences' | keyof IAuditable
->
+export interface IScheduleGenerationParameters {
+  crossingsSetting: number
+  weekDays: Weekdays[]
+  hourlyLoadId: number
+}
 
 export type ScheduleGenerationId = BrandUUID<'ScheduleGenerationId'>
 export interface IBaseScheduleGeneration<
