@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/no-multiple-template-root -->
 <template>
+  <VitePwaManifest v-if="isGeneratorRoute" />
   <AppBar
     v-model:drawer="drawer"
     v-model:dark-mode="darkMode"
@@ -81,6 +82,59 @@ onMounted(async () => {
 })
 const drawer = ref(true)
 const route = useRoute()
+const isGeneratorRoute = computed(
+  () => route.path === '/generator' || route.path.startsWith('/generator/'),
+)
+let reloadingForServiceWorkerUpdate = false
+
+const activateServiceWorker = (worker: ServiceWorker | null) => {
+  worker?.postMessage({ type: 'SKIP_WAITING' })
+}
+
+const registerGeneratorServiceWorker = async () => {
+  if (
+    import.meta.dev ||
+    !isGeneratorRoute.value ||
+    !('serviceWorker' in navigator)
+  )
+    return
+  try {
+    const registration = await navigator.serviceWorker.register('/sw.js', {
+      scope: '/generator',
+      updateViaCache: 'none',
+    })
+
+    activateServiceWorker(registration.waiting)
+    registration.addEventListener('updatefound', () => {
+      const installingWorker = registration.installing
+      installingWorker?.addEventListener('statechange', () => {
+        if (
+          installingWorker.state === 'installed' &&
+          navigator.serviceWorker.controller
+        ) {
+          activateServiceWorker(registration.waiting)
+        }
+      })
+    })
+    await registration.update()
+  } catch (error) {
+    console.warn('Generator service worker registration failed.', error)
+  }
+}
+
+onMounted(() => {
+  navigator.serviceWorker?.addEventListener('controllerchange', () => {
+    if (reloadingForServiceWorkerUpdate) return
+    reloadingForServiceWorkerUpdate = true
+    window.location.reload()
+  })
+  void registerGeneratorServiceWorker()
+})
+
+watch(isGeneratorRoute, (enabled) => {
+  if (enabled) void registerGeneratorServiceWorker()
+})
+
 const userBugReportUrl = computed(() =>
   buildUserBugReportUrl({
     path: route.path,
