@@ -1,10 +1,10 @@
-import type { ScheduleFavorite, GeneratedSchedule } from '#shared/domain'
 import type {
-  IBaseScheduleFavorite,
-  IBaseGeneratedSchedule,
-  IGeneratedSchedule,
-  GeneratedScheduleId,
-} from '#shared/domain/types/schedule'
+  BaseGeneratedSchedule,
+  BaseScheduleFavorite,
+  ScheduleFavorite,
+  GeneratedSchedule,
+} from '#shared/domain'
+import type { GeneratedScheduleId } from '#shared/domain/types/schedule'
 
 export interface ISchedulesRepository {
   findAll(userId: string): Promise<GeneratedSchedule[]>
@@ -22,16 +22,16 @@ export interface ISchedulesRepository {
   ): Promise<GeneratedSchedule | undefined>
   create(
     userId: string,
-    schedule: GeneratedSchedule<IBaseGeneratedSchedule>,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>>
+    schedule: BaseGeneratedSchedule,
+  ): Promise<GeneratedSchedule>
   createAll(
     userId: string,
-    schedules: GeneratedSchedule<IBaseGeneratedSchedule>[],
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]>
+    schedules: BaseGeneratedSchedule[],
+  ): Promise<GeneratedSchedule[]>
   update(
     userId: string,
-    schedule: GeneratedSchedule<IGeneratedSchedule>,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>>
+    schedule: GeneratedSchedule,
+  ): Promise<GeneratedSchedule>
   deleteEntry(
     userId: string,
     id: GeneratedScheduleId,
@@ -55,7 +55,7 @@ export interface ISchedulesFavoritesRepository {
   ): Promise<ScheduleFavorite | undefined>
   create(
     userId: string,
-    favorite: ScheduleFavorite<IBaseScheduleFavorite>,
+    favorite: BaseScheduleFavorite,
   ): Promise<ScheduleFavorite>
   delete(
     userId: string,

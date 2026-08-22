@@ -1,71 +1,110 @@
 import type {
-  IBaseGeneratedSchedule,
+  GeneratedScheduleId,
   IGeneratedSchedule,
   IGeneratedScheduleCreate,
+  IGeneratedScheduleSubject,
   IGeneratedScheduleUpdate,
-  GeneratedScheduleId,
-  GeneratedScheduleInput,
 } from '../types/schedule'
+import type { IEvent } from '../types/event'
 import { DomainError } from '../errors/domain-error'
-import type { IEntitySnapshot } from './snapshot'
 
-export class GeneratedSchedule<
-  T extends GeneratedScheduleInput = IGeneratedSchedule,
-> implements IEntitySnapshot<T> {
-  private constructor(private readonly snapshot: T) {}
+export class BaseGeneratedSchedule {
+  protected _scheduleSubjectKey: string
+  protected _schedulesSubject: IGeneratedScheduleSubject[]
+  protected _crossings: number
+  protected _events: IEvent[]
+  protected _externalId?: GeneratedScheduleId
+  protected _revision?: number
 
-  private static build<T extends GeneratedScheduleInput>(
-    input: T,
-  ): GeneratedSchedule<T> {
-    if (!Number.isInteger(input.crossings) || input.crossings < 0)
+  protected constructor(input: IGeneratedScheduleCreate) {
+    BaseGeneratedSchedule.validate(input.crossings)
+    this._scheduleSubjectKey = input.scheduleSubjectKey
+    this._schedulesSubject = structuredClone(input.schedulesSubject)
+    this._crossings = input.crossings
+    this._events = structuredClone(input.events)
+    this._externalId = input.externalId
+    this._revision = input.revision
+  }
+
+  update(input: IGeneratedScheduleUpdate): this {
+    const crossings = input.crossings ?? this._crossings
+    BaseGeneratedSchedule.validate(crossings)
+    if (input.scheduleSubjectKey !== undefined)
+      this._scheduleSubjectKey = input.scheduleSubjectKey
+    if (input.schedulesSubject !== undefined)
+      this._schedulesSubject = structuredClone(input.schedulesSubject)
+    this._crossings = crossings
+    if (input.events !== undefined) this._events = structuredClone(input.events)
+    if ('externalId' in input) this._externalId = input.externalId
+    if ('revision' in input) this._revision = input.revision
+    return this
+  }
+
+  get scheduleSubjectKey(): string {
+    return this._scheduleSubjectKey
+  }
+  get schedulesSubject(): IGeneratedScheduleSubject[] {
+    return this._schedulesSubject
+  }
+  get crossings(): number {
+    return this._crossings
+  }
+  get events(): IEvent[] {
+    return this._events
+  }
+  get externalId(): GeneratedScheduleId | undefined {
+    return this._externalId
+  }
+  get revision(): number | undefined {
+    return this._revision
+  }
+
+  private static validate(crossings: number): void {
+    if (!Number.isInteger(crossings) || crossings < 0)
       throw new DomainError(
         'invalid-limit',
         'GeneratedSchedule crossings cannot be negative.',
         'crossings',
       )
-    return new GeneratedSchedule(structuredClone(input))
+  }
+}
+
+export class GeneratedSchedule extends BaseGeneratedSchedule {
+  private readonly _id: GeneratedScheduleId
+  private readonly _createdAt: string
+  private readonly _updatedAt: string
+  private readonly _createdBy: string
+  private readonly _updatedBy: string
+
+  private constructor(input: IGeneratedSchedule) {
+    super(input)
+    this._id = input.id
+    this._createdAt = input.createdAt
+    this._updatedAt = input.updatedAt
+    this._createdBy = input.createdBy
+    this._updatedBy = input.updatedBy
   }
 
-  static create(
-    input: IGeneratedScheduleCreate,
-  ): GeneratedSchedule<IBaseGeneratedSchedule> {
-    return GeneratedSchedule.build({
-      ...(input.externalId ? { externalId: input.externalId } : {}),
-      ...(input.revision !== undefined ? { revision: input.revision } : {}),
-      scheduleSubjectKey: input.scheduleSubjectKey,
-      schedulesSubject: structuredClone(input.schedulesSubject),
-      crossings: input.crossings,
-      events: structuredClone(input.events),
-    })
+  static create(input: IGeneratedScheduleCreate): BaseGeneratedSchedule {
+    return new BaseGeneratedSchedule(input)
   }
-
-  static restore(
-    snapshot: IGeneratedSchedule,
-  ): GeneratedSchedule<IGeneratedSchedule> {
-    return GeneratedSchedule.build(snapshot)
+  static reconstitute(input: IGeneratedSchedule): GeneratedSchedule {
+    return new GeneratedSchedule(input)
   }
 
   get id(): GeneratedScheduleId {
-    if (!('id' in this.snapshot))
-      throw new Error('The entity has not been persisted.')
-    return this.snapshot.id
+    return this._id
   }
-
-  get scheduleSubjectKey(): string {
-    return this.snapshot.scheduleSubjectKey
+  get createdAt(): string {
+    return this._createdAt
   }
-
-  update(
-    this: GeneratedSchedule<IGeneratedSchedule>,
-    input: IGeneratedScheduleUpdate,
-  ): GeneratedSchedule<IGeneratedSchedule> {
-    return GeneratedSchedule.build({
-      ...this.snapshot,
-      ...structuredClone(input),
-    })
+  get updatedAt(): string {
+    return this._updatedAt
   }
-
-  toSnapshot(): T {
-    return structuredClone(this.snapshot)
+  get createdBy(): string {
+    return this._createdBy
+  }
+  get updatedBy(): string {
+    return this._updatedBy
   }
 }

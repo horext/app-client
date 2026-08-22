@@ -14,14 +14,13 @@ describe('ActivitiesService', () => {
     delete: vi.fn(),
   })
   const makeActivity = () =>
-    Activity.restore(
-      persistedSnapshot(
-        Activity.create({
-          title: 'Activity',
-          color: '#fff',
-          sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-        }).toSnapshot(),
-      ),
+    Activity.reconstitute(
+      persistedSnapshot({
+        title: 'Activity',
+        color: '#fff',
+        allowOverlap: false,
+        sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
+      }),
     )
   let repo: Mocked<IActivitiesRepository>
   let service: ActivitiesService
@@ -44,7 +43,7 @@ describe('ActivitiesService', () => {
         color: '#fff',
         sessions: [],
       })
-      expect(result.toSnapshot()).toMatchObject({ title: 'Activity' })
+      expect(result.title).toBe('Activity')
     })
   })
   describe('delete', () => {
@@ -62,9 +61,9 @@ describe('ActivitiesService', () => {
       const result = await service.patch('user-1', existing.id, {
         title: 'Updated',
         color: '#fff',
-        sessions: existing.toSnapshot().sessions,
+        sessions: existing.sessions,
       })
-      expect(result.toSnapshot().title).toBe('Updated')
+      expect(result.title).toBe('Updated')
     })
     it('throws when activity not found', async () => {
       repo.findById.mockResolvedValue(undefined)

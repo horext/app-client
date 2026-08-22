@@ -1,6 +1,7 @@
 import type { UUID } from 'crypto'
 import { storeToRefs } from 'pinia'
 import type { ActivityForm, IBaseActivity } from '~/interfaces/event'
+import { toActivityDto } from '~/mappers/domain/entities'
 
 export const useUserEvents = () => {
   const store = useUserEventsStore()
@@ -12,7 +13,7 @@ export const useUserEvents = () => {
     const result = await service.create(userId, {
       ...item,
     })
-    store.addItem(result.toSnapshot())
+    store.addItem(toActivityDto(result))
   }
 
   async function deleteItemById(id: UUID) {
@@ -26,12 +27,12 @@ export const useUserEvents = () => {
     const result = await service.patch(userId, itemId, {
       ...item,
     })
-    store.updateItem(result.toSnapshot())
+    store.updateItem(toActivityDto(result))
   }
 
   async function fetchItems() {
     const data = await service.getAll(userId)
-    store.setItems(data.map((entity) => entity.toSnapshot()))
+    store.setItems(data.map(toActivityDto))
   }
 
   return {

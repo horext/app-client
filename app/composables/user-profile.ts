@@ -4,6 +4,7 @@ import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
+import { toAcademicConfigDto, toProfileDto } from '~/mappers/domain/entities'
 
 export const useUserProfile = () => {
   const store = useUserProfileStore()
@@ -28,7 +29,7 @@ export const useUserProfile = () => {
     try {
       loadingProfile.value = true
       const data = await profileService.get(userId)
-      profile.value = data?.toSnapshot()
+      profile.value = data ? toProfileDto(data) : undefined
     } finally {
       loadingProfile.value = false
     }
@@ -36,9 +37,9 @@ export const useUserProfile = () => {
 
   async function fetchAcademicConfig() {
     const config = await academicConfigService.get(userId)
-    const snapshot = config?.toSnapshot()
-    if (snapshot?.hourlyLoad) {
-      hourlyLoad.value = snapshot.hourlyLoad
+    const dto = config ? toAcademicConfigDto(config) : undefined
+    if (dto?.hourlyLoad) {
+      hourlyLoad.value = dto.hourlyLoad
     }
   }
 
@@ -141,7 +142,7 @@ export const useUserProfile = () => {
       }),
       createPreferences(),
     ])
-    profile.value = createdProfile.toSnapshot()
+    profile.value = toProfileDto(createdProfile)
     hourlyLoad.value = _hourlyLoad
   }
 

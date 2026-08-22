@@ -3,6 +3,7 @@ import type {
   IGeneratedSchedule,
 } from '~/interfaces/schedule'
 import { toDomainSchedule } from '~/mappers/schedule/domain'
+import { toGeneratedScheduleDto } from '~/mappers/domain/entities'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -17,7 +18,7 @@ export const useUserFavoriteSchedules = () => {
       userId,
       toDomainSchedule(_favoritesSchedule),
     )
-    store.addFavorite(result.toSnapshot())
+    store.addFavorite(toGeneratedScheduleDto(result))
   }
 
   async function deleteFavoriteScheduleById(
@@ -28,11 +29,8 @@ export const useUserFavoriteSchedules = () => {
   }
 
   async function fetchFavoritesSchedules() {
-    store.setFavorites(
-      (await favoritesStorage.getFavoriteSchedules(userId)).map((schedule) =>
-        schedule.toSnapshot(),
-      ),
-    )
+    const schedules = await favoritesStorage.getFavoriteSchedules(userId)
+    store.setFavorites((schedules ?? []).map(toGeneratedScheduleDto))
   }
 
   return {

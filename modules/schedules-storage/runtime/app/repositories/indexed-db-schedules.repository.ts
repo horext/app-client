@@ -1,23 +1,27 @@
-import { ScheduleFavorite, GeneratedSchedule } from '#shared/domain'
 import type {
-  IBaseScheduleFavorite,
-  IBaseGeneratedSchedule,
-  IGeneratedSchedule,
-  GeneratedScheduleId,
-} from '#shared/domain/types/schedule'
+  BaseGeneratedSchedule,
+  BaseScheduleFavorite,
+  GeneratedSchedule,
+  ScheduleFavorite,
+} from '#shared/domain'
+import type { GeneratedScheduleId } from '#shared/domain/types/schedule'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
 } from '#shared/application/repositories/schedules.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
+import {
+  GeneratedSchedulePersistenceMapper,
+  ScheduleFavoritePersistenceMapper,
+} from '../mappers/persistence'
 
 export class IndexedDBSchedulesRepository implements ISchedulesRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
   async findAll(userId: string): Promise<GeneratedSchedule[]> {
     return (await this.persistence.findAll(StoresDB.SCHEDULES, userId)).map(
-      GeneratedSchedule.restore,
+      GeneratedSchedulePersistenceMapper.fromRecord,
     )
   }
 
@@ -25,7 +29,9 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     return this.persistence
       .find(StoresDB.SCHEDULES, userId, id)
       .then((record) =>
-        record ? GeneratedSchedule.restore(record) : undefined,
+        record
+          ? GeneratedSchedulePersistenceMapper.fromRecord(record)
+          : undefined,
       )
   }
 
@@ -39,7 +45,7 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
     )
     return results
       .filter((value) => value !== undefined)
-      .map(GeneratedSchedule.restore)
+      .map(GeneratedSchedulePersistenceMapper.fromRecord)
   }
 
   async getByKey(
@@ -51,48 +57,50 @@ export class IndexedDBSchedulesRepository implements ISchedulesRepository {
       'scheduleSubjectKey',
       [userId, scheduleSubjectKey],
     )
-    return result ? GeneratedSchedule.restore(result) : undefined
+    return result
+      ? GeneratedSchedulePersistenceMapper.fromRecord(result)
+      : undefined
   }
 
   async create(
     userId: string,
-    schedule: GeneratedSchedule<IBaseGeneratedSchedule>,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>> {
+    schedule: BaseGeneratedSchedule,
+  ): Promise<GeneratedSchedule> {
     const stored = await this.persistence.create(
       StoresDB.SCHEDULES,
-      schedule.toSnapshot(),
+      GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
       userId,
     )
-    return GeneratedSchedule.restore(stored)
+    return GeneratedSchedulePersistenceMapper.fromRecord(stored)
   }
 
   async createAll(
     userId: string,
-    schedules: GeneratedSchedule<IBaseGeneratedSchedule>[],
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]> {
+    schedules: BaseGeneratedSchedule[],
+  ): Promise<GeneratedSchedule[]> {
     if (!schedules.length) return []
-    const stored: GeneratedSchedule<IGeneratedSchedule>[] = []
+    const stored: GeneratedSchedule[] = []
     for (const schedule of schedules) {
       const record = await this.persistence.create(
         StoresDB.SCHEDULES,
-        schedule.toSnapshot(),
+        GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
         userId,
       )
-      stored.push(GeneratedSchedule.restore(record))
+      stored.push(GeneratedSchedulePersistenceMapper.fromRecord(record))
     }
     return stored
   }
 
   async update(
     userId: string,
-    schedule: GeneratedSchedule<IGeneratedSchedule>,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>> {
+    schedule: GeneratedSchedule,
+  ): Promise<GeneratedSchedule> {
     const stored = await this.persistence.update(
       StoresDB.SCHEDULES,
-      schedule.toSnapshot(),
+      GeneratedSchedulePersistenceMapper.toRecord(schedule),
       userId,
     )
-    return GeneratedSchedule.restore(stored)
+    return GeneratedSchedulePersistenceMapper.fromRecord(stored)
   }
 
   async deleteEntry(userId: string, id: GeneratedScheduleId): Promise<void> {
@@ -115,7 +123,7 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
 
   async findAll(userId: string): Promise<ScheduleFavorite[]> {
     const records = await this.persistence.findAll(StoresDB.FAVORITES, userId)
-    return records.map(ScheduleFavorite.restore)
+    return records.map(ScheduleFavoritePersistenceMapper.fromRecord)
   }
 
   async findById(
@@ -123,7 +131,9 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
     id: GeneratedScheduleId,
   ): Promise<ScheduleFavorite | undefined> {
     const record = await this.persistence.find(StoresDB.FAVORITES, userId, id)
-    return record ? ScheduleFavorite.restore(record) : undefined
+    return record
+      ? ScheduleFavoritePersistenceMapper.fromRecord(record)
+      : undefined
   }
 
   async findByScheduleId(
@@ -135,14 +145,14 @@ export class IndexedDBScheduleFavoritesRepository implements ISchedulesFavorites
 
   async create(
     userId: string,
-    favorite: ScheduleFavorite<IBaseScheduleFavorite>,
+    favorite: BaseScheduleFavorite,
   ): Promise<ScheduleFavorite> {
     const stored = await this.persistence.create(
       StoresDB.FAVORITES,
-      favorite.toSnapshot(),
+      ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
       userId,
     )
-    return ScheduleFavorite.restore(stored)
+    return ScheduleFavoritePersistenceMapper.fromRecord(stored)
   }
 
   async delete(userId: string, id: GeneratedScheduleId): Promise<void> {

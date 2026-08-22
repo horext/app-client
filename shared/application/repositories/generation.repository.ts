@@ -1,9 +1,5 @@
-import type { ScheduleGeneration } from '#shared/domain'
-import type {
-  ScheduleGenerationId,
-  IBaseScheduleGeneration,
-  IScheduleGeneration,
-} from '#shared/domain/types/schedule-generation'
+import type { BaseScheduleGeneration, ScheduleGeneration } from '#shared/domain'
+import type { ScheduleGenerationId } from '#shared/domain/types/schedule-generation'
 
 export interface IGenerationRepository {
   findAll(userId: string): Promise<ScheduleGeneration[]>
@@ -13,12 +9,12 @@ export interface IGenerationRepository {
   ): Promise<ScheduleGeneration | undefined>
   create(
     userId: string,
-    record: ScheduleGeneration<IBaseScheduleGeneration>,
-  ): Promise<ScheduleGeneration<IScheduleGeneration>>
+    record: BaseScheduleGeneration,
+  ): Promise<ScheduleGeneration>
   update(
     userId: string,
-    record: ScheduleGeneration<IScheduleGeneration>,
-  ): Promise<ScheduleGeneration<IScheduleGeneration>>
+    record: ScheduleGeneration,
+  ): Promise<ScheduleGeneration>
   delete(
     userId: string,
     id: ScheduleGenerationId,

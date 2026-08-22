@@ -5,12 +5,10 @@ import type {
 import type { GeneratedSchedule } from '#shared/domain'
 
 export interface IFavoritesSchedulesService {
-  getFavoriteSchedules(
-    userId: string,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]>
+  getFavoriteSchedules(userId: string): Promise<GeneratedSchedule[]>
   addFavorite(
     userId: string,
     schedule: IBaseGeneratedSchedule | IGeneratedSchedule,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>>
+  ): Promise<GeneratedSchedule>
   removeFavorite(userId: string, id: string): Promise<void>
 }

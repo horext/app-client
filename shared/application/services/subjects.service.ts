@@ -1,7 +1,4 @@
-import type {
-  IPlannedSubject,
-  PlannedSubjectId,
-} from '#shared/domain/types/subject'
+import type { PlannedSubjectId } from '#shared/domain/types/subject'
 import {
   PlannedSubject,
   type IPlannedSubjectCreate,
@@ -14,14 +11,14 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 export class SubjectsService implements ISubjectsService {
   constructor(private readonly repo: ISubjectsRepository) {}
 
-  getAll(userId: string): Promise<PlannedSubject<IPlannedSubject>[]> {
+  getAll(userId: string): Promise<PlannedSubject[]> {
     return this.repo.findAll(userId)
   }
 
   async get(
     userId: string,
     id: PlannedSubjectId,
-  ): Promise<PlannedSubject<IPlannedSubject> | undefined> {
+  ): Promise<PlannedSubject | undefined> {
     return this.repo.findById(userId, id)
   }
 
@@ -41,12 +38,12 @@ export class SubjectsService implements ISubjectsService {
     userId: string,
     id: PlannedSubjectId,
     subject: IPlannedSubjectUpdate,
-  ): Promise<PlannedSubject<IPlannedSubject>> {
+  ): Promise<PlannedSubject> {
     const data = await this.repo.findById(userId, id)
     if (!data) {
       throw new ResourceNotFoundError('subject')
     }
-    const updated = data.update(subject)
-    return this.repo.update(userId, updated)
+    data.update(subject)
+    return this.repo.update(userId, data)
   }
 }

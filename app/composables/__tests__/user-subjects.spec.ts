@@ -72,9 +72,14 @@ function makeSubject(id: PlannedSubjectId = makeUUID()): IPlannedSubject {
   }
 }
 
-const asEntity = (subject: IPlannedSubject) => ({
-  toSnapshot: () => subject,
-})
+const asEntity = (subject: IPlannedSubject) =>
+  PlannedSubject.reconstitute({
+    ...subject,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 
 describe('useUserSubjects', () => {
   beforeEach(() => {
@@ -118,7 +123,7 @@ describe('useUserSubjects', () => {
       expect(isProxy(input)).toBe(false)
       expect(isProxy(input.subject)).toBe(false)
       expect(() => structuredClone(input)).not.toThrow()
-      return PlannedSubject.create(input)
+      return asEntity({ ...input, id: makeUUID() })
     })
 
     const { saveNewSubject } = useUserSubjects()

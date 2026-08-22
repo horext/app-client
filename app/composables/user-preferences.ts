@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia'
 import type { Weekdays } from '~/interfaces/event'
+import { toPreferencesDto } from '~/mappers/domain/entities'
 
 export const useUserPreferences = () => {
   const store = useUserPreferencesStore()
@@ -10,7 +11,7 @@ export const useUserPreferences = () => {
 
   async function fetchPreferences() {
     const prefs = await service.get(userId)
-    if (prefs) preferences.value = prefs.toSnapshot()
+    if (prefs) preferences.value = toPreferencesDto(prefs)
   }
 
   async function createPreferences() {
@@ -19,17 +20,17 @@ export const useUserPreferences = () => {
 
   async function updateCrossings(_crossings: number) {
     const result = await service.patch(userId, { crossings: _crossings })
-    preferences.value = result.toSnapshot()
+    preferences.value = toPreferencesDto(result)
   }
 
   async function saveWeekDays(data: Weekdays[]) {
     const result = await service.patch(userId, { weekDays: data })
-    preferences.value = result.toSnapshot()
+    preferences.value = toPreferencesDto(result)
   }
 
   async function updateMaxGenerationHistory(n: number) {
     const result = await service.patch(userId, { maxGenerationHistory: n })
-    preferences.value = result.toSnapshot()
+    preferences.value = toPreferencesDto(result)
   }
 
   return {

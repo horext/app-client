@@ -5,7 +5,7 @@ import type { IProfileRepository } from '#shared/application/repositories/profil
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makeProfile = (setupCompleted = false) =>
-  Profile.restore(
+  Profile.reconstitute(
     persistedSnapshot({
       facultyId: 1,
       specialityId: 2,
@@ -31,7 +31,7 @@ describe('ProfileService', () => {
       expect(await service.get('user-1')).toBeUndefined()
     })
     it('returns profile data when stored', async () => {
-      const profile = Profile.restore(
+      const profile = Profile.reconstitute(
         persistedSnapshot({
           facultyId: 1,
           specialityId: 2,
@@ -58,7 +58,7 @@ describe('ProfileService', () => {
     })
     it('creates and saves new profile when none exist', async () => {
       repo.get.mockResolvedValue(undefined)
-      const profile = Profile.restore(
+      const profile = Profile.reconstitute(
         persistedSnapshot({
           facultyId: 3,
           specialityId: 4,
@@ -71,8 +71,8 @@ describe('ProfileService', () => {
         specialityId: 4,
       })
       expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.toSnapshot().facultyId).toBe(3)
-      expect(result.toSnapshot().setupCompleted).toBe(false)
+      expect(result.facultyId).toBe(3)
+      expect(result.setupCompleted).toBe(false)
     })
   })
   describe('patch', () => {

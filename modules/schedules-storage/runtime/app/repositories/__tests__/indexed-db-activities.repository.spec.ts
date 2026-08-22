@@ -4,6 +4,7 @@ import type { AggregatePersistence } from '../../persistence/aggregate-persisten
 import { IndexedDBActivitiesRepository } from '../indexed-db-activities.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import { ActivityPersistenceMapper } from '../../mappers/persistence'
 
 const baseActivity: IActivityCreate = {
   title: 'Math',
@@ -33,7 +34,9 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns all activities', async () => {
       const activity = Activity.create(baseActivity)
       persistence.findAll.mockResolvedValue([
-        persistedSnapshot(activity.toSnapshot()) satisfies IActivity,
+        persistedSnapshot(
+          ActivityPersistenceMapper.toCreateRecord(activity),
+        ) satisfies IActivity,
       ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
@@ -46,7 +49,7 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns activity by id', async () => {
       const activity = Activity.create(baseActivity)
       const stored = persistedSnapshot(
-        activity.toSnapshot(),
+        ActivityPersistenceMapper.toCreateRecord(activity),
       ) satisfies IActivity
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toMatchObject({
@@ -62,10 +65,10 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns a new activity with generated id', async () => {
       const activity = Activity.create(baseActivity)
       persistence.create.mockResolvedValue(
-        persistedSnapshot(activity.toSnapshot()),
+        persistedSnapshot(ActivityPersistenceMapper.toCreateRecord(activity)),
       )
       const result = await repo.create('user-1', activity)
-      expect(result.toSnapshot().title).toBe(baseActivity.title)
+      expect(result.title).toBe(baseActivity.title)
       expect(result.id).toMatch(/^[0-9a-f-]+$/)
     })
   })
@@ -73,7 +76,7 @@ describe('IndexedDBActivitiesRepository', () => {
     it('returns the updated activity', async () => {
       const activity = Activity.create(baseActivity)
       const stored = persistedSnapshot(
-        activity.toSnapshot(),
+        ActivityPersistenceMapper.toCreateRecord(activity),
       ) satisfies IActivity
       persistence.create.mockResolvedValue(stored)
       expect((await repo.create('user-1', activity)).id).toBe(stored.id)

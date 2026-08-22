@@ -3,6 +3,10 @@ import type { IBaseGeneratedSchedule } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type { IScheduleGenerationParameters } from '~/interfaces/schedule-generation'
 import { toDomainSchedule } from '~/mappers/schedule/domain'
+import {
+  toGeneratedScheduleDto,
+  toScheduleGenerationDto,
+} from '~/mappers/domain/entities'
 
 export const useGeneration = () => {
   const store = useGenerationStore()
@@ -24,13 +28,11 @@ export const useGeneration = () => {
       preferencesStore.maxGenerationHistory,
     )
     store.setHistory(
-      (await service.getGenerations(userId)).map((generation) =>
-        generation.toSnapshot(),
-      ),
+      (await service.getGenerations(userId)).map(toScheduleGenerationDto),
     )
     store.setResult({
-      ..._result.generation.toSnapshot(),
-      schedules: _result.schedules.map((schedule) => schedule.toSnapshot()),
+      ...toScheduleGenerationDto(_result.generation),
+      schedules: _result.schedules.map(toGeneratedScheduleDto),
       occurrences: _result.occurrences,
     })
   }
@@ -40,14 +42,12 @@ export const useGeneration = () => {
       service.getGenerations(userId),
       service.getLatestGeneration(userId),
     ])
-    store.setHistory(records.map((generation) => generation.toSnapshot()))
+    store.setHistory(records.map(toScheduleGenerationDto))
     store.setResult(
       latest
         ? {
-            ...latest.generation.toSnapshot(),
-            schedules: latest.schedules.map((schedule) =>
-              schedule.toSnapshot(),
-            ),
+            ...toScheduleGenerationDto(latest.generation),
+            schedules: latest.schedules.map(toGeneratedScheduleDto),
             occurrences: latest.occurrences,
           }
         : null,

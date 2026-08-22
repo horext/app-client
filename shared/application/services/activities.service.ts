@@ -1,4 +1,3 @@
-import type { IActivity } from '#shared/domain/types/event'
 import {
   Activity,
   type IActivityCreate,
@@ -11,14 +10,14 @@ import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 export class ActivitiesService implements IActivitiesService {
   constructor(private readonly repo: IActivitiesRepository) {}
 
-  getAll(userId: string): Promise<Array<Activity<IActivity>>> {
+  getAll(userId: string): Promise<Activity[]> {
     return this.repo.findAll(userId)
   }
 
   async get(
     userId: string,
-    id: IActivity['id'],
-  ): Promise<Activity<IActivity> | undefined> {
+    id: Parameters<IActivitiesRepository['findById']>[1],
+  ): Promise<Activity | undefined> {
     return this.repo.findById(userId, id)
   }
 
@@ -28,7 +27,7 @@ export class ActivitiesService implements IActivitiesService {
 
   async delete(
     userId: string,
-    id: IActivity['id'],
+    id: Parameters<IActivitiesRepository['delete']>[1],
     expectedRevision?: number,
   ): Promise<void> {
     await this.repo.delete(userId, id, expectedRevision)
@@ -36,14 +35,14 @@ export class ActivitiesService implements IActivitiesService {
 
   async patch(
     userId: string,
-    id: IActivity['id'],
+    id: Parameters<IActivitiesRepository['findById']>[1],
     activity: IActivityUpdate,
-  ): Promise<Activity<IActivity>> {
+  ): Promise<Activity> {
     const existingActivity = await this.repo.findById(userId, id)
     if (!existingActivity) {
       throw new ResourceNotFoundError('activity')
     }
-    const updated = existingActivity.update(activity)
-    return this.repo.update(userId, updated)
+    existingActivity.update(activity)
+    return this.repo.update(userId, existingActivity)
   }
 }

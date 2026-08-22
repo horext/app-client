@@ -1,17 +1,7 @@
-import type { AcademicConfig } from '#shared/domain'
-import type {
-  IBaseAcademicConfig,
-  IAcademicConfig,
-} from '#shared/domain/types/academic-config'
+import type { AcademicConfig, BaseAcademicConfig } from '#shared/domain'
 
 export interface IAcademicConfigRepository {
-  get(userId: string): Promise<AcademicConfig<IAcademicConfig> | undefined>
-  create(
-    userId: string,
-    config: AcademicConfig<IBaseAcademicConfig>,
-  ): Promise<AcademicConfig<IAcademicConfig>>
-  update(
-    userId: string,
-    config: AcademicConfig<IAcademicConfig>,
-  ): Promise<AcademicConfig<IAcademicConfig>>
+  get(userId: string): Promise<AcademicConfig | undefined>
+  create(userId: string, config: BaseAcademicConfig): Promise<AcademicConfig>
+  update(userId: string, config: AcademicConfig): Promise<AcademicConfig>
 }

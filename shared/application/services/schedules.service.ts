@@ -34,7 +34,8 @@ export class SchedulesService {
   ) {
     const current = await this.get(userId, id)
     if (!current) throw new ResourceNotFoundError('schedule')
-    return this.repository.update(userId, current.update(value))
+    current.update(value)
+    return this.repository.update(userId, current)
   }
 
   delete(userId: string, id: GeneratedScheduleId, revision: number) {

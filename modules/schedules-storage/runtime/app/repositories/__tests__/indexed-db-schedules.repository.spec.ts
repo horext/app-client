@@ -12,6 +12,10 @@ import {
 } from '../indexed-db-schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import {
+  GeneratedSchedulePersistenceMapper,
+  ScheduleFavoritePersistenceMapper,
+} from '../../mappers/persistence'
 
 const baseSchedule = {
   scheduleSubjectKey: 'key-1',
@@ -44,7 +48,7 @@ describe('IndexedDBSchedulesRepository', () => {
       const schedule = GeneratedSchedule.create(baseSchedule)
       const missingId: GeneratedScheduleId = makeUUID()
       const stored = persistedSnapshot(
-        schedule.toSnapshot(),
+        GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
       ) satisfies IGeneratedSchedule
       persistence.find
         .mockResolvedValueOnce(stored)
@@ -58,7 +62,9 @@ describe('IndexedDBSchedulesRepository', () => {
     it('returns schedule matching the key', async () => {
       const schedule = GeneratedSchedule.create(baseSchedule)
       persistence.findByIndex.mockResolvedValue(
-        persistedSnapshot(schedule.toSnapshot()) satisfies IGeneratedSchedule,
+        persistedSnapshot(
+          GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
+        ) satisfies IGeneratedSchedule,
       )
       expect(await repo.getByKey('user-1', 'key-1')).toBeDefined()
     })
@@ -71,7 +77,9 @@ describe('IndexedDBSchedulesRepository', () => {
     it('returns a saved schedule', async () => {
       const schedule = GeneratedSchedule.create(baseSchedule)
       persistence.create.mockResolvedValue(
-        persistedSnapshot(schedule.toSnapshot()),
+        persistedSnapshot(
+          GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
+        ),
       )
       expect(await repo.create('user-1', schedule)).toBeDefined()
     })
@@ -84,8 +92,16 @@ describe('IndexedDBSchedulesRepository', () => {
       const a = GeneratedSchedule.create(baseSchedule)
       const b = GeneratedSchedule.create(baseSchedule)
       persistence.create
-        .mockResolvedValueOnce(persistedSnapshot(a.toSnapshot()))
-        .mockResolvedValueOnce(persistedSnapshot(b.toSnapshot()))
+        .mockResolvedValueOnce(
+          persistedSnapshot(
+            GeneratedSchedulePersistenceMapper.toCreateRecord(a),
+          ),
+        )
+        .mockResolvedValueOnce(
+          persistedSnapshot(
+            GeneratedSchedulePersistenceMapper.toCreateRecord(b),
+          ),
+        )
       expect(await repo.createAll('user-1', [a, b])).toHaveLength(2)
     })
   })
@@ -119,7 +135,9 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
     it('returns stored favorites', async () => {
       const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
       persistence.findAll.mockResolvedValue([
-        persistedSnapshot(favorite.toSnapshot()),
+        persistedSnapshot(
+          ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+        ),
       ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
@@ -127,7 +145,9 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   describe('findById', () => {
     it('returns favorite when present', async () => {
       const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
-      const stored = persistedSnapshot(favorite.toSnapshot())
+      const stored = persistedSnapshot(
+        ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+      )
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toBeDefined()
     })
@@ -140,7 +160,9 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
     it('persists the schedule id as the favorite id', async () => {
       const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
       persistence.create.mockResolvedValue(
-        persistedSnapshot(favorite.toSnapshot()),
+        persistedSnapshot(
+          ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+        ),
       )
       await expect(repo.create('user-1', favorite)).resolves.toBeDefined()
     })

@@ -18,6 +18,7 @@ import type {
 } from '#shared/application/repositories/schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import { ScheduleGenerationPersistenceMapper } from '../../mappers/persistence'
 
 const input = {
   scheduleSubjectKey: 'k',
@@ -41,11 +42,9 @@ const idFor = <T extends ScheduleGenerationId | GeneratedScheduleId>(
   return generated
 }
 const createSchedule = () =>
-  GeneratedSchedule.restore(
-    persistedSnapshot(GeneratedSchedule.create(input).toSnapshot()),
-  )
+  GeneratedSchedule.reconstitute(persistedSnapshot(input))
 const createFavorite = (scheduleId: GeneratedScheduleId) =>
-  ScheduleFavorite.restore({
+  ScheduleFavorite.reconstitute({
     id: scheduleId,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
@@ -57,7 +56,7 @@ const makeRecord = (
   scheduleIds: string[] = [],
   generatedAt = '2024-01-01',
 ) => {
-  return ScheduleGeneration.restore({
+  return ScheduleGeneration.reconstitute({
     id: idFor<ScheduleGenerationId>(id),
     ...parameters,
     generatedAt,
@@ -130,7 +129,7 @@ describe('GenerationService', () => {
       schedulesRepo.getEntries.mockResolvedValue([createSchedule()])
       const result = await service.getLatestGeneration('user-1')
       expect(result).toBeDefined()
-      expect(result!.generation.toSnapshot().id).toBe(idFor('gen1'))
+      expect(result!.generation.id).toBe(idFor('gen1'))
       expect(result!.schedules).toHaveLength(1)
     })
   })
@@ -143,7 +142,7 @@ describe('GenerationService', () => {
       ])
       const result = await service.getSchedulesForGeneration(
         'user-1',
-        record.toSnapshot(),
+        ScheduleGenerationPersistenceMapper.toRecord(record),
       )
       expect(result).toHaveLength(2)
     })
@@ -162,7 +161,7 @@ describe('GenerationService', () => {
         [],
         5,
       )
-      expect(result.generation.toSnapshot().id).toBe(idFor('gen1'))
+      expect(result.generation.id).toBe(idFor('gen1'))
       expect(result.schedules).toHaveLength(1)
     })
     it('trims history when exceeding maxHistory', async () => {

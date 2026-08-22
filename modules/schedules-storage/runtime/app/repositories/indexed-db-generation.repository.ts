@@ -1,19 +1,16 @@
-import { ScheduleGeneration } from '#shared/domain'
-import type {
-  ScheduleGenerationId,
-  IBaseScheduleGeneration,
-  IScheduleGeneration,
-} from '#shared/domain/types/schedule-generation'
+import type { BaseScheduleGeneration, ScheduleGeneration } from '#shared/domain'
+import type { ScheduleGenerationId } from '#shared/domain/types/schedule-generation'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
+import { ScheduleGenerationPersistenceMapper } from '../mappers/persistence'
 
 export class IndexedDBGenerationsRepository implements IGenerationRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
   async findAll(userId: string): Promise<ScheduleGeneration[]> {
     return (await this.persistence.findAll(StoresDB.GENERATIONS, userId)).map(
-      ScheduleGeneration.restore,
+      ScheduleGenerationPersistenceMapper.fromRecord,
     )
   }
 
@@ -22,29 +19,31 @@ export class IndexedDBGenerationsRepository implements IGenerationRepository {
     id: ScheduleGenerationId,
   ): Promise<ScheduleGeneration | undefined> {
     const record = await this.persistence.find(StoresDB.GENERATIONS, userId, id)
-    return record ? ScheduleGeneration.restore(record) : undefined
+    return record
+      ? ScheduleGenerationPersistenceMapper.fromRecord(record)
+      : undefined
   }
 
   async create(
     userId: string,
-    record: ScheduleGeneration<IBaseScheduleGeneration>,
-  ): Promise<ScheduleGeneration<IScheduleGeneration>> {
+    record: BaseScheduleGeneration,
+  ): Promise<ScheduleGeneration> {
     const stored = await this.persistence.create(
       StoresDB.GENERATIONS,
-      record.toSnapshot(),
+      ScheduleGenerationPersistenceMapper.toCreateRecord(record),
       userId,
     )
-    return ScheduleGeneration.restore(stored)
+    return ScheduleGenerationPersistenceMapper.fromRecord(stored)
   }
 
   async update(
     userId: string,
-    record: ScheduleGeneration<IScheduleGeneration>,
-  ): Promise<ScheduleGeneration<IScheduleGeneration>> {
-    return ScheduleGeneration.restore(
+    record: ScheduleGeneration,
+  ): Promise<ScheduleGeneration> {
+    return ScheduleGenerationPersistenceMapper.fromRecord(
       await this.persistence.update(
         StoresDB.GENERATIONS,
-        record.toSnapshot(),
+        ScheduleGenerationPersistenceMapper.toRecord(record),
         userId,
       ),
     )

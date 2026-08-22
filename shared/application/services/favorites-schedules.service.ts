@@ -17,9 +17,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
     private readonly generationRepo: IGenerationRepository,
   ) {}
 
-  async getFavoriteSchedules(
-    userId: string,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>[]> {
+  async getFavoriteSchedules(userId: string): Promise<GeneratedSchedule[]> {
     const ids = (await this.favoritesRepo.findAll(userId)).map(
       (favorite) => favorite.id,
     )
@@ -28,7 +26,7 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
 
   private async checkAndAddToFavorites(
     userId: string,
-    createdSchedule: GeneratedSchedule<IGeneratedSchedule>,
+    createdSchedule: GeneratedSchedule,
   ) {
     const existingFavoriteSchedule = await this.favoritesRepo.findByScheduleId(
       userId,
@@ -46,18 +44,18 @@ export class FavoritesSchedulesService implements IFavoritesSchedulesService {
   async addFavorite(
     userId: string,
     schedule: IBaseGeneratedSchedule | IGeneratedSchedule,
-  ): Promise<GeneratedSchedule<IGeneratedSchedule>> {
+  ): Promise<GeneratedSchedule> {
     if ('id' in schedule) {
       return await this.checkAndAddToFavorites(
         userId,
-        GeneratedSchedule.restore(schedule),
+        GeneratedSchedule.reconstitute(schedule),
       )
     }
     const existing = await this.repo.getByKey(
       userId,
       schedule.scheduleSubjectKey,
     )
-    if (existing?.toSnapshot().events.length === schedule.events.length) {
+    if (existing?.events.length === schedule.events.length) {
       return await this.checkAndAddToFavorites(userId, existing)
     }
     const createdSchedule = GeneratedSchedule.create(schedule)

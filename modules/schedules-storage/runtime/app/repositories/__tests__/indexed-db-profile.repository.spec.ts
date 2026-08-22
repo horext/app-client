@@ -34,9 +34,7 @@ describe('IndexedDBProfileRepository', () => {
   })
   it('returns the stored profile', async () => {
     persistence.findAll.mockResolvedValue([persistedProfile])
-    expect((await repo.get('user-1'))?.toSnapshot()).toMatchObject({
-      id: persistedProfile.id,
-    })
+    expect((await repo.get('user-1'))?.id).toBe(persistedProfile.id)
   })
   it('returns undefined when nothing stored', async () => {
     persistence.findAll.mockResolvedValue([])

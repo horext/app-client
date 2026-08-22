@@ -1,54 +1,95 @@
 import type {
-  IBasePlannedSubject,
   IPlannedSubject,
   IPlannedSubjectCreate,
   IPlannedSubjectUpdate,
+  ISubject,
+  ISubjectSchedule,
   PlannedSubjectId,
 } from '../types/subject'
-import type { IEntitySnapshot } from './snapshot'
 
-export class PlannedSubject<
-  T extends IBasePlannedSubject | IPlannedSubject = IPlannedSubject,
-> implements IEntitySnapshot<T> {
-  private constructor(private readonly snapshot: T) {}
+export class BasePlannedSubject {
+  protected _subject: ISubject
+  protected _schedules: ISubjectSchedule[]
+  protected _color: string
+  protected _externalId?: PlannedSubjectId
+  protected _revision?: number
 
-  private static build<T extends IBasePlannedSubject | IPlannedSubject>(
-    input: T,
-  ): PlannedSubject<T> {
-    return new PlannedSubject(structuredClone(input))
+  protected constructor(input: IPlannedSubjectCreate) {
+    this._subject = structuredClone(input.subject)
+    this._schedules = structuredClone(input.schedules)
+    this._color = input.color
+    this._externalId = input.externalId
+    this._revision = input.revision
   }
 
-  static create(
-    input: IPlannedSubjectCreate,
-  ): PlannedSubject<IBasePlannedSubject> {
-    return PlannedSubject.build(input)
+  update(input: IPlannedSubjectUpdate): this {
+    const subject = input.subject
+      ? { ...this._subject, ...structuredClone(input.subject) }
+      : this._subject
+    const schedules = input.schedules
+      ? structuredClone(input.schedules)
+      : this._schedules
+    this._subject = subject
+    this._schedules = schedules
+    if (input.color !== undefined) this._color = input.color
+    if ('externalId' in input) this._externalId = input.externalId
+    if ('revision' in input) this._revision = input.revision
+    return this
   }
 
-  static restore(snapshot: IPlannedSubject): PlannedSubject<IPlannedSubject> {
-    return PlannedSubject.build(snapshot)
+  get subject(): ISubject {
+    return this._subject
+  }
+  get schedules(): ISubjectSchedule[] {
+    return this._schedules
+  }
+  get color(): string {
+    return this._color
+  }
+  get externalId(): PlannedSubjectId | undefined {
+    return this._externalId
+  }
+  get revision(): number | undefined {
+    return this._revision
+  }
+}
+
+export class PlannedSubject extends BasePlannedSubject {
+  private readonly _id: PlannedSubjectId
+  private readonly _createdAt: string
+  private readonly _updatedAt: string
+  private readonly _createdBy: string
+  private readonly _updatedBy: string
+
+  private constructor(input: IPlannedSubject) {
+    super(input)
+    this._id = input.id
+    this._createdAt = input.createdAt
+    this._updatedAt = input.updatedAt
+    this._createdBy = input.createdBy
+    this._updatedBy = input.updatedBy
+  }
+
+  static create(input: IPlannedSubjectCreate): BasePlannedSubject {
+    return new BasePlannedSubject(input)
+  }
+  static reconstitute(input: IPlannedSubject): PlannedSubject {
+    return new PlannedSubject(input)
   }
 
   get id(): PlannedSubjectId {
-    if (!('id' in this.snapshot))
-      throw new Error('The entity has not been persisted.')
-    return this.snapshot.id
+    return this._id
   }
-
-  update(
-    this: PlannedSubject<IPlannedSubject>,
-    input: IPlannedSubjectUpdate,
-  ): PlannedSubject<IPlannedSubject> {
-    return PlannedSubject.build({
-      ...this.snapshot,
-      subject: input.subject
-        ? { ...this.snapshot.subject, ...input.subject }
-        : this.snapshot.subject,
-      schedules: input.schedules ?? this.snapshot.schedules,
-      color: input.color ?? this.snapshot.color,
-    })
+  get createdAt(): string {
+    return this._createdAt
   }
-
-  toSnapshot(): T {
-    return structuredClone(this.snapshot)
+  get updatedAt(): string {
+    return this._updatedAt
+  }
+  get createdBy(): string {
+    return this._createdBy
+  }
+  get updatedBy(): string {
+    return this._updatedBy
   }
 }

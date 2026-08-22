@@ -64,7 +64,7 @@ describe('subject domain mapper', () => {
   it('projects a reactive patch without mutable identifiers', () => {
     const saved = toDomainPlannedSubject(makeSubject())
     const id = makeUUID<PlannedSubjectId>()
-    const entity = PlannedSubject.restore({
+    const entity = PlannedSubject.reconstitute({
       ...saved,
       id,
       createdAt: '2026-08-21T00:00:00.000Z',

@@ -1,45 +1,39 @@
-import type {
-  IBasePreferences,
-  IPreferences,
-  IPreferencesUpdate,
-} from '#shared/domain/types/preferences'
+import type { IPreferencesUpdate } from '#shared/domain/types/preferences'
 import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import type { IPreferencesService } from '../interfaces/preferences.service'
-import { Preferences } from '#shared/domain'
+import { Preferences, type BasePreferences } from '#shared/domain'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
 
-  private async _load(
-    userId: string,
-  ): Promise<Preferences<IPreferences> | undefined> {
+  private async _load(userId: string): Promise<Preferences | undefined> {
     return await this.repo.get(userId)
   }
 
   private async _create(
     userId: string,
-    prefs: Preferences<IBasePreferences>,
-  ): Promise<Preferences<IPreferences>> {
+    prefs: BasePreferences,
+  ): Promise<Preferences> {
     return this.repo.create(userId, prefs)
   }
 
   private async _update(
     userId: string,
-    prefs: Preferences<IPreferences>,
-  ): Promise<Preferences<IPreferences>> {
+    prefs: Preferences,
+  ): Promise<Preferences> {
     return this.repo.update(userId, prefs)
   }
 
-  async get(userId: string): Promise<Preferences<IPreferences> | undefined> {
+  async get(userId: string): Promise<Preferences | undefined> {
     return this._load(userId)
   }
 
   async create(
     userId: string,
     initial: IPreferencesUpdate = {},
-  ): Promise<Preferences<IPreferences>> {
+  ): Promise<Preferences> {
     if (await this._load(userId))
       throw new ResourceAlreadyExistsError('preferences')
     const prefs = Preferences.create({
@@ -50,12 +44,10 @@ export class PreferencesService implements IPreferencesService {
     return this._create(userId, prefs)
   }
 
-  async patch(
-    userId: string,
-    value: IPreferencesUpdate,
-  ): Promise<Preferences<IPreferences>> {
+  async patch(userId: string, value: IPreferencesUpdate): Promise<Preferences> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('preferences')
-    return this._update(userId, existing.update(value))
+    existing.update(value)
+    return this._update(userId, existing)
   }
 }

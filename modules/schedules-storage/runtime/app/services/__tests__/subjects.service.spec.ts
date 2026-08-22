@@ -22,9 +22,7 @@ const subjectInput: IBasePlannedSubject = {
   schedules: [],
 }
 const createSubject = () =>
-  PlannedSubject.restore(
-    persistedSnapshot(PlannedSubject.create(subjectInput).toSnapshot()),
-  )
+  PlannedSubject.reconstitute(persistedSnapshot(subjectInput))
 describe('SubjectsService', () => {
   const makeRepo = (): Mocked<ISubjectsRepository> => ({
     findAll: vi.fn(),
@@ -84,14 +82,14 @@ describe('SubjectsService', () => {
         subject: {
           course: { id: 'CS101', name: 'Updated Intro to CS' },
           credits: 5,
-          type: subject.toSnapshot().subject.type,
-          studyPlan: subject.toSnapshot().subject.studyPlan,
+          type: subject.subject.type,
+          studyPlan: subject.subject.studyPlan,
           cycle: 2,
         },
       })
 
-      expect(result.toSnapshot().subject).toMatchObject({
-        id: subject.toSnapshot().subject.id,
+      expect(result.subject).toMatchObject({
+        id: subject.subject.id,
         course: { name: 'Updated Intro to CS' },
         credits: 5,
         cycle: 2,

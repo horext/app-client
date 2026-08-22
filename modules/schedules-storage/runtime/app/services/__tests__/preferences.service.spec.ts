@@ -5,7 +5,7 @@ import type { IPreferencesRepository } from '#shared/application/repositories/pr
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 
 const makePreferences = () =>
-  Preferences.restore(
+  Preferences.reconstitute(
     persistedSnapshot({
       weekDays: [1, 2, 3],
       crossings: 0,
@@ -52,7 +52,7 @@ describe('PreferencesService', () => {
       const result = await service.create('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
       expect(result.id).toBe(prefs.id)
-      expect(result.toSnapshot().crossings).toBe(0)
+      expect(result.crossings).toBe(0)
     })
   })
   describe('patch', () => {

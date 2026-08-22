@@ -20,7 +20,7 @@ const hourlyLoad: IHourlyLoad = {
   },
 }
 const makeConfig = (value: IHourlyLoad | null = null) =>
-  AcademicConfig.restore(persistedSnapshot({ hourlyLoad: value }))
+  AcademicConfig.reconstitute(persistedSnapshot({ hourlyLoad: value }))
 describe('AcademicConfigService', () => {
   const makeRepo = (): Mocked<IAcademicConfigRepository> => ({
     get: vi.fn(),
@@ -41,10 +41,8 @@ describe('AcademicConfigService', () => {
     it('returns config data when stored', async () => {
       const config = makeConfig()
       repo.get.mockResolvedValue(config)
-      expect((await service.get('user-1'))?.toSnapshot()).toMatchObject({
-        id: config.id,
-        hourlyLoad: null,
-      })
+      expect((await service.get('user-1'))?.id).toBe(config.id)
+      expect((await service.get('user-1'))?.hourlyLoad).toBeNull()
     })
   })
   describe('createAcademicConfig', () => {
@@ -61,7 +59,7 @@ describe('AcademicConfigService', () => {
       repo.create.mockResolvedValue(config)
       const result = await service.create('user-1')
       expect(repo.create).toHaveBeenCalledOnce()
-      expect(result.toSnapshot().hourlyLoad).toBeNull()
+      expect(result.hourlyLoad).toBeNull()
     })
     it('creates config with initial values', async () => {
       repo.get.mockResolvedValue(undefined)
@@ -70,7 +68,7 @@ describe('AcademicConfigService', () => {
       const result = await service.create('user-1', {
         hourlyLoad,
       })
-      expect(result.toSnapshot().hourlyLoad).toEqual(hourlyLoad)
+      expect(result.hourlyLoad).toEqual(hourlyLoad)
     })
   })
   describe('patch', () => {

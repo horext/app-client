@@ -1,29 +1,46 @@
 import { describe, expect, it } from 'vitest'
-import { Activity, DomainError, Preferences } from '#shared/domain'
+import {
+  Activity,
+  BaseActivity,
+  DomainError,
+  Preferences,
+} from '#shared/domain'
 import type { IPreferences } from '#shared/domain/types/preferences'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import type { ActivityID } from '#shared/domain/types/event'
+
+const audit = {
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  createdBy: 'user-1',
+  updatedBy: 'user-1',
+}
 
 describe('shared domain entities', () => {
-  it('round-trips an activity snapshot', () => {
+  it('creates a base activity without persistence identity', () => {
     const activity = Activity.create({
-      title: '  Study  ',
-      description: '  Notes  ',
+      title: 'Study',
       color: '#112233',
-      sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
+      sessions: [],
     })
-    const snapshot = activity.toSnapshot()
-    expect(snapshot.title).toBe('  Study  ')
-    expect(snapshot.description).toBe('  Notes  ')
-    expect(
-      Activity.restore({
-        ...snapshot,
-        id: makeUUID(),
-        createdAt: '2026-01-01T00:00:00.000Z',
-        updatedAt: '2026-01-01T00:00:00.000Z',
-        createdBy: 'user-1',
-        updatedBy: 'user-1',
-      }).toSnapshot(),
-    ).toMatchObject(snapshot)
+
+    expect(activity).toBeInstanceOf(BaseActivity)
+    expect(activity).not.toBeInstanceOf(Activity)
+    expect('id' in activity).toBe(false)
+  })
+
+  it('reconstitutes a persisted activity with identity', () => {
+    const id = makeUUID<ActivityID>()
+    const activity = Activity.reconstitute({
+      id,
+      title: 'Study',
+      color: '#112233',
+      sessions: [],
+      ...audit,
+    })
+
+    expect(activity).toBeInstanceOf(Activity)
+    expect(activity.id).toBe(id)
   })
 
   it('rejects invalid activity time ranges', () => {
@@ -36,74 +53,65 @@ describe('shared domain entities', () => {
     ).toThrowError(DomainError)
   })
 
-  it('leaves identity creation to the repository', () => {
-    const activity = Activity.create({
-      title: 'Study',
-      color: '#112233',
-      sessions: [],
-    })
-
-    expect(() => activity.id).toThrow()
-    expect(
-      Activity.restore({
-        ...activity.toSnapshot(),
-        id: makeUUID(),
-        createdAt: '2026-01-01T00:00:00.000Z',
-        updatedAt: '2026-01-01T00:00:00.000Z',
-        createdBy: 'user-1',
-        updatedBy: 'user-1',
-      }).id,
-    ).toBeDefined()
-  })
-
-  it('rejects an empty generation-history limit', () => {
-    expect(() =>
-      Preferences.create({
-        weekDays: [1, 2, 3],
-        crossings: 0,
-        maxGenerationHistory: 0,
-      }),
-    ).toThrowError(DomainError)
-  })
-
-  it('applies partial activity updates and preserves omitted values', () => {
-    const activity = Activity.restore({
+  it('mutates and returns the same persisted entity', () => {
+    const activity = Activity.reconstitute({
       id: makeUUID(),
       title: 'Study',
       color: '#112233',
       allowOverlap: true,
       sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
-      createdAt: '2026-01-01T00:00:00.000Z',
-      updatedAt: '2026-01-01T00:00:00.000Z',
-      createdBy: 'user-1',
-      updatedBy: 'user-1',
+      ...audit,
     })
 
-    expect(activity.update({ title: 'Updated' }).toSnapshot()).toMatchObject({
-      title: 'Updated',
-      color: '#112233',
-      allowOverlap: true,
-    })
+    expect(activity.update({ title: 'Updated' })).toBe(activity)
+    expect(activity.title).toBe('Updated')
+    expect(activity.allowOverlap).toBe(true)
   })
 
-  it('revalidates preference business limits when restoring and updating', () => {
+  it('does not partially mutate when validation fails', () => {
+    const activity = Activity.reconstitute({
+      id: makeUUID(),
+      title: 'Study',
+      color: '#112233',
+      sessions: [{ day: 1, startTime: '08:00', endTime: '09:00' }],
+      ...audit,
+    })
+
+    expect(() =>
+      activity.update({
+        title: 'Invalid update',
+        sessions: [{ day: 1, startTime: '10:00', endTime: '09:00' }],
+      }),
+    ).toThrowError(DomainError)
+    expect(activity.title).toBe('Study')
+  })
+
+  it('takes ownership of collection inputs when creating an entity', () => {
+    const sessions = [{ day: 1 as const, startTime: '08:00', endTime: '09:00' }]
+    const activity = Activity.create({
+      title: 'Study',
+      color: '#112233',
+      sessions,
+    })
+    sessions[0]!.startTime = '12:00'
+
+    expect(activity.sessions[0]!.startTime).toBe('08:00')
+  })
+
+  it('rejects invalid preference history without mutating current state', () => {
     const snapshot: IPreferences = {
       id: makeUUID(),
       weekDays: [1, 2, 3],
       crossings: 0,
       maxGenerationHistory: 10,
-      createdAt: '2026-01-01T00:00:00.000Z',
-      updatedAt: '2026-01-01T00:00:00.000Z',
-      createdBy: 'user-1',
-      updatedBy: 'user-1',
+      ...audit,
     }
-    const preferences = Preferences.restore({
-      ...snapshot,
-      weekDays: [...snapshot.weekDays],
-    })
+    const preferences = Preferences.reconstitute(snapshot)
 
-    expect(() => preferences.update({ maxGenerationHistory: 0 })).toThrowError(
-      DomainError,
-    )
+    expect(() =>
+      preferences.update({ maxGenerationHistory: 0, crossings: 3 }),
+    ).toThrowError(DomainError)
+    expect(preferences.maxGenerationHistory).toBe(10)
+    expect(preferences.crossings).toBe(0)
   })
 })

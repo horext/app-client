@@ -7,7 +7,7 @@ import type {
 } from '~/interfaces/schedule'
 import { useUserFavoritesStore } from '~/stores/user-favorites'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import { isProxy, reactive } from 'vue'
+import { isProxy, reactive, toRaw } from 'vue'
 import { GeneratedSchedule } from '~~/shared/domain'
 import type { GeneratedScheduleId } from '~~/shared/domain'
 
@@ -39,6 +39,15 @@ function makeFavorite(
   }
 }
 
+const asEntity = (schedule: IGeneratedSchedule) =>
+  GeneratedSchedule.reconstitute({
+    ...structuredClone(toRaw(schedule)),
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
+
 describe('useUserFavoriteSchedules', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -55,7 +64,7 @@ describe('useUserFavoriteSchedules', () => {
 
   it('saveNewFavoriteSchedule adds a favorite and pushes to store', async () => {
     const fav = makeFavorite()
-    mockAddFavorite.mockResolvedValue(fav)
+    mockAddFavorite.mockResolvedValue(asEntity(fav))
     const { saveNewFavoriteSchedule, favoritesSchedules } =
       useUserFavoriteSchedules()
     await saveNewFavoriteSchedule(fav as IBaseGeneratedSchedule)
@@ -70,7 +79,7 @@ describe('useUserFavoriteSchedules', () => {
     mockAddFavorite.mockImplementation(async (_userId, input) => {
       expect(isProxy(input)).toBe(false)
       expect(() => GeneratedSchedule.create(input)).not.toThrow()
-      return favorite
+      return asEntity(favorite)
     })
 
     const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
@@ -81,7 +90,7 @@ describe('useUserFavoriteSchedules', () => {
 
   it('preserves the id of a reactive persisted favorite', async () => {
     const favorite = reactive(makeFavorite())
-    mockAddFavorite.mockResolvedValue(favorite)
+    mockAddFavorite.mockResolvedValue(asEntity(favorite))
 
     const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
     await saveNewFavoriteSchedule(favorite)
@@ -119,7 +128,7 @@ describe('useUserFavoriteSchedules', () => {
 
   it('fetchFavoritesSchedules loads all favorites into store', async () => {
     const favs = [makeFavorite()]
-    mockGetFavoriteSchedules.mockResolvedValue(favs)
+    mockGetFavoriteSchedules.mockResolvedValue(favs.map(asEntity))
     const { fetchFavoritesSchedules, favoritesSchedules } =
       useUserFavoriteSchedules()
     await fetchFavoritesSchedules()

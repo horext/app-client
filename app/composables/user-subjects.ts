@@ -9,6 +9,7 @@ import {
   toDomainPlannedSubject,
   toDomainSubjectUpdate,
 } from '~/mappers/subject/domain'
+import { toPlannedSubjectDto } from '~/mappers/domain/entities'
 
 export const useUserSubjects = () => {
   const service = useSubjectsService()
@@ -21,7 +22,7 @@ export const useUserSubjects = () => {
       ...toDomainPlannedSubject(_subject),
       color: _subject.color ?? DEFAULT_SUBJECT_COLOR,
     })
-    store.addSubject(created.toSnapshot())
+    store.addSubject(toPlannedSubjectDto(created))
   }
 
   async function deleteSubjectById(id: PlannedSubjectId) {
@@ -35,12 +36,12 @@ export const useUserSubjects = () => {
       _subject.id,
       toDomainSubjectUpdate(_subject),
     )
-    store.updateSubject(result.toSnapshot())
+    store.updateSubject(toPlannedSubjectDto(result))
   }
 
   async function updateSubjectColor(id: PlannedSubjectId, color: string) {
     const result = await service.patch(userId, id, { color })
-    store.updateSubject(result.toSnapshot())
+    store.updateSubject(toPlannedSubjectDto(result))
   }
 
   const subjectApi = useSubjectApi()
@@ -70,7 +71,7 @@ export const useUserSubjects = () => {
   async function fetchSubjects() {
     const data = await service.getAll(userId)
     const subjectsWithSchedules = data
-      .map((entity) => entity.toSnapshot())
+      .map(toPlannedSubjectDto)
       .filter((subject: IBasePlannedSubject) => subject?.schedules?.length > 0)
     store.setSubjects(subjectsWithSchedules)
   }

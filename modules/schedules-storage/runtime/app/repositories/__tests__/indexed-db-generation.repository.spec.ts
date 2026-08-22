@@ -4,6 +4,7 @@ import type { AggregatePersistence } from '../../persistence/aggregate-persisten
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import { ScheduleGenerationPersistenceMapper } from '../../mappers/persistence'
 
 const makeGeneration = () =>
   ScheduleGeneration.create({
@@ -34,7 +35,9 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns all records', async () => {
     const value = makeGeneration()
     persistence.findAll.mockResolvedValue([
-      persistedSnapshot(value.toSnapshot()) satisfies IScheduleGeneration,
+      persistedSnapshot(
+        ScheduleGenerationPersistenceMapper.toCreateRecord(value),
+      ) satisfies IScheduleGeneration,
     ])
     expect(await repo.findAll('user-1')).toHaveLength(1)
   })
@@ -45,7 +48,7 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns record by id', async () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
-      value.toSnapshot(),
+      ScheduleGenerationPersistenceMapper.toCreateRecord(value),
     ) satisfies IScheduleGeneration
     persistence.find.mockResolvedValue(stored)
     expect(await repo.findById('user-1', stored.id)).toBeDefined()
@@ -57,7 +60,7 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns a created record', async () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
-      value.toSnapshot(),
+      ScheduleGenerationPersistenceMapper.toCreateRecord(value),
     ) satisfies IScheduleGeneration
     persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
