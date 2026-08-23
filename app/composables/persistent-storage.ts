@@ -1,9 +1,10 @@
 const PREFERENCE_KEY = 'storage-protection-preference'
-const REMINDER_DELAY_MS = 30 * 24 * 60 * 60 * 1000
+const REMINDER_DELAY_MS = 24 * 60 * 60 * 1000
 
 interface StorageProtectionPreference {
   dismissedUntil?: string
   previouslyProtected: boolean
+  requestedProtection?: boolean
 }
 
 export type StorageProtectionStatus =
@@ -39,6 +40,10 @@ export function usePersistentStorage() {
     'storage-protection-dismissed-until',
     () => undefined,
   )
+  const requestedProtection = useState(
+    'storage-protection-requested',
+    () => false,
+  )
   const requesting = useState('storage-protection-requesting', () => false)
   const requestFailed = useState(
     'storage-protection-request-failed',
@@ -62,6 +67,7 @@ export function usePersistentStorage() {
 
     const preference = readPreference()
     dismissedUntil.value = preference.dismissedUntil
+    requestedProtection.value = preference.requestedProtection ?? false
 
     try {
       const isPersisted = await storage.persisted()
@@ -69,7 +75,7 @@ export function usePersistentStorage() {
       protectionLost.value = !isPersisted && preference.previouslyProtected
 
       if (isPersisted && !preference.previouslyProtected) {
-        writePreference({ previouslyProtected: true })
+        writePreference({ ...preference, previouslyProtected: true })
         dismissedUntil.value = undefined
       }
     } catch {
@@ -85,11 +91,18 @@ export function usePersistentStorage() {
       const granted = (await storage?.persist?.()) ?? false
       status.value = granted ? 'protected' : 'unprotected'
       requestFailed.value = !granted
-      if (granted) {
-        protectionLost.value = false
-        dismissedUntil.value = undefined
-        writePreference({ previouslyProtected: true })
-      }
+      requestedProtection.value = true
+
+      const farFuture = '2099-12-31T23:59:59.999Z'
+      dismissedUntil.value = granted ? undefined : farFuture
+      protectionLost.value = false
+
+      writePreference({
+        dismissedUntil: granted ? undefined : farFuture,
+        previouslyProtected: granted,
+        requestedProtection: true,
+      })
+
       return granted
     } catch {
       requestFailed.value = true
@@ -103,9 +116,11 @@ export function usePersistentStorage() {
     const until = new Date(Date.now() + REMINDER_DELAY_MS).toISOString()
     dismissedUntil.value = until
     protectionLost.value = false
+    requestedProtection.value = false
     writePreference({
       dismissedUntil: until,
       previouslyProtected: false,
+      requestedProtection: false,
     })
   }
 
@@ -122,6 +137,7 @@ export function usePersistentStorage() {
   const shouldPrompt = (hasMeaningfulData: MaybeRefOrGetter<boolean>) =>
     computed(
       () =>
+        !requestedProtection.value &&
         status.value === 'unprotected' &&
         toValue(hasMeaningfulData) &&
         (protectionLost.value || reminderExpired.value),

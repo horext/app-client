@@ -1,7 +1,20 @@
 <template>
-  <v-app-bar id="home-app-bar" elevation="1" height="64">
-    <vuetify-logo style="max-width: 48px" />
-    <v-toolbar-title class="text-headline-small"> Horext </v-toolbar-title>
+  <v-app-bar id="home-app-bar" elevation="1" height="64" class="px-2">
+    <nuxt-link
+      to="/"
+      class="home-brand d-flex align-center text-decoration-none text-reset ml-2 cursor-pointer"
+      title="Ir al inicio"
+    >
+      <vuetify-logo
+        style="max-width: 32px; height: 32px"
+        class="mr-2 home-brand__logo"
+      />
+      <span
+        class="text-h5 font-weight-black tracking-tight text-primary"
+        style="font-weight: 800 !important"
+        >Horext</span
+      >
+    </nuxt-link>
     <v-spacer />
     <v-btn
       icon
@@ -70,3 +83,33 @@ const items = [
   { name: 'Acerca de ', route: '/about' },
 ]
 </script>
+
+<style scoped>
+.home-brand {
+  user-select: none;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+  color: inherit !important;
+}
+
+.home-brand:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+.home-brand:visited,
+.home-brand:active,
+.home-brand:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.home-brand__logo {
+  transition: transform 0.3s ease;
+}
+
+.home-brand:hover .home-brand__logo {
+  transform: rotate(-5deg);
+}
+</style>
