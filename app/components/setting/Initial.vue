@@ -20,6 +20,17 @@
           >Importar Excel</v-btn
         >
       </v-btn-toggle>
+      <v-alert
+        v-if="source === 'official' && facultyLoadError"
+        type="error"
+        variant="tonal"
+        class="mb-4"
+      >
+        {{ facultyLoadError }}
+        <template #append>
+          <v-btn variant="text" @click="loadFaculties">Reintentar</v-btn>
+        </template>
+      </v-alert>
       <v-form
         v-if="source === 'official'"
         ref="form"
@@ -128,6 +139,7 @@ const loadingFaculties = ref(false)
 const loadingSpecialities = ref(false)
 const loadingStudyPlans = ref(false)
 const loadingHourlyLoads = ref(false)
+const facultyLoadError = ref('')
 const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const studyPlanApi = useStudyPlanApi()
@@ -142,15 +154,30 @@ const hourlyLoadOptions = computed(() =>
 const studyPlanTitle = (plan: { name?: string; code: string }) =>
   plan.name ?? plan.code
 
-onMounted(async () => {
-  const localDataset = await useLocalHourlyLoad().ensureLoaded()
-  if (localDataset) source.value = 'local'
+const loadFaculties = async () => {
   loadingFaculties.value = true
+  facultyLoadError.value = ''
   try {
     faculties.value = await facultyApi.getAll()
+  } catch {
+    faculties.value = []
+    facultyLoadError.value =
+      'No se pudieron cargar las facultades. Comprueba tu conexión y vuelve a intentarlo.'
   } finally {
     loadingFaculties.value = false
   }
+}
+
+onMounted(() => {
+  void loadFaculties()
+  void useLocalHourlyLoad()
+    .ensureLoaded()
+    .then((localDataset) => {
+      if (localDataset) source.value = 'local'
+    })
+    .catch(() => {
+      // Official loads remain available when private browsing blocks storage.
+    })
 })
 
 watch(
