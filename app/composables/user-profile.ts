@@ -34,6 +34,11 @@ export const useUserProfile = () => {
       loadingProfile.value = true
       const data = await profileService.get(userId)
       profile.value = data ? toProfileDto(data) : undefined
+      if (profile.value?.specialityId) {
+        await fetchSpecialityById(profile.value.specialityId)
+      } else {
+        speciality.value = undefined
+      }
     } finally {
       loadingProfile.value = false
     }
@@ -80,10 +85,15 @@ export const useUserProfile = () => {
       profile.value = { ...profile.value, facultyId: _facultyId }
   }
 
-  async function updateSpeciality(_specialityId: number) {
+  async function updateSpeciality(_specialityId?: number) {
     await profileService.patch(userId, { specialityId: _specialityId })
     if (profile.value)
       profile.value = { ...profile.value, specialityId: _specialityId }
+    if (_specialityId) {
+      await fetchSpecialityById(_specialityId)
+    } else {
+      speciality.value = undefined
+    }
   }
 
   async function updateSetupCompleted(_setupCompleted: boolean) {
@@ -94,10 +104,15 @@ export const useUserProfile = () => {
 
   async function updateBasicSettings(
     _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad | null,
+    _specialityId?: number,
+    _hourlyLoad?: IHourlyLoad | null,
     _studyPlanId?: number,
   ) {
+    if (_specialityId) {
+      await fetchSpecialityById(_specialityId)
+    } else {
+      speciality.value = undefined
+    }
     await Promise.all([
       profileService.patch(userId, {
         facultyId: _facultyId,
@@ -122,10 +137,15 @@ export const useUserProfile = () => {
   const { createPreferences } = useUserPreferences()
   async function completeSetup(
     _facultyId: number,
-    _specialityId: number,
-    _hourlyLoad: IHourlyLoad | null,
+    _specialityId?: number,
+    _hourlyLoad?: IHourlyLoad | null,
     _studyPlanId?: number,
   ) {
+    if (_specialityId) {
+      await fetchSpecialityById(_specialityId)
+    } else {
+      speciality.value = undefined
+    }
     const plainHourlyLoad = _hourlyLoad ? cloneHourlyLoad(_hourlyLoad) : null
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {

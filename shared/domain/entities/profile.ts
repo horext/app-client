@@ -8,7 +8,7 @@ import { Audit } from './audit'
 
 export class BaseProfile {
   protected _facultyId: number
-  protected _specialityId: number
+  protected _specialityId?: number
   protected _studyPlanId?: number
   protected _setupCompleted: boolean
   protected _externalId?: ProfileId
@@ -25,8 +25,7 @@ export class BaseProfile {
 
   update(input: IProfileUpdate): this {
     if (input.facultyId !== undefined) this._facultyId = input.facultyId
-    if (input.specialityId !== undefined)
-      this._specialityId = input.specialityId
+    if ('specialityId' in input) this._specialityId = input.specialityId
     if ('studyPlanId' in input) this._studyPlanId = input.studyPlanId
     if (input.setupCompleted !== undefined)
       this._setupCompleted = input.setupCompleted
@@ -38,7 +37,7 @@ export class BaseProfile {
   get facultyId(): number {
     return this._facultyId
   }
-  get specialityId(): number {
+  get specialityId(): number | undefined {
     return this._specialityId
   }
   get studyPlanId(): number | undefined {

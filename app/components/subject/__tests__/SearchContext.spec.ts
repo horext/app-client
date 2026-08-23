@@ -24,7 +24,7 @@ describe('SubjectSearchContext', () => {
     })
 
     expect(wrapper.text()).toContain('Buscando en')
-    expect(wrapper.text()).toContain('Especialidad')
+    expect(wrapper.text()).toContain('Carrera')
     expect(wrapper.text()).toContain('Engineering')
     expect(wrapper.text()).toContain('Plan 2026')
     expect(wrapper.text()).toContain('Informar problema')
@@ -47,7 +47,7 @@ describe('SubjectSearchContext', () => {
     })
 
     expect(wrapper.text()).toContain('Engineering')
-    expect(wrapper.text()).toContain('Especialidad')
+    expect(wrapper.text()).toContain('Carrera')
     expect(wrapper.text()).toContain('mejorar la precisión')
     expect(wrapper.text()).not.toContain('Informar problema')
     expect(wrapper.find('.v-icon svg').exists()).toBe(true)

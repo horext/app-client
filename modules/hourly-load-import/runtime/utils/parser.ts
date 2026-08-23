@@ -217,7 +217,7 @@ export async function parseLocalHourlyLoad(
       const column = columns.get(key)
       return column ? cellText(row.getCell(column)) : ''
     }
-    const code = read('code').trim().toUpperCase()
+    const code = read('code').replace(/-/g, '').trim().toUpperCase()
     const courseName = read('name').trim()
     const section = read('section').trim().toUpperCase()
     const warningContext = {

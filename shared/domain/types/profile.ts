@@ -8,7 +8,7 @@ import type {
 export type ProfileId = BrandUUID<'ProfileId'>
 export interface IBaseProfile extends ReplicationState<ProfileId> {
   facultyId: number
-  specialityId: number
+  specialityId?: number
   studyPlanId?: number
   setupCompleted?: boolean
 }
