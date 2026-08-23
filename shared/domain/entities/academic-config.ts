@@ -1,49 +1,63 @@
 import type {
-  IBaseAcademicConfig,
+  AcademicConfigId,
   IAcademicConfig,
   IAcademicConfigCreate,
   IAcademicConfigUpdate,
 } from '../types/academic-config'
-import type { UUID } from 'crypto'
-import type { IEntitySnapshot } from './snapshot'
+import { Audit } from './audit'
+import type { IHourlyLoad } from '../types/hourly-load'
 
-export class AcademicConfig<
-  T extends IBaseAcademicConfig | IAcademicConfig = IAcademicConfig,
-> implements IEntitySnapshot<T> {
-  private constructor(private readonly snapshot: T) {}
+export class BaseAcademicConfig {
+  protected _hourlyLoad: IHourlyLoad | null
+  protected _externalId?: AcademicConfigId
+  protected _revision?: number
 
-  static create(
-    input: IAcademicConfigCreate,
-  ): AcademicConfig<IBaseAcademicConfig> {
-    return AcademicConfig.build(input)
+  protected constructor(input: IAcademicConfigCreate) {
+    this._hourlyLoad = structuredClone(input.hourlyLoad)
+    this._externalId = input.externalId
+    this._revision = input.revision
   }
 
-  private static build<T extends IBaseAcademicConfig | IAcademicConfig>(
-    input: T,
-  ): AcademicConfig<T> {
-    return new AcademicConfig(structuredClone(input))
+  update(input: IAcademicConfigUpdate): this {
+    if ('hourlyLoad' in input)
+      this._hourlyLoad = structuredClone(input.hourlyLoad ?? null)
+    if ('externalId' in input) this._externalId = input.externalId
+    if ('revision' in input) this._revision = input.revision
+    return this
   }
 
-  static restore(snapshot: IAcademicConfig): AcademicConfig<IAcademicConfig> {
-    return AcademicConfig.build(snapshot)
+  get hourlyLoad(): IHourlyLoad | null {
+    return this._hourlyLoad
+  }
+  get externalId(): AcademicConfigId | undefined {
+    return this._externalId
+  }
+  get revision(): number | undefined {
+    return this._revision
+  }
+}
+
+export class AcademicConfig extends BaseAcademicConfig {
+  private readonly _id: AcademicConfigId
+  private readonly _audit: Audit
+
+  private constructor(input: IAcademicConfig) {
+    super(input)
+    this._id = input.id
+    this._audit = Audit.reconstitute(input)
   }
 
-  get id(): UUID {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    return this.snapshot.id
+  static create(input: IAcademicConfigCreate): BaseAcademicConfig {
+    return new BaseAcademicConfig(input)
+  }
+  static reconstitute(input: IAcademicConfig): AcademicConfig {
+    return new AcademicConfig(input)
   }
 
-  update(input: IAcademicConfigUpdate): AcademicConfig<IAcademicConfig> {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    const snapshot: IAcademicConfig = {
-      ...this.snapshot,
-      ...input,
-      id: this.snapshot.id,
-    }
-    return AcademicConfig.build(snapshot)
+  get id(): AcademicConfigId {
+    return this._id
   }
-
-  toSnapshot(): T {
-    return structuredClone(this.snapshot)
+  get audit(): Audit {
+    return this._audit
   }
 }

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import {
-  Favorite,
-  Schedule,
-  type IScheduleGenerate,
-  type ScheduleGenerateId,
+  ScheduleFavorite,
+  GeneratedSchedule,
+  type IGeneratedSchedule,
+  type GeneratedScheduleId,
 } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import {
@@ -12,6 +12,10 @@ import {
 } from '../indexed-db-schedules.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import {
+  GeneratedSchedulePersistenceMapper,
+  ScheduleFavoritePersistenceMapper,
+} from '../../mappers/persistence'
 
 const baseSchedule = {
   scheduleSubjectKey: 'key-1',
@@ -41,11 +45,11 @@ describe('IndexedDBSchedulesRepository', () => {
       expect(await repo.getEntries('user-1', [])).toEqual([])
     })
     it('returns schedules by ids, filtering undefined results', async () => {
-      const schedule = Schedule.create(baseSchedule)
-      const missingId: ScheduleGenerateId = makeUUID()
+      const schedule = GeneratedSchedule.create(baseSchedule)
+      const missingId: GeneratedScheduleId = makeUUID()
       const stored = persistedSnapshot(
-        schedule.toSnapshot(),
-      ) satisfies IScheduleGenerate
+        GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
+      ) satisfies IGeneratedSchedule
       persistence.find
         .mockResolvedValueOnce(stored)
         .mockResolvedValueOnce(undefined)
@@ -56,9 +60,11 @@ describe('IndexedDBSchedulesRepository', () => {
   })
   describe('findByKey', () => {
     it('returns schedule matching the key', async () => {
-      const schedule = Schedule.create(baseSchedule)
+      const schedule = GeneratedSchedule.create(baseSchedule)
       persistence.findByIndex.mockResolvedValue(
-        persistedSnapshot(schedule.toSnapshot()) satisfies IScheduleGenerate,
+        persistedSnapshot(
+          GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
+        ) satisfies IGeneratedSchedule,
       )
       expect(await repo.getByKey('user-1', 'key-1')).toBeDefined()
     })
@@ -69,9 +75,11 @@ describe('IndexedDBSchedulesRepository', () => {
   })
   describe('create', () => {
     it('returns a saved schedule', async () => {
-      const schedule = Schedule.create(baseSchedule)
+      const schedule = GeneratedSchedule.create(baseSchedule)
       persistence.create.mockResolvedValue(
-        persistedSnapshot(schedule.toSnapshot()),
+        persistedSnapshot(
+          GeneratedSchedulePersistenceMapper.toCreateRecord(schedule),
+        ),
       )
       expect(await repo.create('user-1', schedule)).toBeDefined()
     })
@@ -81,11 +89,19 @@ describe('IndexedDBSchedulesRepository', () => {
       expect(await repo.createAll('user-1', [])).toEqual([])
     })
     it('returns all schedules', async () => {
-      const a = Schedule.create(baseSchedule)
-      const b = Schedule.create(baseSchedule)
+      const a = GeneratedSchedule.create(baseSchedule)
+      const b = GeneratedSchedule.create(baseSchedule)
       persistence.create
-        .mockResolvedValueOnce(persistedSnapshot(a.toSnapshot()))
-        .mockResolvedValueOnce(persistedSnapshot(b.toSnapshot()))
+        .mockResolvedValueOnce(
+          persistedSnapshot(
+            GeneratedSchedulePersistenceMapper.toCreateRecord(a),
+          ),
+        )
+        .mockResolvedValueOnce(
+          persistedSnapshot(
+            GeneratedSchedulePersistenceMapper.toCreateRecord(b),
+          ),
+        )
       expect(await repo.createAll('user-1', [a, b])).toHaveLength(2)
     })
   })
@@ -117,17 +133,21 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   })
   describe('findAll', () => {
     it('returns stored favorites', async () => {
-      const favorite = Favorite.create({ scheduleId: makeUUID() })
+      const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
       persistence.findAll.mockResolvedValue([
-        persistedSnapshot(favorite.toSnapshot()),
+        persistedSnapshot(
+          ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+        ),
       ])
       expect(await repo.findAll('user-1')).toHaveLength(1)
     })
   })
   describe('findById', () => {
     it('returns favorite when present', async () => {
-      const favorite = Favorite.create({ scheduleId: makeUUID() })
-      const stored = persistedSnapshot(favorite.toSnapshot())
+      const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
+      const stored = persistedSnapshot(
+        ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+      )
       persistence.find.mockResolvedValue(stored)
       expect(await repo.findById('user-1', stored.id)).toBeDefined()
     })
@@ -138,9 +158,11 @@ describe('IndexedDBScheduleFavoritesRepository', () => {
   })
   describe('create', () => {
     it('persists the schedule id as the favorite id', async () => {
-      const favorite = Favorite.create({ scheduleId: makeUUID() })
+      const favorite = ScheduleFavorite.create({ scheduleId: makeUUID() })
       persistence.create.mockResolvedValue(
-        persistedSnapshot(favorite.toSnapshot()),
+        persistedSnapshot(
+          ScheduleFavoritePersistenceMapper.toCreateRecord(favorite),
+        ),
       )
       await expect(repo.create('user-1', favorite)).resolves.toBeDefined()
     })

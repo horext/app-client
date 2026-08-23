@@ -1,7 +1,4 @@
-import type {
-  IAcademicConfig,
-  IBaseAcademicConfig,
-} from '#shared/domain/types/academic-config'
+import type { IAcademicConfigUpdate } from '#shared/domain/types/academic-config'
 import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
 import type { IAcademicConfigService } from '../interfaces/academic-config.service'
 import { AcademicConfig } from '#shared/domain'
@@ -9,16 +6,14 @@ import { AcademicConfig } from '#shared/domain'
 export class AcademicConfigService implements IAcademicConfigService {
   constructor(private readonly repo: IAcademicConfigRepository) {}
 
-  private async _load(
-    userId: string,
-  ): Promise<AcademicConfig<IAcademicConfig> | undefined> {
+  private async _load(userId: string): Promise<AcademicConfig | undefined> {
     return this.repo.get(userId)
   }
 
   private async _create(
     userId: string,
-    initial?: Partial<IBaseAcademicConfig>,
-  ): Promise<AcademicConfig<IAcademicConfig>> {
+    initial?: IAcademicConfigUpdate,
+  ): Promise<AcademicConfig> {
     const config = AcademicConfig.create({
       ...initial,
       hourlyLoad: initial?.hourlyLoad ?? null,
@@ -28,37 +23,39 @@ export class AcademicConfigService implements IAcademicConfigService {
 
   private async _update(
     userId: string,
-    config: AcademicConfig<IAcademicConfig>,
-  ): Promise<AcademicConfig<IAcademicConfig>> {
+    config: AcademicConfig,
+  ): Promise<AcademicConfig> {
     return this.repo.update(userId, config)
   }
 
-  async get(userId: string): Promise<IAcademicConfig | undefined> {
-    return (await this._load(userId))?.toSnapshot()
+  async get(userId: string): Promise<AcademicConfig | undefined> {
+    return this._load(userId)
   }
 
   async create(
     userId: string,
-    initial?: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig> {
+    initial?: IAcademicConfigUpdate,
+  ): Promise<AcademicConfig> {
     const existing = await this._load(userId)
     if (existing) {
       if (!initial) {
-        return existing.toSnapshot()
+        return existing
       }
-      return (await this._update(userId, existing.update(initial))).toSnapshot()
+      existing.update(initial)
+      return this._update(userId, existing)
     }
-    return (await this._create(userId, initial)).toSnapshot()
+    return this._create(userId, initial)
   }
 
   async patch(
     userId: string,
-    value: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig> {
+    value: IAcademicConfigUpdate,
+  ): Promise<AcademicConfig> {
     const existing = await this._load(userId)
     if (!existing) {
-      return (await this._create(userId, value)).toSnapshot()
+      return this._create(userId, value)
     }
-    return (await this._update(userId, existing.update(value))).toSnapshot()
+    existing.update(value)
+    return this._update(userId, existing)
   }
 }

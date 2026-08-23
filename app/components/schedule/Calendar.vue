@@ -36,8 +36,8 @@ import ScheduleEventInfo from '~/components/schedule/CalendarEventCard.vue'
 import { DEFAULT_CALENDAR_WEEK_DAYS } from '~/constants/weekdays'
 import type { IEvent, Weekdays } from '~/interfaces/event'
 import type {
-  ILocalScheduleGenerate,
-  IScheduleGenerate,
+  ILocalGeneratedSchedule,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
 import type { IEventEmitData } from '~~/modules/h-calendar/runtime/types'
 
@@ -51,7 +51,7 @@ interface IScheduleCalendarEvent extends IEvent {
 
 const props = withDefaults(
   defineProps<{
-    schedule: ILocalScheduleGenerate | IScheduleGenerate
+    schedule: ILocalGeneratedSchedule | IGeneratedSchedule
     weekDays?: Weekdays[]
   }>(),
   {

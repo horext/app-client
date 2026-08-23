@@ -5,6 +5,7 @@ export type HourlyLoadSelection =
       source: 'official'
       facultyId: number
       specialityId: number
+      studyPlanId?: number
       hourlyLoad: IHourlyLoad
     }
   | {

@@ -10,6 +10,10 @@ export const useUserEventsStore = defineStore('user/events', () => {
     items.value = newItems
   }
 
+  function addItem(item: IActivity) {
+    items.value.push(item)
+  }
+
   function updateItem(item: IActivity) {
     const index = items.value.findIndex((e) => e.id === item.id)
     if (index >= 0) {
@@ -21,10 +25,16 @@ export const useUserEventsStore = defineStore('user/events', () => {
     items.value = items.value.filter((e) => e.id !== id)
   }
 
+  function clearItems() {
+    items.value = []
+  }
+
   return {
     items,
     setItems,
+    addItem,
     updateItem,
     deleteItemById,
+    clearItems,
   }
 })

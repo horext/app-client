@@ -1,4 +1,4 @@
-import type { IOrganizationResponse } from './organization'
+import type { IOrganizationReferenceResponse } from './organization'
 
 export interface IAcademicPeriodResponse {
   id: number
@@ -8,8 +8,8 @@ export interface IAcademicPeriodOrganizationUnitResponse {
   id: number
   fromDate: string
   toDate: string
-  academicPeriod: Pick<IAcademicPeriodResponse, 'id'>
-  organizationUnit: Pick<IOrganizationResponse, 'id'>
+  academicPeriod: IAcademicPeriodResponse
+  organizationUnit: IOrganizationReferenceResponse
 }
 
 export interface IHourlyLoadResponse {
@@ -20,3 +20,5 @@ export interface IHourlyLoadResponse {
   publishedAt: string
   academicPeriodOrganizationUnit: IAcademicPeriodOrganizationUnitResponse
 }
+
+export type IHourlyLoadReferenceResponse = Pick<IHourlyLoadResponse, 'id'>

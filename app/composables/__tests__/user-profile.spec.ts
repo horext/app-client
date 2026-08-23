@@ -365,9 +365,15 @@ describe('useUserProfile', () => {
     mockProfilePatch.mockResolvedValue(undefined)
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateBasicSettings } = useUserProfile()
-    await updateBasicSettings(3, 4, load)
+    await updateBasicSettings(3, 4, load, 5)
+    expect(mockProfilePatch).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 3,
+      specialityId: 4,
+      studyPlanId: 5,
+    })
     expect(store.profile?.facultyId).toBe(3)
     expect(store.profile?.specialityId).toBe(4)
+    expect(store.profile?.studyPlanId).toBe(5)
   })
 
   it('updateBasicSettings works when profile is undefined', async () => {
@@ -409,9 +415,14 @@ describe('useUserProfile', () => {
       maxGenerationHistory: 10,
     })
     const { completeSetup } = useUserProfile()
-    await completeSetup(2, 3, load)
+    await completeSetup(2, 3, load, 4)
     const store = useUserProfileStore()
-    expect(mockCreateProfile).toHaveBeenCalled()
+    expect(mockCreateProfile).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 2,
+      specialityId: 3,
+      studyPlanId: 4,
+      setupCompleted: true,
+    })
     expect(mockCreateAcademicConfig).toHaveBeenCalled()
     expect(mockCreatePreferences).toHaveBeenCalled()
     expect(store.profile?.facultyId).toBe(2)

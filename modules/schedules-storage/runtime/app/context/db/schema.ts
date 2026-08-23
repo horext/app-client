@@ -1,15 +1,15 @@
 import type { DBSchema } from 'idb'
 import type {
-  IFavoriteSchedule,
-  IScheduleGenerate,
+  IScheduleFavorite,
+  IGeneratedSchedule,
 } from '#shared/domain/types/schedule'
 import type { IActivity } from '#shared/domain/types/event'
 import type { IProfile } from '#shared/domain/types/profile'
 import type { IAcademicConfig } from '#shared/domain/types/academic-config'
 import type { IPreferences } from '#shared/domain/types/preferences'
-import type { IGenerationRecord } from '#shared/domain/types/generation-record'
-import type { ISubjectSchedules } from '#shared/domain/types/subject'
 import type { ILocalHourlyLoadDataset } from '#shared/domain/types/local-hourly-load'
+import type { IScheduleGeneration } from '#shared/domain/types/schedule-generation'
+import type { IPlannedSubject } from '#shared/domain/types/subject'
 
 export const enum StoresDB {
   SCHEDULES = 'schedules',
@@ -38,8 +38,8 @@ export type LocalSchemas = {
 
 export type ReplicableSchemas = {
   [StoresDB.SCHEDULES]: {
-    key: [string, IScheduleGenerate['id']]
-    value: IScheduleGenerate
+    key: [string, IGeneratedSchedule['id']]
+    value: IGeneratedSchedule
     indexes: { createdBy: string; scheduleSubjectKey: [string, string] }
   }
   [StoresDB.ACTIVITIES]: {
@@ -48,8 +48,8 @@ export type ReplicableSchemas = {
     indexes: { createdBy: string }
   }
   [StoresDB.FAVORITES]: {
-    key: [string, IFavoriteSchedule['id']]
-    value: IFavoriteSchedule
+    key: [string, IScheduleFavorite['id']]
+    value: IScheduleFavorite
     indexes: { createdBy: string }
   }
   [StoresDB.PROFILE]: {
@@ -68,13 +68,13 @@ export type ReplicableSchemas = {
     indexes: { createdBy: string }
   }
   [StoresDB.GENERATIONS]: {
-    key: [string, IGenerationRecord['id']]
-    value: IGenerationRecord
+    key: [string, IScheduleGeneration['id']]
+    value: IScheduleGeneration
     indexes: { createdBy: string }
   }
   [StoresDB.SUBJECTS]: {
-    key: [string, ISubjectSchedules['id']]
-    value: ISubjectSchedules
+    key: [string, IPlannedSubject['id']]
+    value: IPlannedSubject
     indexes: { createdBy: string }
   }
 }

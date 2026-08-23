@@ -17,6 +17,11 @@ describe('SUBJECT_HEADERS', () => {
     expect(values).toContain('subject.course.name')
   })
 
+  it('contains a study plan column', () => {
+    const values = SUBJECT_HEADERS.map((h) => h.value)
+    expect(values).toContain('subject.studyPlan.name')
+  })
+
   it('contains a sections column', () => {
     const values = SUBJECT_HEADERS.map((h) => h.value)
     expect(values).toContain('sections')

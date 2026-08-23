@@ -1,44 +1,39 @@
-import type {
-  IBasePreferences,
-  IPreferences,
-} from '#shared/domain/types/preferences'
+import type { IPreferencesUpdate } from '#shared/domain/types/preferences'
 import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
 import type { IPreferencesService } from '../interfaces/preferences.service'
-import { Preferences } from '#shared/domain'
+import { Preferences, type BasePreferences } from '#shared/domain'
 import { ResourceNotFoundError } from '../errors/resource-not-found.error'
 import { ResourceAlreadyExistsError } from '../errors/resource-already-exists.error'
 
 export class PreferencesService implements IPreferencesService {
   constructor(private readonly repo: IPreferencesRepository) {}
 
-  private async _load(
-    userId: string,
-  ): Promise<Preferences<IPreferences> | undefined> {
+  private async _load(userId: string): Promise<Preferences | undefined> {
     return await this.repo.get(userId)
   }
 
   private async _create(
     userId: string,
-    prefs: Preferences<IBasePreferences>,
-  ): Promise<Preferences<IPreferences>> {
+    prefs: BasePreferences,
+  ): Promise<Preferences> {
     return this.repo.create(userId, prefs)
   }
 
   private async _update(
     userId: string,
-    prefs: Preferences<IPreferences>,
-  ): Promise<Preferences<IPreferences>> {
+    prefs: Preferences,
+  ): Promise<Preferences> {
     return this.repo.update(userId, prefs)
   }
 
-  async get(userId: string): Promise<IPreferences | undefined> {
-    return (await this._load(userId))?.toSnapshot()
+  async get(userId: string): Promise<Preferences | undefined> {
+    return this._load(userId)
   }
 
   async create(
     userId: string,
-    initial: Partial<IBasePreferences> = {},
-  ): Promise<IPreferences> {
+    initial: IPreferencesUpdate = {},
+  ): Promise<Preferences> {
     if (await this._load(userId))
       throw new ResourceAlreadyExistsError('preferences')
     const prefs = Preferences.create({
@@ -46,15 +41,13 @@ export class PreferencesService implements IPreferencesService {
       crossings: initial.crossings ?? 0,
       maxGenerationHistory: initial.maxGenerationHistory ?? 10,
     })
-    return (await this._create(userId, prefs)).toSnapshot()
+    return this._create(userId, prefs)
   }
 
-  async patch(
-    userId: string,
-    value: Partial<IBasePreferences>,
-  ): Promise<IPreferences> {
+  async patch(userId: string, value: IPreferencesUpdate): Promise<Preferences> {
     const existing = await this._load(userId)
     if (!existing) throw new ResourceNotFoundError('preferences')
-    return (await this._update(userId, existing.update(value))).toSnapshot()
+    existing.update(value)
+    return this._update(userId, existing)
   }
 }

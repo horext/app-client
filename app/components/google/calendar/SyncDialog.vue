@@ -240,7 +240,10 @@ import { ref, computed, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
 import CreateGoogleCalendar from '~/components/google/calendar/CreateDialog.vue'
 import type { IEvent } from '~/interfaces/event'
-import type { IGoogleCalendarItem } from '~/interfaces/google/calendar'
+import type {
+  GoogleCalendarSummary,
+  IGoogleCalendarItem,
+} from '~/interfaces/google/calendar'
 import type { VForm } from 'vuetify/components/VForm'
 import {
   mdiBell,
@@ -295,7 +298,7 @@ watch(modelValue, (open) => {
 })
 
 const search = ref('')
-const calendarItem = ref<Pick<IGoogleCalendarItem, 'summary'>>({ summary: '' })
+const calendarItem = ref<GoogleCalendarSummary>({ summary: '' })
 const dialogCreateCalendar = ref(false)
 const selected = ref<IGoogleCalendarItem | null>(null)
 
@@ -337,9 +340,7 @@ function addCalendar() {
 }
 
 const loadingCreate = ref(false)
-async function handleSaveCalendar({
-  summary,
-}: Pick<IGoogleCalendarItem, 'summary'>) {
+async function handleSaveCalendar({ summary }: GoogleCalendarSummary) {
   try {
     loadingCreate.value = true
     await createCalendar({ summary })

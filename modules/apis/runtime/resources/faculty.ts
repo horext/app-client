@@ -5,9 +5,9 @@ export interface IFacultyApi {
   getAll(): Promise<IOrganizationResponse[]>
 }
 
-const PATH_SUBJECTS = 'faculties'
+export const PATH_FACULTIES = 'faculties'
 export class FacultyApi extends BaseApi {
   getAll() {
-    return this.$fetch<IOrganizationResponse[]>(PATH_SUBJECTS)
+    return this.$fetch<IOrganizationResponse[]>(PATH_FACULTIES)
   }
 }

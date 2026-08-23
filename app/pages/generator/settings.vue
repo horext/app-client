@@ -35,12 +35,16 @@
           </v-card-actions>
         </v-card>
       </v-col>
+      <v-col cols="12">
+        <SettingStorageProtection />
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import SettingInitial from '~/components/setting/Initial.vue'
+import SettingStorageProtection from '~/components/setting/StorageProtection.vue'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { HourlyLoadSelection } from '~/interfaces/hourly-load-selection'
@@ -74,6 +78,7 @@ const saveBasicSettings = async (selection: HourlyLoadSelection) => {
       selection.facultyId,
       selection.specialityId,
       selection.hourlyLoad,
+      selection.studyPlanId,
     )
     successSave.value = true
   } finally {

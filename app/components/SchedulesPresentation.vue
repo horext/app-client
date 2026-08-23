@@ -43,12 +43,12 @@ import { useUserPreferencesStore } from '~/stores/user-preferences'
 import SchedulesList from '~/components/SchedulesWindow.vue'
 import ScheduleActionsBar from '~/components/schedule/ActionsBar.vue'
 import { ViewMode } from '~/models/ViewMode'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import ScheduleMode from './schedule/Mode.vue'
 
 defineProps({
   schedules: {
-    type: Array as PropType<IScheduleGenerate[]>,
+    type: Array as PropType<IGeneratedSchedule[]>,
     default: () => [],
   },
   path: {
@@ -76,6 +76,6 @@ defineProps({
 const store = useUserPreferencesStore()
 const { weekDays } = storeToRefs(store)
 
-const currentSchedule = shallowRef<IScheduleGenerate>()
+const currentSchedule = shallowRef<IGeneratedSchedule>()
 const mode = ref(ViewMode.CALENDAR)
 </script>

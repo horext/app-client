@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import { useGenerationStore } from '~/stores/generation'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 import { useUserSchedules } from '../user-schedules'
 
@@ -33,9 +34,9 @@ describe('useUserSchedules', () => {
   })
 
   it('mySchedules returns schedules from result when available', () => {
-    const schedules: IScheduleGenerate[] = [
+    const schedules: IGeneratedSchedule[] = [
       {
-        id: crypto.randomUUID(),
+        id: makeUUID(),
         events: [],
         scheduleSubjectKey: '',
         schedulesSubject: [],
@@ -49,9 +50,9 @@ describe('useUserSchedules', () => {
 
   it('updateSchedules sets schedules on the result when result exists', async () => {
     useGenerationStore().result = { schedules: [] } as never
-    const newSchedules: IScheduleGenerate[] = [
+    const newSchedules: IGeneratedSchedule[] = [
       {
-        id: crypto.randomUUID(),
+        id: makeUUID(),
         events: [],
         scheduleSubjectKey: '',
         schedulesSubject: [],
@@ -64,9 +65,9 @@ describe('useUserSchedules', () => {
   })
 
   it('updateSchedules does nothing when result is null', async () => {
-    const newSchedules: IScheduleGenerate[] = [
+    const newSchedules: IGeneratedSchedule[] = [
       {
-        id: crypto.randomUUID(),
+        id: makeUUID(),
         events: [],
         scheduleSubjectKey: '',
         schedulesSubject: [],

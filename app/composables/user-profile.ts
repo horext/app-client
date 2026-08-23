@@ -1,18 +1,18 @@
 import { storeToRefs } from 'pinia'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
-import type { IApiRegistry } from '~~/modules/apis/runtime'
 import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
+import { toAcademicConfigDto, toProfileDto } from '~/mappers/domain/entities'
 
-export const useUserProfile = (apis?: IApiRegistry) => {
+export const useUserProfile = () => {
   const store = useUserProfileStore()
   const profileService = useProfileService()
   const academicConfigService = useAcademicConfigService()
   const userId = useSchedulesUserId()
-  const hourlyLoadApi = useHourlyLoadApi(apis)
-  const specialityApi = useSpecialityApi(apis)
+  const hourlyLoadApi = useHourlyLoadApi()
+  const specialityApi = useSpecialityApi()
   const {
     profile,
     hourlyLoad,
@@ -29,7 +29,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     try {
       loadingProfile.value = true
       const data = await profileService.get(userId)
-      profile.value = data
+      profile.value = data ? toProfileDto(data) : undefined
     } finally {
       loadingProfile.value = false
     }
@@ -37,7 +37,8 @@ export const useUserProfile = (apis?: IApiRegistry) => {
 
   async function fetchAcademicConfig() {
     const config = await academicConfigService.get(userId)
-    hourlyLoad.value = config?.hourlyLoad ?? undefined
+    const dto = config ? toAcademicConfigDto(config) : undefined
+    hourlyLoad.value = dto?.hourlyLoad ?? undefined
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
@@ -101,11 +102,13 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _facultyId: number,
     _specialityId: number,
     _hourlyLoad: IHourlyLoad | null,
+    _studyPlanId?: number,
   ) {
     await Promise.all([
       profileService.patch(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
+        studyPlanId: _studyPlanId,
       }),
       _hourlyLoad
         ? updateHourlyLoad(_hourlyLoad)
@@ -118,6 +121,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
         ...profile.value,
         facultyId: _facultyId,
         specialityId: _specialityId,
+        studyPlanId: _studyPlanId,
       }
   }
 
@@ -126,11 +130,13 @@ export const useUserProfile = (apis?: IApiRegistry) => {
     _facultyId: number,
     _specialityId: number,
     _hourlyLoad: IHourlyLoad | null,
+    _studyPlanId?: number,
   ) {
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {
         facultyId: _facultyId,
         specialityId: _specialityId,
+        studyPlanId: _studyPlanId,
         setupCompleted: true,
       }),
       academicConfigService.create(userId, {
@@ -138,7 +144,7 @@ export const useUserProfile = (apis?: IApiRegistry) => {
       }),
       createPreferences(),
     ])
-    profile.value = createdProfile
+    profile.value = toProfileDto(createdProfile)
     hourlyLoad.value = _hourlyLoad ?? undefined
   }
 

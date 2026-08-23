@@ -3,9 +3,9 @@ import { setActivePinia, createPinia } from 'pinia'
 import type { UUID } from 'crypto'
 import type { IActivity } from '~/interfaces/event'
 import type {
-  IGenerationResult,
-  IGenerationRecord,
-} from '~/interfaces/generation-record'
+  IScheduleGenerationResult,
+  IScheduleGeneration,
+} from '~/interfaces/schedule-generation'
 import { useUserAuthStore } from '~/stores/user-auth'
 import { useGenerationStore } from '~/stores/generation'
 import { useUserFavoritesStore } from '~/stores/user-favorites'
@@ -62,7 +62,7 @@ describe('useGenerationStore', () => {
       crossingsSetting: 0,
       weekDays: [],
       hourlyLoadId: 0,
-    } satisfies IGenerationResult
+    } satisfies IScheduleGenerationResult
     store.history = [
       {
         generatedAt: '',
@@ -73,7 +73,7 @@ describe('useGenerationStore', () => {
         hourlyLoadId: 0,
         resultCount: 0,
       },
-    ] satisfies IGenerationRecord[]
+    ] satisfies IScheduleGeneration[]
     store.clear()
     expect(store.result).toBeNull()
     expect(store.history).toEqual([])

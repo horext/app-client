@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import { ViewMode } from '~/models/ViewMode'
 import type {
-  IScheduleGenerate,
-  IScheduleSubjectGenerate,
+  IGeneratedSchedule,
+  IGeneratedScheduleSubject,
 } from '~/interfaces/schedule'
 import FavoriteAction from '~/components/schedule/FavoriteAction.vue'
 import FavoriteBanner from '~/components/schedule/FavoriteBanner.vue'
@@ -18,6 +18,7 @@ import CalendarEventCard from '~/components/schedule/CalendarEventCard.vue'
 import CalendarEventInfoCard from '~/components/schedule/CalendarEventInfoCard.vue'
 import ActionsBar from '~/components/schedule/ActionsBar.vue'
 import ShareCard from '~/components/schedule/ShareCard.vue'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 vi.mock('~/composables/lottie', () => ({
   useLottie: vi.fn(() => ref(null)),
@@ -38,9 +39,9 @@ vi.mock('~/stores/user-profile', () => ({
 
 const vuetify = createVuetify()
 
-function makeSchedule(): IScheduleGenerate {
+function makeSchedule(): IGeneratedSchedule {
   return {
-    id: crypto.randomUUID(),
+    id: makeUUID(),
     schedulesSubject: [],
     events: [],
     scheduleSubjectKey: '',
@@ -48,7 +49,7 @@ function makeSchedule(): IScheduleGenerate {
   }
 }
 
-function makeScheduleSubject(): IScheduleSubjectGenerate {
+function makeScheduleSubject(): IGeneratedScheduleSubject {
   return {
     id: 1,
     sessions: [],

@@ -8,7 +8,10 @@ export default defineNuxtModule({
     const resolver = createResolver(import.meta.url)
 
     addPlugin({
-      src: resolver.resolve('runtime/plugins/fetch-api.ts'),
+      src: resolver.resolve('./runtime/plugins/fetch-api.ts'),
+    })
+    addPlugin({
+      src: resolver.resolve('./runtime/plugins/api-registry.ts'),
     })
   },
 })

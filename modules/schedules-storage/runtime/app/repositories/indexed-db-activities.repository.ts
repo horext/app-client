@@ -1,52 +1,43 @@
-import { Activity } from '#shared/domain'
-import type {
-  ActivityID,
-  IActivity,
-  IBaseActivity,
-} from '#shared/domain/types/event'
+import type { Activity, BaseActivity } from '#shared/domain'
+import type { ActivityID } from '#shared/domain/types/event'
 import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
 import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
+import { ActivityPersistenceMapper } from '../mappers/persistence'
 
 export class IndexedDBActivitiesRepository implements IActivitiesRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
-  async findAll(userId: string): Promise<Activity<IActivity>[]> {
+  async findAll(userId: string): Promise<Activity[]> {
     return (await this.persistence.findAll(StoresDB.ACTIVITIES, userId)).map(
-      Activity.restore,
+      ActivityPersistenceMapper.fromRecord,
     )
   }
 
   async findById(
     userId: string,
     id: ActivityID,
-  ): Promise<Activity<IActivity> | undefined> {
+  ): Promise<Activity | undefined> {
     const record = await this.persistence.find(StoresDB.ACTIVITIES, userId, id)
-    return record ? Activity.restore(record) : undefined
+    return record ? ActivityPersistenceMapper.fromRecord(record) : undefined
   }
 
-  async create(
-    userId: string,
-    activity: Activity<IBaseActivity>,
-  ): Promise<Activity<IActivity>> {
+  async create(userId: string, activity: BaseActivity): Promise<Activity> {
     const stored = await this.persistence.create(
       StoresDB.ACTIVITIES,
-      activity.toSnapshot(),
+      ActivityPersistenceMapper.toCreateRecord(activity),
       userId,
     )
-    return Activity.restore(stored)
+    return ActivityPersistenceMapper.fromRecord(stored)
   }
 
-  async update(
-    userId: string,
-    activity: Activity<IActivity>,
-  ): Promise<Activity<IActivity>> {
+  async update(userId: string, activity: Activity): Promise<Activity> {
     const stored = await this.persistence.update(
       StoresDB.ACTIVITIES,
-      activity.toSnapshot(),
+      ActivityPersistenceMapper.toRecord(activity),
       userId,
     )
-    return Activity.restore(stored)
+    return ActivityPersistenceMapper.fromRecord(stored)
   }
 
   async delete(userId: string, id: ActivityID): Promise<void> {

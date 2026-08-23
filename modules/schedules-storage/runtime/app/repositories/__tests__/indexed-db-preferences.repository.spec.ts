@@ -40,7 +40,7 @@ describe('IndexedDBPreferencesRepository', () => {
       persistence.findAll.mockResolvedValue([persistedPreferences])
       const result = await repo.get('user-1')
       expect(result).toBeInstanceOf(Preferences)
-      expect(result!.toSnapshot().crossings).toBe(0)
+      expect(result!.crossings).toBe(0)
     })
 
     it('returns undefined when nothing stored', async () => {

@@ -6,6 +6,8 @@ import type { UUID } from 'crypto'
 import { useUserEventsStore } from '~/stores/user-events'
 
 import { useUserEvents } from '../user-events'
+import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
+import { Activity, type ActivityID } from '~~/shared/domain'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
@@ -24,15 +26,21 @@ mockNuxtImport('useActivitiesService', () =>
 function makeActivity(): IActivity {
   return {
     sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
-    color: '#1976d2',
+    color: DEFAULT_ACTIVITY_COLOR,
     id: crypto.randomUUID(),
     title: 'Test Activity',
   }
 }
 
-const asEntity = (activity: IActivity) => ({
-  toSnapshot: () => activity,
-})
+const asEntity = (activity: IActivity) =>
+  Activity.reconstitute({
+    ...activity,
+    id: activity.id as ActivityID,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 
 describe('useUserEvents', () => {
   beforeEach(() => {
@@ -55,7 +63,7 @@ describe('useUserEvents', () => {
     const { createNewItem, items } = useUserEvents()
     await createNewItem(activity)
     expect(mockCreate).toHaveBeenCalledWith(expect.any(String), activity)
-    expect(items.value).toContainEqual(activity)
+    expect(items.value).toContainEqual(expect.objectContaining(activity))
   })
 
   it('deleteItemById calls service.delete and removes item from store', async () => {
@@ -78,7 +86,7 @@ describe('useUserEvents', () => {
     const { updateItem, items } = useUserEvents()
     await updateItem(activityWithId)
     expect(mockPatch).toHaveBeenCalled()
-    expect(items.value).toContainEqual(activityWithId)
+    expect(items.value).toContainEqual(expect.objectContaining(activityWithId))
   })
 
   it('updateItem does nothing when id is falsy', async () => {

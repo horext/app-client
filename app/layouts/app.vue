@@ -5,10 +5,15 @@
     v-model:dark-mode="darkMode"
     :hourly-load="hourlyLoad"
   />
-  <AppNavigationDrawer v-model:drawer="drawer" :items="items" />
+  <AppNavigationDrawer
+    v-model:drawer="drawer"
+    :items="items"
+    :report-url="userBugReportUrl"
+  />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
   <v-main>
+    <AppPersistentStorageAlert />
     <slot />
   </v-main>
 </template>
@@ -18,6 +23,7 @@ import { ref } from 'vue'
 import AppBar from '../components/app/Bar.vue'
 import AppNavigationDrawer from '../components/app/NavigationDrawer.vue'
 import AppBottomNavigation from '../components/app/BottomNavigation.vue'
+import AppPersistentStorageAlert from '../components/app/PersistentStorageAlert.vue'
 import {
   EVENTS_ROUTE,
   FAVORITES_ROUTE,
@@ -26,12 +32,10 @@ import {
   SETTINGS_ROUTE,
   SUBJECTS_ROUTE,
 } from '~/constants/app-routes'
-import { provideApis } from '~~/modules/apis/runtime'
 import { useUserSchedules } from '~/composables/user-schedules'
 import { useUserFavoriteSchedules } from '~/composables/user-favorite-schedules'
 import { useUserSubjects } from '~/composables/user-subjects'
-
-const apis = provideApis()
+import { buildUserBugReportUrl } from '~/utils/user-bug-report'
 
 const settingsStore = useSettingsStore()
 
@@ -51,7 +55,7 @@ const {
   fetchAcademicConfig,
   fetchLatestHourlyLoad,
   fetchSpecialityById,
-} = useUserProfile(apis)
+} = useUserProfile()
 const { fetchPreferences } = useUserPreferences()
 const { fetchItems: fetchEvents } = useUserEvents()
 
@@ -82,6 +86,13 @@ onMounted(async () => {
   ])
 })
 const drawer = ref(true)
+const route = useRoute()
+const userBugReportUrl = computed(() =>
+  buildUserBugReportUrl({
+    path: route.path,
+    userAgent: import.meta.client ? navigator.userAgent : undefined,
+  }),
+)
 const items = computed(() => [
   HOME_ROUTE,
   {

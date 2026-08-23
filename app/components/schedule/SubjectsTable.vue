@@ -29,9 +29,9 @@
 <script setup lang="ts">
 import ScheduleSection from './SubjectsTableItemSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
-import type { IScheduleGenerate } from '~/interfaces/schedule'
+import type { IGeneratedSchedule } from '~/interfaces/schedule'
 
 defineProps<{
-  schedule: IScheduleGenerate
+  schedule: IGeneratedSchedule
 }>()
 </script>

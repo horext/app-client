@@ -1,19 +1,18 @@
 import type {
-  GenerationId,
-  IBaseGenerationRecord,
-  IGenerationCreate,
-  IGenerationMeta,
-  IGenerationRecord,
-  IGenerationResult,
-} from '#shared/domain/types/generation-record'
-import { Generation, Schedule } from '#shared/domain'
+  ScheduleGenerationId,
+  IBaseScheduleGeneration,
+  IScheduleGenerationCreate,
+  IScheduleGenerationParameters,
+  IScheduleGeneration,
+} from '#shared/domain/types/schedule-generation'
+import { ScheduleGeneration, GeneratedSchedule } from '#shared/domain'
 import type { IIntersectionOccurrence } from '#shared/domain/types/occurrences'
-import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
-} from '#shared/domain/types/schedule'
+import type { IBaseGeneratedSchedule } from '#shared/domain/types/schedule'
 import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
-import type { IGenerationService } from '../interfaces/generation.service'
+import type {
+  GenerationResult,
+  IGenerationService,
+} from '../interfaces/generation.service'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -27,40 +26,48 @@ export class GenerationService implements IGenerationService {
     private readonly favoritesRepo: ISchedulesFavoritesRepository,
   ) {}
 
-  get(userId: string, id: GenerationId) {
+  get(userId: string, id: ScheduleGenerationId) {
     return this.generationRepo.findById(userId, id)
   }
 
-  create(userId: string, value: IGenerationCreate, id?: GenerationId) {
+  create(
+    userId: string,
+    value: IScheduleGenerationCreate,
+    id?: ScheduleGenerationId,
+  ) {
     return this.generationRepo.create(
       userId,
-      Generation.create({
+      ScheduleGeneration.create({
         ...value,
         ...(id ? { externalId: id } : {}),
       }),
     )
   }
 
-  async patch(userId: string, id: GenerationId, value: { revision: number }) {
+  async patch(
+    userId: string,
+    id: ScheduleGenerationId,
+    value: { revision: number },
+  ) {
     const current = await this.get(userId, id)
     if (!current) throw new ResourceNotFoundError('generation')
     return this.generationRepo.update(userId, current.update(value))
   }
 
-  delete(userId: string, id: GenerationId, revision?: number) {
+  delete(userId: string, id: ScheduleGenerationId, revision?: number) {
     return this.generationRepo.delete(userId, id, revision)
   }
 
-  async getGenerations(userId: string): Promise<IGenerationRecord[]> {
+  async getGenerations(userId: string): Promise<ScheduleGeneration[]> {
     const records = await this.generationRepo.findAll(userId)
     return records
       .sort((a, b) => a.generatedAt.localeCompare(b.generatedAt))
-      .map((record) => record.toSnapshot())
+      .map((record) => record)
   }
 
   async getLatestGeneration(
     userId: string,
-  ): Promise<IGenerationResult | undefined> {
+  ): Promise<GenerationResult | undefined> {
     const records = await this.getGenerations(userId)
     const latest = records[records.length - 1]
     if (!latest) return undefined
@@ -69,38 +76,40 @@ export class GenerationService implements IGenerationService {
       latest.scheduleIds,
     )
     return {
-      ...latest,
-      schedules: schedules.map((schedule) => schedule.toSnapshot()),
+      generation: latest,
+      schedules,
+      occurrences: latest.occurrences,
     }
   }
 
   async saveGeneration(
     userId: string,
-    meta: IGenerationMeta,
-    schedules: IBaseScheduleGenerate[],
+    parameters: IScheduleGenerationParameters,
+    schedules: IBaseGeneratedSchedule[],
     occurrences: IIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IGenerationResult> {
+  ): Promise<GenerationResult> {
     const schedulesToSave = schedules.map((schedule) =>
-      Schedule.create(schedule),
+      GeneratedSchedule.create(schedule),
     )
     const savedSchedules = await this.schedulesRepo.createAll(
       userId,
       schedulesToSave,
     )
 
-    let savedRecord: Generation
+    let savedRecord: ScheduleGeneration
     try {
-      const record: IBaseGenerationRecord = {
+      const record: IBaseScheduleGeneration = {
+        generatedAt: new Date().toISOString(),
         resultCount: schedules.length,
         occurrences,
-        ...meta,
+        ...parameters,
         scheduleIds: savedSchedules.map((schedule) => schedule.id),
       }
 
       savedRecord = await this.generationRepo.create(
         userId,
-        Generation.create(record),
+        ScheduleGeneration.create(record),
       )
     } catch (error) {
       try {
@@ -118,19 +127,17 @@ export class GenerationService implements IGenerationService {
     await this._trimAndCleanup(userId, maxHistory)
 
     return {
-      ...savedRecord.toSnapshot(),
-      schedules: savedSchedules.map((schedule) => schedule.toSnapshot()),
-      occurrences,
+      generation: savedRecord,
+      schedules: savedSchedules,
+      occurrences: occurrences as IIntersectionOccurrence[],
     }
   }
 
   async getSchedulesForGeneration(
     userId: string,
-    record: IGenerationRecord,
-  ): Promise<IScheduleGenerate[]> {
-    return (
-      await this.schedulesRepo.getEntries(userId, record.scheduleIds)
-    ).map((schedule) => schedule.toSnapshot())
+    record: IScheduleGeneration,
+  ): Promise<GeneratedSchedule[]> {
+    return this.schedulesRepo.getEntries(userId, record.scheduleIds)
   }
 
   private async _trimAndCleanup(

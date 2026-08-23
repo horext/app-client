@@ -54,6 +54,7 @@ const onSubmit = async (selection: HourlyLoadSelection) => {
         selection.facultyId,
         selection.specialityId,
         selection.hourlyLoad,
+        selection.studyPlanId,
       )
     await router.push('/generator/subjects')
   } finally {

@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia'
 import type { Weekdays } from '~/interfaces/event'
+import { toPreferencesDto } from '~/mappers/domain/entities'
 import type { IBasePreferences } from '#shared/domain/types/preferences'
 
 export const useUserPreferences = () => {
@@ -11,7 +12,7 @@ export const useUserPreferences = () => {
 
   async function fetchPreferences() {
     const prefs = await service.get(userId)
-    if (prefs) preferences.value = prefs
+    if (prefs) preferences.value = toPreferencesDto(prefs)
   }
 
   async function createPreferences(initial: Partial<IBasePreferences> = {}) {
@@ -19,24 +20,18 @@ export const useUserPreferences = () => {
   }
 
   async function updateCrossings(_crossings: number) {
-    if (!preferences.value) {
-      await createPreferences({ crossings: _crossings })
-      return
-    }
-    preferences.value = { ...preferences.value, crossings: _crossings }
-    await service.patch(userId, { crossings: _crossings })
+    const result = await service.patch(userId, { crossings: _crossings })
+    preferences.value = toPreferencesDto(result)
   }
 
   async function saveWeekDays(data: Weekdays[]) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, weekDays: data }
-    await service.patch(userId, { weekDays: data })
+    const result = await service.patch(userId, { weekDays: data })
+    preferences.value = toPreferencesDto(result)
   }
 
   async function updateMaxGenerationHistory(n: number) {
-    if (preferences.value)
-      preferences.value = { ...preferences.value, maxGenerationHistory: n }
-    await service.patch(userId, { maxGenerationHistory: n })
+    const result = await service.patch(userId, { maxGenerationHistory: n })
+    preferences.value = toPreferencesDto(result)
   }
 
   return {

@@ -7,7 +7,7 @@ import { makeUUID } from '~~/shared/domain/types/ids'
 
 const config = AcademicConfig.create({ hourlyLoad: null })
 const persistedConfig: IAcademicConfig = {
-  ...config.toSnapshot(),
+  hourlyLoad: null,
   id: makeUUID(),
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -37,9 +37,7 @@ describe('IndexedDBAcademicConfigRepository', () => {
   describe('get', () => {
     it('returns the stored config', async () => {
       persistence.findAll.mockResolvedValue([persistedConfig])
-      expect((await repo.get('user-1'))?.toSnapshot()).toMatchObject({
-        id: persistedConfig.id,
-      })
+      expect((await repo.get('user-1'))?.id).toBe(persistedConfig.id)
     })
 
     it('returns undefined when nothing stored', async () => {

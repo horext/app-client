@@ -6,18 +6,18 @@ export interface IHourlyLoadApi {
   getLatestByFaculty(facultyId: number): Promise<IHourlyLoadResponse>
 }
 
-const PATH_SUBJECTS = 'hourlyLoads'
+export const PATH_HOURLY_LOAD = 'hourlyLoads'
 
 export class HourlyLoadApi extends BaseApi {
   getAllByFaculty(facultyId: number) {
-    return this.$fetch<IHourlyLoadResponse[]>(PATH_SUBJECTS, {
+    return this.$fetch<IHourlyLoadResponse[]>(PATH_HOURLY_LOAD, {
       method: 'GET',
       params: { faculty: facultyId },
     })
   }
 
   getLatestByFaculty(facultyId: number) {
-    return this.$fetch<IHourlyLoadResponse>(PATH_SUBJECTS + '/latest', {
+    return this.$fetch<IHourlyLoadResponse>(PATH_HOURLY_LOAD + '/latest', {
       method: 'GET',
       params: {
         faculty: facultyId,

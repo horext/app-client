@@ -1,13 +1,12 @@
 import type { UUID } from 'crypto'
+import type { IActivitySession } from '~~/shared/domain/types/event'
 
-export type EventCategories = 'COURSE' | 'MY_EVENT'
-export type Weekdays = 0 | 1 | 2 | 3 | 4 | 5 | 6
-
-export interface IActivitySession {
-  day: Weekdays
-  startTime: string
-  endTime: string
-}
+export type {
+  EventCategories,
+  IActivitySession,
+  IEvent,
+  Weekdays,
+} from '~~/shared/domain/types/event'
 
 export interface IBaseActivity {
   title: string
@@ -18,19 +17,8 @@ export interface IBaseActivity {
   sessions: IActivitySession[]
 }
 
-export interface IEvent {
-  id: string
-  title: string
-  day: Weekdays
-  description?: string
-  location?: string
-  color: string
-  category?: EventCategories
-  type: string
-  startTime: string
-  endTime: string
-}
-
 export interface IActivity extends IBaseActivity {
   id: UUID
 }
+
+export type ActivityForm = IBaseActivity & { id?: IActivity['id'] }

@@ -8,6 +8,7 @@ vi.mock('~/stores/user-profile', () => ({
   useUserProfileStore: vi.fn(() => ({
     facultyId: ref(null),
     specialityId: ref(null),
+    studyPlanId: ref(null),
     hourlyLoad: ref(null),
   })),
 }))
@@ -29,6 +30,9 @@ vi.mock('~~/modules/apis/runtime/composables', () => ({
   })),
   useSpecialityApi: vi.fn(() => ({
     getAllByFaculty: vi.fn().mockResolvedValue([]),
+  })),
+  useStudyPlanApi: vi.fn(() => ({
+    getAllBySpecialityId: vi.fn().mockResolvedValue([]),
   })),
 }))
 

@@ -1,13 +1,13 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { createVuetify } from 'vuetify'
 import type {
   ISubjectSchedule,
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
 } from '~/interfaces/subject'
 import ScheduleItem from '~/components/subject/ScheduleItem.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
-import ScheduleList from '~/components/subject/SchedulesEdit.vue'
+import SchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import Select from '~/components/subject/Select.vue'
 import ItemActions from '~/components/subject/table/ItemActions.vue'
 
@@ -26,7 +26,7 @@ function makeSchedule(): ISubjectSchedule {
   }
 }
 
-function makeBaseSubjectSchedules(): IBaseSubjectSchedules {
+function makeBaseSubjectSchedules(): IBasePlannedSubject {
   return {
     subject: {
       id: 1,
@@ -42,7 +42,7 @@ function makeBaseSubjectSchedules(): IBaseSubjectSchedules {
       cycle: 1,
     },
     schedules: [makeSchedule()],
-  } as IBaseSubjectSchedules
+  } as IBasePlannedSubject
 }
 
 describe('subject/ScheduleItem', () => {
@@ -86,9 +86,9 @@ describe('subject/ScheduleSection', () => {
   })
 })
 
-describe('subject/ScheduleList', () => {
+describe('subject/SchedulesEdit', () => {
   it('renders with loading state', () => {
-    const wrapper = shallowMount(ScheduleList, {
+    const wrapper = shallowMount(SchedulesEdit, {
       props: {
         subjectSchedules: makeBaseSubjectSchedules(),
         availableSchedules: [],
@@ -100,7 +100,7 @@ describe('subject/ScheduleList', () => {
   })
 
   it('renders with schedule data', () => {
-    const wrapper = shallowMount(ScheduleList, {
+    const wrapper = shallowMount(SchedulesEdit, {
       props: {
         subjectSchedules: makeBaseSubjectSchedules(),
         availableSchedules: [makeSchedule()],
@@ -109,6 +109,26 @@ describe('subject/ScheduleList', () => {
       global: { plugins: [vuetify] },
     })
     expect(wrapper.exists()).toBe(true)
+  })
+
+  it('shows a schedule report action when a URL is available', () => {
+    const reportUrl = 'https://github.com/horext/app-data/issues/new'
+    const wrapper = mount(SchedulesEdit, {
+      props: {
+        subjectSchedules: makeBaseSubjectSchedules(),
+        availableSchedules: [makeSchedule()],
+        loading: false,
+        reportUrl,
+      },
+      global: { plugins: [vuetify] },
+    })
+    const reportButton = wrapper.find(`[href="${reportUrl}"]`)
+
+    expect(reportButton.attributes()).toMatchObject({
+      href: reportUrl,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    })
   })
 })
 
