@@ -60,13 +60,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    apiUpstreamUrl: process.env.NUXT_PUBLIC_API_URL ?? '',
     public: {
       gsi: {
         clientId: '',
         discoveryDocs: '',
         scopes: '',
       },
-      apiUrl: '',
+      apiUrl: '/api',
     },
     gsi: {
       apiKey: '',
