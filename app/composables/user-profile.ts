@@ -1,10 +1,14 @@
 import { storeToRefs } from 'pinia'
+import { toRaw } from 'vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import {
   useHourlyLoadApi,
   useSpecialityApi,
 } from '~~/modules/apis/runtime/composables'
 import { toAcademicConfigDto, toProfileDto } from '~/mappers/domain/entities'
+
+const cloneHourlyLoad = (hourlyLoad: IHourlyLoad): IHourlyLoad =>
+  structuredClone(toRaw(hourlyLoad))
 
 export const useUserProfile = () => {
   const store = useUserProfileStore()
@@ -42,31 +46,21 @@ export const useUserProfile = () => {
   }
 
   async function updateHourlyLoad(newHourlyLoad: IHourlyLoad) {
+    const plainHourlyLoad = cloneHourlyLoad(newHourlyLoad)
     const currentHourlyLoad = hourlyLoad.value
     if (currentHourlyLoad?.id) {
-      if (currentHourlyLoad.id !== newHourlyLoad.id) {
+      if (currentHourlyLoad.id !== plainHourlyLoad.id) {
         isNewHourlyLoad.value = true
       } else if (
-        currentHourlyLoad.id === newHourlyLoad.id &&
-        currentHourlyLoad.updatedAt !== newHourlyLoad.updatedAt
+        currentHourlyLoad.id === plainHourlyLoad.id &&
+        currentHourlyLoad.updatedAt !== plainHourlyLoad.updatedAt
       ) {
         isUpdateHourlyLoad.value = true
       }
     }
-    hourlyLoad.value = newHourlyLoad
+    hourlyLoad.value = plainHourlyLoad
     await academicConfigService.patch(userId, {
-      hourlyLoad: {
-        ...newHourlyLoad,
-        academicPeriodOrganizationUnit: {
-          ...newHourlyLoad.academicPeriodOrganizationUnit,
-          academicPeriod: {
-            ...newHourlyLoad.academicPeriodOrganizationUnit.academicPeriod,
-          },
-          organizationUnit: {
-            ...newHourlyLoad.academicPeriodOrganizationUnit.organizationUnit,
-          },
-        },
-      },
+      hourlyLoad: plainHourlyLoad,
     })
   }
 
@@ -132,6 +126,7 @@ export const useUserProfile = () => {
     _hourlyLoad: IHourlyLoad | null,
     _studyPlanId?: number,
   ) {
+    const plainHourlyLoad = _hourlyLoad ? cloneHourlyLoad(_hourlyLoad) : null
     const [createdProfile] = await Promise.all([
       profileService.create(userId, {
         facultyId: _facultyId,
@@ -140,12 +135,12 @@ export const useUserProfile = () => {
         setupCompleted: true,
       }),
       academicConfigService.create(userId, {
-        hourlyLoad: _hourlyLoad,
+        hourlyLoad: plainHourlyLoad,
       }),
       createPreferences(),
     ])
     profile.value = toProfileDto(createdProfile)
-    hourlyLoad.value = _hourlyLoad ?? undefined
+    hourlyLoad.value = plainHourlyLoad ?? undefined
   }
 
   return {

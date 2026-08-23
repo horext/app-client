@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
+import { isReactive, reactive } from 'vue'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
 import type { IUserProfile } from '~/interfaces/profile'
 import { useUserProfileStore } from '~/stores/user-profile'
@@ -427,6 +428,33 @@ describe('useUserProfile', () => {
     expect(mockCreatePreferences).toHaveBeenCalled()
     expect(store.profile?.facultyId).toBe(2)
     expect(store.hourlyLoad).toEqual(load)
+  })
+
+  it('completeSetup converts a reactive hourly load to persistence data', async () => {
+    const load = reactive(makeHourlyLoad(2))
+    mockCreateProfile.mockResolvedValue({
+      id: crypto.randomUUID(),
+      facultyId: 2,
+      specialityId: 3,
+      setupCompleted: true,
+    })
+    mockCreateAcademicConfig.mockResolvedValue({
+      id: crypto.randomUUID(),
+      hourlyLoad: makeHourlyLoad(2),
+    })
+    mockCreatePreferences.mockResolvedValue({
+      id: crypto.randomUUID(),
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+    })
+
+    await useUserProfile().completeSetup(2, 3, load)
+
+    const persistedLoad =
+      mockCreateAcademicConfig.mock.calls.at(-1)?.[1].hourlyLoad
+    expect(isReactive(persistedLoad)).toBe(false)
+    expect(() => structuredClone(persistedLoad)).not.toThrow()
   })
 
   it('completeSetup stores a null official load when using a local dataset', async () => {
