@@ -9,18 +9,29 @@
       <span class="text-caption text-medium-emphasis">Buscando en</span>
 
       <v-chip
+        v-if="specialityName"
         :prepend-icon="mdiSchoolOutline"
         color="primary"
         variant="outlined"
         size="small"
         class="search-context__chip"
       >
-        <span class="text-medium-emphasis">Especialidad:</span>
+        <span class="text-medium-emphasis">Carrera:</span>
         <span class="font-weight-medium ml-1">{{ specialityName }}</span>
       </v-chip>
 
+      <v-chip
+        v-else
+        color="secondary"
+        variant="tonal"
+        size="small"
+        class="search-context__chip"
+      >
+        <span class="text-medium-emphasis">Sin carrera seleccionada</span>
+      </v-chip>
+
       <v-icon
-        v-if="studyPlanName"
+        v-if="specialityName && studyPlanName"
         :icon="mdiChevronRight"
         size="x-small"
         class="text-medium-emphasis"
@@ -53,26 +64,30 @@
         Informar problema
       </v-btn>
 
-      <v-icon
-        v-if="!studyPlanName"
-        :icon="mdiInformationOutline"
-        size="small"
-        class="text-medium-emphasis"
-      />
-      <span v-if="!studyPlanName" class="text-caption text-medium-emphasis">
-        Selecciona un plan para mejorar la precisión.
-      </span>
-      <v-btn
-        v-if="!studyPlanName"
-        to="/generator/settings"
-        variant="plain"
-        density="compact"
-        size="small"
-        :prepend-icon="mdiTuneVariant"
-        class="px-1"
-      >
-        Seleccionar plan
-      </v-btn>
+      <template v-if="!studyPlanName">
+        <v-icon
+          :icon="mdiInformationOutline"
+          size="small"
+          class="text-medium-emphasis ml-1"
+        />
+        <span class="text-caption text-medium-emphasis">
+          {{
+            specialityName
+              ? 'Selecciona un plan para mejorar la precisión.'
+              : 'Selecciona una carrera para filtrar por malla.'
+          }}
+        </span>
+        <v-btn
+          to="/generator/settings"
+          variant="plain"
+          density="compact"
+          size="small"
+          :prepend-icon="mdiTuneVariant"
+          class="px-1"
+        >
+          {{ specialityName ? 'Seleccionar plan' : 'Configurar' }}
+        </v-btn>
+      </template>
     </div>
   </v-card>
 </template>
@@ -90,7 +105,7 @@ import {
 } from '@mdi/js'
 
 defineProps<{
-  specialityName: string
+  specialityName?: string
   studyPlanName?: string
   reportUrl?: string
 }>()

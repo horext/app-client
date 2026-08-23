@@ -196,13 +196,24 @@ const availableCourses = computed(() => {
       ),
   )
 })
-const { specialityId, studyPlanId, hourlyLoad, speciality } =
+const { facultyId, specialityId, studyPlanId, hourlyLoad, speciality } =
   storeToRefs(configStore)
+const { fetchSpecialityById } = useUserProfile()
+
+watch(
+  specialityId,
+  async (newSpecialityId) => {
+    if (newSpecialityId && !speciality.value) {
+      await fetchSpecialityById(newSpecialityId)
+    }
+  },
+  { immediate: true },
+)
 
 const { data: studyPlans } = useAsyncData(
   'profile-study-plans',
   async () => {
-    if (!specialityId.value || !studyPlanId.value) return []
+    if (!specialityId.value) return []
     return studyPlanApi.getAllBySpecialityId(specialityId.value)
   },
   {
@@ -212,13 +223,11 @@ const { data: studyPlans } = useAsyncData(
   },
 )
 
-const activeSpecialityName = computed(
-  () => speciality.value?.name ?? 'Especialidad',
-)
+const activeSpecialityName = computed(() => speciality.value?.name)
 const activeStudyPlanName = computed(() => {
   if (!studyPlanId.value) return undefined
   const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
-  if (!plan) return 'Plan de estudios'
+  if (!plan) return undefined
   if (plan.code && plan.name) return `${plan.code} - ${plan.name}`
   return plan.name ?? plan.code
 })
@@ -436,22 +445,36 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
     if (localDataset.value) return searchSubjects(_search)
     const _hourlyLoadId = hourlyLoad.value?.id
     const _studyPlanId = studyPlanId.value
-    if (!_hourlyLoadId || !_specialityId) return []
-    const response = _studyPlanId
-      ? await subjectApi.findPageByStudyPlan({
-          search: _search,
-          studyPlanId: _studyPlanId,
-          hourlyLoadId: _hourlyLoadId,
-        })
-      : await subjectApi.findPageBySpeciality({
+    const _facultyId = facultyId.value
+    if (!_hourlyLoadId) return []
+    const response = _specialityId
+      ? await subjectApi.findPageBySpeciality({
           search: _search,
           specialityId: _specialityId,
           hourlyLoadId: _hourlyLoadId,
         })
+      : _studyPlanId
+        ? await subjectApi.findPageByStudyPlan({
+            search: _search,
+            studyPlanId: _studyPlanId,
+            hourlyLoadId: _hourlyLoadId,
+          })
+        : await subjectApi.findPageByFaculty({
+            search: _search,
+            facultyId: _facultyId ?? 31,
+            hourlyLoadId: _hourlyLoadId,
+          })
     return response.content
   },
   {
-    watch: [search, specialityId, studyPlanId, hourlyLoad, localDataset],
+    watch: [
+      search,
+      specialityId,
+      studyPlanId,
+      facultyId,
+      hourlyLoad,
+      localDataset,
+    ],
     default: () => [],
   },
 )
