@@ -29,7 +29,7 @@ describe('usePersistentStorage', () => {
     expect(visible.value).toBe(false)
   })
 
-  it('waits 30 days after the user asks to be reminded later', async () => {
+  it('waits 1 day after the user asks to be reminded later', async () => {
     vi.stubGlobal('navigator', {
       storage: {
         persisted: vi.fn().mockResolvedValue(false),
@@ -79,5 +79,23 @@ describe('usePersistentStorage', () => {
 
     expect(storage.protectionLost.value).toBe(true)
     expect(storage.shouldPrompt(true).value).toBe(true)
+  })
+
+  it('hides the prompt when storage request is denied', async () => {
+    vi.stubGlobal('navigator', {
+      storage: {
+        persisted: vi.fn().mockResolvedValue(false),
+        persist: vi.fn().mockResolvedValue(false),
+      },
+    })
+    const storage = usePersistentStorage()
+    await storage.check()
+
+    const visible = storage.shouldPrompt(true)
+    expect(visible.value).toBe(true)
+
+    expect(await storage.request()).toBe(false)
+    expect(visible.value).toBe(false)
+    expect(storage.requestFailed.value).toBe(true)
   })
 })

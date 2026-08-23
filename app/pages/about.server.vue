@@ -8,9 +8,10 @@
       />
 
       <div class="space-y-12">
-        <div class="grid gap-6 md:grid-cols-2">
+        <div class="grid gap-6 md:grid-cols-3">
           <AboutProfileCard
             name="Octatec"
+            role="Organización"
             email="Email: octatec.pe@gmail.com"
             :image-src="img('/octatec-logo.png', { quality: 100 })"
             :image-srcset="octatecLogo.srcset"
@@ -18,10 +19,17 @@
           />
           <AboutProfileCard
             name="Franz A. Bendezu Isidro"
+            role="Creador Original"
             email="Email: fbendezui@uni.pe"
             :image-src="img('/me.jpeg', { quality: 100 })"
             :image-srcset="mePhoto.srcset"
             :image-sizes="mePhoto.sizes"
+          />
+          <AboutProfileCard
+            name="Lenin Castro"
+            role="Mantenedor & Desarrollador del Fork"
+            email="Email: lenin.castro.a@uni.pe"
+            github="https://github.com/lenincastro"
           />
         </div>
 
@@ -34,7 +42,12 @@
             <AboutSourceLinkCard
               href="https://github.com/horext"
               :icon="mdiGithub"
-              label="GitHub"
+              label="GitHub (Original)"
+            />
+            <AboutSourceLinkCard
+              href="https://github.com/lenincastro"
+              :icon="mdiGithub"
+              label="Fork del Proyecto"
             />
             <AboutSourceLinkCard
               href="https://gitlab.com/horext-app"
