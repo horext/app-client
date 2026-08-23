@@ -4,6 +4,7 @@ import type {
   IActivitySession,
   IBaseActivity,
 } from '~/interfaces/event'
+import { DEFAULT_ACTIVITY_COLOR } from '~/constants/event'
 
 export class Activity {
   id?: UUID
@@ -19,7 +20,7 @@ export class Activity {
     this.title = activity?.title ?? ''
     this.description = activity?.description ?? ''
     this.location = activity?.location ?? ''
-    this.color = activity?.color ?? '#1976d2'
+    this.color = activity?.color ?? DEFAULT_ACTIVITY_COLOR
     this.allowOverlap = activity?.allowOverlap ?? true
     this.sessions = activity?.sessions.length
       ? activity.sessions.map((session) => ({ ...session }))

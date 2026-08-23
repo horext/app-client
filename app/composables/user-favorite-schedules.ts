@@ -1,7 +1,9 @@
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  GeneratedScheduleInput,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
+import { toDomainSchedule } from '~/mappers/schedule/domain'
+import { toGeneratedScheduleDto } from '~/mappers/domain/entities'
 
 export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
@@ -10,39 +12,25 @@ export const useUserFavoriteSchedules = () => {
   const { favoritesSchedules } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
-    _favoritesSchedule: IScheduleGenerate | IBaseScheduleGenerate,
+    _favoritesSchedule: GeneratedScheduleInput,
   ) {
-    const result = await favoritesStorage.addFavorite(userId, {
-      ..._favoritesSchedule,
-      schedulesSubject: _favoritesSchedule.schedulesSubject.map(
-        (scheduleSubject) => ({
-          ...scheduleSubject,
-          sessions: scheduleSubject.sessions.map((session) => ({
-            ...session,
-            classroom: {
-              ...session.classroom,
-              name: session.classroom.name ?? undefined,
-            },
-          })),
-        }),
-      ),
-    })
-    favoritesSchedules.value.push(result)
+    const result = await favoritesStorage.addFavorite(
+      userId,
+      toDomainSchedule(_favoritesSchedule),
+    )
+    store.addFavorite(toGeneratedScheduleDto(result))
   }
 
   async function deleteFavoriteScheduleById(
-    favoriteScheduleId: IScheduleGenerate['id'],
+    favoriteScheduleId: IGeneratedSchedule['id'],
   ) {
     await favoritesStorage.removeFavorite(userId, favoriteScheduleId)
-    const index = favoritesSchedules.value.findIndex(
-      (s) => s.id === favoriteScheduleId,
-    )
-    if (index >= 0) favoritesSchedules.value.splice(index, 1)
+    store.removeFavoriteById(favoriteScheduleId)
   }
 
   async function fetchFavoritesSchedules() {
-    favoritesSchedules.value =
-      (await favoritesStorage.getFavoriteSchedules(userId)) ?? []
+    const schedules = await favoritesStorage.getFavoriteSchedules(userId)
+    store.setFavorites((schedules ?? []).map(toGeneratedScheduleDto))
   }
 
   return {

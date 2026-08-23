@@ -16,6 +16,7 @@ import {
   IndexedDBSchedulesRepository,
 } from '../app/repositories/indexed-db-schedules.repository'
 import { IndexedDBSubjectsRepository } from '../app/repositories/indexed-db-subjects.repository'
+import { IndexedDBLocalHourlyLoadRepository } from '../app/repositories/indexed-db-local-hourly-load.repository'
 
 const DB_NAME = 'horext-app:v1'
 const ANONYMOUS_USER_ID = 'anonymous'
@@ -53,6 +54,9 @@ export default defineNuxtPlugin({
         persistence,
       ),
       subjectsRepository: new IndexedDBSubjectsRepository(persistence),
+      localHourlyLoadRepository: new IndexedDBLocalHourlyLoadRepository(
+        dbFactory,
+      ),
     }
     nuxtApp.vueApp.provide(SCHEDULES_RAW_REPOSITORIES_KEY, storage)
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, dbFactory)
@@ -69,6 +73,7 @@ export default defineNuxtPlugin({
           generationRepository: storage.generationRepository,
           favoritesRepository: storage.favoritesRepository,
           subjectsRepository: storage.subjectsRepository,
+          localHourlyLoadRepository: storage.localHourlyLoadRepository,
         },
       },
     }

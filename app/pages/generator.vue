@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-dialog
-      :model-value="!loadingProfile && !setupCompleted"
+      :model-value="!loadingProfile && !setupCompleted && !localDataset"
       max-width="600"
       persistent
     >
@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { IHourlyLoad } from '~/interfaces/houly-load'
 import InitialForm from '~/components/setting/Initial.vue'
+import type { HourlyLoadSelection } from '~/interfaces/hourly-load-selection'
 
 definePageMeta({
   layout: 'app',
@@ -42,17 +42,20 @@ const {
 } = useUserProfile()
 
 const router = useRouter()
+const { dataset: localDataset } = useLocalHourlyLoad()
 
 const loading = ref(false)
 
-const onSubmit = async (
-  facultyId: number,
-  specialityId: number,
-  hourlyLoad: IHourlyLoad,
-) => {
+const onSubmit = async (selection: HourlyLoadSelection) => {
   loading.value = true
   try {
-    await completeSetup(facultyId, specialityId, hourlyLoad)
+    if (selection.source === 'official')
+      await completeSetup(
+        selection.facultyId,
+        selection.specialityId,
+        selection.hourlyLoad,
+        selection.studyPlanId,
+      )
     await router.push('/generator/subjects')
   } finally {
     loading.value = false

@@ -3,12 +3,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import { ViewMode } from '~/models/ViewMode'
 import type {
-  IScheduleGenerate,
-  IBaseScheduleGenerate,
+  IGeneratedSchedule,
+  IBaseGeneratedSchedule,
 } from '~/interfaces/schedule'
 import ScheduleShareAddFavorite from '~/components/ScheduleShareAddFavorite.vue'
 import SchedulesWindow from '~/components/SchedulesWindow.vue'
 import SchedulesPresentation from '~/components/SchedulesPresentation.vue'
+import { makeUUID } from '~~/shared/domain/types/ids'
 
 vi.mock('~/composables/google-oauth2', () => ({
   useGoogleOAuth2: vi.fn(() => ({
@@ -40,9 +41,9 @@ vi.mock('pinia', async (importOriginal) => {
 
 const vuetify = createVuetify()
 
-function makeSchedule(): IScheduleGenerate {
+function makeSchedule(): IGeneratedSchedule {
   return {
-    id: crypto.randomUUID(),
+    id: makeUUID(),
     schedulesSubject: [],
     events: [],
     scheduleSubjectKey: 'key-1',
@@ -55,7 +56,7 @@ describe('ScheduleShareAddFavorite', () => {
     const schedule = makeSchedule()
     const wrapper = shallowMount(ScheduleShareAddFavorite, {
       props: {
-        schedule: schedule as IBaseScheduleGenerate,
+        schedule: schedule as IBaseGeneratedSchedule,
         favoritesSchedules: [],
       },
       global: { plugins: [vuetify] },
@@ -67,7 +68,7 @@ describe('ScheduleShareAddFavorite', () => {
     const schedule = makeSchedule()
     const wrapper = shallowMount(ScheduleShareAddFavorite, {
       props: {
-        schedule: schedule as IBaseScheduleGenerate,
+        schedule: schedule as IBaseGeneratedSchedule,
         favoritesSchedules: [schedule],
       },
       global: { plugins: [vuetify] },
@@ -79,7 +80,7 @@ describe('ScheduleShareAddFavorite', () => {
     const schedule = makeSchedule()
     const wrapper = shallowMount(ScheduleShareAddFavorite, {
       props: {
-        schedule: schedule as IBaseScheduleGenerate,
+        schedule: schedule as IBaseGeneratedSchedule,
         favoritesSchedules: [],
       },
       global: { plugins: [vuetify] },

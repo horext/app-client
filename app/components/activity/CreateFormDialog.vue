@@ -90,9 +90,9 @@
 import { computed, ref, watch, toRefs } from 'vue'
 import type { VForm } from 'vuetify/components/VForm'
 import type {
+  ActivityForm,
   IActivity,
   IActivitySession,
-  IBaseActivity,
 } from '~/interfaces/event'
 import { Activity } from '~/models/Activity'
 
@@ -107,7 +107,7 @@ const _props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (name: 'save:event', event: IBaseActivity & { id?: IActivity['id'] }): void
+  (name: 'save:event', event: ActivityForm): void
   (name: 'cancel'): void
 }>()
 

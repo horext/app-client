@@ -11,10 +11,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { IScheduleSubjectGenerate } from '~/interfaces/schedule'
+import type { IGeneratedScheduleSubject } from '~/interfaces/schedule'
 
 const props = defineProps<{
-  schedule: IScheduleSubjectGenerate
+  schedule: IGeneratedScheduleSubject
 }>()
 
 const { schedule } = toRefs(props)

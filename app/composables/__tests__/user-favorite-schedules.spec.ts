@@ -2,10 +2,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
+  IBaseGeneratedSchedule,
+  IGeneratedSchedule,
 } from '~/interfaces/schedule'
 import { useUserFavoritesStore } from '~/stores/user-favorites'
+import { makeUUID } from '~~/shared/domain/types/ids'
+import { isProxy, reactive, toRaw } from 'vue'
+import { GeneratedSchedule } from '~~/shared/domain'
+import type { GeneratedScheduleId } from '~~/shared/domain'
 
 import { useUserFavoriteSchedules } from '../user-favorite-schedules'
 
@@ -23,7 +27,9 @@ mockNuxtImport('useFavoritesSchedulesService', () =>
   })),
 )
 
-function makeFavorite(id = crypto.randomUUID()): IScheduleGenerate {
+function makeFavorite(
+  id: GeneratedScheduleId = makeUUID<GeneratedScheduleId>(),
+): IGeneratedSchedule {
   return {
     id,
     events: [],
@@ -32,6 +38,15 @@ function makeFavorite(id = crypto.randomUUID()): IScheduleGenerate {
     crossings: 0,
   }
 }
+
+const asEntity = (schedule: IGeneratedSchedule) =>
+  GeneratedSchedule.reconstitute({
+    ...structuredClone(toRaw(schedule)),
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 
 describe('useUserFavoriteSchedules', () => {
   beforeEach(() => {
@@ -49,12 +64,41 @@ describe('useUserFavoriteSchedules', () => {
 
   it('saveNewFavoriteSchedule adds a favorite and pushes to store', async () => {
     const fav = makeFavorite()
-    mockAddFavorite.mockResolvedValue(fav)
+    mockAddFavorite.mockResolvedValue(asEntity(fav))
     const { saveNewFavoriteSchedule, favoritesSchedules } =
       useUserFavoriteSchedules()
-    await saveNewFavoriteSchedule(fav as IBaseScheduleGenerate)
+    await saveNewFavoriteSchedule(fav as IBaseGeneratedSchedule)
     expect(mockAddFavorite).toHaveBeenCalledWith(expect.any(String), fav)
     expect(favoritesSchedules.value).toContainEqual(fav)
+  })
+
+  it('maps a reactive new favorite before domain entity creation', async () => {
+    const favorite = makeFavorite()
+    const { id: _id, ...newSchedule } = favorite
+    const reactiveSchedule = reactive(newSchedule)
+    mockAddFavorite.mockImplementation(async (_userId, input) => {
+      expect(isProxy(input)).toBe(false)
+      expect(() => GeneratedSchedule.create(input)).not.toThrow()
+      return asEntity(favorite)
+    })
+
+    const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
+    await expect(
+      saveNewFavoriteSchedule(reactiveSchedule),
+    ).resolves.toBeUndefined()
+  })
+
+  it('preserves the id of a reactive persisted favorite', async () => {
+    const favorite = reactive(makeFavorite())
+    mockAddFavorite.mockResolvedValue(asEntity(favorite))
+
+    const { saveNewFavoriteSchedule } = useUserFavoriteSchedules()
+    await saveNewFavoriteSchedule(favorite)
+
+    expect(mockAddFavorite.mock.calls[0]?.[1]).toEqual(
+      expect.objectContaining({ id: favorite.id }),
+    )
+    expect(isProxy(mockAddFavorite.mock.calls[0]?.[1])).toBe(false)
   })
 
   it('deleteFavoriteScheduleById removes from service and store', async () => {
@@ -84,7 +128,7 @@ describe('useUserFavoriteSchedules', () => {
 
   it('fetchFavoritesSchedules loads all favorites into store', async () => {
     const favs = [makeFavorite()]
-    mockGetFavoriteSchedules.mockResolvedValue(favs)
+    mockGetFavoriteSchedules.mockResolvedValue(favs.map(asEntity))
     const { fetchFavoritesSchedules, favoritesSchedules } =
       useUserFavoriteSchedules()
     await fetchFavoritesSchedules()

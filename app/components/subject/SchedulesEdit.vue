@@ -41,6 +41,19 @@
       />
     </v-card-text>
     <v-card-actions>
+      <v-btn
+        v-if="reportUrl"
+        :href="reportUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="text"
+        density="compact"
+        size="small"
+        :prepend-icon="mdiFlagOutline"
+        :append-icon="mdiOpenInNew"
+      >
+        Informar secciones u horarios
+      </v-btn>
       <v-spacer />
       <v-btn color="primary" variant="text" @click="$emit('cancel')">
         Cancelar
@@ -53,26 +66,28 @@
 </template>
 
 <script setup lang="ts">
+import { mdiFlagOutline, mdiOpenInNew } from '@mdi/js'
 import { computed, watch } from 'vue'
 import ScheduleSubjectList from '~/components/subject/ScheduleItem.vue'
 import type {
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
   ISubjectSchedule,
-  ISubjectSchedules,
+  IPlannedSubject,
 } from '~/interfaces/subject'
-import { SubjectSchedules } from '~/models/subject-schedules'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import { PlannedSubject } from '~/models/planned-subject'
+import type { PlannedSubjectId } from '~~/shared/domain'
 
 const props = defineProps<{
-  subjectSchedules: IBaseSubjectSchedules | ISubjectSchedules
+  subjectSchedules: IBasePlannedSubject | IPlannedSubject
   availableSchedules: ISubjectSchedule[]
   loading: boolean
+  reportUrl?: string
 }>()
 
 const emit = defineEmits<{
   (
     event: 'save',
-    value: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
+    value: PlannedSubject<PlannedSubjectId> | PlannedSubject<undefined>,
   ): void
   (event: 'cancel'): void
 }>()
@@ -93,10 +108,10 @@ const currentSelectedSchedules = computed(() => {
   }
 })
 
-const current = ref(SubjectSchedules.buildFrom(currentSelectedSchedules.value))
+const current = ref(PlannedSubject.buildFrom(currentSelectedSchedules.value))
 
 watch(currentSelectedSchedules, (availableSchedules) => {
-  current.value = SubjectSchedules.buildFrom(availableSchedules)
+  current.value = PlannedSubject.buildFrom(availableSchedules)
 })
 
 const saveSections = () => {

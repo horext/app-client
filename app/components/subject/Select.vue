@@ -34,8 +34,32 @@
       <v-list-item
         v-bind="props"
         :title="`${item?.course?.id} - ${item?.course?.name}`"
-        :subtitle="`Ciclo: ${item?.cycle} | ${item?.type?.name} | ${item?.studyPlan?.name}`"
-      />
+      >
+        <template #subtitle>
+          <span v-if="item.cycle">Ciclo: {{ item.cycle }}</span>
+          <span v-if="item.type?.name"> · {{ item.type.name }}</span>
+          <span v-if="item.studyPlan?.name"> · {{ item.studyPlan.name }} </span>
+          <span v-if="item.specialityCodes?.length" class="ml-2">
+            <v-chip
+              v-for="code in item.specialityCodes"
+              :key="code"
+              size="x-small"
+              variant="tonal"
+              class="mr-1"
+            >
+              {{ code }}
+            </v-chip>
+          </span>
+          <v-chip
+            v-if="item.recommended === false"
+            size="x-small"
+            color="warning"
+            variant="tonal"
+          >
+            Fuera de tu malla
+          </v-chip>
+        </template>
+      </v-list-item>
     </template>
     <template #append>
       <label for="search-course">

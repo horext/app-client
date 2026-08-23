@@ -1,17 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
-import type { ISubjectSchedules } from '~/interfaces/subject'
+import { isProxy, reactive } from 'vue'
+import type { IPlannedSubject } from '~/interfaces/subject'
+import type { PlannedSubjectId } from '~~/shared/domain'
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { useUserSubjectsStore } from '~/stores/user-subjects'
 
 import { useUserSubjects } from '../user-subjects'
-import type { SubjectScheduleId } from '~~/shared/domain'
-import { makeUUID } from '~~/shared/domain/types/ids'
+import { DEFAULT_SUBJECT_COLOR } from '~/constants/event'
+import { PlannedSubject } from '~~/shared/domain'
 
 const mockCreate = vi.fn()
 const mockDelete = vi.fn()
 const mockPatch = vi.fn()
 const mockGetAll = vi.fn()
+const { mockFindAllByIds } = vi.hoisted(() => ({
+  mockFindAllByIds: vi.fn(),
+}))
 
 mockNuxtImport('useSubjectsService', () =>
   vi.fn(() => ({
@@ -22,7 +28,13 @@ mockNuxtImport('useSubjectsService', () =>
   })),
 )
 
-function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
+vi.mock('~~/modules/apis/runtime/composables', () => ({
+  useSubjectApi: () => ({
+    findAllByIds: mockFindAllByIds,
+  }),
+}))
+
+function makeSubject(id: PlannedSubjectId = makeUUID()): IPlannedSubject {
   return {
     id,
     schedules: [
@@ -37,6 +49,7 @@ function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
         sessions: [],
       },
     ],
+    color: '#3F51B5',
     subject: {
       id: 1,
       course: { id: 'CS101', name: 'CS' },
@@ -59,9 +72,14 @@ function makeSubject(id: SubjectScheduleId = makeUUID()): ISubjectSchedules {
   }
 }
 
-const asEntity = (subject: ISubjectSchedules) => ({
-  toSnapshot: () => subject,
-})
+const asEntity = (subject: IPlannedSubject) =>
+  PlannedSubject.reconstitute({
+    ...subject,
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    createdBy: 'user-1',
+    updatedBy: 'user-1',
+  })
 
 describe('useUserSubjects', () => {
   beforeEach(() => {
@@ -69,22 +87,61 @@ describe('useUserSubjects', () => {
     vi.clearAllMocks()
   })
 
-  it('returns mySubjects, updateSubject, saveNewSubject, deleteSubjectById, fetchSubjects', () => {
+  it('returns subject management methods', () => {
     const result = useUserSubjects()
     expect(result.mySubjects).toBeDefined()
     expect(result.saveNewSubject).toBeTypeOf('function')
     expect(result.deleteSubjectById).toBeTypeOf('function')
     expect(result.updateSubject).toBeTypeOf('function')
+    expect(result.refreshSubjectCatalog).toBeTypeOf('function')
+    expect(result.updateSubjectColor).toBeTypeOf('function')
     expect(result.fetchSubjects).toBeTypeOf('function')
   })
 
   it('saveNewSubject creates a subject and pushes to store', async () => {
-    const newSubject = makeSubject()
-    mockCreate.mockResolvedValue(asEntity(newSubject))
+    const { id: _id, ...newSubject } = makeSubject()
+    const savedSubject = makeSubject()
+    mockCreate.mockResolvedValue(asEntity(savedSubject))
     const { saveNewSubject, mySubjects } = useUserSubjects()
     await saveNewSubject(newSubject)
-    expect(mockCreate).toHaveBeenCalledWith(expect.any(String), newSubject)
-    expect(mySubjects.value).toContainEqual(newSubject)
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        subject: expect.objectContaining({ id: newSubject.subject.id }),
+        schedules: expect.any(Array),
+        color: newSubject.color,
+      }),
+    )
+    expect(mockCreate.mock.calls[0]?.[1]).not.toHaveProperty('id')
+    expect(mySubjects.value).toContainEqual(savedSubject)
+  })
+
+  it('passes deeply reactive create data safely through a domain entity', async () => {
+    const { id: _id, ...newSubject } = makeSubject()
+    const reactiveSubject = reactive(newSubject)
+    mockCreate.mockImplementation(async (_userId, input) => {
+      expect(isProxy(input)).toBe(false)
+      expect(isProxy(input.subject)).toBe(false)
+      expect(() => structuredClone(input)).not.toThrow()
+      return asEntity({ ...input, id: makeUUID() })
+    })
+
+    const { saveNewSubject } = useUserSubjects()
+    await expect(saveNewSubject(reactiveSubject)).resolves.toBeUndefined()
+  })
+
+  it('saveNewSubject never sends an undefined color', async () => {
+    const newSubject = makeSubject()
+    const { color: _color, ...subjectWithoutColor } = newSubject
+    mockCreate.mockResolvedValue(asEntity(newSubject))
+    const { saveNewSubject } = useUserSubjects()
+
+    await saveNewSubject(subjectWithoutColor as unknown as IPlannedSubject)
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ color: DEFAULT_SUBJECT_COLOR }),
+    )
   })
 
   it('deleteSubjectById deletes from service and removes from store', async () => {
@@ -115,7 +172,7 @@ describe('useUserSubjects', () => {
     const original = makeSubject()
     const updated = {
       ...original,
-    } satisfies ISubjectSchedules
+    } satisfies IPlannedSubject
     const store = useUserSubjectsStore()
     store.subjects = [original]
     mockPatch.mockResolvedValue(asEntity(updated))
@@ -125,12 +182,111 @@ describe('useUserSubjects', () => {
     expect(mySubjects.value[0]).toEqual(updated)
   })
 
+  it('updateSubject supports a partial catalog update', async () => {
+    const original = makeSubject()
+    const updated = {
+      ...original,
+      subject: { ...original.subject, credits: 5 },
+    }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    mockPatch.mockResolvedValue(asEntity(updated))
+    const { updateSubject, mySubjects } = useUserSubjects()
+
+    await updateSubject({ id: original.id, subject: updated.subject })
+
+    expect(mockPatch).toHaveBeenCalledWith(
+      expect.any(String),
+      original.id,
+      expect.objectContaining({
+        subject: expect.objectContaining({ credits: 5 }),
+      }),
+    )
+    expect(mySubjects.value[0]?.subject.credits).toBe(5)
+  })
+
+  it('refreshSubjectCatalog updates changed subjects by catalog id', async () => {
+    const original = makeSubject()
+    original.subject.updatedAt = '2026-08-20T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      credits: 5,
+      updatedAt: '2026-08-21T00:00:00.000Z',
+    }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    mockFindAllByIds.mockResolvedValue([latest])
+    mockPatch.mockResolvedValue(asEntity({ ...original, subject: latest }))
+    const { refreshSubjectCatalog, mySubjects } = useUserSubjects()
+
+    await refreshSubjectCatalog()
+
+    expect(mockFindAllByIds).toHaveBeenCalledWith([original.subject.id])
+    expect(mockPatch).toHaveBeenCalledWith(
+      expect.any(String),
+      original.id,
+      expect.objectContaining({
+        subject: expect.objectContaining({ credits: 5 }),
+      }),
+    )
+    expect(mySubjects.value[0]?.subject.credits).toBe(5)
+  })
+
+  it('refreshes legacy records without a subject version', async () => {
+    const original = makeSubject()
+    original.subject.studyPlan.updatedAt = '2026-08-21T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      updatedAt: '2026-08-21T00:00:00.000Z',
+    }
+    useUserSubjectsStore().subjects = [original]
+    mockFindAllByIds.mockResolvedValue([latest])
+    mockPatch.mockResolvedValue(asEntity({ ...original, subject: latest }))
+    const { refreshSubjectCatalog } = useUserSubjects()
+
+    await refreshSubjectCatalog()
+
+    expect(mockPatch).toHaveBeenCalled()
+  })
+
+  it('trusts the subject version when updatedAt is unchanged', async () => {
+    const original = makeSubject()
+    original.subject.updatedAt = '2026-08-21T00:00:00.000Z'
+    const latest = {
+      ...original.subject,
+      credits: original.subject.credits + 1,
+    }
+    useUserSubjectsStore().subjects = [original]
+    mockFindAllByIds.mockResolvedValue([latest])
+    const { refreshSubjectCatalog } = useUserSubjects()
+
+    await refreshSubjectCatalog()
+
+    expect(mockPatch).not.toHaveBeenCalled()
+  })
+
+  it('updateSubjectColor patches only the color and updates the store', async () => {
+    const original = makeSubject()
+    const updated = { ...original, color: '#ff0000' }
+    const store = useUserSubjectsStore()
+    store.subjects = [original]
+    mockPatch.mockResolvedValue(asEntity(updated))
+    const { updateSubjectColor, mySubjects } = useUserSubjects()
+
+    await updateSubjectColor(original.id, updated.color)
+
+    expect(mockPatch).toHaveBeenCalledWith(expect.any(String), original.id, {
+      color: updated.color,
+    })
+    expect(mySubjects.value[0]).toEqual(updated)
+  })
+
   it('fetchSubjects loads subjects filtering those with schedules', async () => {
     const withSchedules = makeSubject()
     const withoutSchedules = {
       ...makeSubject(),
       schedules: [],
-    } satisfies ISubjectSchedules
+    } satisfies IPlannedSubject
     mockGetAll.mockResolvedValue(
       [withSchedules, withoutSchedules].map(asEntity),
     )

@@ -1,7 +1,12 @@
 import { storeToRefs } from 'pinia'
-import type { IBaseScheduleGenerate } from '~/interfaces/schedule'
+import type { IBaseGeneratedSchedule } from '~/interfaces/schedule'
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
-import type { IGenerationMeta } from '~/interfaces/generation-record'
+import type { IScheduleGenerationParameters } from '~/interfaces/schedule-generation'
+import { toDomainSchedule } from '~/mappers/schedule/domain'
+import {
+  toGeneratedScheduleDto,
+  toScheduleGenerationDto,
+} from '~/mappers/domain/entities'
 
 export const useGeneration = () => {
   const store = useGenerationStore()
@@ -11,42 +16,42 @@ export const useGeneration = () => {
   const { result, history } = storeToRefs(store)
 
   async function setResult(
-    newSchedules: IBaseScheduleGenerate[],
+    newSchedules: IBaseGeneratedSchedule[],
     newOccurrences: IBaseIntersectionOccurrence[],
-    meta: IGenerationMeta,
+    parameters: IScheduleGenerationParameters,
   ): Promise<void> {
-    if (!service) return
     const _result = await service.saveGeneration(
       userId,
-      meta,
-      newSchedules.map((schedule) => ({
-        ...schedule,
-        schedulesSubject: schedule.schedulesSubject.map((scheduleSubject) => ({
-          ...scheduleSubject,
-          sessions: scheduleSubject.sessions.map((session) => ({
-            ...session,
-            classroom: {
-              ...session.classroom,
-              name: session.classroom.name ?? undefined,
-            },
-          })),
-        })),
-      })),
+      parameters,
+      newSchedules.map(toDomainSchedule),
       newOccurrences,
       preferencesStore.maxGenerationHistory,
     )
-    history.value = await service.getGenerations(userId)
-    result.value = _result
+    store.setHistory(
+      (await service.getGenerations(userId)).map(toScheduleGenerationDto),
+    )
+    store.setResult({
+      ...toScheduleGenerationDto(_result.generation),
+      schedules: _result.schedules.map(toGeneratedScheduleDto),
+      occurrences: _result.occurrences,
+    })
   }
 
   async function loadSaved(): Promise<void> {
-    if (!service) return
     const [records, latest] = await Promise.all([
       service.getGenerations(userId),
       service.getLatestGeneration(userId),
     ])
-    history.value = records
-    result.value = latest ?? null
+    store.setHistory(records.map(toScheduleGenerationDto))
+    store.setResult(
+      latest
+        ? {
+            ...toScheduleGenerationDto(latest.generation),
+            schedules: latest.schedules.map(toGeneratedScheduleDto),
+            occurrences: latest.occurrences,
+          }
+        : null,
+    )
   }
 
   return {

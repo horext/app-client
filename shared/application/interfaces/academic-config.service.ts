@@ -1,16 +1,11 @@
-import type {
-  IAcademicConfig,
-  IBaseAcademicConfig,
-} from '#shared/domain/types/academic-config'
+import type { IAcademicConfigUpdate } from '#shared/domain/types/academic-config'
+import type { AcademicConfig } from '#shared/domain'
 
 export interface IAcademicConfigService {
-  get(userId: string): Promise<IAcademicConfig | undefined>
+  get(userId: string): Promise<AcademicConfig | undefined>
   create(
     userId: string,
-    initial?: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig>
-  patch(
-    userId: string,
-    value: Partial<IBaseAcademicConfig>,
-  ): Promise<IAcademicConfig>
+    initial?: IAcademicConfigUpdate,
+  ): Promise<AcademicConfig>
+  patch(userId: string, value: IAcademicConfigUpdate): Promise<AcademicConfig>
 }

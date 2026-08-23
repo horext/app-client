@@ -3,9 +3,12 @@ export interface IOrganizationTypeResponse {
   name: string
 }
 
-export interface IOrganizationResponse {
+export interface IOrganizationReferenceResponse {
   id: number
-  parentOrganizationUnit: Pick<IOrganizationResponse, 'id'>
+}
+
+export interface IOrganizationResponse extends IOrganizationReferenceResponse {
+  parentOrganizationUnit: IOrganizationReferenceResponse
   code: string
   name: string
   type: IOrganizationTypeResponse

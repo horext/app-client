@@ -8,6 +8,7 @@
     max="5"
     min="0"
     type="number"
+    @update:model-value="onUpdateCrossings"
   >
     <template #append-inner>
       <v-menu bottom>
@@ -41,18 +42,28 @@
 
 <script setup lang="ts">
 import { mdiHelpCircle, mdiUpdate } from '@mdi/js'
-defineProps<{
+const props = defineProps<{
   loadingGenerate: boolean
+  crossings: number
 }>()
 const emit = defineEmits<{
-  (event: 'click:generate'): void
+  (event: 'update:crossings' | 'click:generate', crossings: number): void
 }>()
 
-const internalCrossings = defineModel<number>('crossings', {
-  required: true,
-})
+const internalCrossings = ref(props.crossings)
+
+watch(
+  () => props.crossings,
+  (crossings) => {
+    internalCrossings.value = crossings
+  },
+)
+
+const onUpdateCrossings = (crossings: string) => {
+  emit('update:crossings', Number(crossings))
+}
 
 const onClickGenerate = () => {
-  emit('click:generate')
+  emit('click:generate', internalCrossings.value)
 }
 </script>

@@ -1,57 +1,88 @@
 import type {
-  IBasePreferences,
   IPreferences,
   IPreferencesCreate,
   IPreferencesUpdate,
+  PreferenceID,
 } from '../types/preferences'
+import type { Weekdays } from '../types/event'
 import { DomainError } from '../errors/domain-error'
-import type { UUID } from 'crypto'
-import type { IEntitySnapshot } from './snapshot'
+import { Audit } from './audit'
 
-export class Preferences<
-  T extends IBasePreferences | IPreferences = IPreferences,
-> implements IEntitySnapshot<T> {
-  private constructor(private readonly snapshot: T) {}
+export class BasePreferences {
+  protected _weekDays: Weekdays[]
+  protected _crossings: number
+  protected _maxGenerationHistory: number
+  protected _externalId?: PreferenceID
+  protected _revision?: number
 
-  static create(input: IPreferencesCreate): Preferences<IBasePreferences> {
-    return Preferences.build(input)
+  protected constructor(input: IPreferencesCreate) {
+    BasePreferences.validate(input.maxGenerationHistory)
+    this._weekDays = [...input.weekDays]
+    this._crossings = input.crossings
+    this._maxGenerationHistory = input.maxGenerationHistory
+    this._externalId = input.externalId
+    this._revision = input.revision
   }
 
-  private static build<T extends IBasePreferences | IPreferences>(
-    input: T,
-  ): Preferences<T> {
-    if (input.maxGenerationHistory < 1)
+  update(input: IPreferencesUpdate): this {
+    const maxGenerationHistory =
+      input.maxGenerationHistory ?? this._maxGenerationHistory
+    BasePreferences.validate(maxGenerationHistory)
+    if (input.weekDays !== undefined) this._weekDays = [...input.weekDays]
+    if (input.crossings !== undefined) this._crossings = input.crossings
+    this._maxGenerationHistory = maxGenerationHistory
+    if ('externalId' in input) this._externalId = input.externalId
+    if ('revision' in input) this._revision = input.revision
+    return this
+  }
+
+  get weekDays(): Weekdays[] {
+    return this._weekDays
+  }
+  get crossings(): number {
+    return this._crossings
+  }
+  get maxGenerationHistory(): number {
+    return this._maxGenerationHistory
+  }
+  get externalId(): PreferenceID | undefined {
+    return this._externalId
+  }
+  get revision(): number | undefined {
+    return this._revision
+  }
+
+  private static validate(maxGenerationHistory: number): void {
+    if (maxGenerationHistory < 1)
       throw new DomainError(
         'invalid-limit',
-        'Generation history must be positive.',
+        'ScheduleGeneration history must be positive.',
         'maxGenerationHistory',
       )
-    return new Preferences({
-      ...input,
-      weekDays: [...input.weekDays],
-    })
+  }
+}
+
+export class Preferences extends BasePreferences {
+  private readonly _id: PreferenceID
+  private readonly _audit: Audit
+
+  private constructor(input: IPreferences) {
+    super(input)
+    this._id = input.id
+    this._audit = Audit.reconstitute(input)
   }
 
-  static restore(snapshot: IPreferences): Preferences<IPreferences> {
-    return Preferences.build(snapshot)
+  static create(input: IPreferencesCreate): BasePreferences {
+    return new BasePreferences(input)
+  }
+  static reconstitute(input: IPreferences): Preferences {
+    return new Preferences(input)
   }
 
-  update(input: IPreferencesUpdate): Preferences<IPreferences> {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    const snapshot: IPreferences = {
-      ...this.snapshot,
-      ...input,
-      id: this.snapshot.id,
-    }
-    return Preferences.build(snapshot)
+  get id(): PreferenceID {
+    return this._id
   }
-
-  get id(): UUID {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    return this.snapshot.id
-  }
-
-  toSnapshot(): T {
-    return structuredClone(this.snapshot)
+  get audit(): Audit {
+    return this._audit
   }
 }

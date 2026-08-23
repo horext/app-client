@@ -45,6 +45,10 @@ export default defineNuxtModule({
         name: 'useSubjectsService',
         from: resolver.resolve('runtime/app/composables/index'),
       },
+      {
+        name: 'useLocalHourlyLoadService',
+        from: resolver.resolve('runtime/app/composables/index'),
+      },
     ])
 
     addPlugin({

@@ -1,0 +1,8 @@
+export * as AcademicConfigPersistenceMapper from './academic-config'
+export * as ActivityPersistenceMapper from './activity'
+export * as GeneratedSchedulePersistenceMapper from './generated-schedule'
+export * as PlannedSubjectPersistenceMapper from './planned-subject'
+export * as PreferencesPersistenceMapper from './preferences'
+export * as ProfilePersistenceMapper from './profile'
+export * as ScheduleFavoritePersistenceMapper from './schedule-favorite'
+export * as ScheduleGenerationPersistenceMapper from './schedule-generation'

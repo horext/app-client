@@ -22,12 +22,26 @@
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
+    <template #append>
+      <v-divider />
+      <v-list-item
+        :href="reportUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        :prepend-icon="mdiBugOutline"
+        :append-icon="mdiOpenInNew"
+        title="Informar un problema"
+      />
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
+import { mdiBugOutline, mdiOpenInNew } from '@mdi/js'
+
 defineProps<{
   items: { title: string; icon: string; to: string; badge?: number }[]
+  reportUrl: string
 }>()
 
 const internalDrawer = defineModel<boolean>('drawer')

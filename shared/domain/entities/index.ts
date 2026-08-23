@@ -1,14 +1,15 @@
-import type { IHourlyLoad } from '~/interfaces/houly-load'
+import type { IHourlyLoad } from '../types/hourly-load'
 import type { IIntersectionOccurrence } from '../types/occurrences'
 
 export type GenerationOccurrences = IIntersectionOccurrence[]
 export type AcademicLoad = IHourlyLoad
 
+export * from './audit'
 export * from './activity'
-export * from './user-subject'
-export * from './schedule'
-export * from './generation'
+export * from './planned-subject'
+export * from './generated-schedule'
+export * from './schedule-generation'
 export * from './profile'
 export * from './preferences'
 export * from './academic-config'
-export * from './favorite'
+export * from './schedule-favorite'

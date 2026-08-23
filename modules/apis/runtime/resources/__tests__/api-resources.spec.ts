@@ -33,6 +33,16 @@ describe('FacultyApi', () => {
 })
 
 describe('HourlyLoadApi', () => {
+  it('lists all published loads for a faculty', async () => {
+    const $fetch = makeFetch()
+    const api = new HourlyLoadApi($fetch)
+    await api.getAllByFaculty(42)
+    expect($fetch).toHaveBeenCalledWith('hourlyLoads', {
+      method: 'GET',
+      params: { faculty: 42 },
+    })
+  })
+
   it('calls $fetch with hourlyLoads/latest path and faculty param', async () => {
     const $fetch = makeFetch()
     const api = new HourlyLoadApi($fetch)
@@ -55,19 +65,40 @@ describe('SpecialityApi', () => {
   })
 })
 
-describe('CourseApi', () => {
-  it('calls $fetch with subjects search path and params', async () => {
+describe('SubjectApi', () => {
+  it('calls subjects path with comma-separated ids', async () => {
     const $fetch = makeFetch()
     const api = new SubjectApi($fetch)
-    await api.findPageBySearch({
+    await api.findAllByIds([12, 18, 25])
+    expect($fetch).toHaveBeenCalledWith('subjects', {
+      params: { ids: '12,18,25' },
+    })
+  })
+
+  it('calls $fetch with speciality subjects search path', async () => {
+    const $fetch = makeFetch()
+    const api = new SubjectApi($fetch)
+    await api.findPageBySpeciality({
       search: 'math',
       specialityId: 2,
       hourlyLoadId: 3,
     })
-    expect($fetch).toHaveBeenCalledWith('subjects?search=math', {
-      method: 'GET',
-      params: { specialityId: 2, hourlyLoadId: 3 },
+    expect($fetch).toHaveBeenCalledWith(
+      'hourlyLoads/3/specialities/2/subjects?search=math',
+    )
+  })
+
+  it('calls $fetch with study-plan subjects search path', async () => {
+    const $fetch = makeFetch()
+    const api = new SubjectApi($fetch)
+    await api.findPageByStudyPlan({
+      search: 'math',
+      studyPlanId: 2,
+      hourlyLoadId: 3,
     })
+    expect($fetch).toHaveBeenCalledWith(
+      'hourlyLoads/3/studyPlans/2/subjects?search=math',
+    )
   })
 })
 
@@ -104,5 +135,12 @@ describe('StudyPlanApi', () => {
     const api = new StudyPlanApi($fetch)
     await api.getSubjectsByStudyPlanId(7)
     expect($fetch).toHaveBeenCalledWith('studyPlans/7/subjects')
+  })
+
+  it('calls $fetch with speciality study plans path', async () => {
+    const $fetch = makeFetch()
+    const api = new StudyPlanApi($fetch)
+    await api.getAllBySpecialityId(4)
+    expect($fetch).toHaveBeenCalledWith('specialities/4/studyPlans')
   })
 })

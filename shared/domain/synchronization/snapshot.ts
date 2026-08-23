@@ -8,7 +8,3 @@ export interface AggregateSnapshot<T> {
 }
 
 export type Snapshot<T> = Required<AggregateSnapshot<T>>
-
-export interface SnapshotSource<T> {
-  toSnapshot(): T
-}

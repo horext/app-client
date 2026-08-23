@@ -1,22 +1,29 @@
-import type { ISubject, ISubjectSchedule } from './subject'
-import type { IEvent } from './event'
-import type { UUID } from 'crypto'
+import type {
+  IGeneratedScheduleSubject,
+  GeneratedScheduleId,
+} from '~~/shared/domain'
 
-export interface IScheduleSubjectGenerate extends ISubjectSchedule {
-  subject: ISubject
-}
-export interface IBaseScheduleGenerate {
+import type { IEvent } from './event'
+
+export type {
+  IGeneratedScheduleSubject,
+  GeneratedScheduleId,
+} from '~~/shared/domain'
+
+export interface IBaseGeneratedSchedule {
   scheduleSubjectKey: string
-  schedulesSubject: IScheduleSubjectGenerate[]
+  schedulesSubject: IGeneratedScheduleSubject[]
   crossings: number
   events: IEvent[]
 }
 
-export interface ILocalScheduleGenerate extends IBaseScheduleGenerate {
+export interface ILocalGeneratedSchedule extends IBaseGeneratedSchedule {
   events: IEvent[]
 }
 
-export interface IScheduleGenerate extends IBaseScheduleGenerate {
-  id: UUID
+export interface IGeneratedSchedule extends IBaseGeneratedSchedule {
+  id: GeneratedScheduleId
   events: IEvent[]
 }
+
+export type GeneratedScheduleInput = IBaseGeneratedSchedule | IGeneratedSchedule

@@ -1,13 +1,25 @@
-import type { IHourlyLoad } from './hourly-load'
+import type { IHourlyLoadReference } from './hourly-load'
 import type { ISubject, ISubjectSchedule } from './subject'
+
+export type IScheduleSubjectReference = Pick<IScheduleSubject, 'id'>
+export type ISubjectReference = Pick<ISubject, 'id'>
+export type IScheduleSubjectSchedule = Pick<
+  ISubjectSchedule,
+  'id' | 'section' | 'sessions'
+>
 
 export interface IScheduleSubject {
   id: number
-  subject: Pick<ISubject, 'id'>
-  hourlyLoad: Pick<IHourlyLoad, 'id'>
-  schedule: ISubjectSchedule
+  subject: ISubjectReference
+  hourlyLoad: IHourlyLoadReference
+  schedule: IScheduleSubjectSchedule
 }
 
-export interface IScheduleSubjectSessionDetail extends IScheduleSubject {
+export interface IScheduleSubjectDetail extends Omit<
+  IScheduleSubject,
+  'subject'
+> {
   subject: ISubject
 }
+
+export type IScheduleSubjectSessionDetail = IScheduleSubjectDetail

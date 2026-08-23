@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
-import { Generation, type IGenerationRecord } from '#shared/domain'
+import { ScheduleGeneration, type IScheduleGeneration } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
 import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
+import { ScheduleGenerationPersistenceMapper } from '../../mappers/persistence'
 
 const makeGeneration = () =>
-  Generation.create({
+  ScheduleGeneration.create({
     generatedAt: '2024-01-01T00:00:00Z',
     scheduleIds: [],
     crossingsSetting: 0,
@@ -34,7 +35,9 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns all records', async () => {
     const value = makeGeneration()
     persistence.findAll.mockResolvedValue([
-      persistedSnapshot(value.toSnapshot()) satisfies IGenerationRecord,
+      persistedSnapshot(
+        ScheduleGenerationPersistenceMapper.toCreateRecord(value),
+      ) satisfies IScheduleGeneration,
     ])
     expect(await repo.findAll('user-1')).toHaveLength(1)
   })
@@ -45,8 +48,8 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns record by id', async () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
-      value.toSnapshot(),
-    ) satisfies IGenerationRecord
+      ScheduleGenerationPersistenceMapper.toCreateRecord(value),
+    ) satisfies IScheduleGeneration
     persistence.find.mockResolvedValue(stored)
     expect(await repo.findById('user-1', stored.id)).toBeDefined()
   })
@@ -57,8 +60,8 @@ describe('IndexedDBGenerationsRepository', () => {
   it('returns a created record', async () => {
     const value = makeGeneration()
     const stored = persistedSnapshot(
-      value.toSnapshot(),
-    ) satisfies IGenerationRecord
+      ScheduleGenerationPersistenceMapper.toCreateRecord(value),
+    ) satisfies IScheduleGeneration
     persistence.create.mockResolvedValue(stored)
     const result = await repo.create('user-1', value)
     expect(result.id).toBe(stored.id)

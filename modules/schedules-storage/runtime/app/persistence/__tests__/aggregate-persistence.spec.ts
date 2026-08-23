@@ -3,7 +3,7 @@ import type { AggregatePersistence } from '../aggregate-persistence'
 import { IndexedDbAggregatePersistence } from '../indexed-db-aggregate-persistence'
 import { StoresDB } from '../../context/db'
 import { makeUUID } from '~~/shared/domain/types/ids'
-import type { IProfile, ProfileId, ScheduleGenerateId } from '~~/shared/domain'
+import type { IProfile, ProfileId, GeneratedScheduleId } from '~~/shared/domain'
 
 describe('IndexedDbAggregatePersistence', () => {
   const get = vi.fn()
@@ -106,7 +106,7 @@ describe('IndexedDbAggregatePersistence', () => {
     const favoritePersistence = new IndexedDbAggregatePersistence(
       vi.fn().mockResolvedValue(db),
     )
-    const id: ScheduleGenerateId = makeUUID()
+    const id: GeneratedScheduleId = makeUUID()
 
     const result = await favoritePersistence.create(
       StoresDB.FAVORITES,

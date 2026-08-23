@@ -20,6 +20,7 @@ const mockAcademicPatch = vi.fn()
 const mockCreateAcademicConfig = vi.fn()
 
 const mockGetLatestByFaculty = vi.fn()
+const mockGetAllByFaculty = vi.fn()
 
 const mockCreatePreferences = vi.fn()
 
@@ -56,6 +57,7 @@ vi.mock('~~/modules/apis/runtime/composables', () => ({
     () =>
       ({
         getLatestByFaculty: mockGetLatestByFaculty,
+        getAllByFaculty: mockGetAllByFaculty,
       }) satisfies IHourlyLoadApi,
   ),
   useSpecialityApi: vi.fn(
@@ -363,9 +365,15 @@ describe('useUserProfile', () => {
     mockProfilePatch.mockResolvedValue(undefined)
     mockAcademicPatch.mockResolvedValue(undefined)
     const { updateBasicSettings } = useUserProfile()
-    await updateBasicSettings(3, 4, load)
+    await updateBasicSettings(3, 4, load, 5)
+    expect(mockProfilePatch).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 3,
+      specialityId: 4,
+      studyPlanId: 5,
+    })
     expect(store.profile?.facultyId).toBe(3)
     expect(store.profile?.specialityId).toBe(4)
+    expect(store.profile?.studyPlanId).toBe(5)
   })
 
   it('updateBasicSettings works when profile is undefined', async () => {
@@ -375,6 +383,17 @@ describe('useUserProfile', () => {
     const { updateBasicSettings } = useUserProfile()
     await updateBasicSettings(3, 4, load)
     expect(mockProfilePatch).toHaveBeenCalled()
+  })
+
+  it('updateBasicSettings clears the official hourly load for a local dataset', async () => {
+    mockProfilePatch.mockResolvedValue(undefined)
+    mockAcademicPatch.mockResolvedValue(undefined)
+    const { updateBasicSettings } = useUserProfile()
+    await updateBasicSettings(3, 4, null)
+    expect(mockAcademicPatch).toHaveBeenCalledWith(expect.any(String), {
+      hourlyLoad: null,
+    })
+    expect(useUserProfileStore().hourlyLoad).toBeUndefined()
   })
 
   it('completeSetup creates profile, academic config, preferences, and sets store values', async () => {
@@ -396,12 +415,42 @@ describe('useUserProfile', () => {
       maxGenerationHistory: 10,
     })
     const { completeSetup } = useUserProfile()
-    await completeSetup(2, 3, load)
+    await completeSetup(2, 3, load, 4)
     const store = useUserProfileStore()
-    expect(mockCreateProfile).toHaveBeenCalled()
+    expect(mockCreateProfile).toHaveBeenCalledWith(expect.any(String), {
+      facultyId: 2,
+      specialityId: 3,
+      studyPlanId: 4,
+      setupCompleted: true,
+    })
     expect(mockCreateAcademicConfig).toHaveBeenCalled()
     expect(mockCreatePreferences).toHaveBeenCalled()
     expect(store.profile?.facultyId).toBe(2)
     expect(store.hourlyLoad).toEqual(load)
+  })
+
+  it('completeSetup stores a null official load when using a local dataset', async () => {
+    mockCreateProfile.mockResolvedValue({
+      id: crypto.randomUUID(),
+      facultyId: 2,
+      specialityId: 3,
+      setupCompleted: true,
+    })
+    mockCreateAcademicConfig.mockResolvedValue({
+      id: crypto.randomUUID(),
+      hourlyLoad: null,
+    })
+    mockCreatePreferences.mockResolvedValue({
+      id: crypto.randomUUID(),
+      weekDays: [1, 2, 3],
+      crossings: 0,
+      maxGenerationHistory: 10,
+    })
+    const { completeSetup } = useUserProfile()
+    await completeSetup(2, 3, null)
+    expect(mockCreateAcademicConfig).toHaveBeenCalledWith(expect.any(String), {
+      hourlyLoad: null,
+    })
+    expect(useUserProfileStore().hourlyLoad).toBeUndefined()
   })
 })

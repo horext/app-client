@@ -1,13 +1,8 @@
-import type {
-  IBasePreferences,
-  IPreferences,
-} from '#shared/domain/types/preferences'
+import type { IPreferencesUpdate } from '#shared/domain/types/preferences'
+import type { Preferences } from '#shared/domain'
 
 export interface IPreferencesService {
-  get(userId: string): Promise<IPreferences | undefined>
-  create(
-    userId: string,
-    initial?: Partial<IBasePreferences>,
-  ): Promise<IPreferences>
-  patch(userId: string, value: Partial<IBasePreferences>): Promise<IPreferences>
+  get(userId: string): Promise<Preferences | undefined>
+  create(userId: string, initial?: IPreferencesUpdate): Promise<Preferences>
+  patch(userId: string, value: IPreferencesUpdate): Promise<Preferences>
 }

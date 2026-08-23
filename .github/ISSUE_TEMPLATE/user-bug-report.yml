@@ -1,0 +1,120 @@
+name: Reportar un problema como usuario
+description: Informa un error o comportamiento inesperado en Horext.
+title: '[Aplicación]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por ayudarnos a mejorar Horext.
+
+        No incluyas nombres, correos, horarios personales ni otra información privada en el reporte o las capturas.
+
+  - type: checkboxes
+    id: existing_issue
+    attributes:
+      label: Verificación previa
+      options:
+        - label: Busqué problemas existentes y no encontré uno que describa este error.
+          required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afectada
+      options:
+        - Generador de horarios
+        - Cursos y secciones
+        - Calendario y actividades
+        - Configuración académica o perfil
+        - Instalación o aplicación PWA
+        - Otra área
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué ocurrió?
+      description: Describe el error y cuándo apareció.
+      placeholder: Explica claramente el comportamiento observado.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducirlo
+      description: Indica la secuencia mínima que permite observar el problema.
+      placeholder: |
+        1. Abrí...
+        2. Seleccioné...
+        3. Ocurrió...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Comportamiento esperado
+      description: Explica qué esperabas que ocurriera.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frecuencia
+      options:
+        - Siempre
+        - Frecuentemente
+        - Algunas veces
+        - Ocurrió una sola vez
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Navegador
+      multiple: true
+      options:
+        - Chrome
+        - Microsoft Edge
+        - Firefox
+        - Safari
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Dispositivo y sistema
+      description: Indica el dispositivo, sistema operativo y versión del navegador si los conoces.
+      placeholder: |
+        - Dispositivo: computadora o teléfono
+        - Sistema: Windows 11, Android 16, etc.
+        - Versión del navegador:
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Capturas o grabaciones
+      description: Adjunta imágenes o animaciones que ayuden a entender el problema. Oculta primero cualquier dato personal.
+    validations:
+      required: false
+      accept: '.png,.jpg,.jpeg,.webp,.gif'
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Información adicional
+      description: Agrega cualquier otro detalle relevante.
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacidad
+      options:
+        - label: Confirmo que el reporte y sus archivos no contienen datos personales.
+          required: true

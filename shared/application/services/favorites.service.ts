@@ -1,4 +1,4 @@
-import { Favorite, type ScheduleGenerateId } from '#shared/domain'
+import { ScheduleFavorite, type GeneratedScheduleId } from '#shared/domain'
 import type {
   ISchedulesFavoritesRepository,
   ISchedulesRepository,
@@ -10,26 +10,26 @@ export class FavoritesService {
     private readonly schedules: ISchedulesRepository,
   ) {}
 
-  get(userId: string, id: ScheduleGenerateId) {
+  get(userId: string, id: GeneratedScheduleId) {
     return this.favorites.findById(userId, id)
   }
 
-  findByScheduleId(userId: string, scheduleId: ScheduleGenerateId) {
+  findByScheduleId(userId: string, scheduleId: GeneratedScheduleId) {
     return this.favorites.findByScheduleId(userId, scheduleId)
   }
 
-  async scheduleExists(userId: string, id: ScheduleGenerateId) {
+  async scheduleExists(userId: string, id: GeneratedScheduleId) {
     return Boolean(await this.schedules.findBy(userId, id))
   }
 
-  create(userId: string, scheduleId: ScheduleGenerateId) {
+  create(userId: string, scheduleId: GeneratedScheduleId) {
     return this.favorites.create(
       userId,
-      Favorite.create({ scheduleId: scheduleId }),
+      ScheduleFavorite.create({ scheduleId: scheduleId }),
     )
   }
 
-  delete(userId: string, id: ScheduleGenerateId, revision: number) {
+  delete(userId: string, id: GeneratedScheduleId, revision: number) {
     return this.favorites.delete(userId, id, revision)
   }
 }

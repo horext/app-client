@@ -15,9 +15,20 @@ export interface IStudyPlanResponse {
   id: number
   fromDate: string
   code: string
-  organizationUnit: {
-    id: number
-  }
+  name: string
+  organizationUnit:
+    | {
+        id: number
+        name: null
+        code: null
+      }
+    | {
+        id: number
+        name: string
+        code: string
+      }
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IClassroomResponse {
@@ -54,7 +65,13 @@ export interface ISubjectResponse {
   studyPlan: IStudyPlanResponse
   credits: number
   cycle: number | null
+  specialityCodes?: string[]
+  recommended?: boolean
+  createdAt: string
+  updatedAt: string
 }
+
+export type ISubjectReferenceResponse = Pick<ISubjectResponse, 'id'>
 
 export interface IScheduleResponse {
   id: number

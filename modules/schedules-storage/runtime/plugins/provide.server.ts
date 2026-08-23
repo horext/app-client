@@ -7,6 +7,7 @@ import {
   NoopSchedulesFavoritesRepository,
   NoopSchedulesRepository,
   NoopSubjectsRepository,
+  NoopLocalHourlyLoadRepository,
 } from '../app/repositories/noop.repositories'
 import {
   SCHEDULES_DB_KEY,
@@ -32,6 +33,7 @@ export default defineNuxtPlugin({
       generationRepository: new NoopGenerationRepository(),
       favoritesRepository: new NoopSchedulesFavoritesRepository(),
       subjectsRepository: new NoopSubjectsRepository(),
+      localHourlyLoadRepository: new NoopLocalHourlyLoadRepository(),
     }
     nuxtApp.vueApp.provide(SCHEDULES_RAW_REPOSITORIES_KEY, storage)
     nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, storage.db)
@@ -49,6 +51,7 @@ export default defineNuxtPlugin({
           generationRepository: storage.generationRepository,
           favoritesRepository: storage.favoritesRepository,
           subjectsRepository: storage.subjectsRepository,
+          localHourlyLoadRepository: storage.localHourlyLoadRepository,
         },
       },
     }

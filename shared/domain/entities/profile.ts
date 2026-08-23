@@ -1,52 +1,82 @@
 import type {
-  IBaseProfile,
   IProfile,
   IProfileCreate,
   IProfileUpdate,
+  ProfileId,
 } from '../types/profile'
-import type { UUID } from 'crypto'
-import type { IEntitySnapshot } from './snapshot'
+import { Audit } from './audit'
 
-export class Profile<
-  T extends IBaseProfile | IProfile = IProfile,
-> implements IEntitySnapshot<T> {
-  private constructor(private readonly snapshot: T) {}
+export class BaseProfile {
+  protected _facultyId: number
+  protected _specialityId: number
+  protected _studyPlanId?: number
+  protected _setupCompleted: boolean
+  protected _externalId?: ProfileId
+  protected _revision?: number
 
-  static create(input: IProfileCreate): Profile<IBaseProfile> {
-    return Profile.build(input)
+  protected constructor(input: IProfileCreate) {
+    this._facultyId = input.facultyId
+    this._specialityId = input.specialityId
+    this._studyPlanId = input.studyPlanId
+    this._setupCompleted = input.setupCompleted ?? false
+    this._externalId = input.externalId
+    this._revision = input.revision
   }
 
-  private static build<T extends IBaseProfile | IProfile>(
-    input: T,
-  ): Profile<T> {
-    return new Profile({
-      ...input,
-      setupCompleted: input.setupCompleted ?? false,
-    })
+  update(input: IProfileUpdate): this {
+    if (input.facultyId !== undefined) this._facultyId = input.facultyId
+    if (input.specialityId !== undefined)
+      this._specialityId = input.specialityId
+    if ('studyPlanId' in input) this._studyPlanId = input.studyPlanId
+    if (input.setupCompleted !== undefined)
+      this._setupCompleted = input.setupCompleted
+    if ('externalId' in input) this._externalId = input.externalId
+    if ('revision' in input) this._revision = input.revision
+    return this
   }
 
-  static restore(snapshot: IProfile): Profile<IProfile> {
-    return Profile.build(snapshot)
+  get facultyId(): number {
+    return this._facultyId
+  }
+  get specialityId(): number {
+    return this._specialityId
+  }
+  get studyPlanId(): number | undefined {
+    return this._studyPlanId
+  }
+  get setupCompleted(): boolean {
+    return this._setupCompleted
+  }
+  get externalId(): ProfileId | undefined {
+    return this._externalId
+  }
+  get revision(): number | undefined {
+    return this._revision
+  }
+}
+
+export class Profile extends BaseProfile {
+  private readonly _id: ProfileId
+  private readonly _audit: Audit
+
+  private constructor(input: IProfile) {
+    super(input)
+    this._id = input.id
+    this._audit = Audit.reconstitute(input)
   }
 
-  update(input: IProfileUpdate): Profile<IProfile> {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    const snapshot: IProfile = {
-      ...this.snapshot,
-      ...input,
-      id: this.snapshot.id,
-    }
-    return Profile.build(snapshot)
+  static create(input: IProfileCreate): BaseProfile {
+    return new BaseProfile(input)
   }
 
-  get id(): UUID {
-    if (!('id' in this.snapshot)) throw new Error('Entity is not persisted.')
-    return this.snapshot.id
+  static reconstitute(input: IProfile): Profile {
+    return new Profile(input)
   }
 
-  toSnapshot() {
-    return {
-      ...this.snapshot,
-    }
+  get id(): ProfileId {
+    return this._id
+  }
+  get audit(): Audit {
+    return this._audit
   }
 }

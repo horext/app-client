@@ -1,59 +1,65 @@
-import type { Favorite, Schedule } from '#shared/domain'
 import type {
-  IBaseFavoriteSchedule,
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
-  ScheduleGenerateId,
-} from '#shared/domain/types/schedule'
+  BaseGeneratedSchedule,
+  BaseScheduleFavorite,
+  ScheduleFavorite,
+  GeneratedSchedule,
+} from '#shared/domain'
+import type { GeneratedScheduleId } from '#shared/domain/types/schedule'
 
 export interface ISchedulesRepository {
-  findAll(userId: string): Promise<Schedule[]>
-  findBy(userId: string, id: ScheduleGenerateId): Promise<Schedule | undefined>
-  getEntries(userId: string, ids: ScheduleGenerateId[]): Promise<Schedule[]>
+  findAll(userId: string): Promise<GeneratedSchedule[]>
+  findBy(
+    userId: string,
+    id: GeneratedScheduleId,
+  ): Promise<GeneratedSchedule | undefined>
+  getEntries(
+    userId: string,
+    ids: GeneratedScheduleId[],
+  ): Promise<GeneratedSchedule[]>
   getByKey(
     userId: string,
     scheduleSubjectKey: string,
-  ): Promise<Schedule | undefined>
+  ): Promise<GeneratedSchedule | undefined>
   create(
     userId: string,
-    schedule: Schedule<IBaseScheduleGenerate>,
-  ): Promise<Schedule<IScheduleGenerate>>
+    schedule: BaseGeneratedSchedule,
+  ): Promise<GeneratedSchedule>
   createAll(
     userId: string,
-    schedules: Schedule<IBaseScheduleGenerate>[],
-  ): Promise<Schedule<IScheduleGenerate>[]>
+    schedules: BaseGeneratedSchedule[],
+  ): Promise<GeneratedSchedule[]>
   update(
     userId: string,
-    schedule: Schedule<IScheduleGenerate>,
-  ): Promise<Schedule<IScheduleGenerate>>
+    schedule: GeneratedSchedule,
+  ): Promise<GeneratedSchedule>
   deleteEntry(
     userId: string,
-    id: ScheduleGenerateId,
+    id: GeneratedScheduleId,
     expectedRevision?: number,
   ): Promise<void>
   deleteEntries(
     userId: string,
-    ids: ScheduleGenerateId[],
+    ids: GeneratedScheduleId[],
     expectedRevision?: number,
   ): Promise<void>
 }
 export interface ISchedulesFavoritesRepository {
-  findAll(userId: string): Promise<Favorite[]>
+  findAll(userId: string): Promise<ScheduleFavorite[]>
   findById(
     userId: string,
-    id: ScheduleGenerateId,
-  ): Promise<Favorite | undefined>
+    id: GeneratedScheduleId,
+  ): Promise<ScheduleFavorite | undefined>
   findByScheduleId(
     userId: string,
-    scheduleId: ScheduleGenerateId,
-  ): Promise<Favorite | undefined>
+    scheduleId: GeneratedScheduleId,
+  ): Promise<ScheduleFavorite | undefined>
   create(
     userId: string,
-    favorite: Favorite<IBaseFavoriteSchedule>,
-  ): Promise<Favorite>
+    favorite: BaseScheduleFavorite,
+  ): Promise<ScheduleFavorite>
   delete(
     userId: string,
-    id: ScheduleGenerateId,
+    id: GeneratedScheduleId,
     expectedRevision?: number,
   ): Promise<void>
 }

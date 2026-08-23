@@ -1,26 +1,32 @@
 import type {
-  IGenerationMeta,
-  IGenerationRecord,
-  IGenerationResult,
-} from '#shared/domain/types/generation-record'
-import type { IBaseIntersectionOccurrence } from '#shared/domain/types/occurrences'
+  IScheduleGenerationParameters,
+  IScheduleGeneration,
+} from '#shared/domain/types/schedule-generation'
 import type {
-  IBaseScheduleGenerate,
-  IScheduleGenerate,
-} from '#shared/domain/types/schedule'
+  IBaseIntersectionOccurrence,
+  IIntersectionOccurrence,
+} from '#shared/domain/types/occurrences'
+import type { IBaseGeneratedSchedule } from '#shared/domain/types/schedule'
+import type { GeneratedSchedule, ScheduleGeneration } from '#shared/domain'
+
+export interface GenerationResult {
+  generation: ScheduleGeneration
+  schedules: GeneratedSchedule[]
+  occurrences: IIntersectionOccurrence[]
+}
 
 export interface IGenerationService {
-  getGenerations(userId: string): Promise<IGenerationRecord[]>
-  getLatestGeneration(userId: string): Promise<IGenerationResult | undefined>
+  getGenerations(userId: string): Promise<ScheduleGeneration[]>
+  getLatestGeneration(userId: string): Promise<GenerationResult | undefined>
   saveGeneration(
     userId: string,
-    meta: IGenerationMeta,
-    schedules: IBaseScheduleGenerate[],
+    parameters: IScheduleGenerationParameters,
+    schedules: IBaseGeneratedSchedule[],
     occurrences: IBaseIntersectionOccurrence[],
     maxHistory: number,
-  ): Promise<IGenerationResult>
+  ): Promise<GenerationResult>
   getSchedulesForGeneration(
     userId: string,
-    record: IGenerationRecord,
-  ): Promise<IScheduleGenerate[]>
+    record: IScheduleGeneration,
+  ): Promise<GeneratedSchedule[]>
 }

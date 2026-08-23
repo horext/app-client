@@ -24,6 +24,8 @@ export interface IGoogleCalendarItem {
   primary?: boolean
 }
 
+export type GoogleCalendarSummary = Pick<IGoogleCalendarItem, 'summary'>
+
 export interface Reminder {
   method: string
   minutes: number

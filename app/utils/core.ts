@@ -1,11 +1,10 @@
 import type { IBaseIntersectionOccurrence } from '~/interfaces/ocurrences'
 import type {
-  ILocalScheduleGenerate,
-  IScheduleSubjectGenerate,
+  ILocalGeneratedSchedule,
+  IGeneratedScheduleSubject,
 } from '~/interfaces/schedule'
-import type { IBaseSubjectSchedules } from '~/interfaces/subject'
+import type { IBasePlannedSubject } from '~/interfaces/subject'
 import type { IActivity } from '~/interfaces/event'
-import { EVENT_COLORS } from '~/constants/event'
 import { ActivitySessionEvent, SubjectSessionEvent } from '~/models/Event'
 import type { UUID } from 'crypto'
 
@@ -17,12 +16,12 @@ export type ScheduleOptions = {
 }
 
 export function getSchedules(
-  subjectsSchedules: Array<IBaseSubjectSchedules>,
+  subjectsSchedules: Array<IBasePlannedSubject>,
   activities: Array<IActivity>,
   _options?: ScheduleOptions,
 ): {
   occurrences: IBaseIntersectionOccurrence[]
-  combinations: ILocalScheduleGenerate[]
+  combinations: ILocalGeneratedSchedule[]
 } {
   const options = {
     credits: 100,
@@ -34,7 +33,7 @@ export function getSchedules(
   const occurrencesMap = new Map<string, IBaseIntersectionOccurrence>()
   const maxQuantity = subjectsSchedules.length
   const indexSchedules: number[] = Array(maxQuantity).fill(0)
-  const generatedSchedules: Array<ILocalScheduleGenerate> = []
+  const generatedSchedules: Array<ILocalGeneratedSchedule> = []
   const baseEvents = activities.flatMap(
     ActivitySessionEvent.buildActivitiesFrom,
   )
@@ -62,16 +61,13 @@ export function getSchedules(
 
   const intersectionCache = new Map<string, boolean>()
   for (let i = totalSchedules; i--;) {
-    const scheduleSubjects: Array<IScheduleSubjectGenerate> =
+    const scheduleSubjects: Array<IGeneratedScheduleSubject> =
       subjectsSchedules.map((subjectSchedules, j) => ({
         ...subjectSchedules.schedules[indexSchedules[j]!]!,
         subject: subjectSchedules.subject,
       }))
     const scheduleSubjectsEvents = scheduleSubjects.map((c, index) =>
-      SubjectSessionEvent.buildFromSchedule(
-        c,
-        subjectsSchedules[index]?.color ?? EVENT_COLORS[index] ?? '#000000',
-      ),
+      SubjectSessionEvent.buildFromSchedule(c, subjectsSchedules[index]!.color),
     )
     let crossingCombination = 0
     let useCombination = true

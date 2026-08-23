@@ -7,38 +7,41 @@ import type {
 } from './replicated-identity'
 import type { BrandUUID } from './ids'
 
-export interface IScheduleSubjectGenerate extends ISubjectSchedule {
+export interface IGeneratedScheduleSubject extends ISubjectSchedule {
   subject: ISubject
 }
 
-export type ScheduleGenerateId = BrandUUID<'ScheduleGenerateId'>
+export type GeneratedScheduleId = BrandUUID<'GeneratedScheduleId'>
 
-export interface IBaseScheduleGenerate extends ReplicationState<ScheduleGenerateId> {
+export interface IBaseGeneratedSchedule extends ReplicationState<GeneratedScheduleId> {
   scheduleSubjectKey: string
-  schedulesSubject: IScheduleSubjectGenerate[]
+  schedulesSubject: IGeneratedScheduleSubject[]
   crossings: number
   events: IEvent[]
 }
 
-export interface IScheduleGenerate
+export interface IGeneratedSchedule
   extends
-    IBaseScheduleGenerate,
+    IBaseGeneratedSchedule,
     IAuditable,
-    ReplicatedIdentity<ScheduleGenerateId> {}
+    ReplicatedIdentity<GeneratedScheduleId> {}
 
-export interface IBaseFavoriteSchedule extends ReplicationState<ScheduleGenerateId> {
-  id: ScheduleGenerateId
+/** A schedule can be either a newly generated value or a persisted entity. */
+export type GeneratedScheduleInput = IBaseGeneratedSchedule | IGeneratedSchedule
+
+export interface IBaseScheduleFavorite extends ReplicationState<GeneratedScheduleId> {
+  id: GeneratedScheduleId
 }
 
-export interface IFavoriteSchedule
+export interface IScheduleFavorite
   extends
-    IBaseFavoriteSchedule,
+    IBaseScheduleFavorite,
     IAuditable,
-    ReplicatedIdentity<ScheduleGenerateId> {}
+    ReplicatedIdentity<GeneratedScheduleId> {}
 
-export type IScheduleCreate = IBaseScheduleGenerate
-export type IScheduleUpdate = Partial<IScheduleCreate>
+export type IGeneratedScheduleCreate = IBaseGeneratedSchedule
+export type IGeneratedScheduleUpdate = Partial<IGeneratedScheduleCreate>
 
-export interface IFavoriteCreate {
-  scheduleId: ScheduleGenerateId
+export interface IScheduleFavoriteCreate {
+  scheduleId: GeneratedScheduleId
 }

@@ -14,6 +14,13 @@
       <v-sheet flat class="pa-2">
         <v-row density="comfortable">
           <v-col cols="12">
+            <SubjectSearchContext
+              :speciality-name="activeSpecialityName"
+              :study-plan-name="activeStudyPlanName"
+              :report-url="studyPlanReportUrl"
+            />
+          </v-col>
+          <v-col cols="12">
             <SubjectSelect
               v-model="selectedSubject"
               v-model:search="search"
@@ -22,11 +29,6 @@
               :subjects="availableCourses"
               @update:model-value="addNewSubject"
             />
-          </v-col>
-          <v-col cols="12">
-            <v-chip color="primary" variant="flat" size="small"
-              >Especialidad: {{ speciality?.name }}
-            </v-chip>
           </v-col>
         </v-row>
         <v-dialog
@@ -41,6 +43,7 @@
             :subject-schedules="subjectSchedules"
             :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
+            :report-url="scheduleReportUrl"
             @save="save"
             @cancel="close"
           />
@@ -61,7 +64,12 @@
       <SubjectTableNoData />
     </template>
     <template #[`item.color`]="{ item }">
-      <v-badge :color="item.color ?? '#1976d2'" />
+      <BaseColorEditor
+        :color="item.color"
+        :loading="updatingColor"
+        title="Color del curso"
+        @save="saveColor(item, $event)"
+      />
     </template>
     <template #[`item.sections`]="{ item }">
       <SubjectTableItemSectionList :schedules="item.schedules" />
@@ -74,7 +82,22 @@
     </template>
     <template #bottom>
       <v-divider />
-      <SubjectTotalCredits :subjects="mySubjects" />
+      <SubjectTotalCredits :subjects="mySubjects">
+        <template v-if="missingCourseReportUrl" #actions>
+          <v-btn
+            :href="missingCourseReportUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="text"
+            density="compact"
+            size="small"
+            :prepend-icon="mdiBookSearchOutline"
+            :append-icon="mdiOpenInNew"
+          >
+            ¿No encuentras tu curso?
+          </v-btn>
+        </template>
+      </SubjectTotalCredits>
 
       <base-confirm-dialog
         v-if="selectedDelete"
@@ -94,74 +117,198 @@
       <base-snackbar v-model="succcesDeleteCourse">
         Curso Eliminado correctamente!
       </base-snackbar>
+      <base-confirm-dialog
+        v-if="pendingUnrecommendedSubject"
+        v-model="confirmUnrecommended"
+        @click:confirm="confirmAddUnrecommended"
+        @click:reject="cancelAddUnrecommended"
+      >
+        {{ pendingUnrecommendedSubject.course.name }} no figura en la malla
+        conocida de tu carrera. La información puede estar desactualizada.
+        ¿Deseas agregarlo de todas formas?
+      </base-confirm-dialog>
     </template>
   </v-data-table>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { mdiBookSearchOutline, mdiOpenInNew } from '@mdi/js'
 import SubjectSchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import SubjectTableItemSectionList from '~/components/subject/table/ItemSectionList.vue'
 import SubjectTableNoData from '~/components/subject/table/NoData.vue'
 import { useUserProfileStore } from '~/stores/user-profile'
 import type {
-  ISubjectSchedules,
+  IPlannedSubject,
   ISubjectSchedule,
   ISubject,
-  IBaseSubjectSchedules,
+  IBasePlannedSubject,
 } from '~/interfaces/subject'
 import { SUBJECT_HEADERS } from '~/constants/subjects'
-import { EVENT_COLORS } from '~/constants/event'
+import { getNextAvailableEventColor } from '~/constants/event'
 import SubjectTableItemActions from '~/components/subject/table/ItemActions.vue'
 import {
-  useCourseApi,
+  useSubjectApi,
   useScheduleSubjectApi,
+  useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
 import SubjectTotalCredits from '~/components/subject/TotalCredits.vue'
 import SubjectSelect from '~/components/subject/Select.vue'
 import { useUserSubjects } from '~/composables/user-subjects'
-import type { SubjectSchedules } from '~/models/subject-schedules'
-import type { SubjectScheduleId } from '~~/shared/domain'
+import type { PlannedSubject } from '~/models/planned-subject'
+import type { PlannedSubjectId } from '~~/shared/domain'
+import { toAppScheduleSubject } from '~/mappers/schedule/api'
+import SubjectSearchContext from '~/components/subject/SearchContext.vue'
+import {
+  buildHourlyLoadReportUrl,
+  buildStudyPlanReportUrl,
+  withHourlyLoadSubjectSchedules,
+  withStudyPlanReportProblem,
+} from '~/utils/study-plan-report'
 
 useSeoMeta({
   title: 'Cursos - Generador de Horarios',
   description: 'Administra tus cursos para tener un mejor control de tu tiempo',
 })
 
-const courseApi = useCourseApi()
+const subjectApi = useSubjectApi()
+const studyPlanApi = useStudyPlanApi()
 
 const configStore = useUserProfileStore()
-const { mySubjects, deleteSubjectById, updateSubject, saveNewSubject } =
-  useUserSubjects()
+const {
+  mySubjects,
+  deleteSubjectById,
+  updateSubject,
+  updateSubjectColor,
+  saveNewSubject,
+  refreshSubjectCatalog,
+} = useUserSubjects()
 
 const succcesAddCourse = ref(false)
 
 const selectedSubject = shallowRef<ISubject>()
 const availableCourses = computed(() => {
   return subjects.value?.filter(
-    (c1) => !mySubjects.value.some((c2) => c1.id === c2.subject.id),
+    (c1) =>
+      !mySubjects.value.some(
+        (c2) =>
+          c1.id === c2.subject.id || c1.course.id === c2.subject.course.id,
+      ),
   )
 })
-const { specialityId, hourlyLoad, speciality } = storeToRefs(configStore)
+const { specialityId, studyPlanId, hourlyLoad, speciality } =
+  storeToRefs(configStore)
+
+const { data: studyPlans } = useAsyncData(
+  'profile-study-plans',
+  async () => {
+    if (!specialityId.value || !studyPlanId.value) return []
+    return studyPlanApi.getAllBySpecialityId(specialityId.value)
+  },
+  {
+    default: () => [],
+    watch: [specialityId, studyPlanId],
+    server: false,
+  },
+)
+
+const activeSpecialityName = computed(
+  () => speciality.value?.name ?? 'Especialidad',
+)
+const activeStudyPlanName = computed(() => {
+  if (!studyPlanId.value) return undefined
+  const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
+  if (!plan) return 'Plan de estudios'
+  if (plan.code && plan.name) return `${plan.code} - ${plan.name}`
+  return plan.name ?? plan.code
+})
+const studyPlanReportUrl = computed(() => {
+  if (!studyPlanId.value || !speciality.value?.name) return undefined
+  const plan = studyPlans.value.find((item) => item.id === studyPlanId.value)
+  if (!plan) return undefined
+  return buildStudyPlanReportUrl({
+    specialityName: speciality.value.name,
+    studyPlanName: plan.name ?? plan.code,
+    studyPlanCode: plan.name ? plan.code : undefined,
+    fromDate: plan.fromDate,
+  })
+})
+const missingCourseReportUrl = computed(() => {
+  if (!studyPlanReportUrl.value) return undefined
+  return withStudyPlanReportProblem(studyPlanReportUrl.value, 'missing-subject')
+})
+
+const refresh = async () => {
+  try {
+    await refreshSubjectCatalog()
+  } catch {
+    // IndexedDB remains the offline source of truth.
+  }
+}
+
+if (mySubjects.value.length > 0) {
+  void refresh()
+} else {
+  watch(
+    () => mySubjects.value.length,
+    (length) => {
+      if (length > 0) void refresh()
+    },
+    { once: true },
+  )
+}
 
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const subjectSchedules = shallowRef<IBaseSubjectSchedules | ISubjectSchedules>()
+const subjectSchedules = shallowRef<IBasePlannedSubject | IPlannedSubject>()
 
 const openSearchMenu = ref(false)
+const pendingUnrecommendedSubject = shallowRef<ISubject>()
+const confirmUnrecommended = ref(false)
 
 const addNewSubject = (item?: ISubject) => {
   if (!item) return
+  if (item.recommended === false) {
+    pendingUnrecommendedSubject.value = item
+    confirmUnrecommended.value = true
+    return
+  }
+  openSubject(item)
+}
+
+const openSubject = (item: ISubject) => {
+  const color = getNextAvailableEventColor(
+    mySubjects.value.map((subject) => subject.color),
+  )
   openSearchMenu.value = false
   editItem({
     subject: item,
     schedules: [],
-    color: EVENT_COLORS[mySubjects.value.length] ?? '#1976d2',
+    color,
   })
 }
 
+const confirmAddUnrecommended = () => {
+  if (pendingUnrecommendedSubject.value)
+    openSubject(pendingUnrecommendedSubject.value)
+  cancelAddUnrecommended()
+}
+
+const cancelAddUnrecommended = () => {
+  confirmUnrecommended.value = false
+  pendingUnrecommendedSubject.value = undefined
+  selectedSubject.value = undefined
+}
+
 const scheduleSubjectApi = useScheduleSubjectApi()
+const {
+  dataset: localDataset,
+  ensureLoaded: ensureLocalHourlyLoad,
+  searchSubjects,
+  schedulesForSubject,
+} = useLocalHourlyLoad()
+await ensureLocalHourlyLoad()
 
 const {
   data: schedules,
@@ -170,9 +317,13 @@ const {
 } = useAsyncData<ISubjectSchedule[]>(
   'generator-subject-schedules',
   async () => {
-    const _hourlyLoadId = hourlyLoad.value?.id
     const subject = subjectSchedules.value?.subject
-    if (!_hourlyLoadId || !subject) return []
+    if (!subject) return []
+
+    if (localDataset.value) return schedulesForSubject(subject.id)
+
+    const _hourlyLoadId = hourlyLoad.value?.id
+    if (!_hourlyLoadId) return []
 
     const schedulesSubject =
       await scheduleSubjectApi.findBySubjectIdAndHourlyLoadId(
@@ -180,7 +331,7 @@ const {
         _hourlyLoadId,
       )
 
-    return schedulesSubject.map((sb) => ({
+    return schedulesSubject.map(toAppScheduleSubject).map((sb) => ({
       ...sb.schedule,
       scheduleSubject: {
         id: sb.id,
@@ -189,26 +340,43 @@ const {
   },
   {
     default: () => [],
-    watch: [hourlyLoad],
+    watch: [hourlyLoad, localDataset],
     immediate: false,
     server: false,
   },
 )
 
-const editItem = (item: ISubjectSchedules | IBaseSubjectSchedules) => {
+const scheduleReportUrl = computed(() => {
+  const subject = subjectSchedules.value?.subject
+  const currentHourlyLoad = hourlyLoad.value
+  const specialityName = speciality.value?.name
+  if (!subject || !currentHourlyLoad || !specialityName) return undefined
+
+  const reportUrl = buildHourlyLoadReportUrl({
+    specialityName,
+    hourlyLoadName: currentHourlyLoad.name,
+  })
+  return withHourlyLoadSubjectSchedules(reportUrl, {
+    courseCode: subject.course.id,
+    courseName: subject.course.name,
+    sections: schedules.value.map((schedule) => schedule.section.id),
+  })
+})
+
+const editItem = (item: IPlannedSubject | IBasePlannedSubject) => {
   subjectSchedules.value = item
   fetchSchedules()
   dialog.value = true
 }
 
-const selectedDelete = ref<ISubjectSchedules>()
-const deleteItem = (item: ISubjectSchedules) => {
+const selectedDelete = ref<IPlannedSubject>()
+const deleteItem = (item: IPlannedSubject) => {
   selectedDelete.value = item
   dialogDelete.value = true
 }
 
 const succcesDeleteCourse = ref(false)
-const deleteItemConfirm = async (item: ISubjectSchedules) => {
+const deleteItemConfirm = async (item: IPlannedSubject) => {
   await deleteSubjectById(item.id)
   succcesDeleteCourse.value = true
   closeDelete()
@@ -226,8 +394,20 @@ const closeDelete = () => {
 }
 
 const succcesUpdateCourse = ref(false)
+const updatingColor = ref(false)
+
+const saveColor = async (item: IPlannedSubject, color: string) => {
+  updatingColor.value = true
+  try {
+    await updateSubjectColor(item.id, color)
+    succcesUpdateCourse.value = true
+  } finally {
+    updatingColor.value = false
+  }
+}
+
 const save = async (
-  data: SubjectSchedules<SubjectScheduleId> | SubjectSchedules<undefined>,
+  data: PlannedSubject<PlannedSubjectId> | PlannedSubject<undefined>,
 ) => {
   succcesAddCourse.value = false
   if (data.id) {
@@ -252,18 +432,26 @@ const { data: subjects, status: statusSubjects } = await useAsyncData(
   async () => {
     const _search = search.value
     if (!_search) return []
-    const _hourlyLoadId = hourlyLoad.value?.id
     const _specialityId = specialityId.value
+    if (localDataset.value) return searchSubjects(_search)
+    const _hourlyLoadId = hourlyLoad.value?.id
+    const _studyPlanId = studyPlanId.value
     if (!_hourlyLoadId || !_specialityId) return []
-    const response = await courseApi.findPageBySearch({
-      search: _search,
-      specialityId: _specialityId,
-      hourlyLoadId: _hourlyLoadId,
-    })
+    const response = _studyPlanId
+      ? await subjectApi.findPageByStudyPlan({
+          search: _search,
+          studyPlanId: _studyPlanId,
+          hourlyLoadId: _hourlyLoadId,
+        })
+      : await subjectApi.findPageBySpeciality({
+          search: _search,
+          specialityId: _specialityId,
+          hourlyLoadId: _hourlyLoadId,
+        })
     return response.content
   },
   {
-    watch: [search],
+    watch: [search, specialityId, studyPlanId, hourlyLoad, localDataset],
     default: () => [],
   },
 )
