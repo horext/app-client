@@ -12,9 +12,17 @@
   />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
-  <v-main>
+  <v-main class="d-flex flex-column min-h-screen">
     <AppPersistentStorageAlert />
-    <slot />
+    <div class="flex-grow-1">
+      <slot />
+    </div>
+    <v-footer
+      class="py-4 px-4 bg-transparent text-caption text-medium-emphasis justify-center border-t mt-auto"
+    >
+      Copyright &copy; {{ new Date().getFullYear() }} Octatec &middot; Lenin
+      Castro
+    </v-footer>
   </v-main>
 </template>
 
