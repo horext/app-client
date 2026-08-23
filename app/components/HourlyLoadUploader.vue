@@ -1,14 +1,16 @@
 <template>
-  <v-card class="pa-4" variant="outlined" rounded="lg">
-    <v-card-title class="text-h6 d-flex align-center ga-2">
-      <v-icon color="primary">mdi-file-excel</v-icon>
+  <v-card class="pa-5 pa-md-6 rounded-xl" variant="outlined">
+    <v-card-title
+      class="text-h6 font-weight-bold d-flex align-center ga-2 px-0 pt-0 mb-1"
+    >
+      <v-icon color="primary" :icon="mdiFileExcel" />
       Carga horaria personal
     </v-card-title>
-    <v-card-subtitle>
+    <v-card-subtitle class="px-0 pb-4 text-body-2 text-medium-emphasis">
       El archivo se procesa y guarda únicamente en este navegador.
     </v-card-subtitle>
 
-    <v-card-text>
+    <v-card-text class="px-0 py-2">
       <v-alert v-if="activeDataset" type="info" variant="tonal" class="mb-4">
         <strong>{{ activeDataset.name }}</strong
         ><br />
@@ -21,10 +23,14 @@
         v-model="selectedFile"
         label="Seleccionar o arrastrar archivo Excel (.xlsx)"
         accept=".xlsx"
-        prepend-icon="mdi-paperclip"
+        prepend-icon=""
+        :prepend-inner-icon="mdiPaperclip"
         variant="outlined"
+        density="comfortable"
+        hide-details="auto"
         show-size
         clearable
+        class="mb-3"
         :loading="isParsing"
         :disabled="isParsing || isSaving"
         @update:model-value="draft = undefined"
@@ -34,7 +40,8 @@
         v-if="selectedFile && !draft"
         color="primary"
         variant="tonal"
-        prepend-icon="mdi-file-search"
+        :prepend-icon="mdiFileSearch"
+        class="mt-2 font-weight-medium text-none"
         :loading="isParsing"
         @click="analyzeFile"
       >
@@ -104,7 +111,7 @@
       </v-alert>
     </v-card-text>
 
-    <v-card-actions class="justify-end">
+    <v-card-actions class="px-0 pt-4 pb-0 justify-end">
       <v-btn
         v-if="activeDataset"
         color="error"
@@ -118,7 +125,7 @@
         v-if="activeDataset && !draft"
         color="primary"
         variant="flat"
-        prepend-icon="mdi-arrow-right"
+        :prepend-icon="mdiArrowRight"
         @click="emit('activated', activeDataset)"
       >
         Continuar con esta carga
@@ -127,7 +134,7 @@
         v-if="draft"
         color="primary"
         variant="flat"
-        prepend-icon="mdi-check"
+        :prepend-icon="mdiCheck"
         :loading="isSaving"
         @click="activateDraft"
       >
@@ -138,6 +145,13 @@
 </template>
 
 <script setup lang="ts">
+import {
+  mdiFileExcel,
+  mdiPaperclip,
+  mdiFileSearch,
+  mdiArrowRight,
+  mdiCheck,
+} from '@mdi/js'
 import type {
   ILocalHourlyLoadDataset,
   ILocalHourlyLoadDraft,

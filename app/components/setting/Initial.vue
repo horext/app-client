@@ -1,25 +1,38 @@
 <template>
-  <v-card :loading="loading">
-    <v-card-title>Configuración académica</v-card-title>
-    <v-card-subtitle>
+  <v-card
+    :loading="loading"
+    class="pa-6 pa-md-8 rounded-xl border elevation-1"
+    flat
+  >
+    <v-card-title class="text-h5 font-weight-bold px-0 pt-0 mb-1"
+      >Configuración académica</v-card-title
+    >
+    <v-card-subtitle class="px-0 pb-6 text-body-1 text-medium-emphasis">
       Elige una carga oficial o importa una carga personal.
     </v-card-subtitle>
-    <v-card-text>
+    <v-card-text class="px-0 py-0">
       <v-btn-toggle
         v-model="source"
         mandatory
         color="primary"
         variant="outlined"
         divided
-        class="mb-5"
+        class="mb-6 rounded-lg w-100 d-flex"
       >
-        <v-btn value="official" prepend-icon="mdi-cloud-download"
+        <v-btn
+          value="official"
+          :prepend-icon="mdiCloudDownload"
+          class="flex-1 font-weight-medium text-none py-3"
           >Carga oficial</v-btn
         >
-        <v-btn value="local" prepend-icon="mdi-file-excel"
+        <v-btn
+          value="local"
+          :prepend-icon="mdiFileExcel"
+          class="flex-1 font-weight-medium text-none py-3"
           >Importar Excel</v-btn
         >
       </v-btn-toggle>
+
       <v-alert
         v-if="source === 'official' && facultyLoadError"
         type="error"
@@ -31,73 +44,97 @@
           <v-btn variant="text" @click="loadFaculties">Reintentar</v-btn>
         </template>
       </v-alert>
+
       <v-form
         v-if="source === 'official'"
         ref="form"
         @submit.prevent="submitOfficial"
       >
-        <v-autocomplete
-          v-model="facultyId"
-          :items="faculties"
-          :loading="loadingFaculties"
-          item-title="name"
-          item-value="id"
-          label="Facultad"
-          :rules="[(value) => !!value || 'Selecciona una facultad']"
-        />
-        <v-alert
-          v-if="facultyId && !loadingHourlyLoads && hourlyLoads.length === 0"
-          type="warning"
-          variant="tonal"
-          class="mb-4"
-        >
-          No existe una carga oficial publicada para esta facultad. Puedes
-          importar la carga que tengas en Excel.
-          <template #append
-            ><v-btn variant="text" @click="source = 'local'"
-              >Importar</v-btn
-            ></template
+        <v-row density="comfortable">
+          <v-col cols="12" sm="6">
+            <v-autocomplete
+              v-model="facultyId"
+              :items="faculties"
+              :loading="loadingFaculties"
+              item-title="name"
+              item-value="id"
+              label="Facultad"
+              variant="outlined"
+              density="comfortable"
+              :rules="[(value) => !!value || 'Selecciona una facultad']"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="hourlyLoadId"
+              :items="hourlyLoadOptions"
+              :loading="loadingHourlyLoads"
+              :disabled="!facultyId || hourlyLoads.length === 0"
+              item-title="title"
+              item-value="value"
+              label="Carga horaria"
+              variant="outlined"
+              density="comfortable"
+              hint="Puedes utilizar una carga de un ciclo anterior"
+              persistent-hint
+              :rules="[(value) => !!value || 'Selecciona una carga horaria']"
+            />
+          </v-col>
+
+          <v-col
+            v-if="facultyId && !loadingHourlyLoads && hourlyLoads.length === 0"
+            cols="12"
           >
-        </v-alert>
-        <v-select
-          v-model="hourlyLoadId"
-          :items="hourlyLoadOptions"
-          :loading="loadingHourlyLoads"
-          :disabled="!facultyId || hourlyLoads.length === 0"
-          item-title="title"
-          item-value="value"
-          label="Carga horaria"
-          hint="Puedes utilizar una carga de un ciclo anterior"
-          persistent-hint
-          :rules="[(value) => !!value || 'Selecciona una carga horaria']"
-        />
-        <v-autocomplete
-          v-model="specialityId"
-          :items="specialities"
-          :loading="loadingSpecialities"
-          :disabled="!facultyId"
-          item-title="name"
-          item-value="id"
-          label="Carrera"
-          hint="La carrera recomienda cursos, pero no restringe la búsqueda"
-          persistent-hint
-          :rules="[(value) => !!value || 'Selecciona una carrera']"
-        />
-        <v-autocomplete
-          v-model="studyPlanId"
-          :disabled="!specialityId"
-          item-value="id"
-          :loading="loadingStudyPlans"
-          :item-title="studyPlanTitle"
-          :items="studyPlans"
-          label="Plan de estudios"
-          placeholder="Plan de estudios (opcional)"
-          clearable
-        />
-        <div class="d-flex justify-end mt-4">
+            <v-alert type="warning" variant="tonal" class="mb-4">
+              No existe una carga oficial publicada para esta facultad. Puedes
+              importar la carga que tengas en Excel.
+              <template #append>
+                <v-btn variant="text" @click="source = 'local'">Importar</v-btn>
+              </template>
+            </v-alert>
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <v-autocomplete
+              v-model="specialityId"
+              :items="specialities"
+              :loading="loadingSpecialities"
+              :disabled="!facultyId"
+              item-title="name"
+              item-value="id"
+              label="Carrera (opcional)"
+              variant="outlined"
+              density="comfortable"
+              clearable
+            />
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <v-autocomplete
+              v-model="studyPlanId"
+              :disabled="!specialityId"
+              item-value="id"
+              :loading="loadingStudyPlans"
+              :item-title="studyPlanTitle"
+              :items="studyPlans"
+              label="Plan de estudios"
+              placeholder="Plan de estudios (opcional)"
+              variant="outlined"
+              density="comfortable"
+              clearable
+            />
+          </v-col>
+        </v-row>
+
+        <div class="d-flex justify-end mt-6">
           <v-btn
             type="submit"
             color="primary"
+            variant="flat"
+            size="large"
+            rounded="lg"
+            class="font-weight-bold px-8 text-none"
             :loading="loading"
             :disabled="hourlyLoads.length === 0"
             >Continuar</v-btn
@@ -110,6 +147,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiCloudDownload, mdiFileExcel } from '@mdi/js'
 import type { VForm } from 'vuetify/components/VForm'
 import type { IOrganization } from '~/interfaces/organization'
 import type { IHourlyLoad } from '~/interfaces/houly-load'
@@ -230,7 +268,7 @@ watch(specialityId, async (selectedSpecialityId) => {
 
 const submitOfficial = async () => {
   const validation = await form.value?.validate()
-  if (!validation?.valid || !facultyId.value || !specialityId.value) return
+  if (!validation?.valid || !facultyId.value) return
   const hourlyLoad = hourlyLoads.value.find(
     ({ id }) => id === hourlyLoadId.value,
   )
@@ -245,4 +283,16 @@ const submitOfficial = async () => {
 }
 const submitLocal = (_dataset: ILocalHourlyLoadDataset) =>
   emit('submit', { source: 'local' })
+
+const isDirty = computed(() => {
+  if (source.value === 'local') return false
+  return (
+    facultyId.value !== store.facultyId ||
+    specialityId.value !== store.specialityId ||
+    studyPlanId.value !== store.studyPlanId ||
+    hourlyLoadId.value !== store.hourlyLoad?.id
+  )
+})
+
+defineExpose({ isDirty, submitOfficial })
 </script>
