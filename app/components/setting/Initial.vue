@@ -137,7 +137,7 @@
             class="font-weight-bold px-8 text-none"
             :loading="loading"
             :disabled="hourlyLoads.length === 0"
-            >Continuar</v-btn
+            >{{ submitText }}</v-btn
           >
         </div>
       </v-form>
@@ -160,7 +160,15 @@ import {
   useStudyPlanApi,
 } from '~~/modules/apis/runtime/composables'
 
-defineProps<{ loading?: boolean }>()
+withDefaults(
+  defineProps<{
+    loading?: boolean
+    submitText?: string
+  }>(),
+  {
+    submitText: 'Guardar',
+  },
+)
 const emit = defineEmits<{ submit: [selection: HourlyLoadSelection] }>()
 const source = ref<'official' | 'local'>('official')
 const form = ref<VForm>()
@@ -182,6 +190,21 @@ const facultyApi = useFacultyApi()
 const specialityApi = useSpecialityApi()
 const studyPlanApi = useStudyPlanApi()
 const hourlyLoadApi = useHourlyLoadApi()
+
+const initialSource = ref<'official' | 'local'>('official')
+const initialFacultyId = ref<number | undefined>(undefined)
+const initialSpecialityId = ref<number | undefined>(undefined)
+const initialStudyPlanId = ref<number | undefined>(undefined)
+const initialHourlyLoadId = ref<number | undefined>(undefined)
+const isInitializing = ref(true)
+
+function captureInitialState() {
+  initialSource.value = source.value
+  initialFacultyId.value = facultyId.value
+  initialSpecialityId.value = specialityId.value ?? undefined
+  initialStudyPlanId.value = studyPlanId.value ?? undefined
+  initialHourlyLoadId.value = hourlyLoadId.value ?? undefined
+}
 
 const hourlyLoadOptions = computed(() =>
   hourlyLoads.value.map((load) => ({
@@ -212,9 +235,10 @@ onMounted(() => {
     .ensureLoaded()
     .then((localDataset) => {
       if (localDataset) source.value = 'local'
+      captureInitialState()
     })
     .catch(() => {
-      // Official loads remain available when private browsing blocks storage.
+      captureInitialState()
     })
 })
 
@@ -247,6 +271,10 @@ watch(
     } finally {
       loadingSpecialities.value = false
       loadingHourlyLoads.value = false
+      if (isInitializing.value) {
+        captureInitialState()
+        isInitializing.value = false
+      }
     }
   },
   { immediate: true },
@@ -263,6 +291,9 @@ watch(specialityId, async (selectedSpecialityId) => {
       studyPlanId.value = undefined
   } finally {
     loadingStudyPlans.value = false
+    if (isInitializing.value) {
+      captureInitialState()
+    }
   }
 })
 
@@ -273,6 +304,7 @@ const submitOfficial = async () => {
     ({ id }) => id === hourlyLoadId.value,
   )
   if (!hourlyLoad) return
+  captureInitialState()
   emit('submit', {
     source: 'official',
     facultyId: facultyId.value,
@@ -281,16 +313,28 @@ const submitOfficial = async () => {
     hourlyLoad,
   })
 }
-const submitLocal = (_dataset: ILocalHourlyLoadDataset) =>
+const submitLocal = (_dataset: ILocalHourlyLoadDataset) => {
+  captureInitialState()
   emit('submit', { source: 'local' })
+}
+
+const normalize = (val: number | null | undefined) => val ?? undefined
 
 const isDirty = computed(() => {
+  if (
+    isInitializing.value ||
+    loadingFaculties.value ||
+    loadingHourlyLoads.value
+  )
+    return false
+  if (source.value !== initialSource.value) return true
   if (source.value === 'local') return false
+
   return (
-    facultyId.value !== store.facultyId ||
-    specialityId.value !== store.specialityId ||
-    studyPlanId.value !== store.studyPlanId ||
-    hourlyLoadId.value !== store.hourlyLoad?.id
+    normalize(facultyId.value) !== normalize(initialFacultyId.value) ||
+    normalize(specialityId.value) !== normalize(initialSpecialityId.value) ||
+    normalize(studyPlanId.value) !== normalize(initialStudyPlanId.value) ||
+    normalize(hourlyLoadId.value) !== normalize(initialHourlyLoadId.value)
   )
 })
 

@@ -109,6 +109,7 @@ import SettingStorageProtection from '~/components/setting/StorageProtection.vue
 import { useUserPreferencesStore } from '~/stores/user-preferences'
 import { WEEK_DAYS_NAMES } from '~/constants/weekdays'
 import type { HourlyLoadSelection } from '~/interfaces/hourly-load-selection'
+import type { Weekdays } from '~/interfaces/event'
 
 useSeoMeta({
   title: 'Configuración - Generador de Horarios',
@@ -121,16 +122,36 @@ const store = useUserPreferencesStore()
 const { updateBasicSettings } = useUserProfile()
 const localHourlyLoad = useLocalHourlyLoad()
 const { weekDays } = storeToRefs(store)
-const internalWeekDays = ref(weekDays.value)
-watch(weekDays, (value) => {
-  internalWeekDays.value = value
-})
+const initialWeekDays = ref<Weekdays[]>([...(weekDays.value || [])])
+const internalWeekDays = ref<Weekdays[]>([...(weekDays.value || [])])
+const isCalendarUserEdited = ref(false)
 
 const isCalendarDirty = computed(() => {
-  const current = [...internalWeekDays.value].sort((a, b) => a - b)
-  const saved = [...(weekDays.value || [])].sort((a, b) => a - b)
+  const current = [...(internalWeekDays.value || [])].sort((a, b) => a - b)
+  const saved = [...(initialWeekDays.value || [])].sort((a, b) => a - b)
   return JSON.stringify(current) !== JSON.stringify(saved)
 })
+
+watch(
+  internalWeekDays,
+  () => {
+    if (isCalendarDirty.value) {
+      isCalendarUserEdited.value = true
+    }
+  },
+  { deep: true },
+)
+
+watch(
+  weekDays,
+  (value) => {
+    if (!isCalendarUserEdited.value) {
+      initialWeekDays.value = [...(value || [])]
+      internalWeekDays.value = [...(value || [])]
+    }
+  },
+  { immediate: true },
+)
 
 const isPageDirty = computed(() => {
   return isCalendarDirty.value || (initialRef.value?.isDirty ?? false)
@@ -230,5 +251,7 @@ const saveBasicSettings = async (selection: HourlyLoadSelection) => {
 const { saveWeekDays } = useUserPreferences()
 const save = async () => {
   await saveWeekDays(internalWeekDays.value)
+  initialWeekDays.value = [...internalWeekDays.value]
+  isCalendarUserEdited.value = false
 }
 </script>
