@@ -7,10 +7,10 @@ import type {
   individualResources,
   regularCollectionResources,
   SyncResource,
-  type BulkCollectionResource,
-  type CollectionResource,
-  type IndividualResource,
-  type RegularCollectionResource,
+  BulkCollectionResource,
+  CollectionResource,
+  IndividualResource,
+  RegularCollectionResource,
 } from '#shared/domain/synchronization'
 import type { SyncBodyMap } from '~~/modules/synchronization/runtime/contracts'
 

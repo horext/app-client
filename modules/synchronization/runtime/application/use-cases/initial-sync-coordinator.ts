@@ -1,9 +1,9 @@
 import type { CloudChangeApplier } from '../ports/cloud-change-applier'
+import { SyncResource } from '~~/modules/synchronization/runtime/contracts'
 import type {
   SyncConflictRecord,
-  SyncResource,
-  type RemoteCloudRecord,
-  type SyncOperationDto,
+  RemoteCloudRecord,
+  SyncOperationDto,
 } from '~~/modules/synchronization/runtime/contracts'
 import type { RemoteChange } from '../../domain/models/remote-change'
 import type { AnonymousDataMigration } from '../ports/anonymous-data-migration'

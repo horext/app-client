@@ -24,7 +24,7 @@ import type {
 } from '#shared/domain/types/subject'
 import type {
   SyncResource,
-  type CollectionResource,
+  CollectionResource,
 } from '#shared/domain/synchronization'
 
 export {
