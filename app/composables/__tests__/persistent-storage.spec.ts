@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import { usePersistentStorage } from '../persistent-storage'
 
 describe('usePersistentStorage', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     localStorage.clear()
     clearNuxtState()
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }))
