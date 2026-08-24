@@ -63,8 +63,8 @@ importers:
         specifier: ^1.17.5
         version: 1.17.5(db0@0.3.4)(ioredis@5.11.1)
       uuid:
-        specifier: ^14.0.1
-        version: 14.0.1
+        specifier: ^14.0.2
+        version: 14.0.2
       vite:
         specifier: ^8.2.2
         version: 8.2.2(@types/node@26.2.0)(@vitejs/devtools@0.4.12(crossws@0.4.10(srvx@0.12.7))(srvx@0.12.7)(typescript@6.0.3)(valibot@1.4.2(typescript@6.0.3))(vite@8.2.2))(esbuild@0.28.1)(jiti@2.7.0)(sass@1.102.0)(terser@5.50.0)(yaml@2.9.0)
@@ -5979,8 +5979,8 @@ packages:
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
-  uuid@14.0.1:
-    resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
+  uuid@14.0.2:
+    resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
     hasBin: true
 
   valibot@1.4.2:
@@ -8353,7 +8353,7 @@ snapshots:
 
   '@types/uuid@11.0.0':
     dependencies:
-      uuid: 14.0.1
+      uuid: 14.0.2
 
   '@types/web-bluetooth@0.0.21': {}
 
@@ -13101,7 +13101,7 @@ snapshots:
     dependencies:
       base64-arraybuffer: 1.0.2
 
-  uuid@14.0.1: {}
+  uuid@14.0.2: {}
 
   valibot@1.4.2(typescript@6.0.3):
     optionalDependencies:
