@@ -1,3 +1,4 @@
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { setActivePinia, createPinia } from 'pinia'
@@ -288,7 +289,7 @@ describe('useUserProfile', () => {
   it('updateFaculty patches service and updates profile facultyId', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -312,7 +313,7 @@ describe('useUserProfile', () => {
   it('updateSpeciality patches service and updates profile specialityId', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -333,7 +334,7 @@ describe('useUserProfile', () => {
   it('updateSetupCompleted patches service and updates profile', async () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -355,7 +356,7 @@ describe('useUserProfile', () => {
     const load = makeHourlyLoad(1)
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: false,
@@ -386,17 +387,17 @@ describe('useUserProfile', () => {
   it('completeSetup creates profile, academic config, preferences, and sets store values', async () => {
     const load = makeHourlyLoad(1)
     mockCreateProfile.mockResolvedValue({
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 2,
       specialityId: 3,
       setupCompleted: true,
     })
     mockCreateAcademicConfig.mockResolvedValue({
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       hourlyLoad: load,
     })
     mockCreatePreferences.mockResolvedValue({
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       weekDays: [1, 2, 3],
       crossings: 0,
       maxGenerationHistory: 10,

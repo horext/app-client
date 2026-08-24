@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "horext-app",
+  "compatibility_date": "2026-08-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": ".output/server/index.mjs",
+  "assets": { "directory": ".output/public", "binding": "ASSETS" },
+  "d1_databases": [{ "binding": "DB", "database_name": "horext-development", "database_id": "replace-with-development-database-id", "migrations_dir": "migrations" }],
+  "env": {
+    "staging": { "name": "horext-app-staging", "d1_databases": [{ "binding": "DB", "database_name": "horext-staging", "database_id": "replace-with-staging-database-id", "migrations_dir": "migrations" }] },
+    "production": { "name": "horext-app-production", "d1_databases": [{ "binding": "DB", "database_name": "horext-production", "database_id": "replace-with-production-database-id", "migrations_dir": "migrations" }] }
+  }
+}

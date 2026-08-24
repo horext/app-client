@@ -9,7 +9,7 @@ import {
   GENERATION_SERVICE_KEY,
   SUBJECTS_SERVICE_KEY,
   USER_ID_KEY,
-} from '../context/keys'
+} from '../context'
 import type { IFavoritesSchedulesService } from '#shared/application/interfaces/favorites-schedules.service'
 import type { IActivitiesService } from '#shared/application/interfaces/activities.service'
 import type { IProfileService } from '#shared/application/interfaces/profile.service'

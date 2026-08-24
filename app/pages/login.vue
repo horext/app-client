@@ -51,21 +51,26 @@ async function handleCredentialResponse(
   response: google.accounts.id.CredentialResponse,
 ) {
   const result = await $fetch<{
-    body: {
+    user: {
       id: string
-      email?: string
-      name?: string
-      picture?: string
-      isUniversityEmail?: boolean
+      email: string
+      name?: string | null
+      picture?: string | null
+      isUniversityEmail: boolean
     }
-  }>('/auth/verify', {
+    expiresAt: string
+  }>('/api/v1/sessions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: response,
   })
-  setUser(result.body)
+  setUser({
+    ...result.user,
+    name: result.user.name ?? undefined,
+    picture: result.user.picture ?? undefined,
+  })
   await navigateTo('/generator')
 }
 

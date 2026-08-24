@@ -25,8 +25,12 @@ describe('useUserAuthStore', () => {
 
   it('sets user and isLoggedIn becomes true', () => {
     const store = useUserAuthStore()
-    store.setUser({ email: 'test@example.com', name: 'Test' })
-    expect(store.user).toEqual({ email: 'test@example.com', name: 'Test' })
+    store.setUser({ id: 'user-1', email: 'test@example.com', name: 'Test' })
+    expect(store.user).toEqual({
+      id: 'user-1',
+      email: 'test@example.com',
+      name: 'Test',
+    })
     expect(store.isLoggedIn).toBe(true)
   })
 

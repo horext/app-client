@@ -10,6 +10,14 @@ export const toCreateRecord = (entity: BaseAcademicConfig) => ({
   externalId: entity.externalId,
   revision: entity.revision,
 })
+export const toUpdateRecord = (entity: AcademicConfig) => ({
+  hourlyLoad: structuredClone(entity.hourlyLoad),
+  externalId: entity.externalId,
+  revision: entity.revision,
+  createdAt: entity.audit.createdAt,
+  createdBy: entity.audit.createdBy,
+  id: entity.id,
+})
 export const toRecord = (entity: AcademicConfig): IAcademicConfig =>
   Object.assign(
     toCreateRecord(entity),

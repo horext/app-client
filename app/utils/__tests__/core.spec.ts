@@ -1,3 +1,4 @@
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { describe, it, expect } from 'vitest'
 import { getSchedules } from '../core'
 import type { IActivity, Weekdays } from '~/interfaces/event'
@@ -657,7 +658,7 @@ describe('getSchedules', () => {
           },
         ])
         const baseEvent = makeActivity(
-          crypto.randomUUID(),
+          makeUUID(),
           MON,
           T_09_11.startTime,
           T_09_11.endTime,

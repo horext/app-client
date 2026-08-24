@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 interface AuthUser {
+  id?: string
   email?: string
   name?: string
   picture?: string

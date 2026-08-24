@@ -7,13 +7,19 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      include: ['app/**/*.{ts,vue}', 'modules/**/*.{ts,vue}'],
+      include: ['app/**/*.{ts,vue}', 'modules/**/*.{ts,vue}', 'server/**/*.ts'],
     },
     projects: [
       {
         test: {
           name: 'unit',
-          include: ['modules/**/__tests__/**/*.{spec,test}.{ts,vue}'],
+          include: [
+            'modules/**/__tests__/**/*.{spec,test}.{ts,vue}',
+            'server/**/__tests__/**/*.{spec,test}.ts',
+          ],
+          exclude: [
+            'modules/synchronization/runtime/plugins/__tests__/**/*.spec.ts',
+          ],
           environment: 'happy-dom',
           typecheck: {
             enabled: true,
@@ -53,7 +59,10 @@ export default defineConfig({
       await defineVitestProject({
         test: {
           name: 'nuxt',
-          include: ['app/**/__tests__/**/*.{spec,test}.{ts,vue}'],
+          include: [
+            'app/**/__tests__/**/*.{spec,test}.{ts,vue}',
+            'modules/synchronization/runtime/plugins/__tests__/**/*.spec.ts',
+          ],
           environment: 'nuxt',
           typecheck: {
             enabled: true,

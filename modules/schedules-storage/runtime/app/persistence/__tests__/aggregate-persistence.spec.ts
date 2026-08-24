@@ -60,7 +60,7 @@ describe('IndexedDbAggregatePersistence', () => {
   })
 
   it('lists only entities owned by the requested user', async () => {
-    getAll.mockResolvedValue([{ id: crypto.randomUUID(), createdBy: 'user-1' }])
+    getAll.mockResolvedValue([{ id: makeUUID(), createdBy: 'user-1' }])
     const originalKeyRange = globalThis.IDBKeyRange
     Object.defineProperty(globalThis, 'IDBKeyRange', {
       configurable: true,
