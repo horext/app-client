@@ -1,1 +1,5 @@
+export * from './bulk-collection-resource'
+export * from './collection-resource'
+export * from './individual-resource'
+export * from './resource'
 export * from './snapshot'
