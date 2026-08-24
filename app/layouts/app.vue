@@ -12,6 +12,7 @@
   />
 
   <AppBottomNavigation v-if="$vuetify.display.smAndDown" :items="denseItems" />
+  <CloudSyncCoordinator />
   <v-main>
     <AppPersistentStorageAlert />
     <slot />

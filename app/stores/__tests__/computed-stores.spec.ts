@@ -1,3 +1,4 @@
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useUserPreferencesStore } from '~/stores/user-preferences'
@@ -26,7 +27,7 @@ describe('useUserPreferencesStore', () => {
   it('returns weekDays from preferences when set', () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       weekDays: [1, 2, 3],
       crossings: 1,
       maxGenerationHistory: 10,
@@ -37,7 +38,7 @@ describe('useUserPreferencesStore', () => {
   it('returns crossings from preferences when set', () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       weekDays: [0],
       crossings: 3,
       maxGenerationHistory: 5,
@@ -48,7 +49,7 @@ describe('useUserPreferencesStore', () => {
   it('returns maxGenerationHistory from preferences when set', () => {
     const store = useUserPreferencesStore()
     store.preferences = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       weekDays: [0],
       crossings: 0,
       maxGenerationHistory: 20,
@@ -77,7 +78,7 @@ describe('useUserProfileStore', () => {
     const store = useUserProfileStore()
     store.loadingProfile = false
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 1,
       specialityId: 2,
       setupCompleted: true,
@@ -94,7 +95,7 @@ describe('useUserProfileStore', () => {
   it('facultyId returns from profile', () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 5,
       specialityId: 7,
       setupCompleted: true,
@@ -105,7 +106,7 @@ describe('useUserProfileStore', () => {
   it('specialityId returns from profile', () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 5,
       specialityId: 7,
       setupCompleted: true,
@@ -116,7 +117,7 @@ describe('useUserProfileStore', () => {
   it('studyPlanId returns the optional study plan from profile', () => {
     const store = useUserProfileStore()
     store.profile = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       facultyId: 5,
       specialityId: 7,
       studyPlanId: 9,
