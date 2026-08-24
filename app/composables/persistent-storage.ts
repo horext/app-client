@@ -1,3 +1,5 @@
+import { StorageProtectionStatus } from '~/models/StorageProtectionStatus'
+
 const PREFERENCE_KEY = 'storage-protection-preference'
 const REMINDER_DELAY_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -5,9 +7,6 @@ interface StorageProtectionPreference {
   dismissedUntil?: string
   previouslyProtected: boolean
 }
-
-export type StorageProtectionStatus =
-  'checking' | 'unsupported' | 'protected' | 'unprotected'
 
 const readPreference = (): StorageProtectionPreference => {
   try {
@@ -32,7 +31,7 @@ export function usePersistentStorage() {
   const isStandalone = useState('storage-protection-standalone', () => false)
   const status = useState<StorageProtectionStatus>(
     'storage-protection-status',
-    () => 'checking',
+    () => StorageProtectionStatus.CHECKING,
   )
   const protectionLost = useState('storage-protection-lost', () => false)
   const dismissedUntil = useState<string | undefined>(
@@ -49,14 +48,14 @@ export function usePersistentStorage() {
     isStandalone.value =
       window.matchMedia('(display-mode: standalone)').matches ||
       (navigator as Navigator & { standalone?: boolean }).standalone === true
-    status.value = 'checking'
+    status.value = StorageProtectionStatus.CHECKING
     const storage = navigator.storage as Partial<StorageManager> | undefined
     if (
       !storage ||
       typeof storage.persisted !== 'function' ||
       typeof storage.persist !== 'function'
     ) {
-      status.value = 'unsupported'
+      status.value = StorageProtectionStatus.UNSUPPORTED
       return
     }
 
@@ -65,7 +64,9 @@ export function usePersistentStorage() {
 
     try {
       const isPersisted = await storage.persisted()
-      status.value = isPersisted ? 'protected' : 'unprotected'
+      status.value = isPersisted
+        ? StorageProtectionStatus.PROTECTED
+        : StorageProtectionStatus.UNPROTECTED
       protectionLost.value = !isPersisted && preference.previouslyProtected
 
       if (isPersisted && !preference.previouslyProtected) {
@@ -73,7 +74,7 @@ export function usePersistentStorage() {
         dismissedUntil.value = undefined
       }
     } catch {
-      status.value = 'unsupported'
+      status.value = StorageProtectionStatus.UNSUPPORTED
     }
   }
 
@@ -83,7 +84,9 @@ export function usePersistentStorage() {
     try {
       const storage = navigator.storage as Partial<StorageManager> | undefined
       const granted = (await storage?.persist?.()) ?? false
-      status.value = granted ? 'protected' : 'unprotected'
+      status.value = granted
+        ? StorageProtectionStatus.PROTECTED
+        : StorageProtectionStatus.UNPROTECTED
       requestFailed.value = !granted
       if (granted) {
         protectionLost.value = false
@@ -122,7 +125,7 @@ export function usePersistentStorage() {
   const shouldPrompt = (hasMeaningfulData: MaybeRefOrGetter<boolean>) =>
     computed(
       () =>
-        status.value === 'unprotected' &&
+        status.value === StorageProtectionStatus.UNPROTECTED &&
         toValue(hasMeaningfulData) &&
         (protectionLost.value || reminderExpired.value),
     )

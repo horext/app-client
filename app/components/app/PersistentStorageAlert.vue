@@ -61,7 +61,6 @@ const hasMeaningfulData = computed(
 
 const {
   protectionLost,
-  isStandalone,
   requesting,
   requestFailed,
   check,
@@ -72,17 +71,17 @@ const {
 } = usePersistentStorage()
 const visible = shouldPrompt(hasMeaningfulData)
 const title = computed(() =>
-  protectionLost.value ? 'Protección desactivada' : 'Evita perder tus datos',
+  protectionLost.value
+    ? 'Protección desactivada'
+    : 'Protección del almacenamiento',
 )
 const message = computed(() =>
   protectionLost.value
     ? 'El navegador dejó de proteger los datos guardados en este dispositivo.'
     : 'Solicita al navegador que conserve tus horarios y preferencias aunque necesite espacio.',
 )
-const failureMessage = computed(() =>
-  isStandalone.value
-    ? 'Chrome no la concedió por ahora. Podrás intentarlo más adelante.'
-    : 'Instala y abre Horext como aplicación antes de volver a intentarlo.',
+const failureMessage = computed(
+  () => 'Chrome no la concedió por ahora. Podrás intentarlo más adelante.',
 )
 
 const dismissFailure = (open: boolean) => {
