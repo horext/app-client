@@ -32,12 +32,6 @@
         :append-icon="mdiOpenInNew"
         title="Informar un problema"
       />
-      <div
-        class="text-caption text-medium-emphasis text-center py-3 px-3 border-t"
-      >
-        Copyright &copy; {{ new Date().getFullYear() }} Octatec &middot; Lenin
-        Castro
-      </div>
     </template>
   </v-navigation-drawer>
 </template>

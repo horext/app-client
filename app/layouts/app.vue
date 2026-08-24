@@ -18,7 +18,14 @@
       <slot />
     </div>
     <v-footer
-      class="py-4 px-4 bg-transparent text-caption text-medium-emphasis justify-center border-t mt-auto"
+      class="py-3 px-4 text-caption text-medium-emphasis justify-center border-t mt-auto position-sticky bottom-0"
+      style="
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background-color: rgba(var(--v-theme-surface), 0.75);
+        border-top: 1px solid rgba(var(--v-border-color), 0.12) !important;
+        z-index: 10;
+      "
     >
       Copyright &copy; {{ new Date().getFullYear() }} Octatec &middot; Lenin
       Castro
