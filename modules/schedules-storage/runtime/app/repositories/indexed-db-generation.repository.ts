@@ -5,7 +5,7 @@ import type { AggregatePersistence } from '../persistence/aggregate-persistence'
 import { StoresDB } from '../context/db'
 import { ScheduleGenerationPersistenceMapper } from '../mappers/persistence'
 
-export class IndexedDBGenerationsRepository implements IGenerationRepository {
+export class IndexedDBGenerationRepository implements IGenerationRepository {
   constructor(private readonly persistence: AggregatePersistence) {}
 
   async findAll(userId: string): Promise<ScheduleGeneration[]> {

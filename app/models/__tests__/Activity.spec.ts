@@ -1,3 +1,4 @@
+import { makeUUID } from '~~/shared/domain/types/ids'
 import { describe, expect, it } from 'vitest'
 import { isProxy, reactive } from 'vue'
 import { Activity } from '../Activity'
@@ -21,7 +22,7 @@ describe('Activity requests', () => {
 
   it('includes the activity id in an update request', () => {
     const activity = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       title: 'Study',
       color: DEFAULT_ACTIVITY_COLOR,
       sessions: [{ day: 1, startTime: '08:00', endTime: '10:00' }],
@@ -32,7 +33,7 @@ describe('Activity requests', () => {
 
   it('generates a distinct UUID event for every session', () => {
     const activity = {
-      id: crypto.randomUUID(),
+      id: makeUUID(),
       title: 'Study',
       color: DEFAULT_ACTIVITY_COLOR,
       sessions: [

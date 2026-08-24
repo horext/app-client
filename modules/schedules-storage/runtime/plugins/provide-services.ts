@@ -1,23 +1,13 @@
 import {
-  SCHEDULES_REPOSITORY_KEY,
-  FAVORITES_SCHEDULES_SERVICE_KEY,
-  ACTIVITIES_SERVICE_KEY,
-  PROFILE_SERVICE_KEY,
   ACADEMIC_CONFIG_SERVICE_KEY,
-  PREFERENCES_SERVICE_KEY,
+  ACTIVITIES_SERVICE_KEY,
+  FAVORITES_SCHEDULES_SERVICE_KEY,
   GENERATION_SERVICE_KEY,
+  PREFERENCES_SERVICE_KEY,
+  PROFILE_SERVICE_KEY,
+  SCHEDULES_REPOSITORY_KEY,
   SUBJECTS_SERVICE_KEY,
-} from '../app/context/keys'
-import type { IAcademicConfigRepository } from '#shared/application/repositories/academic-config.repository'
-import type { IActivitiesRepository } from '#shared/application/repositories/activities.repository'
-import type { IGenerationRepository } from '#shared/application/repositories/generation.repository'
-import type { IPreferencesRepository } from '#shared/application/repositories/preferences.repository'
-import type { IProfileRepository } from '#shared/application/repositories/profile.repository'
-import type {
-  ISchedulesRepository,
-  ISchedulesFavoritesRepository,
-} from '#shared/application/repositories/schedules.repository'
-import type { ISubjectsRepository } from '#shared/application/repositories/subjects.repository'
+} from '../app/context'
 import { AcademicConfigService } from '#shared/application/services/academic-config.service'
 import { ActivitiesService } from '#shared/application/services/activities.service'
 import { FavoritesSchedulesService } from '#shared/application/services/favorites-schedules.service'
@@ -26,21 +16,10 @@ import { PreferencesService } from '#shared/application/services/preferences.ser
 import { ProfileService } from '#shared/application/services/profile.service'
 import { SubjectsService } from '#shared/application/services/subjects.service'
 
-interface SchedulesStorage {
-  schedulesRepository: ISchedulesRepository
-  activitiesRepository: IActivitiesRepository
-  profileRepository: IProfileRepository
-  academicConfigRepository: IAcademicConfigRepository
-  preferencesRepository: IPreferencesRepository
-  generationRepository: IGenerationRepository
-  favoritesRepository: ISchedulesFavoritesRepository
-  subjectsRepository: ISubjectsRepository
-}
-
 export default defineNuxtPlugin({
   name: 'schedules-storage:provide-services',
-  dependsOn: ['schedules-storage:provide-repos'],
-  order: 2,
+  dependsOn: ['synchronization:provide'],
+  order: 3,
   setup(nuxtApp) {
     const {
       schedulesRepository,
@@ -51,7 +30,7 @@ export default defineNuxtPlugin({
       generationRepository,
       favoritesRepository,
       subjectsRepository,
-    } = nuxtApp.$schedulesStorage as SchedulesStorage
+    } = nuxtApp.$applicationRepositories
 
     nuxtApp.vueApp.provide(SCHEDULES_REPOSITORY_KEY, schedulesRepository)
     nuxtApp.vueApp.provide(

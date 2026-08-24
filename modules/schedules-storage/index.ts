@@ -48,7 +48,7 @@ export default defineNuxtModule({
     ])
 
     addPlugin({
-      src: resolver.resolve('runtime/plugins/provide.client'),
+      src: resolver.resolve('./runtime/plugins/provide.client'),
     })
 
     addPlugin({

@@ -8,22 +8,18 @@ import {
   NoopSchedulesRepository,
   NoopSubjectsRepository,
 } from '../app/repositories/noop.repositories'
-import {
-  SCHEDULES_DB_KEY,
-  SCHEDULES_RAW_REPOSITORIES_KEY,
-  USER_ID_KEY,
-} from '../app/context/keys'
+import { USER_ID_KEY } from '../app/context'
 import type { DbFactory } from '../app/context/db'
+import { IndexedDbAggregatePersistence } from '../app/persistence/indexed-db-aggregate-persistence'
 
 export default defineNuxtPlugin({
   name: 'schedules-storage:provide-repos',
   order: 1,
   setup(nuxtApp) {
-    const storage = {
-      db: (() =>
-        Promise.reject(
-          new Error('IndexedDB is unavailable on the server.'),
-        )) as DbFactory,
+    const db: DbFactory = () =>
+      Promise.reject(new Error('IndexedDB is unavailable on the server.'))
+    const persistence = new IndexedDbAggregatePersistence(db)
+    const repositories = {
       schedulesRepository: new NoopSchedulesRepository(),
       activitiesRepository: new NoopActivitiesRepository(),
       profileRepository: new NoopProfileRepository(),
@@ -33,23 +29,13 @@ export default defineNuxtPlugin({
       favoritesRepository: new NoopSchedulesFavoritesRepository(),
       subjectsRepository: new NoopSubjectsRepository(),
     }
-    nuxtApp.vueApp.provide(SCHEDULES_RAW_REPOSITORIES_KEY, storage)
-    nuxtApp.vueApp.provide(SCHEDULES_DB_KEY, storage.db)
     nuxtApp.vueApp.provide(USER_ID_KEY, () => 'anonymous')
     return {
       provide: {
-        schedulesDb: storage.db,
+        schedulesDb: db,
         schedulesUserId: () => 'anonymous',
-        schedulesStorage: {
-          schedulesRepository: storage.schedulesRepository,
-          activitiesRepository: storage.activitiesRepository,
-          profileRepository: storage.profileRepository,
-          academicConfigRepository: storage.academicConfigRepository,
-          preferencesRepository: storage.preferencesRepository,
-          generationRepository: storage.generationRepository,
-          favoritesRepository: storage.favoritesRepository,
-          subjectsRepository: storage.subjectsRepository,
-        },
+        schedulesStorage: repositories,
+        persistence: persistence,
       },
     }
   },

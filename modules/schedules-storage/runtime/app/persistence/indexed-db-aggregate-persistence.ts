@@ -68,7 +68,7 @@ export class IndexedDbAggregatePersistence
     const timestamp = new Date().toISOString()
     const record = {
       ...value,
-      id: value.id ?? makeUUID(),
+      id: value.id ?? makeUUID<ReplicableSchemas[S]['key'][1]>(),
       createdAt: timestamp,
       updatedAt: timestamp,
       createdBy: userId,

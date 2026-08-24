@@ -48,4 +48,12 @@ export const schemaMigrations: SchemaMigration<HorextDB>[] = [
       ])
     },
   },
+  {
+    version: 2,
+    up(db) {
+      db.createObjectStore(StoresDB.OUTBOX, { keyPath: 'key' })
+      db.createObjectStore(StoresDB.CONFLICTS, { keyPath: 'key' })
+      db.createObjectStore(StoresDB.SYNC_STATE, { keyPath: 'key' })
+    },
+  },
 ]

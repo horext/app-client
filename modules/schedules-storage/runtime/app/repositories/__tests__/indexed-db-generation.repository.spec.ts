@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from 'vitest'
 import { ScheduleGeneration, type IScheduleGeneration } from '#shared/domain'
 import type { AggregatePersistence } from '../../persistence/aggregate-persistence'
-import { IndexedDBGenerationsRepository } from '../indexed-db-generation.repository'
+import { IndexedDBGenerationRepository } from '../indexed-db-generation.repository'
 import { persistedSnapshot } from '../../../shared/__tests__/persisted-snapshot'
 import { makeUUID } from '~~/shared/domain/types/ids'
 import { ScheduleGenerationPersistenceMapper } from '../../mappers/persistence'
 
-const makeGeneration = () =>
+const makeScheduleGeneration = () =>
   ScheduleGeneration.create({
     generatedAt: '2024-01-01T00:00:00Z',
     scheduleIds: [],
@@ -25,15 +25,15 @@ const makePersistence = (): Mocked<AggregatePersistence> => ({
   remove: vi.fn(),
   findAllByIndex: vi.fn(),
 })
-describe('IndexedDBGenerationsRepository', () => {
+describe('IndexedDBGenerationRepository', () => {
   let persistence: Mocked<AggregatePersistence>
-  let repo: IndexedDBGenerationsRepository
+  let repo: IndexedDBGenerationRepository
   beforeEach(() => {
     persistence = makePersistence()
-    repo = new IndexedDBGenerationsRepository(persistence)
+    repo = new IndexedDBGenerationRepository(persistence)
   })
   it('returns all records', async () => {
-    const value = makeGeneration()
+    const value = makeScheduleGeneration()
     persistence.findAll.mockResolvedValue([
       persistedSnapshot(
         ScheduleGenerationPersistenceMapper.toCreateRecord(value),
@@ -46,7 +46,7 @@ describe('IndexedDBGenerationsRepository', () => {
     expect(await repo.findAll('user-1')).toEqual([])
   })
   it('returns record by id', async () => {
-    const value = makeGeneration()
+    const value = makeScheduleGeneration()
     const stored = persistedSnapshot(
       ScheduleGenerationPersistenceMapper.toCreateRecord(value),
     ) satisfies IScheduleGeneration
@@ -58,7 +58,7 @@ describe('IndexedDBGenerationsRepository', () => {
     expect(await repo.findById('user-1', makeUUID())).toBeUndefined()
   })
   it('returns a created record', async () => {
-    const value = makeGeneration()
+    const value = makeScheduleGeneration()
     const stored = persistedSnapshot(
       ScheduleGenerationPersistenceMapper.toCreateRecord(value),
     ) satisfies IScheduleGeneration

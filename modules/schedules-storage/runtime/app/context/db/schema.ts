@@ -19,6 +19,17 @@ export const enum StoresDB {
   ACADEMIC_CONFIG = 'academic-config',
   GENERATIONS = 'generations',
   SUBJECTS = 'subjects',
+  OUTBOX = 'outbox',
+  CONFLICTS = 'conflicts',
+  SYNC_STATE = 'sync-state',
+}
+
+export type Syncable<T extends object> = T & {
+  createdBy: string
+  updatedBy: string
+  revision?: number
+  syncedAt?: string
+  localSequence?: number
 }
 
 export type ReplicableSchemas = {
@@ -61,6 +72,21 @@ export type ReplicableSchemas = {
     key: [string, IPlannedSubject['id']]
     value: IPlannedSubject
     indexes: { createdBy: string }
+  }
+  [StoresDB.OUTBOX]: {
+    key: string
+    value: Record<string, unknown>
+    indexes: Record<never, never>
+  }
+  [StoresDB.CONFLICTS]: {
+    key: string
+    value: Record<string, unknown>
+    indexes: Record<never, never>
+  }
+  [StoresDB.SYNC_STATE]: {
+    key: string
+    value: Record<string, unknown>
+    indexes: Record<never, never>
   }
 }
 
