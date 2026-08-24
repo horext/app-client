@@ -1,0 +1,5 @@
+export { GetSingletonQuery } from './get-singleton.query'
+export { CreateSingletonCommand } from './create-singleton.command'
+export { PatchSingletonCommand } from './patch-singleton.command'
+export type { SingletonService } from './singleton.service'
+export type { SingletonRevisionReader } from './singleton-revision.reader'
