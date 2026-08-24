@@ -1,3 +1,4 @@
+import type { ActivityID } from '#shared/domain/types/event'
 import { z } from 'zod'
 import {
   entityMetadataSchema,
@@ -12,6 +13,8 @@ const timeSchema = z
   .trim()
   .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
 
+const activityIdSchema = uuidSchema.transform((value) => value as ActivityID)
+
 export const activitySessionSchema = z
   .object({
     day: weekdaySchema,
@@ -24,7 +27,7 @@ export const activitySessionSchema = z
   })
 
 export const baseActivitySchema = z.object({
-  externalId: uuidSchema.optional(),
+  externalId: activityIdSchema.optional(),
   title: requiredStringSchema,
   description: optionalStringSchema,
   location: optionalStringSchema,
@@ -36,7 +39,7 @@ export const activityPatchSchema = baseActivitySchema
   .omit({ externalId: true })
   .partial()
 export const activitySchema = baseActivitySchema.extend({
-  id: uuidSchema,
+  id: activityIdSchema,
   ...entityMetadataSchema.shape,
 })
 
