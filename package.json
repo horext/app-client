@@ -71,7 +71,7 @@
     "@types/uuid": "^11.0.0",
     "@unhead/schema": "^3.3.2",
     "@unocss/nuxt": "^66.7.5",
-    "@unocss/preset-wind4": "^66.7.5",
+    "@unocss/preset-wind4": "^66.8.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/coverage-v8": "^4.1.10",
     "@vue/test-utils": "^2.4.11",
