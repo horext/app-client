@@ -5,6 +5,7 @@
     empty-message="Usted no tiene horarios favoritos"
     :schedules="favoritesSchedules"
     path="/skd"
+    :loading="loadingFavorites"
   >
     <template #top-items-right>
       <v-toolbar-title> Horarios favoritos </v-toolbar-title>
@@ -49,6 +50,7 @@ const {
   saveNewFavoriteSchedule,
   deleteFavoriteScheduleById,
   favoritesSchedules,
+  loadingFavorites,
 } = useUserFavoriteSchedules()
 
 const addFavorite = async (schedule: IGeneratedSchedule) => {

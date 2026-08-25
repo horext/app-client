@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card :loading="loading">
     <v-toolbar flat theme="dark" :color="color" class="px-2">
       <slot name="top-items-right" />
       <v-spacer />
@@ -22,12 +22,17 @@
 
     <v-divider />
     <schedules-list
-      v-if="schedules.length > 0"
+      v-if="!loading && schedules.length > 0"
       v-model:current-schedule="currentSchedule"
       :schedules="schedules"
       :week-days="weekDays"
       :mode="mode"
     />
+    <v-card-text v-else-if="loading" class="py-8">
+      <v-skeleton-loader
+        type="heading, list-item-three-line, list-item-three-line"
+      />
+    </v-card-text>
     <v-card-text v-else>
       <slot name="emptyBody">
         {{ emptyMessage }}
@@ -68,6 +73,10 @@ defineProps({
     default: '',
   },
   dialog: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },

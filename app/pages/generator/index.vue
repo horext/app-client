@@ -6,6 +6,7 @@
     empty-message="Usted no tiene horarios generados"
     :schedules="result?.schedules ?? []"
     path="/skd"
+    :loading="loadingGeneration"
   >
     <template #top-items-right>
       <div class="d-flex align-self-center ga-2">
@@ -96,7 +97,7 @@ const { setResult } = useGeneration()
 const { updateCrossings } = useUserPreferences()
 const { weekDays, crossings: crossingSubjects } = storeToRefs(preferencesStore)
 const { hourlyLoad } = storeToRefs(profileStore)
-const { result } = storeToRefs(generationStore)
+const { result, loadingGeneration } = storeToRefs(generationStore)
 const { items: myEvents } = storeToRefs(eventsStore)
 
 const showAddFavoriteMessage = ref(false)
@@ -122,20 +123,21 @@ const loadingGenerate = ref(false)
 const generateAllUserSchedules = async () => {
   succces.value = false
   loadingGenerate.value = true
-  const { occurrences: occurrencesData, combinations } = await loadSchedules(
-    mySubjects.value,
-    myEvents.value,
-    {
-      crossingSubjects: crossingSubjects.value,
-    },
-  )
-  loadingGenerate.value = false
-  await setResult(toRaw(combinations), toRaw(occurrencesData), {
-    crossingsSetting: toRaw(crossingSubjects.value),
-    weekDays: toRaw(weekDays.value),
-    hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
-  })
-  succces.value = true
+  try {
+    const { occurrences: occurrencesData, combinations } = await loadSchedules(
+      mySubjects.value,
+      myEvents.value,
+      { crossingSubjects: crossingSubjects.value },
+    )
+    await setResult(toRaw(combinations), toRaw(occurrencesData), {
+      crossingsSetting: toRaw(crossingSubjects.value),
+      weekDays: toRaw(weekDays.value),
+      hourlyLoadId: toRaw(hourlyLoad.value)?.id ?? 0,
+    })
+    succces.value = true
+  } finally {
+    loadingGenerate.value = false
+  }
 }
 </script>
 

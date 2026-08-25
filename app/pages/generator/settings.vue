@@ -1,5 +1,11 @@
 <template>
   <v-container>
+    <v-progress-linear
+      v-if="loadingSettings"
+      class="mb-4"
+      color="primary"
+      indeterminate
+    />
     <v-row>
       <v-col cols="12">
         <v-card>
@@ -31,7 +37,9 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn variant="text" @click="save">Guardar</v-btn>
+            <v-btn :loading="savingWeekDays" variant="text" @click="save">
+              Guardar
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -56,14 +64,23 @@ useSeoMeta({
 })
 
 const store = useUserPreferencesStore()
+const profileStore = useUserProfileStore()
 const { updateBasicSettings } = useUserProfile()
-const { weekDays } = storeToRefs(store)
+const { weekDays, loadingPreferences } = storeToRefs(store)
+const { loadingProfile, loadingAcademicConfig } = storeToRefs(profileStore)
+const loadingSettings = computed(
+  () =>
+    loadingProfile.value ||
+    loadingAcademicConfig.value ||
+    loadingPreferences.value,
+)
 const internalWeekDays = ref(weekDays.value)
 watch(weekDays, (value) => {
   internalWeekDays.value = value
 })
 
 const savingBasic = ref(false)
+const savingWeekDays = ref(false)
 const successSave = ref(false)
 const saveBasicSettings = async (
   facultyId: number,
@@ -79,6 +96,11 @@ const saveBasicSettings = async (
 
 const { saveWeekDays } = useUserPreferences()
 const save = async () => {
-  await saveWeekDays(internalWeekDays.value)
+  savingWeekDays.value = true
+  try {
+    await saveWeekDays(internalWeekDays.value)
+  } finally {
+    savingWeekDays.value = false
+  }
 }
 </script>

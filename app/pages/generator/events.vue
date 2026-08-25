@@ -5,6 +5,7 @@
         :headers="headers"
         :items="activities"
         class="elevation-1"
+        :loading="loadingEvents"
         mobile-breakpoint="md"
         :mobile="null"
       >
@@ -93,6 +94,7 @@ const {
   updateItem,
   createNewItem,
   items: activities,
+  loadingEvents,
 } = useUserEvents()
 
 const selectedDeleteItem = ref<IActivity>()

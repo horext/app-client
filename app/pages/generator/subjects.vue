@@ -3,6 +3,7 @@
     :headers="SUBJECT_HEADERS"
     :items="mySubjects"
     class="elevation-1"
+    :loading="loadingSubjects"
     mobile-breakpoint="md"
     :mobile="null"
   >
@@ -167,6 +168,7 @@ const studyPlanApi = useStudyPlanApi()
 const configStore = useUserProfileStore()
 const {
   mySubjects,
+  loadingSubjects,
   deleteSubjectById,
   updateSubject,
   updateSubjectColor,
