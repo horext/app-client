@@ -1,4 +1,15 @@
 <template>
+  <div v-if="!loading && schedules.length" class="selection-toolbar">
+    <v-checkbox-btn
+      v-model="selectAll"
+      aria-label="Seleccionar todas las secciones"
+      :indeterminate="isPartiallySelected"
+      label="Seleccionar todas"
+    />
+    <span class="text-caption text-medium-emphasis">
+      {{ selectedCount }} de {{ schedules.length }}
+    </span>
+  </div>
   <v-table class="schedule-table d-none d-md-block" density="comfortable">
     <thead>
       <tr>
@@ -47,7 +58,7 @@ import ScheduleMobileSection from '~/components/subject/ScheduleMobileSection.vu
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
-defineProps<{
+const props = defineProps<{
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
@@ -55,9 +66,45 @@ defineProps<{
 const valueSync = defineModel<ISubjectSchedule[]>({
   required: true,
 })
+
+const availableSectionIds = computed(
+  () => new Set(props.schedules.map((schedule) => schedule.section.id)),
+)
+
+const selectedCount = computed(
+  () =>
+    new Set(
+      valueSync.value
+        .filter((schedule) =>
+          availableSectionIds.value.has(schedule.section.id),
+        )
+        .map((schedule) => schedule.section.id),
+    ).size,
+)
+
+const selectAll = computed({
+  get: () =>
+    props.schedules.length > 0 &&
+    selectedCount.value === props.schedules.length,
+  set: (selected: boolean) => {
+    valueSync.value = selected ? [...props.schedules] : []
+  },
+})
+
+const isPartiallySelected = computed(
+  () => selectedCount.value > 0 && !selectAll.value,
+)
 </script>
 
 <style>
+.selection-toolbar {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td,
 .schedule-table.v-table > .v-table__wrapper > table > tbody > tr > th,
 .schedule-table.v-table > .v-table__wrapper > table > thead > tr > td,

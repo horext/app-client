@@ -1,5 +1,6 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { nextTick } from 'vue'
 import { createVuetify } from 'vuetify'
 import type {
   ISubjectSchedule,
@@ -13,12 +14,12 @@ import ItemActions from '~/components/subject/table/ItemActions.vue'
 
 const vuetify = createVuetify()
 
-function makeSchedule(): ISubjectSchedule {
+function makeSchedule(id = 1, sectionId = ''): ISubjectSchedule {
   return {
-    id: 1,
+    id,
     sessions: [],
     section: {
-      id: '',
+      id: sectionId,
     },
     scheduleSubject: {
       id: 0,
@@ -69,6 +70,28 @@ describe('subject/ScheduleItem', () => {
       global: { plugins: [vuetify] },
     })
     expect(wrapper.exists()).toBe(true)
+  })
+
+  it('selects and clears every available schedule', async () => {
+    const schedules = [makeSchedule(1, 'A'), makeSchedule(2, 'B')]
+    const wrapper = shallowMount(ScheduleItem, {
+      props: {
+        schedules,
+        loading: false,
+        modelValue: [],
+      },
+      global: { plugins: [vuetify] },
+    })
+    const selectAll = wrapper.findComponent({ name: 'VCheckboxBtn' })
+
+    selectAll.vm.$emit('update:modelValue', true)
+    await nextTick()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([schedules])
+
+    await wrapper.setProps({ modelValue: schedules })
+    selectAll.vm.$emit('update:modelValue', false)
+    await nextTick()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[]])
   })
 })
 
