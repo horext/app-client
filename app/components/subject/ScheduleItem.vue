@@ -10,59 +10,32 @@
       {{ selectedCount }} de {{ schedules.length }}
     </span>
   </div>
-  <v-table class="schedule-table d-none d-md-block" density="comfortable">
-    <thead>
-      <tr>
-        <th class="text-left">Sección</th>
-        <th class="text-left">Día</th>
-        <th class="text-left">Horas</th>
-        <th class="text-left">Docente</th>
-        <th class="text-left">Tipo</th>
-        <th class="text-left">Aula</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-if="loading">
-        <td colspan="6">
-          <v-skeleton-loader type="table-row@10" />
-        </td>
-      </tr>
-      <template v-else>
-        <template v-for="schedule in schedules" :key="schedule.id">
-          <ScheduleSection v-model="valueSync" :schedule="schedule" />
-          <ClassSessionItem
-            v-for="session in schedule.sessions"
-            :key="session.id"
-            :session="session"
-            :for="schedule?.section?.id"
-          />
-        </template>
-      </template>
-    </tbody>
-  </v-table>
-  <div class="d-md-none">
-    <v-skeleton-loader v-if="loading" type="card@4" />
-    <ScheduleMobileSection
-      v-for="schedule in schedules"
-      v-else
-      :key="schedule.id"
-      v-model="valueSync"
-      :schedule="schedule"
-    />
-  </div>
+  <ScheduleDesktopList
+    v-if="mdAndUp"
+    v-model="valueSync"
+    :schedules="schedules"
+    :loading="loading"
+  />
+  <ScheduleMobileList
+    v-else
+    v-model="valueSync"
+    :schedules="schedules"
+    :loading="loading"
+  />
 </template>
 
 <script setup lang="ts">
-import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
-import ScheduleMobileSection from '~/components/subject/ScheduleMobileSection.vue'
-import ScheduleSection from '~/components/subject/ScheduleSection.vue'
+import ScheduleDesktopList from '~/components/subject/ScheduleDesktopList.vue'
+import ScheduleMobileList from '~/components/subject/ScheduleMobileList.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
+import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
 const { schedules } = toRefs(props)
+const { mdAndUp } = useDisplay()
 
 const valueSync = defineModel<ISubjectSchedule[]>({
   required: true,
@@ -111,22 +84,5 @@ const isPartiallySelected = computed(
 .selection-toolbar .text-caption {
   flex: none;
   white-space: nowrap;
-}
-
-.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td,
-.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > th,
-.schedule-table.v-table > .v-table__wrapper > table > thead > tr > td,
-.schedule-table.v-table > .v-table__wrapper > table > thead > tr > th,
-.schedule-table.v-table > .v-table__wrapper > table > tfoot > tr > td,
-.schedule-table.v-table > .v-table__wrapper > table > tfoot > tr > th {
-  padding: 0 6px;
-}
-
-.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td {
-  transition: background-color 120ms ease;
-}
-
-.schedule-table.v-table > .v-table__wrapper > table > tbody > tr:hover > td {
-  background-color: rgba(var(--v-theme-primary), 0.06);
 }
 </style>
