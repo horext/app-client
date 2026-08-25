@@ -1,6 +1,6 @@
 <template>
   <v-card :loading="loading">
-    <v-card-title>
+    <v-card-title class="schedule-edit-title">
       <div class="d-flex align-center w-100">
         <v-menu :close-on-content-click="false" location="right center">
           <template #activator="{ props: menuActivatorProps }">
@@ -30,7 +30,9 @@
           </v-card>
         </v-menu>
         <v-spacer />
-        <span class="text-headline-medium">{{ title }}</span>
+        <span class="schedule-edit-heading text-headline-medium">{{
+          title
+        }}</span>
       </div>
     </v-card-title>
     <v-card-text>
@@ -123,3 +125,33 @@ const title = computed(() => {
   return `${course?.id} - ${course?.name}`
 })
 </script>
+
+<style scoped>
+.schedule-edit-heading {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 959.98px) {
+  .schedule-edit-title {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: rgb(var(--v-theme-surface));
+  }
+
+  .schedule-edit-heading {
+    font-size: 1.25rem !important;
+  }
+
+  .v-card-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: rgb(var(--v-theme-surface));
+    border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  }
+}
+</style>

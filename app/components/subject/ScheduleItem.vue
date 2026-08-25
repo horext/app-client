@@ -1,5 +1,5 @@
 <template>
-  <v-table class="schedule-table" density="comfortable">
+  <v-table class="schedule-table d-none d-md-block" density="comfortable">
     <thead>
       <tr>
         <th class="text-left">Sección</th>
@@ -29,10 +29,21 @@
       </template>
     </tbody>
   </v-table>
+  <div class="d-md-none">
+    <v-skeleton-loader v-if="loading" type="card@4" />
+    <ScheduleMobileSection
+      v-for="schedule in schedules"
+      v-else
+      :key="schedule.id"
+      v-model="valueSync"
+      :schedule="schedule"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
+import ScheduleMobileSection from '~/components/subject/ScheduleMobileSection.vue'
 import ScheduleSection from '~/components/subject/ScheduleSection.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
