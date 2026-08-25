@@ -121,4 +121,12 @@ const isPartiallySelected = computed(
 .schedule-table.v-table > .v-table__wrapper > table > tfoot > tr > th {
   padding: 0 6px;
 }
+
+.schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td {
+  transition: background-color 120ms ease;
+}
+
+.schedule-table.v-table > .v-table__wrapper > table > tbody > tr:hover > td {
+  background-color: rgba(var(--v-theme-primary), 0.06);
+}
 </style>
