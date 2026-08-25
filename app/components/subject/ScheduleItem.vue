@@ -62,13 +62,14 @@ const props = defineProps<{
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
+const { schedules } = toRefs(props)
 
 const valueSync = defineModel<ISubjectSchedule[]>({
   required: true,
 })
 
 const availableSectionIds = computed(
-  () => new Set(props.schedules.map((schedule) => schedule.section.id)),
+  () => new Set(schedules.value.map((schedule) => schedule.section.id)),
 )
 
 const selectedCount = computed(
@@ -84,10 +85,10 @@ const selectedCount = computed(
 
 const selectAll = computed({
   get: () =>
-    props.schedules.length > 0 &&
-    selectedCount.value === props.schedules.length,
+    schedules.value.length > 0 &&
+    selectedCount.value === schedules.value.length,
   set: (selected: boolean) => {
-    valueSync.value = selected ? [...props.schedules] : []
+    valueSync.value = selected ? [...schedules.value] : []
   },
 })
 

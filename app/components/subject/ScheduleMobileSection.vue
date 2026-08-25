@@ -59,27 +59,30 @@ import type { ISubjectSchedule } from '~/interfaces/subject'
 import { getWeekdayName } from '~/utils/weekday'
 
 const props = defineProps<{ schedule: ISubjectSchedule }>()
+const { schedule } = toRefs(props)
 const valueSync = defineModel<ISubjectSchedule[]>({ required: true })
 
 const isSelected = computed(() =>
   valueSync.value.some(
-    (schedule) => schedule.section.id === props.schedule.section.id,
+    (selectedSchedule) =>
+      selectedSchedule.section.id === schedule.value.section.id,
   ),
 )
-const checkboxId = computed(() => `mobile-section-${props.schedule.section.id}`)
+const checkboxId = computed(() => `mobile-section-${schedule.value.section.id}`)
 
 const toggleSelection = () => {
   if (isSelected.value) {
     valueSync.value = valueSync.value.filter(
-      (schedule) => schedule.section.id !== props.schedule.section.id,
+      (selectedSchedule) =>
+        selectedSchedule.section.id !== schedule.value.section.id,
     )
     return
   }
-  valueSync.value = [...valueSync.value, props.schedule]
+  valueSync.value = [...valueSync.value, schedule.value]
 }
 
 const sessions = computed(() =>
-  props.schedule.sessions.map((session) => ({
+  schedule.value.sessions.map((session) => ({
     id: session.id,
     day: getWeekdayName(session.day)?.substring(0, 2).toUpperCase(),
     time: `${session.startTime.substring(0, 5)} - ${session.endTime.substring(0, 5)}`,
