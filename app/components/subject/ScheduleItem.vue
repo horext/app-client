@@ -102,8 +102,15 @@ const isPartiallySelected = computed(
   display: flex;
   min-height: 48px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 8px;
+}
+
+.selection-toolbar .v-checkbox-btn,
+.selection-toolbar .v-label,
+.selection-toolbar .text-caption {
+  flex: none;
+  white-space: nowrap;
 }
 
 .schedule-table.v-table > .v-table__wrapper > table > tbody > tr > td,

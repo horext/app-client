@@ -1,7 +1,7 @@
 <template>
   <v-card :loading="loading">
     <v-card-title class="schedule-edit-title">
-      <div class="d-flex align-center w-100">
+      <div class="schedule-edit-title-content w-100">
         <v-menu :close-on-content-click="false" location="right center">
           <template #activator="{ props: menuActivatorProps }">
             <v-btn
@@ -29,7 +29,6 @@
             </v-card-text>
           </v-card>
         </v-menu>
-        <v-spacer />
         <span class="schedule-edit-heading text-headline-medium">{{
           title
         }}</span>
@@ -127,11 +126,27 @@ const title = computed(() => {
 </script>
 
 <style scoped>
-.schedule-edit-heading {
+.schedule-edit-title {
   min-width: 0;
+}
+
+.schedule-edit-heading {
+  width: 0;
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 8px;
   overflow: hidden;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.schedule-edit-title-content {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  overflow: hidden;
 }
 
 @media (max-width: 959.98px) {
