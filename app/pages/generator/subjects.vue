@@ -40,8 +40,8 @@
           @keydown.esc="close"
         >
           <SubjectSchedulesEdit
-            v-if="subjectSchedules"
-            :subject-schedules="subjectSchedules"
+            v-if="planedSubject"
+            :planed-subject="planedSubject"
             :available-schedules="schedules"
             :loading="statusSchedules === 'pending'"
             :report-url="scheduleReportUrl"
@@ -253,7 +253,7 @@ if (mySubjects.value.length > 0) {
 const dialog = ref(false)
 const dialogDelete = ref(false)
 
-const subjectSchedules = shallowRef<IBasePlannedSubject | IPlannedSubject>()
+const planedSubject = shallowRef<IBasePlannedSubject | IPlannedSubject>()
 
 const openSearchMenu = ref(false)
 
@@ -280,7 +280,7 @@ const {
   'generator-subject-schedules',
   async () => {
     const _hourlyLoadId = hourlyLoad.value?.id
-    const subject = subjectSchedules.value?.subject
+    const subject = planedSubject.value?.subject
     if (!_hourlyLoadId || !subject) return []
 
     const schedulesSubject =
@@ -305,7 +305,7 @@ const {
 )
 
 const scheduleReportUrl = computed(() => {
-  const subject = subjectSchedules.value?.subject
+  const subject = planedSubject.value?.subject
   const currentHourlyLoad = hourlyLoad.value
   const specialityName = speciality.value?.name
   if (!subject || !currentHourlyLoad || !specialityName) return undefined
@@ -322,7 +322,7 @@ const scheduleReportUrl = computed(() => {
 })
 
 const editItem = (item: IPlannedSubject | IBasePlannedSubject) => {
-  subjectSchedules.value = item
+  planedSubject.value = item
   fetchSchedules()
   dialog.value = true
 }
@@ -342,7 +342,7 @@ const deleteItemConfirm = async (item: IPlannedSubject) => {
 
 const close = () => {
   dialog.value = false
-  subjectSchedules.value = undefined
+  planedSubject.value = undefined
   selectedSubject.value = undefined
 }
 

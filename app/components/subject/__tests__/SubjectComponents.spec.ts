@@ -113,7 +113,7 @@ describe('subject/SchedulesEdit', () => {
   it('renders with loading state', () => {
     const wrapper = shallowMount(SchedulesEdit, {
       props: {
-        subjectSchedules: makeBaseSubjectSchedules(),
+        planedSubject: makeBaseSubjectSchedules(),
         availableSchedules: [],
         loading: true,
       },
@@ -125,7 +125,7 @@ describe('subject/SchedulesEdit', () => {
   it('renders with schedule data', () => {
     const wrapper = shallowMount(SchedulesEdit, {
       props: {
-        subjectSchedules: makeBaseSubjectSchedules(),
+        planedSubject: makeBaseSubjectSchedules(),
         availableSchedules: [makeSchedule()],
         loading: false,
       },
@@ -138,7 +138,7 @@ describe('subject/SchedulesEdit', () => {
     const reportUrl = 'https://github.com/horext/app-data/issues/new'
     const wrapper = mount(SchedulesEdit, {
       props: {
-        subjectSchedules: makeBaseSubjectSchedules(),
+        planedSubject: makeBaseSubjectSchedules(),
         availableSchedules: [makeSchedule()],
         loading: false,
         reportUrl,

@@ -79,7 +79,7 @@ import { PlannedSubject } from '~/models/planned-subject'
 import type { PlannedSubjectId } from '~~/shared/domain'
 
 const props = defineProps<{
-  subjectSchedules: IBasePlannedSubject | IPlannedSubject
+  planedSubject: IBasePlannedSubject | IPlannedSubject
   availableSchedules: ISubjectSchedule[]
   loading: boolean
   reportUrl?: string
@@ -93,13 +93,13 @@ const emit = defineEmits<{
   (event: 'cancel'): void
 }>()
 
-const { subjectSchedules, availableSchedules } = toRefs(props)
+const { planedSubject, availableSchedules } = toRefs(props)
 
 const currentSelectedSchedules = computed(() => {
   const currentSchedules = availableSchedules.value
-  const _subjectSchedules = subjectSchedules.value.schedules
+  const _subjectSchedules = planedSubject.value.schedules
   return {
-    ...subjectSchedules.value,
+    ...planedSubject.value,
     currentSchedules: currentSchedules.filter((s1) => {
       const schedule = _subjectSchedules.find(
         (s2) => s2.section.id === s1.section.id,
@@ -120,7 +120,7 @@ const saveSections = () => {
 }
 
 const title = computed(() => {
-  const course = subjectSchedules.value?.subject.course
+  const course = planedSubject.value?.subject.course
   return `${course?.id} - ${course?.name}`
 })
 </script>
