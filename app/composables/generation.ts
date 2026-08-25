@@ -13,7 +13,7 @@ export const useGeneration = () => {
   const service = useGenerationService()
   const userId = useSchedulesUserId()
   const preferencesStore = useUserPreferencesStore()
-  const { result, history } = storeToRefs(store)
+  const { result, history, loadingGeneration } = storeToRefs(store)
 
   async function setResult(
     newSchedules: IBaseGeneratedSchedule[],
@@ -38,25 +38,31 @@ export const useGeneration = () => {
   }
 
   async function loadSaved(): Promise<void> {
-    const [records, latest] = await Promise.all([
-      service.getGenerations(userId),
-      service.getLatestGeneration(userId),
-    ])
-    store.setHistory(records.map(toScheduleGenerationDto))
-    store.setResult(
-      latest
-        ? {
-            ...toScheduleGenerationDto(latest.generation),
-            schedules: latest.schedules.map(toGeneratedScheduleDto),
-            occurrences: latest.occurrences,
-          }
-        : null,
-    )
+    loadingGeneration.value = true
+    try {
+      const [records, latest] = await Promise.all([
+        service.getGenerations(userId),
+        service.getLatestGeneration(userId),
+      ])
+      store.setHistory(records.map(toScheduleGenerationDto))
+      store.setResult(
+        latest
+          ? {
+              ...toScheduleGenerationDto(latest.generation),
+              schedules: latest.schedules.map(toGeneratedScheduleDto),
+              occurrences: latest.occurrences,
+            }
+          : null,
+      )
+    } finally {
+      loadingGeneration.value = false
+    }
   }
 
   return {
     result,
     history,
+    loadingGeneration,
     setResult,
     loadSaved,
     clear: store.clear,

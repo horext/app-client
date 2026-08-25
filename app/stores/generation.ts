@@ -6,6 +6,7 @@ import type {
 } from '~/interfaces/schedule-generation'
 
 export const useGenerationStore = defineStore('generation', () => {
+  const loadingGeneration = ref(true)
   const result = ref<IScheduleGenerationResult | null>(null)
   const history = ref<IScheduleGeneration[]>([])
 
@@ -27,6 +28,7 @@ export const useGenerationStore = defineStore('generation', () => {
   }
 
   return {
+    loadingGeneration,
     result,
     history,
     setResult,

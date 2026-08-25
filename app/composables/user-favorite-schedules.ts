@@ -9,7 +9,7 @@ export const useUserFavoriteSchedules = () => {
   const favoritesStorage = useFavoritesSchedulesService()
   const userId = useSchedulesUserId()
   const store = useUserFavoritesStore()
-  const { favoritesSchedules } = storeToRefs(store)
+  const { favoritesSchedules, loadingFavorites } = storeToRefs(store)
 
   async function saveNewFavoriteSchedule(
     _favoritesSchedule: GeneratedScheduleInput,
@@ -29,12 +29,18 @@ export const useUserFavoriteSchedules = () => {
   }
 
   async function fetchFavoritesSchedules() {
-    const schedules = await favoritesStorage.getFavoriteSchedules(userId)
-    store.setFavorites((schedules ?? []).map(toGeneratedScheduleDto))
+    loadingFavorites.value = true
+    try {
+      const schedules = await favoritesStorage.getFavoriteSchedules(userId)
+      store.setFavorites((schedules ?? []).map(toGeneratedScheduleDto))
+    } finally {
+      loadingFavorites.value = false
+    }
   }
 
   return {
     favoritesSchedules,
+    loadingFavorites,
     saveNewFavoriteSchedule,
     deleteFavoriteScheduleById,
     fetchFavoritesSchedules,

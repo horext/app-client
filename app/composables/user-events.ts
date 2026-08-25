@@ -7,7 +7,7 @@ export const useUserEvents = () => {
   const store = useUserEventsStore()
   const service = useActivitiesService()
   const userId = useSchedulesUserId()
-  const { items } = storeToRefs(store)
+  const { items, loadingEvents } = storeToRefs(store)
 
   async function createNewItem(item: IBaseActivity) {
     const result = await service.create(userId, {
@@ -31,12 +31,18 @@ export const useUserEvents = () => {
   }
 
   async function fetchItems() {
-    const data = await service.getAll(userId)
-    store.setItems(data.map(toActivityDto))
+    loadingEvents.value = true
+    try {
+      const data = await service.getAll(userId)
+      store.setItems(data.map(toActivityDto))
+    } finally {
+      loadingEvents.value = false
+    }
   }
 
   return {
     items,
+    loadingEvents,
     createNewItem,
     deleteItemById,
     updateItem,

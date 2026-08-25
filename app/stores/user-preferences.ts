@@ -4,6 +4,7 @@ import type { IUserPreferences } from '~/interfaces/preferences'
 import type { Weekdays } from '~/interfaces/event'
 
 export const useUserPreferencesStore = defineStore('user-preferences', () => {
+  const loadingPreferences = ref(true)
   const preferences = ref<IUserPreferences>()
 
   const weekDays = computed(
@@ -17,6 +18,7 @@ export const useUserPreferencesStore = defineStore('user-preferences', () => {
   )
 
   return {
+    loadingPreferences,
     preferences,
     weekDays,
     crossings,

@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import type { IActivity } from '~/interfaces/event'
 
 export const useUserEventsStore = defineStore('user/events', () => {
+  const loadingEvents = ref(true)
   const items = ref<Array<IActivity>>([])
 
   function setItems(newItems: Array<IActivity>) {
@@ -30,6 +31,7 @@ export const useUserEventsStore = defineStore('user/events', () => {
   }
 
   return {
+    loadingEvents,
     items,
     setItems,
     addItem,

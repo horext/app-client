@@ -6,12 +6,22 @@ export const useUserPreferences = () => {
   const store = useUserPreferencesStore()
   const service = usePreferencesService()
   const userId = useSchedulesUserId()
-  const { preferences, weekDays, crossings, maxGenerationHistory } =
-    storeToRefs(store)
+  const {
+    preferences,
+    weekDays,
+    crossings,
+    maxGenerationHistory,
+    loadingPreferences,
+  } = storeToRefs(store)
 
   async function fetchPreferences() {
-    const prefs = await service.get(userId)
-    if (prefs) preferences.value = toPreferencesDto(prefs)
+    loadingPreferences.value = true
+    try {
+      const prefs = await service.get(userId)
+      if (prefs) preferences.value = toPreferencesDto(prefs)
+    } finally {
+      loadingPreferences.value = false
+    }
   }
 
   async function createPreferences() {
@@ -38,6 +48,7 @@ export const useUserPreferences = () => {
     weekDays,
     crossings,
     maxGenerationHistory,
+    loadingPreferences,
     fetchPreferences,
     createPreferences,
     updateCrossings,

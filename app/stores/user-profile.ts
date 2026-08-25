@@ -6,6 +6,7 @@ import type { IOrganization } from '~/interfaces/organization'
 
 export const useUserProfileStore = defineStore('user-profile', () => {
   const loadingProfile = ref(true)
+  const loadingAcademicConfig = ref(true)
   const profile = ref<IUserProfile>()
   const hourlyLoad = ref<IHourlyLoad>()
   const isNewHourlyLoad = ref(false)
@@ -29,6 +30,7 @@ export const useUserProfileStore = defineStore('user-profile', () => {
     specialityId,
     studyPlanId,
     loadingProfile,
+    loadingAcademicConfig,
     speciality,
   }
 })

@@ -4,6 +4,7 @@ import type { IGeneratedSchedule } from '~/interfaces/schedule'
 import type { GeneratedScheduleId } from '~~/shared/domain'
 
 export const useUserFavoritesStore = defineStore('user-favorites', () => {
+  const loadingFavorites = ref(true)
   const favoritesSchedules = ref<IGeneratedSchedule[]>([])
 
   function setFavorites(schedules: IGeneratedSchedule[]) {
@@ -25,6 +26,7 @@ export const useUserFavoritesStore = defineStore('user-favorites', () => {
   }
 
   return {
+    loadingFavorites,
     favoritesSchedules,
     setFavorites,
     addFavorite,

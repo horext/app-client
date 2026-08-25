@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { IPlannedSubject, PlannedSubjectId } from '~/interfaces/subject'
 
 export const useUserSubjectsStore = defineStore('user-subjects', () => {
+  const loadingSubjects = ref(true)
   const subjects = ref<Array<IPlannedSubject>>([])
   const subjectCount = computed(() => subjects.value.length)
   const hasSubjects = computed(() => subjectCount.value > 0)
@@ -29,6 +30,7 @@ export const useUserSubjectsStore = defineStore('user-subjects', () => {
   }
 
   return {
+    loadingSubjects,
     subjects,
     subjectCount,
     hasSubjects,

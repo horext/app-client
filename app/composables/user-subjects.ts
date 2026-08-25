@@ -15,7 +15,7 @@ export const useUserSubjects = () => {
   const service = useSubjectsService()
   const userId = useSchedulesUserId()
   const store = useUserSubjectsStore()
-  const { subjects, hasSubjects } = storeToRefs(store)
+  const { subjects, hasSubjects, loadingSubjects } = storeToRefs(store)
 
   async function saveNewSubject(_subject: IBasePlannedSubject) {
     const created = await service.create(userId, {
@@ -69,15 +69,23 @@ export const useUserSubjects = () => {
   }
 
   async function fetchSubjects() {
-    const data = await service.getAll(userId)
-    const subjectsWithSchedules = data
-      .map(toPlannedSubjectDto)
-      .filter((subject: IBasePlannedSubject) => subject?.schedules?.length > 0)
-    store.setSubjects(subjectsWithSchedules)
+    loadingSubjects.value = true
+    try {
+      const data = await service.getAll(userId)
+      const subjectsWithSchedules = data
+        .map(toPlannedSubjectDto)
+        .filter(
+          (subject: IBasePlannedSubject) => subject?.schedules?.length > 0,
+        )
+      store.setSubjects(subjectsWithSchedules)
+    } finally {
+      loadingSubjects.value = false
+    }
   }
 
   return {
     mySubjects: subjects,
+    loadingSubjects,
     updateSubject,
     updateSubjectColor,
     refreshSubjectCatalog,
