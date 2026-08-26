@@ -69,7 +69,7 @@
     "@types/luxon": "^3.7.4",
     "@types/node": "^26.2.0",
     "@types/uuid": "^11.0.0",
-    "@unhead/schema": "^3.3.2",
+    "@unhead/schema": "^3.4.0",
     "@unocss/nuxt": "^66.7.5",
     "@unocss/preset-wind4": "^66.8.1",
     "@vitejs/plugin-vue": "^6.0.8",
