@@ -109,8 +109,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       '@unhead/schema':
-        specifier: ^3.3.2
-        version: 3.3.2
+        specifier: ^3.4.0
+        version: 3.4.0
       '@unocss/nuxt':
         specifier: ^66.7.5
         version: 66.7.5(esbuild@0.28.1)(magic-string@1.1.0)(magicast@0.5.4)(oxc-parser@0.131.0)(rolldown@1.2.5)(rollup@4.62.4)(unplugin@3.3.0(esbuild@0.28.1)(rolldown@1.2.5)(rollup@4.62.4)(vite@8.2.2)(webpack@5.107.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.26)))(vite@8.2.2)(webpack@5.107.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.26))
@@ -2046,8 +2046,8 @@ packages:
       webpack:
         optional: true
 
-  '@unhead/schema@3.3.2':
-    resolution: {integrity: sha512-E4QmBJQAxSDZZVmYomjE60JMQIK53Qhcf1sap3doxK9l3S/EXO/STIEGpGPDyVTHoL8q4K9zoSFZySIQEmaJKA==}
+  '@unhead/schema@3.4.0':
+    resolution: {integrity: sha512-4yu+NygMBC42OInjrSWVObHoZ9+ZaV+RkJY9rKXm1ljHy9UVR+4VJpyJpmwXhjffWcMcrmo8gJ3rENxsgBeN+g==}
 
   '@unhead/vue@3.3.2':
     resolution: {integrity: sha512-WMmKtBxEzYrs2GBG3nuFFguuq8CdbQ6s7NX8TxBNev++WGh8otHa6KvmlMwNCawu+iH83aRWuCaxLpCKAuCDkQ==}
@@ -8510,7 +8510,7 @@ snapshots:
       - rollup
       - unloader
 
-  '@unhead/schema@3.3.2': {}
+  '@unhead/schema@3.4.0': {}
 
   '@unhead/vue@3.3.2(@oxc-project/types@0.146.0)(@vitejs/devtools-kit@0.4.12(cac@7.0.0)(srvx@0.12.7)(vite@8.2.2))(esbuild@0.28.1)(lightningcss@1.33.0)(oxc-parser@0.131.0)(rolldown@1.2.5)(rollup@4.62.4)(vite@8.2.2)(vue@3.5.41(typescript@6.0.3))(webpack@5.107.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.26))':
     dependencies:
