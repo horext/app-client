@@ -1,20 +1,28 @@
 <template>
   <tr>
-    <td :rowspan="sessionsCount + 1" class="section-cell">
+    <td :rowspan="sectionRowspan" class="section-cell">
       <v-checkbox
-        :id="section"
+        :id="sectionId"
         v-model="valueSync"
         class="text-body-small"
         density="compact"
-        :label="section"
+        :label="sectionId"
         :value="schedule"
         hide-details
         multiple
       />
     </td>
   </tr>
+  <ClassSessionItem
+    v-for="session in schedule.sessions"
+    :key="session.id"
+    :session="session"
+    :for="schedule.section.id"
+  />
 </template>
+
 <script setup lang="ts">
+import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
 import { computed } from 'vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 
@@ -27,11 +35,11 @@ const valueSync = defineModel<ISubjectSchedule[]>({
 })
 const { schedule } = toRefs(props)
 
-const sessionsCount = computed(() => {
-  return schedule.value.sessions?.length
+const sectionRowspan = computed(() => {
+  return schedule.value.sessions?.length + 1
 })
 
-const section = computed(() => {
+const sectionId = computed(() => {
   return schedule.value.section?.id
 })
 </script>
