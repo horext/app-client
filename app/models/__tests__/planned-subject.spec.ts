@@ -100,6 +100,25 @@ describe('PlannedSubject schedule comparison', () => {
     expect(model.scheduleOptions[1]?.selected).toBe(false)
   })
 
+  it('owns section selection changes without replacing its options', () => {
+    const schedule = makeSchedule('101', [makeSession()])
+    const model = new PlannedSubject(
+      undefined,
+      {} as ISubject,
+      [],
+      DEFAULT_SUBJECT_COLOR,
+      [],
+    )
+    model.initializeAvailableSchedules([schedule])
+    const option = model.scheduleOptions[0]
+
+    model.setScheduleSelected('101', true)
+
+    expect(model.scheduleOptions[0]).toBe(option)
+    expect(option?.selected).toBe(true)
+    expect(model.schedules).toEqual([schedule])
+  })
+
   it('keeps session comparison inside its previously selected option', () => {
     const saved = makeSchedule('101', [makeSession()])
     const current = makeSchedule('101', [

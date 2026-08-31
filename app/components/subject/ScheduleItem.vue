@@ -15,12 +15,14 @@
     :schedules="schedules"
     :loading="loading"
     :show-changes="resolvedShowChanges"
+    @update:selected="forwardSelectionUpdate"
   />
   <ScheduleMobileList
     v-else
     :schedules="schedules"
     :loading="loading"
     :show-changes="resolvedShowChanges"
+    @update:selected="forwardSelectionUpdate"
   />
 </template>
 
@@ -35,9 +37,16 @@ const props = defineProps<{
   showChanges?: boolean
   loading: boolean
 }>()
+const emit = defineEmits<{
+  (event: 'update:selected', sectionId: string, selected: boolean): void
+  (event: 'update:all', selected: boolean): void
+}>()
 const { schedules, loading, showChanges: showChangesProp } = toRefs(props)
 const { mdAndUp } = useDisplay()
 const resolvedShowChanges = computed(() => showChangesProp.value ?? true)
+const forwardSelectionUpdate = (sectionId: string, selected: boolean) => {
+  emit('update:selected', sectionId, selected)
+}
 
 const selectedCount = computed(
   () => schedules.value.filter(({ selected }) => selected).length,
@@ -48,9 +57,7 @@ const selectAll = computed({
     schedules.value.length > 0 &&
     selectedCount.value === schedules.value.length,
   set: (selected: boolean) => {
-    schedules.value.forEach((option) => {
-      option.selected = selected
-    })
+    emit('update:all', selected)
   },
 })
 

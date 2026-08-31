@@ -49,5 +49,20 @@ describe('subject/ScheduleDesktopSection', () => {
       expect(wrapper.findComponent({ name: 'VCheckbox' }).exists()).toBe(true)
       expect(wrapper.findAllComponents(ClassSessionItem)).toHaveLength(0)
     })
+
+    it('emits a selection request without mutating the option', async () => {
+      const option = makeScheduleOption(makeSchedule(1, 'A'))
+      const wrapper = shallowMount(ScheduleDesktopSection, {
+        props: { option, showChanges: false },
+        global: { plugins: [vuetify] },
+      })
+
+      await wrapper
+        .findComponent({ name: 'VCheckbox' })
+        .vm.$emit('update:modelValue', true)
+
+      expect(wrapper.emitted('update:selected')).toEqual([[true]])
+      expect(option.selected).toBe(false)
+    })
   })
 })

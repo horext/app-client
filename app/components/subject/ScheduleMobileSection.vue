@@ -13,12 +13,13 @@
     <v-card-title class="d-flex align-center py-2">
       <v-checkbox
         :id="checkboxId"
-        v-model="option.selected"
+        :model-value="option.selected"
         class="flex-grow-0"
         density="compact"
         :label="schedule.section.id"
         hide-details
         @click.stop
+        @update:model-value="emit('update:selected', Boolean($event))"
       />
       <v-chip
         v-if="isAddedToSelection"
@@ -83,6 +84,9 @@ const props = defineProps<{
   option: PlannedSubjectSchedule
   showChanges: boolean
 }>()
+const emit = defineEmits<{
+  (event: 'update:selected', selected: boolean): void
+}>()
 const { option, showChanges } = toRefs(props)
 const { schedule, isAddedToSelection, sessionStates } = useScheduleSection(
   option,
@@ -91,7 +95,7 @@ const { schedule, isAddedToSelection, sessionStates } = useScheduleSection(
 const checkboxId = computed(() => `mobile-section-${schedule.value.section.id}`)
 
 const toggleSelection = () => {
-  option.value.selected = !option.value.selected
+  emit('update:selected', !option.value.selected)
 }
 
 const sessionCards = computed(() =>

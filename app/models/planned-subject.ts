@@ -280,6 +280,25 @@ export class PlannedSubject<
     )
   }
 
+  setScheduleSelected(sectionId: string, selected: boolean) {
+    const option = this.scheduleOptions.find(
+      (schedule) => schedule.sectionId === sectionId,
+    )
+    if (option) option.selected = selected
+  }
+
+  setAllSchedulesSelected(selected: boolean) {
+    this.scheduleOptions.forEach((option) => {
+      option.selected = selected
+    })
+  }
+
+  restoreSavedSelection() {
+    this.scheduleOptions.forEach((option) => {
+      option.selected = option.wasSelected
+    })
+  }
+
   changesFrom(originalSchedules: ISubjectSchedule[]): PlannedSubjectChanges {
     const addedSchedules = this.schedules.filter(
       (schedule) => !findSchedule(originalSchedules, schedule),

@@ -3,11 +3,12 @@
     <td :rowspan="schedule.sessions.length + 1" class="section-cell">
       <v-checkbox
         :id="schedule.section.id"
-        v-model="option.selected"
+        :model-value="option.selected"
         class="text-body-small"
         density="compact"
         :label="schedule.section.id"
         hide-details
+        @update:model-value="emit('update:selected', Boolean($event))"
       />
       <v-chip
         v-if="isAddedToSelection"
@@ -37,6 +38,9 @@ import type { PlannedSubjectSchedule } from '~/models/planned-subject'
 const props = defineProps<{
   option: PlannedSubjectSchedule
   showChanges: boolean
+}>()
+const emit = defineEmits<{
+  (event: 'update:selected', selected: boolean): void
 }>()
 const { option, showChanges } = toRefs(props)
 const { schedule, isAddedToSelection, sessionStates } = useScheduleSection(

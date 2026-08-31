@@ -49,7 +49,7 @@ describe('subject/SchedulesEdit selection state', () => {
     expect(options.every(({ selected }) => !selected)).toBe(true)
     expect(wrapper.text()).not.toContain('Cambios en tus selecciones')
 
-    options[0]!.selected = true
+    scheduleList.vm.$emit('update:selected', 'A', true)
     await nextTick()
 
     expect(options[0]!.selected).toBe(true)
@@ -70,8 +70,7 @@ describe('subject/SchedulesEdit selection state', () => {
       global: { plugins: [vuetify] },
     })
     const scheduleList = wrapper.findComponent(ScheduleItem)
-    const options = scheduleList.props('schedules') as PlannedSubjectSchedule[]
-    options[0]!.selected = true
+    scheduleList.vm.$emit('update:selected', 'A', true)
     await nextTick()
 
     await wrapper.setProps({

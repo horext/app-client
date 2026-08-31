@@ -39,5 +39,22 @@ describe('subject/ScheduleDesktopList', () => {
 
       expect(wrapper.findAllComponents(ScheduleDesktopSection)).toHaveLength(2)
     })
+
+    it('relays the section selection request with its identifier', () => {
+      const wrapper = mount(ScheduleDesktopList, {
+        props: {
+          schedules: [makeScheduleOption(makeSchedule(1, 'A'))],
+          loading: false,
+          showChanges: false,
+        },
+        global: { plugins: [vuetify] },
+      })
+
+      wrapper
+        .findComponent(ScheduleDesktopSection)
+        .vm.$emit('update:selected', true)
+
+      expect(wrapper.emitted('update:selected')).toEqual([['A', true]])
+    })
   })
 })

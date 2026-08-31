@@ -18,7 +18,8 @@ describe('subject/ScheduleMobileSection', () => {
 
       await wrapper.findComponent({ name: 'VCard' }).trigger('click')
 
-      expect(option.selected).toBe(true)
+      expect(wrapper.emitted('update:selected')?.at(-1)).toEqual([true])
+      expect(option.selected).toBe(false)
     })
   })
 
@@ -33,7 +34,8 @@ describe('subject/ScheduleMobileSection', () => {
 
       await wrapper.findComponent({ name: 'VCard' }).trigger('click')
 
-      expect(option.selected).toBe(false)
+      expect(wrapper.emitted('update:selected')?.at(-1)).toEqual([false])
+      expect(option.selected).toBe(true)
     })
   })
 

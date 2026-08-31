@@ -22,6 +22,7 @@
           :key="option.sectionId"
           :option="option"
           :show-changes="showChanges"
+          @update:selected="emit('update:selected', option.sectionId, $event)"
         />
       </template>
     </tbody>
@@ -36,6 +37,9 @@ const props = defineProps<{
   schedules: PlannedSubjectSchedule[]
   loading: boolean
   showChanges: boolean
+}>()
+const emit = defineEmits<{
+  (event: 'update:selected', sectionId: string, selected: boolean): void
 }>()
 const { schedules, loading, showChanges } = toRefs(props)
 </script>

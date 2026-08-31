@@ -69,6 +69,8 @@
         :schedules="current.scheduleOptions"
         :show-changes="isEditing"
         :loading="loading"
+        @update:selected="updateScheduleSelection"
+        @update:all="updateAllScheduleSelections"
       />
     </v-card-text>
     <v-card-actions>
@@ -193,9 +195,15 @@ const sessionChangesSummary = computed(() => {
 })
 
 const restoreSavedSelection = () => {
-  current.value.scheduleOptions.forEach((option) => {
-    option.selected = option.wasSelected
-  })
+  current.value.restoreSavedSelection()
+}
+
+const updateScheduleSelection = (sectionId: string, selected: boolean) => {
+  current.value.setScheduleSelected(sectionId, selected)
+}
+
+const updateAllScheduleSelections = (selected: boolean) => {
+  current.value.setAllSchedulesSelected(selected)
 }
 
 watch(
