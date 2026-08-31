@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import ScheduleDesktopSection from '~/components/subject/ScheduleDesktopSection.vue'
 import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
-import { makeSchedule, makeSession } from './fixtures'
+import { makeSchedule, makeScheduleOption, makeSession } from './fixtures'
 
 const vuetify = createVuetify()
 
@@ -11,7 +11,10 @@ describe('subject/ScheduleDesktopSection', () => {
   describe('given an available section', () => {
     it('displays its identifier as the selection label', () => {
       const wrapper = shallowMount(ScheduleDesktopSection, {
-        props: { schedule: makeSchedule(1, 'A'), modelValue: [] },
+        props: {
+          option: makeScheduleOption(makeSchedule(1, 'A')),
+          showChanges: false,
+        },
         global: { plugins: [vuetify] },
       })
 
@@ -23,8 +26,10 @@ describe('subject/ScheduleDesktopSection', () => {
     it('displays every session belonging to the section', () => {
       const wrapper = shallowMount(ScheduleDesktopSection, {
         props: {
-          schedule: makeSchedule(1, 'A', [makeSession(1), makeSession(2)]),
-          modelValue: [],
+          option: makeScheduleOption(
+            makeSchedule(1, 'A', [makeSession(1), makeSession(2)]),
+          ),
+          showChanges: false,
         },
         global: { plugins: [vuetify] },
       })
@@ -34,7 +39,10 @@ describe('subject/ScheduleDesktopSection', () => {
 
     it('still displays a selectable section when it has no sessions', () => {
       const wrapper = shallowMount(ScheduleDesktopSection, {
-        props: { schedule: makeSchedule(1, 'A'), modelValue: [] },
+        props: {
+          option: makeScheduleOption(makeSchedule(1, 'A')),
+          showChanges: false,
+        },
         global: { plugins: [vuetify] },
       })
 

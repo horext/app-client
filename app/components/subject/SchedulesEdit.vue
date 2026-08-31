@@ -35,9 +35,39 @@
       </div>
     </v-card-title>
     <v-card-text>
+      <v-alert
+        v-if="isEditing && hasChanges"
+        class="mb-4"
+        density="compact"
+        type="info"
+        variant="tonal"
+      >
+        <div class="changes-alert-layout">
+          <div>
+            <div class="text-subtitle-2 mb-1">Cambios en tus selecciones</div>
+            <div v-if="sectionChangesSummary">
+              <strong>Cambios en tu selección:</strong>
+              {{ sectionChangesSummary }}
+            </div>
+            <div v-if="sessionChangesSummary">
+              <strong>Cambios en horarios de secciones guardadas:</strong>
+              {{ sessionChangesSummary }}
+            </div>
+          </div>
+          <v-btn
+            v-if="originalSchedules.length"
+            class="restore-selection"
+            size="small"
+            variant="text"
+            @click="restoreSavedSelection"
+          >
+            Restaurar selección guardada
+          </v-btn>
+        </div>
+      </v-alert>
       <ScheduleSubjectList
-        v-model="current.schedules"
-        :schedules="availableSchedules"
+        :schedules="current.scheduleOptions"
+        :show-changes="isEditing"
         :loading="loading"
       />
     </v-card-text>
@@ -93,27 +123,95 @@ const emit = defineEmits<{
   (event: 'cancel'): void
 }>()
 
-const { planedSubject, availableSchedules } = toRefs(props)
+const { planedSubject, availableSchedules, loading } = toRefs(props)
 
 const currentSelectedSchedules = computed(() => {
   const currentSchedules = availableSchedules.value
   const _subjectSchedules = planedSubject.value.schedules
+  const selectedSectionIds = new Set(
+    _subjectSchedules.map(({ section }) => section.id),
+  )
   return {
     ...planedSubject.value,
-    currentSchedules: currentSchedules.filter((s1) => {
-      const schedule = _subjectSchedules.find(
-        (s2) => s2.section.id === s1.section.id,
-      )
-      return schedule?.id === s1?.id
-    }),
+    currentSchedules: currentSchedules.filter(({ section }) =>
+      selectedSectionIds.has(section.id),
+    ),
   }
 })
 
-const current = ref(PlannedSubject.buildFrom(currentSelectedSchedules.value))
+const current = ref(
+  PlannedSubject.buildFrom({
+    ...planedSubject.value,
+    currentSchedules: [],
+  }),
+)
+const initialized = ref(false)
 
-watch(currentSelectedSchedules, (availableSchedules) => {
-  current.value = PlannedSubject.buildFrom(availableSchedules)
+const originalSchedules = computed(() => planedSubject.value.schedules)
+const isEditing = computed(() => 'id' in planedSubject.value)
+const changes = computed(() =>
+  current.value.changesFrom(originalSchedules.value),
+)
+
+const hasChanges = computed(
+  () =>
+    initialized.value &&
+    (changes.value.addedSchedules.length > 0 ||
+      changes.value.removedSchedules.length > 0 ||
+      changes.value.removedSessions > 0 ||
+      changes.value.modifiedSessions > 0),
+)
+
+const sectionChangesSummary = computed(() => {
+  const summary: string[] = []
+  if (changes.value.addedSchedules.length) {
+    summary.push(
+      `+${changes.value.addedSchedules.length} ${changes.value.addedSchedules.length === 1 ? 'sección' : 'secciones'}`,
+    )
+  }
+  if (changes.value.removedSchedules.length) {
+    summary.push(
+      `-${changes.value.removedSchedules.length} ${changes.value.removedSchedules.length === 1 ? 'sección' : 'secciones'}`,
+    )
+  }
+  return summary.join(' · ')
 })
+
+const sessionChangesSummary = computed(() => {
+  const summary: string[] = []
+  if (changes.value.removedSessions) {
+    summary.push(
+      `-${changes.value.removedSessions} ${changes.value.removedSessions === 1 ? 'eliminado' : 'eliminados'}`,
+    )
+  }
+  if (changes.value.modifiedSessions) {
+    summary.push(
+      `${changes.value.modifiedSessions} ${changes.value.modifiedSessions === 1 ? 'modificado' : 'modificados'}`,
+    )
+  }
+  return summary.join(' · ')
+})
+
+const restoreSavedSelection = () => {
+  current.value.scheduleOptions.forEach((option) => {
+    option.selected = option.wasSelected
+  })
+}
+
+watch(
+  [loading, availableSchedules],
+  () => {
+    if (loading.value) return
+    if (initialized.value) {
+      current.value.updateAvailableSchedules(availableSchedules.value)
+      return
+    }
+    current.value = PlannedSubject.buildFrom(currentSelectedSchedules.value)
+    current.value.initializeAvailableSchedules(availableSchedules.value)
+    initialized.value = true
+  },
+  { immediate: true },
+)
 
 const saveSections = () => {
   emit('save', current.value)
@@ -149,6 +247,17 @@ const title = computed(() => {
   overflow: hidden;
 }
 
+.changes-alert-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.restore-selection {
+  flex: none;
+}
+
 @media (max-width: 959.98px) {
   .schedule-edit-title {
     position: sticky;
@@ -159,6 +268,16 @@ const title = computed(() => {
 
   .schedule-edit-heading {
     font-size: 1.25rem !important;
+  }
+
+  .changes-alert-layout {
+    display: grid;
+    gap: 8px;
+  }
+
+  .restore-selection {
+    justify-self: start;
+    margin-inline-start: -8px;
   }
 
   .v-card-actions {

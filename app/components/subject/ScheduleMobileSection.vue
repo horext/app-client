@@ -1,52 +1,72 @@
 <template>
   <v-card
     class="mb-3"
+    :class="{ 'added-section': isAddedToSelection }"
     role="checkbox"
-    :aria-checked="isSelected"
+    :aria-checked="option.selected"
     tabindex="0"
     variant="outlined"
     @click="toggleSelection"
     @keydown.enter.prevent="toggleSelection"
     @keydown.space.prevent="toggleSelection"
   >
-    <v-card-title class="py-2">
+    <v-card-title class="d-flex align-center py-2">
       <v-checkbox
         :id="checkboxId"
-        v-model="valueSync"
+        v-model="option.selected"
         class="flex-grow-0"
         density="compact"
         :label="schedule.section.id"
-        :value="schedule"
         hide-details
-        multiple
         @click.stop
       />
+      <v-chip
+        v-if="isAddedToSelection"
+        class="ml-2"
+        color="success"
+        size="x-small"
+      >
+        Nueva selección
+      </v-chip>
     </v-card-title>
 
     <v-divider />
 
     <v-card-text class="pa-0">
       <div
-        v-for="session in sessions"
+        v-for="session in sessionCards"
         :key="session.id"
         class="mobile-session pa-3"
+        :class="{ 'changed-session': session.isModified }"
       >
-        <div class="d-flex align-center ga-2 mb-2">
+        <div class="d-flex align-center flex-wrap ga-2 mb-2">
           <strong>{{ session.day }}</strong>
           <span>{{ session.time }}</span>
+          <v-chip v-if="session.isModified" color="info" size="x-small">
+            Modificado
+          </v-chip>
         </div>
         <div class="mobile-field">
           <span class="field-label">Docente</span>
           <span>{{ session.teacher }}</span>
+          <span v-if="session.teacherBefore" class="field-change">
+            Antes: <del>{{ session.teacherBefore }}</del>
+          </span>
         </div>
         <div class="mobile-details">
           <div class="mobile-field">
             <span class="field-label">Tipo</span>
             <span>{{ session.type }}</span>
+            <span v-if="session.typeBefore" class="field-change">
+              Antes: <del>{{ session.typeBefore }}</del>
+            </span>
           </div>
           <div class="mobile-field">
             <span class="field-label">Aula</span>
             <span>{{ session.classroom }}</span>
+            <span v-if="session.classroomBefore" class="field-change">
+              Antes: <del>{{ session.classroomBefore }}</del>
+            </span>
           </div>
         </div>
       </div>
@@ -55,45 +75,54 @@
 </template>
 
 <script setup lang="ts">
-import type { ISubjectSchedule } from '~/interfaces/subject'
+import { useScheduleSection } from '~/composables/use-schedule-section'
+import type { PlannedSubjectSchedule } from '~/models/planned-subject'
 import { getWeekdayName } from '~/utils/weekday'
 
-const props = defineProps<{ schedule: ISubjectSchedule }>()
-const { schedule } = toRefs(props)
-const valueSync = defineModel<ISubjectSchedule[]>({ required: true })
-
-const isSelected = computed(() =>
-  valueSync.value.some(
-    (selectedSchedule) =>
-      selectedSchedule.section.id === schedule.value.section.id,
-  ),
+const props = defineProps<{
+  option: PlannedSubjectSchedule
+  showChanges: boolean
+}>()
+const { option, showChanges } = toRefs(props)
+const { schedule, isAddedToSelection, sessionStates } = useScheduleSection(
+  option,
+  showChanges,
 )
 const checkboxId = computed(() => `mobile-section-${schedule.value.section.id}`)
 
 const toggleSelection = () => {
-  if (isSelected.value) {
-    valueSync.value = valueSync.value.filter(
-      (selectedSchedule) =>
-        selectedSchedule.section.id !== schedule.value.section.id,
-    )
-    return
-  }
-  valueSync.value = [...valueSync.value, schedule.value]
+  option.value.selected = !option.value.selected
 }
 
-const sessions = computed(() =>
-  schedule.value.sessions.map((session) => ({
-    id: session.id,
-    day: getWeekdayName(session.day)?.substring(0, 2).toUpperCase(),
-    time: `${session.startTime.substring(0, 5)} - ${session.endTime.substring(0, 5)}`,
-    teacher: session.teacher?.fullName,
-    type: session.type?.name || session.type?.code,
-    classroom: session.classroom?.name ?? session.classroom?.code,
-  })),
+const sessionCards = computed(() =>
+  schedule.value.sessions.map((session) => {
+    const state = sessionStates.value[session.id]
+    const changes = state?.changeDetails ?? []
+    const byField = Object.fromEntries(
+      changes.map((change) => [change.field, change]),
+    )
+    return {
+      id: session.id,
+      day: getWeekdayName(session.day)?.substring(0, 2).toUpperCase(),
+      time: `${session.startTime.substring(0, 5)} - ${session.endTime.substring(0, 5)}`,
+      teacher: session.teacher?.fullName,
+      type: session.type?.name || session.type?.code,
+      classroom: session.classroom?.name ?? session.classroom?.code,
+      isModified: state?.isModified ?? false,
+      teacherBefore: byField.teacher?.before,
+      typeBefore: byField.type?.before,
+      classroomBefore: byField.classroom?.before,
+    }
+  }),
 )
 </script>
 
 <style scoped>
+.added-section,
+.changed-session {
+  background-color: rgba(var(--v-theme-success), 0.06);
+}
+
 .v-card[role='checkbox'] {
   cursor: pointer;
 }
@@ -121,6 +150,11 @@ const sessions = computed(() =>
 
 .field-label {
   color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+  font-size: 0.75rem;
+}
+
+.field-change {
+  color: rgb(var(--v-theme-info));
   font-size: 0.75rem;
 }
 </style>

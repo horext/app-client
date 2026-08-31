@@ -1,19 +1,39 @@
 <template>
-  <tr>
+  <tr :class="{ 'changed-row': isModified }">
     <td class="text-left">
       <label :for="forLabel">{{ dayWeek }}</label>
     </td>
     <td class="text-left">
-      <label :for="forLabel">{{ timeInterval }}</label>
+      <label :for="forLabel">
+        {{ timeInterval }}
+        <v-chip v-if="isModified" class="ml-2" color="info" size="x-small">
+          Modificado
+        </v-chip>
+      </label>
     </td>
     <td class="text-left">
-      <label :for="forLabel">{{ teacherFullName }}</label>
+      <label :for="forLabel">
+        <span>{{ teacherFullName }}</span>
+        <span v-if="changesByField.teacher?.before" class="field-change">
+          Antes: <del>{{ changesByField.teacher.before }}</del>
+        </span>
+      </label>
     </td>
     <td class="text-left">
-      <label :for="forLabel">{{ type }}</label>
+      <label :for="forLabel">
+        <span>{{ type }}</span>
+        <span v-if="changesByField.type?.before" class="field-change">
+          Antes: <del>{{ changesByField.type.before }}</del>
+        </span>
+      </label>
     </td>
     <td class="text-left">
-      <label :for="forLabel">{{ classroom }}</label>
+      <label :for="forLabel">
+        <span>{{ classroom }}</span>
+        <span v-if="changesByField.classroom?.before" class="field-change">
+          Antes: <del>{{ changesByField.classroom.before }}</del>
+        </span>
+      </label>
     </td>
   </tr>
 </template>
@@ -25,9 +45,20 @@ import { getWeekdayName } from '~/utils/weekday'
 const props = defineProps<{
   session: ISession
   for?: string
+  isModified?: boolean
+  changeDetails?: Array<{
+    field: string
+    before: string
+    after: string
+  }>
 }>()
 
 const { session, for: forLabel } = toRefs(props)
+const changesByField = computed(() =>
+  Object.fromEntries(
+    (props.changeDetails ?? []).map((change) => [change.field, change]),
+  ),
+)
 const dayWeek = computed(() =>
   getWeekdayName(session.value?.day ?? 0)
     ?.substring(0, 2)
@@ -60,5 +91,17 @@ label {
   width: 100%;
   min-height: 100%;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.changed-row {
+  background-color: rgba(var(--v-theme-success), 0.06);
+}
+
+.field-change {
+  width: 100%;
+  color: rgb(var(--v-theme-info));
+  font-size: 0.75rem;
+  white-space: normal;
 }
 </style>

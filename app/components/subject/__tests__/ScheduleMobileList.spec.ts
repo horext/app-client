@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import ScheduleMobileList from '~/components/subject/ScheduleMobileList.vue'
 import ScheduleMobileSection from '~/components/subject/ScheduleMobileSection.vue'
-import { makeSchedule } from './fixtures'
+import { makeSchedule, makeScheduleOption } from './fixtures'
 
 const vuetify = createVuetify()
 
@@ -12,9 +12,9 @@ describe('subject/ScheduleMobileList', () => {
     it('displays card skeletons without schedule sections', () => {
       const wrapper = shallowMount(ScheduleMobileList, {
         props: {
-          schedules: [makeSchedule(1, 'A')],
+          schedules: [makeScheduleOption(makeSchedule(1, 'A'))],
           loading: true,
-          modelValue: [],
+          showChanges: false,
         },
         global: { plugins: [vuetify] },
       })
@@ -28,9 +28,12 @@ describe('subject/ScheduleMobileList', () => {
 
   describe('given loaded schedules', () => {
     it('displays one mobile section for each available schedule', () => {
-      const schedules = [makeSchedule(1, 'A'), makeSchedule(2, 'B')]
+      const schedules = [
+        makeScheduleOption(makeSchedule(1, 'A')),
+        makeScheduleOption(makeSchedule(2, 'B')),
+      ]
       const wrapper = shallowMount(ScheduleMobileList, {
-        props: { schedules, loading: false, modelValue: [] },
+        props: { schedules, loading: false, showChanges: false },
         global: { plugins: [vuetify] },
       })
 

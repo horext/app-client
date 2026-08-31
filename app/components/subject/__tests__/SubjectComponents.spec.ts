@@ -1,14 +1,16 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { nextTick } from 'vue'
 import { createVuetify } from 'vuetify'
 import type { IBasePlannedSubject } from '~/interfaces/subject'
+import ScheduleItem from '~/components/subject/ScheduleItem.vue'
 import SchedulesEdit from '~/components/subject/SchedulesEdit.vue'
 import Select from '~/components/subject/Select.vue'
 import ItemActions from '~/components/subject/table/ItemActions.vue'
 import { makeSchedule } from '~/components/subject/__tests__/fixtures'
+import type { PlannedSubjectSchedule } from '~/models/planned-subject'
 
 const vuetify = createVuetify()
-
 function makeBaseSubjectSchedules(): IBasePlannedSubject {
   return {
     subject: {
@@ -28,6 +30,62 @@ function makeBaseSubjectSchedules(): IBasePlannedSubject {
   } as IBasePlannedSubject
 }
 
+describe('subject/SchedulesEdit selection state', () => {
+  it('keeps a new subject empty until the user selects a schedule', async () => {
+    const schedule = makeSchedule(1, 'A')
+    const planedSubject = makeBaseSubjectSchedules()
+    planedSubject.schedules = []
+    const wrapper = mount(SchedulesEdit, {
+      props: {
+        planedSubject,
+        availableSchedules: [schedule],
+        loading: false,
+      },
+      global: { plugins: [vuetify] },
+    })
+    const scheduleList = wrapper.findComponent(ScheduleItem)
+
+    const options = scheduleList.props('schedules') as PlannedSubjectSchedule[]
+    expect(options.every(({ selected }) => !selected)).toBe(true)
+    expect(wrapper.text()).not.toContain('Cambios en tus selecciones')
+
+    options[0]!.selected = true
+    await nextTick()
+
+    expect(options[0]!.selected).toBe(true)
+    expect(wrapper.text()).not.toContain('Cambios en tus selecciones')
+    expect(wrapper.text()).not.toContain('Nueva selección')
+  })
+
+  it('does not reset a user selection when available schedules change', async () => {
+    const selected = makeSchedule(1, 'A')
+    const planedSubject = makeBaseSubjectSchedules()
+    planedSubject.schedules = []
+    const wrapper = mount(SchedulesEdit, {
+      props: {
+        planedSubject,
+        availableSchedules: [selected],
+        loading: false,
+      },
+      global: { plugins: [vuetify] },
+    })
+    const scheduleList = wrapper.findComponent(ScheduleItem)
+    const options = scheduleList.props('schedules') as PlannedSubjectSchedule[]
+    options[0]!.selected = true
+    await nextTick()
+
+    await wrapper.setProps({
+      availableSchedules: [selected, makeSchedule(2, 'B')],
+    })
+
+    const updatedOptions = scheduleList.props(
+      'schedules',
+    ) as PlannedSubjectSchedule[]
+    expect(
+      updatedOptions.find(({ sectionId }) => sectionId === 'A')?.selected,
+    ).toBe(true)
+  })
+})
 describe('subject/SchedulesEdit', () => {
   it('renders with loading state', () => {
     const wrapper = shallowMount(SchedulesEdit, {

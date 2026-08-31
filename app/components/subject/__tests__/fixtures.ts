@@ -1,4 +1,5 @@
 import type { ISession, ISubjectSchedule } from '~/interfaces/subject'
+import { PlannedSubjectSchedule } from '~/models/planned-subject'
 
 export const makeSession = (id = 1): ISession => ({
   id,
@@ -21,3 +22,9 @@ export const makeSchedule = (
   section: { id: sectionId },
   scheduleSubject: { id: 0 },
 })
+
+export const makeScheduleOption = (
+  schedule: ISubjectSchedule,
+  saved?: ISubjectSchedule,
+  selected = Boolean(saved),
+) => new PlannedSubjectSchedule(schedule, saved, selected)

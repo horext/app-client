@@ -18,10 +18,10 @@
       </tr>
       <template v-else>
         <ScheduleDesktopSection
-          v-for="schedule in schedules"
-          :key="schedule.id"
-          v-model="valueSync"
-          :schedule="schedule"
+          v-for="option in schedules"
+          :key="option.sectionId"
+          :option="option"
+          :show-changes="showChanges"
         />
       </template>
     </tbody>
@@ -30,14 +30,14 @@
 
 <script setup lang="ts">
 import ScheduleDesktopSection from '~/components/subject/ScheduleDesktopSection.vue'
-import type { ISubjectSchedule } from '~/interfaces/subject'
+import type { PlannedSubjectSchedule } from '~/models/planned-subject'
 
-defineProps<{
-  schedules: ISubjectSchedule[]
+const props = defineProps<{
+  schedules: PlannedSubjectSchedule[]
   loading: boolean
+  showChanges: boolean
 }>()
-
-const valueSync = defineModel<ISubjectSchedule[]>({ required: true })
+const { schedules, loading, showChanges } = toRefs(props)
 </script>
 
 <style>

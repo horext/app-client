@@ -12,48 +12,35 @@
   </div>
   <ScheduleDesktopList
     v-if="mdAndUp"
-    v-model="valueSync"
     :schedules="schedules"
     :loading="loading"
+    :show-changes="resolvedShowChanges"
   />
   <ScheduleMobileList
     v-else
-    v-model="valueSync"
     :schedules="schedules"
     :loading="loading"
+    :show-changes="resolvedShowChanges"
   />
 </template>
 
 <script setup lang="ts">
 import ScheduleDesktopList from '~/components/subject/ScheduleDesktopList.vue'
 import ScheduleMobileList from '~/components/subject/ScheduleMobileList.vue'
-import type { ISubjectSchedule } from '~/interfaces/subject'
+import type { PlannedSubjectSchedule } from '~/models/planned-subject'
 import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
-  schedules: ISubjectSchedule[]
+  schedules: PlannedSubjectSchedule[]
+  showChanges?: boolean
   loading: boolean
 }>()
-const { schedules } = toRefs(props)
+const { schedules, loading, showChanges: showChangesProp } = toRefs(props)
 const { mdAndUp } = useDisplay()
-
-const valueSync = defineModel<ISubjectSchedule[]>({
-  required: true,
-})
-
-const availableSectionIds = computed(
-  () => new Set(schedules.value.map((schedule) => schedule.section.id)),
-)
+const resolvedShowChanges = computed(() => showChangesProp.value ?? true)
 
 const selectedCount = computed(
-  () =>
-    new Set(
-      valueSync.value
-        .filter((schedule) =>
-          availableSectionIds.value.has(schedule.section.id),
-        )
-        .map((schedule) => schedule.section.id),
-    ).size,
+  () => schedules.value.filter(({ selected }) => selected).length,
 )
 
 const selectAll = computed({
@@ -61,7 +48,9 @@ const selectAll = computed({
     schedules.value.length > 0 &&
     selectedCount.value === schedules.value.length,
   set: (selected: boolean) => {
-    valueSync.value = selected ? [...schedules.value] : []
+    schedules.value.forEach((option) => {
+      option.selected = selected
+    })
   },
 })
 
