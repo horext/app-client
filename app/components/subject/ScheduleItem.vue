@@ -34,6 +34,9 @@ const props = defineProps<{
   schedules: ISubjectSchedule[]
   loading: boolean
 }>()
+const emit = defineEmits<{
+  (event: 'select-all', selected: boolean): void
+}>()
 const { schedules } = toRefs(props)
 const { mdAndUp } = useDisplay()
 
@@ -61,7 +64,7 @@ const selectAll = computed({
     schedules.value.length > 0 &&
     selectedCount.value === schedules.value.length,
   set: (selected: boolean) => {
-    valueSync.value = selected ? [...schedules.value] : []
+    emit('select-all', selected)
   },
 })
 

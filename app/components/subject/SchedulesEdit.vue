@@ -39,6 +39,7 @@
         v-model="current.schedules"
         :schedules="availableSchedules"
         :loading="loading"
+        @select-all="selectAllSchedules"
       />
     </v-card-text>
     <v-card-actions>
@@ -117,6 +118,10 @@ watch(currentSelectedSchedules, (availableSchedules) => {
 
 const saveSections = () => {
   emit('save', current.value)
+}
+
+const selectAllSchedules = (selected: boolean) => {
+  current.value.schedules = selected ? [...availableSchedules.value] : []
 }
 
 const title = computed(() => {

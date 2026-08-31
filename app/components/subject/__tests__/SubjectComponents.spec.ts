@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { createVuetify } from 'vuetify'
 import type { IBasePlannedSubject } from '~/interfaces/subject'
 import SchedulesEdit from '~/components/subject/SchedulesEdit.vue'
+import ScheduleItem from '~/components/subject/ScheduleItem.vue'
 import Select from '~/components/subject/Select.vue'
 import ItemActions from '~/components/subject/table/ItemActions.vue'
 import { makeSchedule } from '~/components/subject/__tests__/fixtures'
@@ -51,6 +52,22 @@ describe('subject/SchedulesEdit', () => {
       global: { plugins: [vuetify] },
     })
     expect(wrapper.exists()).toBe(true)
+  })
+
+  it('owns the bulk selection requested by the schedule list', async () => {
+    const schedules = [makeSchedule(1, 'A'), makeSchedule(2, 'B')]
+    const planedSubject = makeBaseSubjectSchedules()
+    planedSubject.schedules = []
+    const wrapper = mount(SchedulesEdit, {
+      props: { planedSubject, availableSchedules: schedules, loading: false },
+      global: { plugins: [vuetify] },
+    })
+    const scheduleList = wrapper.findComponent(ScheduleItem)
+
+    scheduleList.vm.$emit('select-all', true)
+    await wrapper.vm.$nextTick()
+
+    expect(scheduleList.props('modelValue')).toEqual(schedules)
   })
 
   it('shows a schedule report action when a URL is available', () => {

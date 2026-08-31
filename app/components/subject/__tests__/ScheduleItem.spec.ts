@@ -47,7 +47,7 @@ describe('subject/ScheduleItem', () => {
         .vm.$emit('update:modelValue', true)
       await nextTick()
 
-      expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([schedules])
+      expect(wrapper.emitted('select-all')?.at(-1)).toEqual([true])
     })
 
     it('clears all schedules when the user deselects all', async () => {
@@ -62,7 +62,7 @@ describe('subject/ScheduleItem', () => {
         .vm.$emit('update:modelValue', false)
       await nextTick()
 
-      expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[]])
+      expect(wrapper.emitted('select-all')?.at(-1)).toEqual([false])
     })
 
     it('shows an indeterminate state when only some are selected', () => {
