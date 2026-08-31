@@ -83,7 +83,7 @@
     "happy-dom": "^20.11.6",
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
-    "lint-staged": "^17.3.0",
+    "lint-staged": "^17.4.1",
     "nitropack": "^2.13.4",
     "nuxt": "^4.5.2",
     "nuxt-gtag": "^5.0.0",
