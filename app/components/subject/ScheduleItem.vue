@@ -1,13 +1,14 @@
 <template>
   <div v-if="!loading && schedules.length" class="selection-toolbar">
     <v-checkbox-btn
-      v-model="selectAll"
+      :model-value="allSelected"
       aria-label="Seleccionar todas las secciones"
-      :indeterminate="isPartiallySelected"
+      :indeterminate="partiallySelected"
       label="Seleccionar todas"
+      @update:model-value="emit('select-all', $event)"
     />
     <span class="text-caption text-medium-emphasis">
-      {{ selectedCount }} de {{ schedules.length }}
+      {{ selectedCount }} de {{ totalCount }}
     </span>
   </div>
   <ScheduleDesktopList
@@ -30,47 +31,22 @@ import ScheduleMobileList from '~/components/subject/ScheduleMobileList.vue'
 import type { ISubjectSchedule } from '~/interfaces/subject'
 import { useDisplay } from 'vuetify'
 
-const props = defineProps<{
+defineProps<{
   schedules: ISubjectSchedule[]
   loading: boolean
+  allSelected: boolean
+  partiallySelected: boolean
+  selectedCount: number
+  totalCount: number
 }>()
 const emit = defineEmits<{
   (event: 'select-all', selected: boolean): void
 }>()
-const { schedules } = toRefs(props)
 const { mdAndUp } = useDisplay()
 
 const valueSync = defineModel<ISubjectSchedule[]>({
   required: true,
 })
-
-const availableSectionIds = computed(
-  () => new Set(schedules.value.map((schedule) => schedule.section.id)),
-)
-
-const selectedCount = computed(
-  () =>
-    new Set(
-      valueSync.value
-        .filter((schedule) =>
-          availableSectionIds.value.has(schedule.section.id),
-        )
-        .map((schedule) => schedule.section.id),
-    ).size,
-)
-
-const selectAll = computed({
-  get: () =>
-    schedules.value.length > 0 &&
-    selectedCount.value === schedules.value.length,
-  set: (selected: boolean) => {
-    emit('select-all', selected)
-  },
-})
-
-const isPartiallySelected = computed(
-  () => selectedCount.value > 0 && !selectAll.value,
-)
 </script>
 
 <style>

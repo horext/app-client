@@ -11,7 +11,15 @@ describe('subject/ScheduleItem', () => {
   describe('given schedules are loading', () => {
     it('hides the bulk selection control', () => {
       const wrapper = shallowMount(ScheduleItem, {
-        props: { schedules: [], loading: true, modelValue: [] },
+        props: {
+          schedules: [],
+          loading: true,
+          modelValue: [],
+          allSelected: false,
+          partiallySelected: false,
+          selectedCount: 0,
+          totalCount: 0,
+        },
         global: { plugins: [vuetify] },
       })
 
@@ -24,7 +32,15 @@ describe('subject/ScheduleItem', () => {
   describe('given no available schedules', () => {
     it('does not offer bulk selection', () => {
       const wrapper = shallowMount(ScheduleItem, {
-        props: { schedules: [], loading: false, modelValue: [] },
+        props: {
+          schedules: [],
+          loading: false,
+          modelValue: [],
+          allSelected: false,
+          partiallySelected: false,
+          selectedCount: 0,
+          totalCount: 0,
+        },
         global: { plugins: [vuetify] },
       })
 
@@ -38,7 +54,15 @@ describe('subject/ScheduleItem', () => {
     it('selects all schedules when the user selects all', async () => {
       const schedules = [makeSchedule(1, 'A'), makeSchedule(2, 'B')]
       const wrapper = shallowMount(ScheduleItem, {
-        props: { schedules, loading: false, modelValue: [] },
+        props: {
+          schedules,
+          loading: false,
+          modelValue: [],
+          allSelected: false,
+          partiallySelected: false,
+          selectedCount: 0,
+          totalCount: 2,
+        },
         global: { plugins: [vuetify] },
       })
 
@@ -53,7 +77,15 @@ describe('subject/ScheduleItem', () => {
     it('clears all schedules when the user deselects all', async () => {
       const schedules = [makeSchedule(1, 'A'), makeSchedule(2, 'B')]
       const wrapper = shallowMount(ScheduleItem, {
-        props: { schedules, loading: false, modelValue: schedules },
+        props: {
+          schedules,
+          loading: false,
+          modelValue: schedules,
+          allSelected: true,
+          partiallySelected: false,
+          selectedCount: 2,
+          totalCount: 2,
+        },
         global: { plugins: [vuetify] },
       })
 
@@ -72,6 +104,10 @@ describe('subject/ScheduleItem', () => {
           schedules,
           loading: false,
           modelValue: [schedules[0]!],
+          allSelected: false,
+          partiallySelected: true,
+          selectedCount: 1,
+          totalCount: 2,
         },
         global: { plugins: [vuetify] },
       })
@@ -88,6 +124,10 @@ describe('subject/ScheduleItem', () => {
           schedules: [makeSchedule(1, 'A')],
           loading: false,
           modelValue: [makeSchedule(2, 'REMOVED')],
+          allSelected: false,
+          partiallySelected: false,
+          selectedCount: 0,
+          totalCount: 1,
         },
         global: { plugins: [vuetify] },
       })
