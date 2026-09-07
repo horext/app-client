@@ -33,8 +33,8 @@ importers:
         specifier: ^11.0.2
         version: 11.0.2
       html2canvas-pro:
-        specifier: ^2.4.0
-        version: 2.4.0
+        specifier: ^2.4.1
+        version: 2.4.1
       idb:
         specifier: ^8.0.3
         version: 8.0.3
@@ -3921,8 +3921,8 @@ packages:
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
-  html2canvas-pro@2.4.0:
-    resolution: {integrity: sha512-ERxMm/ZGRatO9g0mAM2EBlWFgCXDjma7RZFLCHm71gM6q/WqQRYaqB0MIGjjYKEHF8rKvXIeshrrJ8ovImd9aw==}
+  html2canvas-pro@2.4.1:
+    resolution: {integrity: sha512-yjArt1NPIduV9aN6oK+FOQHb7INT46XMOu7Ue5YcKvlxpkEwmg+QpkCV3Bmfb+LzdltLy45kSYjHM/xyS3ukqw==}
     engines: {node: '>=16.0.0'}
 
   html2canvas@1.4.1:
@@ -10727,7 +10727,7 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
-  html2canvas-pro@2.4.0:
+  html2canvas-pro@2.4.1:
     dependencies:
       css-line-break: 2.1.0
       text-segmentation: 1.0.3
