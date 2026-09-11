@@ -93,7 +93,7 @@
     "typescript": "^6.0.3",
     "unocss": "^66.7.5",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.10",
+    "vitest": "^5.0.0",
     "vue-tsc": "^3.3.11"
   }
 }
