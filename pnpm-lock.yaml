@@ -151,8 +151,8 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0
       lint-staged:
-        specifier: ^17.4.1
-        version: 17.4.1
+        specifier: ^17.5.0
+        version: 17.5.0
       nitropack:
         specifier: ^2.13.4
         version: 2.13.4(@parcel/watcher@2.6.0)(oxc-parser@0.131.0)(rolldown@1.2.5)(srvx@1.0.3)(vite@8.2.2)(webpack@5.107.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.26))
@@ -4397,8 +4397,8 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
-  lint-staged@17.4.1:
-    resolution: {integrity: sha512-FmJeudcalbSfg1du+JCfvi5vS6Qt08KgbfLWiHinbef+2JJwUZwAWVoaO1AcJVUTWPfk0t30PMQNwPAeCzYQ+Q==}
+  lint-staged@17.5.0:
+    resolution: {integrity: sha512-ah2qsNtvKP1+Ak4rAvEEIvcXDLjjbr/xmxCvlequxqEOFYk0qINcZcRxD3Ic8wRn7/oQ8+wC9s0DfDrdMVCRFg==}
     engines: {node: '>=22.22.1'}
     hasBin: true
 
@@ -5699,6 +5699,10 @@ packages:
     resolution: {integrity: sha512-QKAl9m8gWWGHV8jZcPeym6j+XULi6tOf1mT83WYJ4Lk2ytW/uwAWkrP0uFsdoYMdueVJ0qs26wZ+23xeB4ibNQ==}
     engines: {node: '>=18'}
 
+  tinyexec@1.3.1:
+    resolution: {integrity: sha512-GCvB3aoys96IuDFBMcTB46JOR6mdMtAToqwiW8JlWhsoh1mhHi/xn9ss/Dg7N555GiJyEt2qzoG/NHCwM6h1EA==}
+    engines: {node: '>=18'}
+
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
@@ -6457,12 +6461,12 @@ snapshots:
   '@antfu/install-pkg@1.1.0':
     dependencies:
       package-manager-detector: 1.8.0
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
 
   '@antfu/install-pkg@2.0.1':
     dependencies:
       package-manager-detector: 1.8.0
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
 
   '@apidevtools/json-schema-ref-parser@14.2.1(@types/json-schema@7.0.15)':
     dependencies:
@@ -6669,7 +6673,7 @@ snapshots:
       nostics: 1.2.0
       pathe: 2.0.3
       perfect-debounce: 2.1.0
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
       zigpty: 0.2.1
 
   '@devframes/hub@0.8.1(devframe@0.8.2(cac@7.0.0)(srvx@1.0.3))':
@@ -6680,7 +6684,7 @@ snapshots:
       nostics: 1.2.0
       pathe: 2.0.3
       perfect-debounce: 2.1.0
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
       zigpty: 0.2.1
 
   '@devframes/json-render@0.8.1(@devframes/hub@0.8.1(devframe@0.7.16(cac@7.0.0)(srvx@1.0.3)(typescript@6.0.3)))(devframe@0.8.2(cac@7.0.0)(srvx@1.0.3))':
@@ -7216,7 +7220,7 @@ snapshots:
       srvx: 0.11.22
       std-env: 4.2.0
       tinyclip: 0.1.15
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
       ufo: 1.6.4
       youch: 4.1.1
     optionalDependencies:
@@ -11189,11 +11193,11 @@ snapshots:
 
   lilconfig@3.1.3: {}
 
-  lint-staged@17.4.1:
+  lint-staged@17.5.0:
     dependencies:
       picomatch: 4.0.7
       string-argv: 0.3.2
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
     optionalDependencies:
       yaml: 2.9.0
 
@@ -12838,6 +12842,8 @@ snapshots:
   tinyclip@0.1.15: {}
 
   tinyexec@1.3.0: {}
+
+  tinyexec@1.3.1: {}
 
   tinyglobby@0.2.17:
     dependencies:
