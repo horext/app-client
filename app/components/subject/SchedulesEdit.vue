@@ -39,6 +39,11 @@
         v-model="current.schedules"
         :schedules="availableSchedules"
         :loading="loading"
+        :all-selected="allSelected"
+        :partially-selected="partiallySelected"
+        :selected-count="selectedCount"
+        :total-count="totalCount"
+        @select-all="selectAllSchedules"
       />
     </v-card-text>
     <v-card-actions>
@@ -111,12 +116,36 @@ const currentSelectedSchedules = computed(() => {
 
 const current = ref(PlannedSubject.buildFrom(currentSelectedSchedules.value))
 
+const availableSectionIds = computed(
+  () => new Set(availableSchedules.value.map(({ section }) => section.id)),
+)
+const selectedAvailableSectionIds = computed(
+  () =>
+    new Set(
+      current.value.schedules
+        .map(({ section }) => section.id)
+        .filter((sectionId) => availableSectionIds.value.has(sectionId)),
+    ),
+)
+const totalCount = computed(() => availableSectionIds.value.size)
+const selectedCount = computed(() => selectedAvailableSectionIds.value.size)
+const allSelected = computed(
+  () => totalCount.value > 0 && selectedCount.value === totalCount.value,
+)
+const partiallySelected = computed(
+  () => selectedCount.value > 0 && !allSelected.value,
+)
+
 watch(currentSelectedSchedules, (availableSchedules) => {
   current.value = PlannedSubject.buildFrom(availableSchedules)
 })
 
 const saveSections = () => {
   emit('save', current.value)
+}
+
+const selectAllSchedules = (selected: boolean) => {
+  current.value.schedules = selected ? [...availableSchedules.value] : []
 }
 
 const title = computed(() => {
