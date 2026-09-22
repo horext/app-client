@@ -41,7 +41,7 @@
     "@unhead/vue": "^3.4.1",
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
-    "google-auth-library": "^11.0.2",
+    "google-auth-library": "^11.1.0",
     "html2canvas-pro": "^2.4.3",
     "idb": "^8.0.3",
     "jspdf": "^4.2.1",
@@ -54,7 +54,7 @@
     "unstorage": "^1.17.5",
     "uuid": "^14.0.2",
     "vite": "^8.3.0",
-    "vue": "^3.5.42",
+    "vue": "^3.5.43",
     "vue-router": "^5.3.1",
     "vuetify": "^4.2.1"
   },
