@@ -41,8 +41,8 @@
     "@unhead/vue": "^3.4.1",
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
-    "google-auth-library": "^11.0.2",
-    "html2canvas-pro": "^2.4.3",
+    "google-auth-library": "^11.1.0",
+    "html2canvas-pro": "^2.4.5",
     "idb": "^8.0.3",
     "jspdf": "^4.2.1",
     "lottie-web": "^5.13.0",
@@ -53,10 +53,10 @@
     "unhead": "^3.4.1",
     "unstorage": "^1.17.5",
     "uuid": "^14.0.2",
-    "vite": "^8.3.0",
-    "vue": "^3.5.42",
+    "vite": "^8.3.1",
+    "vue": "^3.5.43",
     "vue-router": "^5.3.1",
-    "vuetify": "^4.2.1"
+    "vuetify": "^4.2.2"
   },
   "devDependencies": {
     "@mdi/js": "^7.4.47",
