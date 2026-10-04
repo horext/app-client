@@ -40,7 +40,7 @@
     "@pinia/nuxt": "^1.0.2",
     "@unhead/vue": "^3.4.2",
     "@vueuse/core": "^15.0.0",
-    "@vueuse/nuxt": "^14.4.0",
+    "@vueuse/nuxt": "^15.0.0",
     "google-auth-library": "^11.1.0",
     "html2canvas-pro": "^2.5.0",
     "idb": "^8.0.3",
