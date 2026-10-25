@@ -1,0 +1,45 @@
+import { shallowMount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
+import { createVuetify } from 'vuetify'
+import ScheduleDesktopSection from '~/components/subject/ScheduleDesktopSection.vue'
+import ClassSessionItem from '~/components/subject/ClassSessionItem.vue'
+import { makeSchedule, makeSession } from './fixtures'
+
+const vuetify = createVuetify()
+
+describe('subject/ScheduleDesktopSection', () => {
+  describe('given an available section', () => {
+    it('displays its identifier as the selection label', () => {
+      const wrapper = shallowMount(ScheduleDesktopSection, {
+        props: { schedule: makeSchedule(1, 'A'), modelValue: [] },
+        global: { plugins: [vuetify] },
+      })
+
+      expect(wrapper.findComponent({ name: 'VCheckbox' }).props('label')).toBe(
+        'A',
+      )
+    })
+
+    it('displays every session belonging to the section', () => {
+      const wrapper = shallowMount(ScheduleDesktopSection, {
+        props: {
+          schedule: makeSchedule(1, 'A', [makeSession(1), makeSession(2)]),
+          modelValue: [],
+        },
+        global: { plugins: [vuetify] },
+      })
+
+      expect(wrapper.findAllComponents(ClassSessionItem)).toHaveLength(2)
+    })
+
+    it('still displays a selectable section when it has no sessions', () => {
+      const wrapper = shallowMount(ScheduleDesktopSection, {
+        props: { schedule: makeSchedule(1, 'A'), modelValue: [] },
+        global: { plugins: [vuetify] },
+      })
+
+      expect(wrapper.findComponent({ name: 'VCheckbox' }).exists()).toBe(true)
+      expect(wrapper.findAllComponents(ClassSessionItem)).toHaveLength(0)
+    })
+  })
+})
